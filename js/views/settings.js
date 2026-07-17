@@ -1,16 +1,65 @@
-// 设置：语音选择、语速、每日新词、进度导出/导入
+// 设置：语音选择、语速、每日新词、Gist 同步、进度导出/导入
 import { el, esc, toast } from '../ui.js';
 import { germanVoices, speak, ttsAvailable, recognitionAvailable } from '../speech.js';
 import { getSettings, setSetting, exportAll, importAll, resetAll } from '../storage.js';
+import { pullMerge, pushNow, syncConfigured } from '../sync.js';
 
 export function renderSettings(host) {
   const s = getSettings();
-  host.appendChild(el(`<a class="back-link" href="#/">‹ 首页</a>`));
+  host.appendChild(el(`<a class="back-link" href="#/me">‹ 我的</a>`));
   host.appendChild(el(`<h1 class="page-title">⚙️ 设置</h1>`));
 
+  /* 跨设备同步 */
+  const syncCard = el(`<div class="card"><h3>☁️ 跨设备同步（GitHub Gist）</h3>
+    <p class="meta">进度自动保存到你的私有 Gist（免费、仅自己可见）。手机/平板各粘贴一次令牌即可无感接力。
+    <br>令牌获取：github.com → Settings → Developer settings → Personal access tokens (classic) → Generate new token，<b>只勾选 gist 权限</b>。</p></div>`);
+  const tokenRow = el(`<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+    <input type="password" class="quiz-fill-input" style="flex:1;min-width:180px" placeholder="粘贴 GitHub 令牌 (ghp_…)" value="${esc(s.gistToken || '')}">
+    <button class="btn small">保存</button>
+  </div>`);
+  const tokenInput = tokenRow.querySelector('input');
+  tokenRow.querySelector('button').addEventListener('click', async () => {
+    const token = tokenInput.value.trim();
+    setSetting('gistToken', token);
+    if (!token) { toast('已清除令牌，同步关闭'); return; }
+    toast('正在验证并同步…');
+    try {
+      const pulled = await pullMerge();
+      if (pulled === 'pulled') { toast('已拉取云端进度 ✅'); setTimeout(() => location.reload(), 900); return; }
+      await pushNow();
+      toast('同步已开启 ✅ 进度已上传');
+      setTimeout(() => location.reload(), 900);
+    } catch (e) {
+      toast(`同步失败：${e.message}`, 4000);
+    }
+  });
+  syncCard.appendChild(tokenRow);
+  if (syncConfigured()) {
+    const row = el(`<div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn small secondary">⬇️ 立即拉取</button>
+      <button class="btn small secondary">⬆️ 立即推送</button>
+    </div>`);
+    const [pullBtn, pushBtn] = row.querySelectorAll('button');
+    pullBtn.addEventListener('click', async () => {
+      try {
+        const r = await pullMerge();
+        toast(r === 'pulled' ? '已拉取云端进度 ✅（刷新生效）' : '本地已是最新');
+        if (r === 'pulled') setTimeout(() => location.reload(), 900);
+      } catch (e) { toast(`拉取失败：${e.message}`, 4000); }
+    });
+    pushBtn.addEventListener('click', async () => {
+      try { await pushNow(); toast('已推送 ✅'); }
+      catch (e) { toast(`推送失败：${e.message}`, 4000); }
+    });
+    syncCard.appendChild(row);
+    if (s.gistId) syncCard.appendChild(el(`<p class="meta" style="margin-top:8px">Gist ID: ${esc(s.gistId)}</p>`));
+  }
+  host.appendChild(syncCard);
+
   /* 语音 */
-  const voiceCard = el(`<div class="card"><h3>🔊 德语语音</h3></div>`);
-  const voiceRow = el(`<div class="settings-row"><label>朗读语音</label></div>`);
+  const voiceCard = el(`<div class="card"><h3>🔊 德语语音</h3>
+    <p class="meta" style="margin-bottom:6px">课程内容使用内置真人级德语音频（微软神经网络语音），所有设备发音一致。下面的设备语音仅在朗读内容库之外的文本时作为回退。</p></div>`);
+  const voiceRow = el(`<div class="settings-row"><label>回退语音</label></div>`);
   const sel = el(`<select></select>`);
   function fillVoices() {
     const list = germanVoices();

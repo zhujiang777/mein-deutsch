@@ -43,6 +43,13 @@ export function rate(id, rating) {
   return c;
 }
 
+// 标熟：已认识的词，长间隔后再抽查一次
+export function markKnown(id) {
+  const all = loadSrs();
+  all[id] = { ivl: 180, ease: 2.8, reps: 1, lapses: 0, state: 'review', due: Date.now() + 180 * DAY };
+  saveSrs(all);
+}
+
 // 组装今日学习队列：到期复习卡 + 每日限额内的新卡
 export function buildQueue(allIds) {
   const all = loadSrs();

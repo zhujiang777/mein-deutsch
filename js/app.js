@@ -1,88 +1,44 @@
-// 应用入口：hash 路由 + 首页
+// 应用入口 v2：hash 路由 + Gist 同步启动
+import { renderToday, runDictationSet } from './views/today.js';
+import { renderPath } from './views/path.js';
+import { renderLessonRoute } from './views/lesson.js';
+import { renderVocab } from './views/vocab.js';
+import { renderReadListen } from './views/readlisten.js';
+import { renderReading } from './views/reading.js';
 import { renderPron } from './views/pronunciation.js';
 import { renderGrammar } from './views/grammar.js';
-import { renderVocab } from './views/vocab.js';
-import { renderReading } from './views/reading.js';
+import { renderMe } from './views/me.js';
 import { renderSettings } from './views/settings.js';
-import { doneCount } from './storage.js';
-import { srsStats } from './srs.js';
-import { PRON_LESSONS } from '../data/pronunciation.js';
-import { GRAMMAR_LESSONS } from '../data/grammar.js';
-import { VOCAB } from '../data/vocab.js';
-import { READINGS } from '../data/readings.js';
-import { el } from './ui.js';
+import { migrate } from './storage.js';
+import { initSync } from './sync.js';
 import { stopSpeak } from './speech.js';
+import { el, toast } from './ui.js';
+
+migrate();
 
 const app = document.getElementById('app');
 
-function renderHome(host) {
-  const stats = srsStats(VOCAB.map(w => w.id));
-  const pronDone = doneCount('pron');
-  const gramDone = doneCount('grammar');
-  const readDone = doneCount('reading');
-  const hour = new Date().getHours();
-  const greet = hour < 11 ? 'Guten Morgen!' : hour < 18 ? 'Guten Tag!' : 'Guten Abend!';
-
-  host.appendChild(el(`<div class="hero">
-    <h1 class="de">${greet} 👋</h1>
-    <p>坚持每天一点点，德语就是这样学会的。</p>
-    <div class="hero-stats">
-      <div class="hero-stat"><b>${stats.due}</b><span>待复习单词</span></div>
-      <div class="hero-stat"><b>${stats.learned}</b><span>已学单词</span></div>
-      <div class="hero-stat"><b>${pronDone + gramDone + readDone}</b><span>已完成课程</span></div>
-    </div>
-  </div>`));
-
-  if (stats.due > 0) {
-    host.appendChild(el(`<a class="card" href="#/vocab/study" style="display:flex;align-items:center;gap:12px">
-      <span style="font-size:1.6rem">⏰</span>
-      <div style="flex:1">
-        <h3>今日复习</h3>
-        <div class="meta">有 ${stats.due} 个单词到期了，趁热复习效果最好</div>
-      </div>
-      <span class="li-arrow">›</span>
-    </a>`));
-  }
-
-  host.appendChild(el(`<div class="section-label">学习模块</div>`));
-  const grid = el(`<div class="module-grid"></div>`);
-  const modules = [
-    { href: '#/pron', icon: '🗣️', title: '发音系统课', sub: `${pronDone}/${PRON_LESSONS.length} 课完成` },
-    { href: '#/grammar', icon: '📐', title: '体系化语法', sub: `${gramDone}/${GRAMMAR_LESSONS.length} 课完成` },
-    { href: '#/vocab', icon: '🃏', title: '词汇记忆', sub: `已学 ${stats.learned}/${stats.total}` },
-    { href: '#/reading', icon: '📖', title: '分级阅读', sub: `${readDone}/${READINGS.length} 篇读完` },
-    { href: '#/settings', icon: '⚙️', title: '设置', sub: '语音·同步·数据' },
-  ];
-  modules.forEach(m => grid.appendChild(el(`<a class="module-card" href="${m.href}">
-    <div class="m-icon">${m.icon}</div>
-    <div class="m-title">${m.title}</div>
-    <div class="m-sub">${m.sub}</div>
-  </a>`)));
-  host.appendChild(grid);
-
-  host.appendChild(el(`<div class="card" style="margin-top:16px">
-    <h3>📅 建议的学习路径</h3>
-    <div class="meta" style="line-height:1.8">
-      ① 先用 <a href="#/pron">发音课</a> 打好拼读基础（德语见词能读，10 课就能入门）<br>
-      ② 每天 10-15 分钟 <a href="#/vocab/study">词汇卡片</a>，积累核心词汇<br>
-      ③ 按顺序学 <a href="#/grammar">语法课</a>，每课做完练习<br>
-      ④ 语法学到第 3 课后开始 <a href="#/reading">阅读</a>：精读逐句弄懂，泛读只求大意<br>
-      ⑤ 所有德语句子都可以点 🎤 跟读，检验发音
-    </div>
-  </div>`));
-}
-
 const routes = [
-  { pattern: /^\/?$/, tab: 'home', render: (host) => renderHome(host) },
-  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'pron', render: (host, m) => renderPron(host, m[1]) },
-  { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'grammar', render: (host, m) => renderGrammar(host, m[1]) },
-  { pattern: /^\/vocab(?:\/(.+))?$/, tab: 'vocab', render: (host, m) => renderVocab(host, m[1]) },
-  { pattern: /^\/reading(?:\/(.+))?$/, tab: 'reading', render: (host, m) => renderReading(host, m[1]) },
-  { pattern: /^\/settings$/, tab: 'home', render: (host) => renderSettings(host) },
+  { pattern: /^\/?$/, tab: 'today', render: (h) => renderToday(h) },
+  { pattern: /^\/path$/, tab: 'path', render: (h) => renderPath(h) },
+  { pattern: /^\/lesson\/(.+)$/, tab: 'path', render: (h, m) => renderLessonRoute(h, m[1]) },
+  { pattern: /^\/vocab(?:\/(.+))?$/, tab: 'vocab', render: (h, m) => renderVocab(h, m[1]) },
+  { pattern: /^\/readlisten$/, tab: 'readlisten', render: (h) => renderReadListen(h) },
+  { pattern: /^\/reading\/(.+)$/, tab: 'readlisten', render: (h, m) => renderReading(h, m[1]) },
+  { pattern: /^\/dictation$/, tab: 'readlisten', render: (h) => {
+      h.appendChild(el(`<a class="back-link" href="#/readlisten">‹ 读·听</a>`));
+      runDictationSet(h, 5, () => { location.hash = '#/readlisten'; });
+    } },
+  { pattern: /^\/me$/, tab: 'me', render: (h) => renderMe(h) },
+  { pattern: /^\/settings$/, tab: 'me', render: (h) => renderSettings(h) },
+  // 旧版模块（内容迁移期间保留）
+  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'path', render: (h, m) => renderPron(h, m[1]) },
+  { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'path', render: (h, m) => renderGrammar(h, m[1]) },
 ];
 
 function route() {
   stopSpeak();
+  document.body.classList.remove('immersive');
   const path = location.hash.replace(/^#/, '') || '/';
   app.innerHTML = '';
   document.querySelector('.gloss-pop')?.remove();
@@ -101,3 +57,11 @@ function route() {
 
 window.addEventListener('hashchange', route);
 route();
+
+// 同步：启动拉取（拉到新数据就刷新当前页）
+initSync({
+  onPulled: () => {
+    toast('已从云端同步最新进度 ☁️');
+    route();
+  },
+});

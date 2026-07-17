@@ -34,7 +34,7 @@ export function audioBtn(text, { slow = false } = {}) {
 }
 
 /* ---- 跟读麦克风：点击 → 识别 → 逐词比对结果渲染到 resultHost ---- */
-export function micBtn(targetText, resultHost) {
+export function micBtn(targetText, resultHost, opts = {}) {
   const b = el(`<button class="mic-btn" title="跟读检测">🎤</button>`);
   if (!recognitionAvailable()) {
     b.addEventListener('click', (e) => {
@@ -63,6 +63,7 @@ export function micBtn(targetText, resultHost) {
           <div class="heard">识别到：${esc(r.heard)}</div>
           <div class="score-line"><b>${r.score}%</b> ${emoji}</div>
         </div>`;
+        opts.onScore?.(r.score);
       },
       onError: (err) => {
         got = true;
@@ -99,6 +100,87 @@ export function phraseRow({ de, ipa, zh, tip, mic = true, slowBtn = true }) {
   if (slowBtn) btns.appendChild(audioBtn(de, { slow: true }));
   if (mic) btns.appendChild(micBtn(de, result));
   return row;
+}
+
+/* ---- YouTube 视频组件：懒加载 facade + IFrame API 进度追踪 ----
+   videoId 记录观看状态；播放 ≥80% 自动记已看，手动"我看完了"兜底 */
+import { getVideoState, setVideoState } from './storage.js';
+
+let ytApiPromise = null;
+function loadYtApi() {
+  if (window.YT?.Player) return Promise.resolve();
+  if (!ytApiPromise) {
+    ytApiPromise = new Promise((resolve) => {
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { prev?.(); resolve(); };
+      const s = document.createElement('script');
+      s.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(s);
+      setTimeout(resolve, 6000); // API 加载失败也不阻塞
+    });
+  }
+  return ytApiPromise;
+}
+
+export function videoCard(video, { onWatched } = {}) {
+  // video: { yt, title, note?, duration? }
+  const state = getVideoState(video.yt);
+  const card = el(`<div class="video-card">
+    <div class="video-facade" role="button" tabindex="0" aria-label="播放视频">
+      <img loading="lazy" src="https://i.ytimg.com/vi/${esc(video.yt)}/hqdefault.jpg" alt="">
+      <span class="video-play">▶</span>
+    </div>
+    <div class="video-meta">
+      <div class="video-title">${esc(video.title)}${state.done ? ' <span class="pill green">已看完 ✓</span>' : ''}</div>
+      ${video.note ? `<div class="meta">${esc(video.note)}</div>` : ''}
+      <button class="btn small secondary video-done-btn" style="margin-top:6px">${state.done ? '重新标记' : '我看完了（手动确认）'}</button>
+    </div>
+  </div>`);
+
+  const facade = card.querySelector('.video-facade');
+  const markWatched = () => {
+    setVideoState(video.yt, { done: true, pct: 100 });
+    card.querySelector('.video-title').innerHTML = `${esc(video.title)} <span class="pill green">已看完 ✓</span>`;
+    onWatched?.();
+  };
+  card.querySelector('.video-done-btn').addEventListener('click', markWatched);
+
+  facade.addEventListener('click', async () => {
+    const holder = el(`<div class="video-embed"><div id="yt-${video.yt}-${Date.now()}"></div></div>`);
+    facade.replaceWith(holder);
+    await loadYtApi();
+    if (window.YT?.Player) {
+      const p = new YT.Player(holder.firstElementChild.id, {
+        videoId: video.yt,
+        host: 'https://www.youtube-nocookie.com',
+        playerVars: { rel: 0, modestbranding: 1 },
+        events: {
+          onReady: () => p.playVideo(),
+          onStateChange: () => {
+            // 轮询累计进度
+            if (!p._tracker) {
+              p._tracker = setInterval(() => {
+                try {
+                  const dur = p.getDuration();
+                  const cur = p.getCurrentTime();
+                  if (dur > 0) {
+                    const pct = Math.round(100 * cur / dur);
+                    const prev = getVideoState(video.yt).pct || 0;
+                    if (pct > prev) setVideoState(video.yt, { pct });
+                    if (pct >= 80 && !getVideoState(video.yt).done) markWatched();
+                  }
+                } catch {}
+              }, 5000);
+            }
+          },
+        },
+      });
+    } else {
+      // API 加载失败：普通 iframe 兜底（手动确认按钮仍可用）
+      holder.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/${esc(video.yt)}?rel=0&autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    }
+  });
+  return card;
 }
 
 /* ---- 练习题渲染，全部答对/答完后回调 onFinish(correct, total) ---- */

@@ -1,10 +1,26 @@
-// 语音：TTS 朗读（speechSynthesis）+ 跟读识别（SpeechRecognition）
+// 语音：预生成音频优先（真人级德语 MP3），设备 TTS 仅作德语语音回退
+// + 跟读识别（SpeechRecognition）
 import { getSettings } from './storage.js';
+import { AUDIO_MANIFEST } from '../data/audio-manifest.js';
 
-/* ================= TTS ================= */
+/* ================= 播放：预生成音频 ================= */
+let player = null; // 共享播放器，保证同时只放一个
+
+function playFile(file, { slow = false, onend } = {}) {
+  stopSpeak();
+  player = new Audio(`audio/${file}`);
+  // 慢速：降速不变调（现代浏览器 preservesPitch 默认开启，这里显式声明）
+  player.preservesPitch = true;
+  player.webkitPreservesPitch = true;
+  player.playbackRate = slow ? 0.65 : 1;
+  if (onend) player.onended = onend;
+  player.play().catch(() => onend?.());
+}
+
+/* ================= 回退：设备 TTS（仅限德语语音） ================= */
 let voices = [];
 function refreshVoices() {
-  voices = speechSynthesis.getVoices();
+  if ('speechSynthesis' in window) voices = speechSynthesis.getVoices();
 }
 if ('speechSynthesis' in window) {
   refreshVoices();
@@ -16,7 +32,7 @@ export function germanVoices() {
   return voices.filter(v => v.lang.toLowerCase().startsWith('de'));
 }
 
-function pickVoice() {
+function pickGermanVoice() {
   const list = germanVoices();
   if (!list.length) return null;
   const pref = getSettings().voiceURI;
@@ -24,31 +40,50 @@ function pickVoice() {
     const hit = list.find(v => v.voiceURI === pref);
     if (hit) return hit;
   }
-  // 优先本地高质量语音（iOS 上通常是 Anna）
   return list.find(v => v.localService && v.lang === 'de-DE')
     || list.find(v => v.lang === 'de-DE')
     || list[0];
 }
 
-export function ttsAvailable() {
-  return 'speechSynthesis' in window;
-}
-
-export function speak(text, { slow = false, onend } = {}) {
-  if (!ttsAvailable()) return;
+function speakTTS(text, { slow = false, onend } = {}) {
+  if (!('speechSynthesis' in window)) return notifyNoGerman();
+  const v = pickGermanVoice();
+  // 关键原则：宁可不发音，也不用非德语语音硬读
+  if (!v) return notifyNoGerman();
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'de-DE';
-  const v = pickVoice();
-  if (v) u.voice = v;
-  const base = getSettings().rate || 1;
-  u.rate = slow ? base * 0.6 : base;
+  u.voice = v;
+  u.rate = slow ? 0.6 : 1;
   if (onend) u.onend = onend;
   speechSynthesis.speak(u);
 }
 
+function notifyNoGerman() {
+  import('./ui.js').then(({ toast }) => {
+    toast('本机未安装德语语音（iOS：设置→辅助功能→朗读内容→声音→德语）', 3500);
+  });
+}
+
+/* ================= 统一入口 ================= */
+export function speak(text, opts = {}) {
+  const key = (text || '').trim();
+  const file = AUDIO_MANIFEST[key];
+  if (file) return playFile(file, opts);
+  return speakTTS(key, opts); // 内容库外的动态文本才走 TTS
+}
+
 export function stopSpeak() {
-  if (ttsAvailable()) speechSynthesis.cancel();
+  if (player) {
+    player.onended = null;
+    player.pause();
+    player = null;
+  }
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+}
+
+export function ttsAvailable() {
+  return 'speechSynthesis' in window;
 }
 
 /* ================= 语音识别（跟读检测） ================= */
@@ -58,7 +93,6 @@ export function recognitionAvailable() {
   return !!SR;
 }
 
-// 识别一次，返回 {stop} 控制器；结果通过回调给出
 export function recognizeOnce({ onResult, onError, onEnd }) {
   const rec = new SR();
   rec.lang = 'de-DE';
@@ -87,7 +121,6 @@ function normalizeWords(text) {
     .filter(Boolean);
 }
 
-// 最长公共子序列对齐：标记目标句中每个词是否被读出
 function lcsMatch(target, spoken) {
   const n = target.length, m = spoken.length;
   const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
@@ -106,7 +139,6 @@ function lcsMatch(target, spoken) {
   return ok;
 }
 
-// 在多个候选识别结果里取匹配得分最高的
 export function scoreSpeech(targetText, alternatives) {
   const target = normalizeWords(targetText);
   let best = { score: 0, ok: new Array(target.length).fill(false), heard: alternatives[0] || '' };
@@ -117,7 +149,6 @@ export function scoreSpeech(targetText, alternatives) {
     const score = target.length ? Math.round(100 * matched / target.length) : 0;
     if (score >= best.score) best = { score, ok, heard: alt };
   }
-  // 返回目标句原始分词（保留大小写标点用于显示）
   const displayWords = targetText.split(/\s+/).filter(Boolean);
   return { ...best, displayWords };
 }
