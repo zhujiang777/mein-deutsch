@@ -2,13 +2,16 @@
 // 对齐 Nicos Weg A1 章节进度（learngerman.dw.com），讲解原创中文
 // 步骤类型：teach / example(内嵌) / recap 为信息卡；
 // 练习：choice / listenChoice / assemble / dictation / fill / match / translate / speak
-// 当前为试点单元（打通引擎），Phase 3 将补齐全部单元
+// 展示/复述：scene / observe / reproduce / roleplay
+// unit.track: 'grammar'（语法主线）| 'scene'（场景口语），双泳道各自顺序解锁
+// 数据字段规范见 docs/schema.md
 
 export const COURSE = [
   {
     id: 'u1',
     title: '第1单元 · Hallo! 我是谁',
     icon: '👋',
+    track: 'grammar',
     intro: '学会用德语介绍自己：动词 sein（是）的全部变位。',
     nicosWeg: { name: 'Nicos Weg A1 · Hallo! / Wie heißt du?', url: 'https://learngerman.dw.com/zh/beginners/c-36519789' },
     videos: [],
@@ -68,6 +71,24 @@ export const COURSE = [
           { type: 'translate', zh: '我们是大学生。', a: ['Wir sind Studenten', 'Wir sind Studenten.'], explain: 'wir + sind + 复数名词。', skills: ['sein-pl'] },
           { type: 'speak', de: 'Wir sind aus China und wir lernen Deutsch.', zh: '我们来自中国，我们在学德语。' },
           { type: 'recap', h: '恭喜！sein 全部拿下', p: '你已经掌握德语最重要的动词。sein 的六个形态会在后面所有课程里反复出现，忘了也没关系——系统会安排复习。' },
+        ],
+      },
+    ],
+  },
+
+  /* ===== 场景口语线（占位，双泳道可见可测；内容制作中） ===== */
+  {
+    id: 's1',
+    title: '生存场景 · 预告',
+    icon: '🗣️',
+    track: 'scene',
+    intro: '按真实场景学口语：点餐、问路、购物……即将上线。',
+    lessons: [
+      {
+        id: 's1l1',
+        title: '场景课程制作中',
+        steps: [
+          { type: 'teach', h: '🗣️ 场景口语线', p: '这条线用真实对话（scene）+ 语法观察（observe）+ 复述（reproduce）+ 角色扮演（roleplay）带你开口说德语。\n内容正在制作中，先在语法主线打好基础吧。', tip: '两条线各自独立解锁，随时切换。' },
         ],
       },
     ],

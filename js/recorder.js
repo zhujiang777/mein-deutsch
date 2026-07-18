@@ -1,0 +1,59 @@
+// 录音封装：MediaRecorder + getUserMedia
+// 跟读的核心方案是"录音对比"（识别只是可选增强）——中国大陆的 SpeechRecognition
+// 依赖 Google 服务器常报 'network'，录音回放不依赖任何在线服务，随处可用。
+
+export function recordingSupported() {
+  return !!(navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
+}
+
+// iOS Safari 只认 mp4，其余浏览器用 webm 兜底；都不支持则不传 mimeType 交给浏览器决定
+function pickMimeType() {
+  if (!window.MediaRecorder?.isTypeSupported) return '';
+  if (MediaRecorder.isTypeSupported('audio/mp4')) return 'audio/mp4';
+  if (MediaRecorder.isTypeSupported('audio/webm')) return 'audio/webm';
+  return '';
+}
+
+/**
+ * 开始录音。返回 { stop()→Promise<{url, blob}>, cancel() }。
+ * 出错时抛出带可读中文 message 的 Error。
+ * 注意：生成的 object URL 由调用方负责 revokeObjectURL。
+ */
+export async function startRecording() {
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (err) {
+    const name = err?.name;
+    if (name === 'NotAllowedError') throw new Error('请在浏览器设置中允许麦克风');
+    if (name === 'NotFoundError') throw new Error('未检测到麦克风');
+    throw new Error(err?.message || '无法录音');
+  }
+
+  const mimeType = pickMimeType();
+  const rec = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+  const chunks = [];
+  rec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+  rec.start();
+
+  // 用完必须释放麦克风，否则浏览器一直显示"录音中"占用指示
+  const release = () => stream.getTracks().forEach(t => t.stop());
+
+  return {
+    stop() {
+      return new Promise((resolve) => {
+        rec.onstop = () => {
+          release();
+          const blob = new Blob(chunks, { type: rec.mimeType || mimeType || 'audio/webm' });
+          resolve({ url: URL.createObjectURL(blob), blob });
+        };
+        try { rec.stop(); }
+        catch { release(); resolve({ url: null, blob: null }); }
+      });
+    },
+    cancel() {
+      try { rec.stop(); } catch {}
+      release();
+    },
+  };
+}

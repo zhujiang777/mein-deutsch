@@ -38,10 +38,12 @@ for (const unit of COURSE)
       if (step.example) add(step.example.de);
       add(step.audioText);
       add(step.answer);
-      add(step.de);
+      add(step.de); // speak / reproduce
       if (step.type === 'choice' && step.options) add(step.options[step.a]);
       if ((step.type === 'fill' || step.type === 'translate') && step.a) add(step.a[0]);
       if (step.type === 'match' && step.pairs) step.pairs.forEach(p => add(p.de));
+      // scene / observe / roleplay：逐句德语进音频清单
+      if (Array.isArray(step.lines)) step.lines.forEach(l => add(l.de));
     }
 
 process.stdout.write(JSON.stringify([...texts], null, 0));

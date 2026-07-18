@@ -143,6 +143,7 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
         <div class="wc-audio"></div>
       </div>
       <div class="wc-senses">${m.senses.map(s => `<div class="wc-sense"><span class="wc-pos">${esc(s.pos || '')}</span> ${esc(s.zh)}</div>`).join('')}</div>
+      ${m.valence ? `<div class="wc-valence">${esc(m.valence)}</div>` : ''}
       <div class="wc-sentences"></div>
       ${m.mnemonic ? `<div class="wc-mnemonic">🧩 ${esc(m.mnemonic)}</div>` : ''}
       <div class="wc-actions">

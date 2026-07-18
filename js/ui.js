@@ -1,5 +1,6 @@
 // 共享 UI 组件：音频按钮、跟读麦克风、练习题渲染、toast
-import { speak, recognitionAvailable, recognizeOnce, scoreSpeech } from './speech.js';
+import { speak, stopSpeak, recognitionAvailable, recognizeOnce, scoreSpeech } from './speech.js';
+import { recordingSupported, startRecording } from './recorder.js';
 
 export function el(html) {
   const t = document.createElement('template');
@@ -33,23 +34,153 @@ export function audioBtn(text, { slow = false } = {}) {
   return b;
 }
 
-/* ---- 跟读麦克风：点击 → 识别 → 逐词比对结果渲染到 resultHost ---- */
-export function micBtn(targetText, resultHost, opts = {}) {
-  const b = el(`<button class="mic-btn" title="跟读检测">🎤</button>`);
-  if (!recognitionAvailable()) {
-    b.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toast('当前浏览器不支持语音识别，请使用 Safari 或 Chrome');
-    });
-    return b;
+/* ---- 跟读练习组件：🔊听标准 → 🎤录自己 → 并排对比（▶标准 | ▶我的）----
+   录音对比为核心（随处可用）；SpeechRecognition 可用时额外附加逐词识别对照。
+   录音和识别共用一次说话：录音期间同时启动识别，停止后一起展示。 */
+export function speakPractice(host, targetText, { onScore } = {}) {
+  const wrap = el(`<div class="speak-practice">
+    <div class="sp-controls">
+      <button class="sp-btn sp-listen">🔊 听标准</button>
+    </div>
+    <div class="sp-status"></div>
+    <div class="sp-compare"></div>
+    <div class="sp-recog"></div>
+  </div>`);
+  const controls = wrap.querySelector('.sp-controls');
+  const status = wrap.querySelector('.sp-status');
+  const compare = wrap.querySelector('.sp-compare');
+  const recogHost = wrap.querySelector('.sp-recog');
+
+  controls.querySelector('.sp-listen').addEventListener('click', (e) => {
+    e.stopPropagation(); stopSpeak(); speak(targetText);
+  });
+
+  // 无录音能力：识别可用则退回纯识别，否则只保留"听标准"
+  if (!recordingSupported()) {
+    if (recognitionAvailable()) {
+      const recBtn = el(`<button class="sp-btn sp-record">🎤 跟读（识别）</button>`);
+      controls.appendChild(recBtn);
+      wireRecognitionOnly(recBtn, targetText, recogHost, status, onScore);
+    } else {
+      status.textContent = '本设备不支持录音，可听标准音后自己朗读';
+    }
+    host.appendChild(wrap);
+    return wrap;
   }
-  let ctl = null;
-  b.addEventListener('click', (e) => {
+
+  const recordBtn = el(`<button class="sp-btn sp-record">🎤 录我的</button>`);
+  controls.appendChild(recordBtn);
+
+  let recorderCtl = null;   // 录音控制器
+  let recogCtl = null;      // 识别控制器
+  let recogResult = null;   // 识别结果（或 {error}）
+  let stopped = false;
+  let recogRendered = false;
+  let myUrl = null;
+
+  function renderRecog() {
+    if (recogRendered || !stopped) return;
+    if (!recognitionAvailable()) return;
+    if (recogResult == null) return; // 还没回来
+    recogRendered = true;
+    const r = recogResult;
+    if (r.error) {
+      const msg = r.error === 'network'
+          ? '语音识别服务无法连接（需要 Google 网络），已用录音对比模式'
+        : r.error === 'not-allowed'
+          ? '麦克风权限被拒，识别不可用（录音对比仍可用）'
+        : r.error === 'no-speech'
+          ? '' // 没听到，不打扰
+          : `识别不可用（${r.error}），已用录音对比模式`;
+      recogHost.innerHTML = msg ? `<div class="sp-recog-msg">${esc(msg)}</div>` : '';
+      return;
+    }
+    const words = r.displayWords.map((w, i) =>
+      `<span class="${r.ok[i] ? 'w-ok' : 'w-miss'}">${esc(w)}</span>`).join(' ');
+    const emoji = r.score >= 90 ? '🎉' : r.score >= 70 ? '👍' : '💪';
+    recogHost.innerHTML = `<div class="speak-result">
+      <div>${words}</div>
+      <div class="score-line"><b>${r.score}%</b> ${emoji} 逐词对照</div>
+    </div>`;
+    onScore?.(r.score);
+  }
+
+  function renderCompare(url) {
+    compare.innerHTML = '';
+    const std = el(`<button class="sp-cmp"><span class="sp-cmp-icon">▶</span><span>标准</span></button>`);
+    std.addEventListener('click', (e) => { e.stopPropagation(); stopSpeak(); speak(targetText); });
+    compare.appendChild(std);
+    if (url) {
+      const audio = new Audio(url);
+      const mine = el(`<button class="sp-cmp mine"><span class="sp-cmp-icon">▶</span><span>我的录音</span></button>`);
+      mine.addEventListener('click', (e) => {
+        e.stopPropagation(); stopSpeak(); audio.currentTime = 0; audio.play().catch(() => {});
+      });
+      compare.appendChild(mine);
+    }
+  }
+
+  async function startRec() {
+    status.textContent = '';
+    compare.innerHTML = '';
+    recogHost.innerHTML = '';
+    if (myUrl) { URL.revokeObjectURL(myUrl); myUrl = null; }
+    stopped = false; recogRendered = false; recogResult = null;
+    recordBtn.disabled = true; // 等待 stream 就绪，防重复点击
+    try {
+      recorderCtl = await startRecording();
+    } catch (err) {
+      recordBtn.disabled = false;
+      status.textContent = err.message || '无法录音';
+      return;
+    }
+    // 同时尝试识别（共用同一次说话）；部分浏览器会抢麦克风冲突，捕获后降级为纯录音
+    if (recognitionAvailable()) {
+      try {
+        recogCtl = recognizeOnce({
+          onResult: (alts) => { recogResult = scoreSpeech(targetText, alts); renderRecog(); },
+          onError: (errCode) => { recogResult = { error: errCode }; renderRecog(); },
+          onEnd: () => {},
+        });
+      } catch { recogCtl = null; }
+    }
+    recordBtn.disabled = false;
+    recordBtn.classList.add('recording');
+    recordBtn.textContent = '⏹ 停止';
+    status.textContent = '录音中…请朗读';
+  }
+
+  async function stopRec() {
+    recordBtn.classList.remove('recording');
+    recordBtn.textContent = '🔁 重录';
+    status.textContent = '';
+    if (recogCtl) { try { recogCtl.stop(); } catch {} recogCtl = null; }
+    const res = recorderCtl ? await recorderCtl.stop() : null;
+    recorderCtl = null;
+    if (res?.url) { myUrl = res.url; renderCompare(res.url); }
+    stopped = true;
+    renderRecog();
+  }
+
+  recordBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (b.classList.contains('listening')) { ctl?.stop(); return; }
-    b.classList.add('listening');
-    b.textContent = '⏹';
-    resultHost.innerHTML = `<div class="speak-result"><span class="heard">请开始朗读…</span></div>`;
+    if (recordBtn.classList.contains('recording')) stopRec();
+    else startRec();
+  });
+
+  host.appendChild(wrap);
+  return wrap;
+}
+
+// 纯识别模式（无录音能力时的退路）：点击 → 识别 → 逐词比对
+function wireRecognitionOnly(btn, targetText, recogHost, status, onScore) {
+  let ctl = null;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (btn.classList.contains('recording')) { ctl?.stop(); return; }
+    btn.classList.add('recording');
+    btn.textContent = '⏹ 停止';
+    status.textContent = '识别中…请朗读';
     let got = false;
     ctl = recognizeOnce({
       onResult: (alts) => {
@@ -57,27 +188,41 @@ export function micBtn(targetText, resultHost, opts = {}) {
         const r = scoreSpeech(targetText, alts);
         const words = r.displayWords.map((w, i) =>
           `<span class="${r.ok[i] ? 'w-ok' : 'w-miss'}">${esc(w)}</span>`).join(' ');
-        const emoji = r.score >= 90 ? '🎉 非常好！' : r.score >= 70 ? '👍 不错，再练练标红的词' : '💪 再试一次，注意标红的词';
-        resultHost.innerHTML = `<div class="speak-result">
-          <div>${words}</div>
-          <div class="heard">识别到：${esc(r.heard)}</div>
-          <div class="score-line"><b>${r.score}%</b> ${emoji}</div>
-        </div>`;
-        opts.onScore?.(r.score);
+        const emoji = r.score >= 90 ? '🎉' : r.score >= 70 ? '👍' : '💪';
+        recogHost.innerHTML = `<div class="speak-result"><div>${words}</div>
+          <div class="score-line"><b>${r.score}%</b> ${emoji}</div></div>`;
+        onScore?.(r.score);
       },
       onError: (err) => {
         got = true;
-        const msg = err === 'not-allowed' ? '请在浏览器设置中允许使用麦克风'
+        const msg = err === 'network' ? '语音识别服务无法连接（需要 Google 网络）'
+          : err === 'not-allowed' ? '请在浏览器设置中允许使用麦克风'
           : err === 'no-speech' ? '没有听到声音，请再试一次'
-          : `识别出错（${err}），请重试`;
-        resultHost.innerHTML = `<div class="speak-result"><span class="heard">${esc(msg)}</span></div>`;
+          : `识别出错（${err}）`;
+        recogHost.innerHTML = `<div class="sp-recog-msg">${esc(msg)}</div>`;
       },
       onEnd: () => {
-        b.classList.remove('listening');
-        b.textContent = '🎤';
-        if (!got) resultHost.innerHTML = `<div class="speak-result"><span class="heard">没有听清，请靠近麦克风再试</span></div>`;
+        btn.classList.remove('recording');
+        btn.textContent = '🎤 跟读（识别）';
+        status.textContent = '';
+        if (!got) recogHost.innerHTML = `<div class="sp-recog-msg">没有听清，请靠近麦克风再试</div>`;
       },
     });
+  });
+}
+
+/* ---- 兼容包装：micBtn 返回 🎤 按钮，点击后在 resultHost 里展开跟读练习组件 ----
+   历史调用点（reading.js / grammar.js / phraseRow）沿用不动 */
+export function micBtn(targetText, resultHost, opts = {}) {
+  const b = el(`<button class="mic-btn" title="跟读练习">🎤</button>`);
+  let shown = false;
+  b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (shown) return;
+    shown = true;
+    b.classList.add('active');
+    resultHost.innerHTML = '';
+    speakPractice(resultHost, targetText, opts);
   });
   return b;
 }

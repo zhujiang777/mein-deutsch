@@ -566,3 +566,124 @@ body.immersive #app { padding-bottom: 24px; }
 .week-day.active .week-dot { background: var(--green); color: #fff; font-weight: 700; }
 .week-label { font-size: .7rem; color: var(--text-2); }
 .ext-links { display: flex; flex-direction: column; gap: 10px; font-size: .9rem; }
+
+/* =======================================================================
+   v3 引擎新增（录音跟读 / 打字听写 / 场景步 / 双泳道 / 复现推荐 / valence）
+   ======================================================================= */
+
+/* ===== 跟读练习：录音对比 + 可选识别（speakPractice） ===== */
+.speak-practice { margin-top: 10px; }
+.sp-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.sp-btn {
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 9px 14px;
+  font-size: .9rem; font-weight: 600; background: var(--card); color: var(--text);
+}
+.sp-btn.sp-listen { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.sp-record.recording { background: var(--red); color: #fff; border-color: var(--red); animation: pulse 1.2s infinite; }
+.sp-status { font-size: .82rem; color: var(--text-2); margin-top: 8px; min-height: 1.1em; }
+.sp-compare { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.sp-cmp {
+  flex: 1; min-width: 120px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 12px;
+  background: var(--card); color: var(--text); font-weight: 600; font-size: .92rem;
+}
+.sp-cmp .sp-cmp-icon { color: var(--accent); font-size: 1rem; }
+.sp-cmp.mine { border-color: var(--blue); }
+.sp-cmp.mine .sp-cmp-icon { color: var(--blue); }
+.sp-recog { margin-top: 10px; }
+.sp-recog-msg { font-size: .82rem; color: var(--text-2); background: var(--bg); border-radius: 8px; padding: 8px 12px; }
+
+/* ===== dictation 打字模式 ===== */
+.dict-input {
+  width: 100%; margin-top: 16px;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  font: inherit; font-size: 1.05rem; background: var(--bg); color: var(--text);
+}
+.dict-input.correct { border-color: var(--green); background: var(--green-soft); }
+.dict-input.wrong { border-color: var(--red); background: var(--red-soft); }
+.dict-charbar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.dict-char {
+  min-width: 38px; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 0;
+  font-size: 1.05rem; background: var(--card); color: var(--text); flex: 1;
+  font-family: Georgia, serif;
+}
+.dict-char:active { background: var(--accent-soft); }
+.dict-feedback { margin-top: 12px; }
+.dict-note { color: var(--gold); font-size: .86rem; }
+.dict-diff { font-size: .95rem; line-height: 1.7; }
+.dict-diff-line { margin-top: 4px; }
+.dict-wrong { color: var(--red); text-decoration: underline wavy var(--red); }
+.dict-toblocks-wrap { text-align: right; margin-top: 10px; }
+.dict-toblocks { color: var(--text-2); font-size: .82rem; text-decoration: underline; }
+
+/* ===== scene 对话展示步 ===== */
+.scene-step { padding: 6px 2px; }
+.scene-bar { display: flex; gap: 8px; margin: 4px 0 14px; flex-wrap: wrap; }
+.scene-lines { display: flex; flex-direction: column; gap: 12px; }
+.scene-line { display: flex; flex-direction: column; gap: 4px; }
+.scene-who { font-size: .8rem; font-weight: 700; color: var(--accent); }
+.scene-bubble {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 12px 14px; position: relative;
+}
+.scene-de { font-size: 1.15rem; font-weight: 600; line-height: 1.6; }
+.scene-bubble .audio-btn { margin-top: 6px; }
+.scene-zh { color: var(--text-2); font-size: .86rem; margin-top: 2px; }
+.scene-lines.hide-zh .scene-zh { display: none; }
+.scene-line.me .scene-who { color: var(--blue); }
+.scene-line.me .scene-bubble { background: var(--blue-soft); }
+
+/* ===== observe 语法观察步 ===== */
+.observe-step { padding: 6px 2px; }
+.observe-lines {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 14px 16px; margin: 10px 0 16px; display: flex; flex-direction: column; gap: 10px;
+}
+.observe-line { line-height: 1.6; }
+.observe-de { font-size: 1.1rem; font-weight: 600; }
+.observe-de mark { background: var(--accent-soft); color: var(--accent); border-radius: 4px; padding: 0 3px; }
+.observe-zh { color: var(--text-2); font-size: .84rem; }
+.observe-q { margin: 8px 0 4px; }
+
+/* ===== reproduce 整句复述步 ===== */
+.reproduce-step { padding: 6px 2px; text-align: center; }
+.reproduce-zh { font-size: 1.2rem; font-weight: 600; margin: 14px 0; }
+.reproduce-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.reproduce-reveal { margin-top: 16px; }
+.reproduce-de { font-size: 1.25rem; font-weight: 700; }
+.reproduce-zh2 { color: var(--text-2); font-size: .88rem; margin-top: 4px; }
+.reproduce-assess { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+
+/* ===== roleplay 角色扮演步 ===== */
+.roleplay-step { padding: 6px 2px; }
+.roleplay-log { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+.roleplay-turn {
+  background: var(--accent-soft); border-radius: var(--radius);
+  padding: 14px 16px; text-align: center;
+}
+.roleplay-turn .scene-who { color: var(--blue); }
+.roleplay-cue { font-size: 1.05rem; font-weight: 600; margin: 6px 0 12px; }
+.roleplay-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.roleplay-reveal { margin-top: 12px; }
+
+/* ===== 双泳道分段切换（path） ===== */
+.track-seg {
+  display: flex; gap: 6px; background: var(--line); border-radius: 12px;
+  padding: 4px; margin-bottom: 16px;
+}
+.track-tab {
+  flex: 1; border-radius: 9px; padding: 9px 4px; font-size: .9rem; font-weight: 600;
+  color: var(--text-2); text-align: center;
+}
+.track-tab.active { background: var(--card); color: var(--accent); box-shadow: var(--shadow); }
+
+/* ===== 复现推荐标签（readlisten） ===== */
+.recur-tag { color: var(--gold); font-weight: 600; }
+
+/* ===== 词条支配关系 valence（wordcard） ===== */
+.wc-valence {
+  color: var(--gold); font-size: .9rem; margin-top: 8px;
+  background: rgba(217, 164, 6, .1); border-radius: 8px; padding: 6px 12px;
+  display: inline-block;
+}

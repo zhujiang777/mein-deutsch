@@ -8,6 +8,7 @@ export const READINGS = [
     titleZh: '你好，我是安娜',
     level: 'A1',
     mode: 'intensiv',
+    vocabRefs: ['w016', 'w017', 'w018', 'w029', 'w061', 'w065', 'w031'],
     intro: '第一篇课文：自我介绍。配合语法第 1-2 课（sein、规则动词）阅读。点任何单词可查词义。',
     sentences: [
       { de: 'Hallo! Ich heiße Anna.', zh: '你好！我叫安娜。', note: 'heißen 叫……，du 变位是 heißt' },
@@ -61,6 +62,7 @@ export const READINGS = [
     titleZh: '我的家庭',
     level: 'A1',
     mode: 'intensiv',
+    vocabRefs: ['w061', 'w062', 'w063', 'w066', 'w117', 'w169', 'w016'],
     intro: '配合语法第 3 课（名词的性）和第 11 课（物主冠词）。注意 mein/meine 的变化。',
     sentences: [
       { de: 'Das ist meine Familie.', zh: '这是我的家庭。', note: 'Familie 阴性 → meine' },
@@ -125,6 +127,7 @@ export const READINGS = [
     titleZh: '我的一天',
     level: 'A1',
     mode: 'intensiv',
+    vocabRefs: ['w130', 'w081', 'w078', 'w116', 'w153', 'w105', 'w112', 'w133'],
     intro: '日常作息。重点观察：可分动词（aufstehen/fernsehen）的前缀在句尾，时间状语提前后的语序。配合语法第 5、9 课。',
     sentences: [
       { de: 'Ich stehe um sieben Uhr auf.', zh: '我七点起床。', note: 'aufstehen 可分：stehe … auf，前缀甩到句尾' },
@@ -199,6 +202,7 @@ export const READINGS = [
     titleZh: '在咖啡馆',
     level: 'A1',
     mode: 'intensiv',
+    vocabRefs: ['w081', 'w082', 'w105', 'w099', 'w009', 'w008'],
     intro: '一段点餐对话，学完就能在德国咖啡馆用。重点：möchten 的礼貌用法。配合语法第 8 课。',
     sentences: [
       { de: 'Kellner: Guten Tag! Was möchten Sie?', zh: '服务员：您好！您想要点什么？', note: 'möchten + Sie 是点餐标准句式' },
@@ -265,6 +269,7 @@ export const READINGS = [
     titleZh: '我的狗布鲁诺',
     level: 'A1',
     mode: 'extensiv',
+    vocabRefs: ['w029', 'w105', 'w115', 'w114', 'w162', 'w104'],
     intro: '泛读第一篇：别查词，凭已学的词猜大意，读完做题检验。遇到实在卡住的词再点一下。',
     sentences: [
       { de: 'Ich habe einen Hund.', zh: '我有一只狗。' },
@@ -301,6 +306,7 @@ export const READINGS = [
     titleZh: '周末',
     level: 'A1',
     mode: 'extensiv',
+    vocabRefs: ['w081', 'w106', 'w198', 'w156', 'w162', 'w193'],
     intro: '一个普通的德国周末。注意大量的时间状语开头句（Am Samstag…, Am Abend…），体会动词永远第二位。',
     sentences: [
       { de: 'Endlich Wochenende!', zh: '终于到周末了！' },
@@ -341,6 +347,7 @@ export const READINGS = [
     titleZh: '在超市购物',
     level: 'A1',
     mode: 'extensiv',
+    vocabRefs: ['w131', 'w158', 'w078', 'w083', 'w086', 'w088', 'w090', 'w111'],
     intro: '购物场景 + 价格表达。读完你会发现：食物主题的单词卡都在这里出现了。',
     sentences: [
       { de: 'Heute kaufe ich im Supermarkt ein.', zh: '今天我在超市购物。' },
@@ -378,6 +385,7 @@ export const READINGS = [
     titleZh: '来自柏林的一封邮件',
     level: 'A1',
     mode: 'extensiv',
+    vocabRefs: ['w149', 'w177', 'w136', 'w148', 'w049', 'w074'],
     intro: '小梅到柏林学德语了，这是她写给妈妈的邮件。也是书信格式的入门示例。',
     sentences: [
       { de: 'Liebe Mama,', zh: '亲爱的妈妈：', note: '书信开头：Liebe（阴性）/ Lieber（阳性）+ 名字' },

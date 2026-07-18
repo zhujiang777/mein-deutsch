@@ -2,10 +2,32 @@
 import { READINGS } from '../../data/readings.js';
 import { el, esc } from '../ui.js';
 import { isDone } from '../storage.js';
+import { scoreText } from '../recur.js';
 
 export function renderReadListen(host) {
   host.appendChild(el(`<h1 class="page-title">📖 读 · 听</h1>`));
   host.appendChild(el(`<p class="page-sub">可理解输入是语言习得的核心。精读弄懂每句，泛读泛听只求大意。</p>`));
+
+  /* ---- 为你推荐：让最近学的词在文章里复现 ---- */
+  const scored = READINGS
+    .map(r => ({ r, score: scoreText(r.vocabRefs) }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2);
+  if (scored.length) {
+    host.appendChild(el(`<div class="section-label">✨ 为你推荐 · 复现最近学的词</div>`));
+    scored.forEach(({ r, score }) => {
+      const done = isDone('reading', r.id);
+      host.appendChild(el(`<a class="list-item" href="#/reading/${r.id}">
+        <span class="li-icon">${done ? '✅' : '✨'}</span>
+        <div class="li-main">
+          <div class="li-title de">${esc(r.title)}</div>
+          <div class="li-sub">${esc(r.titleZh)} · <span class="recur-tag">复现你最近学的 ${score} 个词</span></div>
+        </div>
+        <span class="li-arrow">›</span>
+      </a>`));
+    });
+  }
 
   /* ---- 听力三层 ---- */
   host.appendChild(el(`<div class="section-label">🎧 听力训练</div>`));

@@ -6,7 +6,9 @@ import { recordAnswer, addMistake } from '../mastery.js';
 import { getLessonState, setLessonState, logActivity } from '../storage.js';
 import { findLesson } from '../../data/course.js';
 
-const EXERCISE_TYPES = new Set(['choice', 'listenChoice', 'assemble', 'dictation', 'fill', 'match', 'translate', 'speak']);
+const EXERCISE_TYPES = new Set(['choice', 'listenChoice', 'assemble', 'dictation', 'fill', 'match', 'translate', 'speak', 'scene', 'observe', 'reproduce', 'roleplay']);
+// 展示/角色步：走 renderExercise 但不计分、不弹反馈条，onSubmit 后直接进下一步
+const DISPLAY_TYPES = new Set(['scene', 'roleplay']);
 
 /* 信息类步骤（teach / example / recap）渲染 */
 function renderInfoStep(host, step) {
@@ -101,6 +103,7 @@ export function runLesson(host, lessonId, { onExit, onComplete } = {}) {
 
     renderExercise(stage, step, {
       onSubmit: (correct, correctText) => {
+        if (DISPLAY_TYPES.has(step.type)) { pos++; showStep(); return; }
         const isFirst = !attempted.has(stepIdx);
         if (correct !== null) {
           if (isFirst) {
