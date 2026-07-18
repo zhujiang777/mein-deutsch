@@ -1,0 +1,5096 @@
+[
+  {
+    "lemma": "%",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "&",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ab",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Abend",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "aber",
+    "pos": "Konjunktion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "abfahren",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Abfahrt",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "abfliegen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Abflug",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "abgeben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "abholen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Absender",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "acht",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Achtung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "achtzehn",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "achtzig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Adresse",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "all",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "alle",
+    "pos": "Pronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "allein",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "alleine",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "alles",
+    "pos": "Pronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "also",
+    "pos": "Konjunktion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "alt",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Alter",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "am",
+    "pos": "Präposition + Artikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "an",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "an",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "anbieten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ander",
+    "pos": "Indefinitpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Anfang",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "anfangen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Angebot",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "anklicken",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ankommen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ankreuzen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Ankunft",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "anmachen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "anmelden",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Anmeldung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Anrede",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Anruf",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Anrufbeantworter",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "anrufen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Ansage",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Anschluss",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Antwort",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "antworten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Anzeige",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "anziehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Apartment",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Apfel",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Appartement",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Appetit",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "April",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Arbeit",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "arbeiten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "arbeitslos",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Arbeitsplatz",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Arm",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Arzt",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "auch",
+    "pos": "Konjunktion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "auf",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "auf sein",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Aufgabe",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "aufhören",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "aufstehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Aufzug",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Auge",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "August",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "aus",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "aus",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "aus sein",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Ausflug",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "ausfüllen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Ausgang",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Auskunft",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Ausland",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Ausländer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "ausländisch",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ausmachen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Aussage",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "aussehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "aussteigen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Ausweis",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "ausziehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Auto",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Autobahn",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Automat",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "automatisch",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Baby",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Bad",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "baden",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bahn",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Bahnhof",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Bahnsteig",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "bald",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Balkon",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Banane",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Bank",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Bank",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "bar",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bauch",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Baum",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Beamte",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "bedeuten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "beginnen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "bei",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "beide",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bein",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Beispiel",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "bekannt",
+    "pos": "partizipiales Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bekannte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "bekommen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "benutzen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Beruf",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "besetzt",
+    "pos": "partizipiales Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "besichtigen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "besser",
+    "pos": "Komparativ",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "best",
+    "pos": "Superlativ",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "bestellen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "besuchen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bett",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "bezahlen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bier",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Bild",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "billig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Birne",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "bis",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "bisschen",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "bitte",
+    "pos": "Partikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bitte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "bitten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "bitter",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "blau",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "bleiben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bleistift",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Blick",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Blume",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Bogen",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "brauchen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "braun",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "breit",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Brief",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Briefmarke",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "bringen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Brot",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Bruder",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Brötchen",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Buch",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Buchstabe",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "buchstabieren",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Bus",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Butter",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Bäckerei",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "bös",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "böse",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "c",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Café",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "CD",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Cent",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Chef",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "cm",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Computer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "da",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "daneben",
+    "pos": "Pronominaladverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Dank",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "danke",
+    "pos": "Partikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "danken",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "dann",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "das",
+    "pos": "bestimmter Artikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Datum",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "dauern",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "dein",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "deine",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "denn",
+    "pos": "Konjunktion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "der",
+    "pos": "bestimmter Artikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "deutsch",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Deutsche",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Deutschland",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Dezember",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "dich",
+    "pos": "Pronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "die",
+    "pos": "bestimmter Artikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Dienstag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "dir",
+    "pos": "Pronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Doktor",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Donnerstag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Doppelzimmer",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Dorf",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "dort",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "draußen",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "drei",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "dreizehn",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "dreißig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "dritte",
+    "pos": "Ordinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "drucken",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Drucker",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "drücken",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "durch",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Durchsage",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Durst",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Dusche",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "duschen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "dürfen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "E-Mail",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Ecke",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Ehefrau",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Ehemann",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Ei",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "eilig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ein",
+    "pos": "unbestimmter Artikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "eine",
+    "pos": "unbestimmter Artikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "einfach",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Eingang",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "einhundert",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "einkaufen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "einladen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Einladung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "eins",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "einsteigen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "eintausend",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Eintritt",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Einzelzimmer",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "elf",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Eltern",
+    "pos": "Substantiv (nur im Plural)",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "empfehlen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Empfänger",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Ende",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "enden",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "entschuldigen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Entschuldigung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "er",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Ergebnis",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "erklären",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "erlauben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "erste",
+    "pos": "Ordinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Erwachsene",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "erzählen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "es",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Essen",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "essen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "euer",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "eure",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Euro",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Europa",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Europäer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "europäisch",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "fahren",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Fahrer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Fahrkarte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Fahrrad",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "falsch",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Familie",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Familienname",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Familienstand",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Farbe",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Fax",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Februar",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "fehlen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Fehler",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Feierabend",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "feiern",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Feiertag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "fernsehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "fertig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Feuer",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Fieber",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Film",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "finden",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Firma",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Fisch",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Flasche",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Fleisch",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "fliegen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Flughafen",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Flugzeug",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Formular",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Foto",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Frage",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "fragen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Frau",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "frei",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Freitag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Freizeit",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "fremd",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "freuen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Freund",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Freundin",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "früher",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Frühjahr",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Frühling",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Frühstück",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "frühstücken",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Fuß",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Fußball",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Führung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "fünf",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "fünfzehn",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "fünfzig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "für",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "g",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Garten",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Gast",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "geben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "geboren",
+    "pos": "partizipiales Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Geburtsjahr",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Geburtsort",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Geburtstag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "gefallen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gegen",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gehören",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gelb",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Geld",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Gemüse",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Gepäck",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "gerade",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "geradeaus",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gern",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gerne",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Geschenk",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "geschlossen",
+    "pos": "partizipiales Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Geschwister",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Geschäft",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Gespräch",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "gestern",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Getränk",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Gewicht",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "gewinnen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Glas",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "glauben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gleich",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gleich",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Gleis",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Glück",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "glücklich",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Glückwunsch",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Grad",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "grade",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gradeaus",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Gramm",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "gratulieren",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "grau",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "grillen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "groß",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Großeltern",
+    "pos": "Substantiv (nur im Plural)",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Großmutter",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Großvater",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Gruppe",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Gruß",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Größe",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "grün",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gut",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "gültig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "günstig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "h",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Haar",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "haben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "halb",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Halbpension",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Halle",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "hallo",
+    "pos": "Interjektion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "halten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Haltestelle",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Hand",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Handy",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Haus",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Hausaufgabe",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Hausfrau",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Hausmann",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Heimat",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "heiraten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "heißen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "helfen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "hell",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Herbst",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Herd",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Herr",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "herzlich",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "heut",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "heute",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "hier",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Hilfe",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "hinten",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Hobby",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "hoch",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Hochzeit",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "holen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Hotel",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Hund",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "hundert",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Hunger",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Hähnchen",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "hören",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ich",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ihm",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ihn",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Ihr",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ihr",
+    "pos": "Personalpronomen (nur im Plural)",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ihr",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Ihre",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ihre",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "immer",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "in",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Information",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "ins",
+    "pos": "Präposition + Artikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "international",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Internet",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "ja",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Jacke",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Jahr",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Januar",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "jede",
+    "pos": "Indefinitpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "jeder",
+    "pos": "Indefinitpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "jedes",
+    "pos": "Indefinitpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "jetzt",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Job",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Jugendliche",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Juli",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "jung",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Junge",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Juni",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Kaffee",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "kaputt",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Karte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Kartoffel",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Kasse",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "kaufen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "kein",
+    "pos": "Indefinitpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "kennen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "kennenlernen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "kg",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Kilo",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Kilogramm",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Kilometer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Kind",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Kindergarten",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Kino",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Kiosk",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "klar",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Klasse",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Kleidung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "klein",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "km",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "kochen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Koffer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Kollege",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "kommen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Konto",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Kopf",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "kosten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "krank",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Kreditkarte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "kriegen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Kuchen",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Kugelschreiber",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "kulturell",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Kunde",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Kundin",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Kurs",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "kurz",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "können",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Küche",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Kühlschrank",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "kümmern",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "lachen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Laden",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Land",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "lang",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "lange",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "langsam",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "laufen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "laut",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "leben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Leben",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Lebensmittel",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "ledig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "legen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Lehrer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "leicht",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "leider",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "leise",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "lernen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "lesen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "letzt",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Leute",
+    "pos": "Substantiv (nur im Plural)",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Licht",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "lieb",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "lieben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "lieber",
+    "pos": "Komparativ",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Lieblingslied",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Lied",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "liegen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "links",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Liter",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Lkw",
+    "pos": "Substantiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Lokal",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "lustig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Lösung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "m",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "machen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Mai",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "man",
+    "pos": "Indefinitpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Mann",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Maschine",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Meer",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "mehr",
+    "pos": "Komparativ",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "mein",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "meine",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "meist",
+    "pos": "Superlativ",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Mensch",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Meter",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Miete",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "mieten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Milch",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Milliarde",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Million",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Minute",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "mit",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "mitbringen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "mitkommen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "mitmachen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "mitnehmen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Mittag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Mitte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Mittwoch",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Moment",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Montag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "morgen",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Morgen",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Mund",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Mutter",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "m²",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Mädchen",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "männlich",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "März",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Möbel",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "mögen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "möglich",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "müde",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "müssen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "nach",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Nachmittag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Name",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Namen",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "nehmen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "nein",
+    "pos": "Partikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "neu",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "neun",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "neunzehn",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "neunzig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "nicht",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "nichts",
+    "pos": "Indefinitpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "nie",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "noch",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Norden",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "normal",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "November",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Nummer",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "nur",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "nächst",
+    "pos": "Superlativ",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "oben",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Obst",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "oder",
+    "pos": "Konjunktion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "oft",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ohne",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Oktober",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Oma",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Opa",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Ordnung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Ort",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Osten",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Papier",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Partner",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Partnerin",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Party",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Pass",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Pause",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Pfund",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Plan",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Platz",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Polizei",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Pommes frites",
+    "pos": "Mehrwortausdruck (nur im Plural)",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Post",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Postleitzahl",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Praktikum",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Praxis",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Preis",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Problem",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Prospekt",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Prozent",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Prüfung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "pünktlich",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "qm",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Quadratmeter",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Rad fahren",
+    "pos": "Mehrwortausdruck",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "rauchen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Raum",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Rechnung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "rechts",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Regen",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "regnen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Reis",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Reise",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Reisebüro",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Reiseführer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "reisen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Reparatur",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "reparieren",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Restaurant",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Rezeption",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "richtig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "riechen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "rot",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "ruhig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "s",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "S-Bahn",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Saft",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "sagen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Salat",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Salz",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Samstag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Satz",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Schalter",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "scheinen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "schicken",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Schild",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Schinken",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "schlafen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "schlecht",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "schließen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Schluss",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Schlüssel",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "schmecken",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "schnell",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "schon",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Schrank",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "schreiben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Schuh",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Schule",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "schwarz",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "schwer",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Schwester",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Schwimmbad",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "schwimmen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "schön",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Schüler",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "sechs",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "sechzehn",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "sechzig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "See",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "sehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sehenswürdigkeit",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "sehr",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "sein",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "sein",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "seine",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "seit",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sekunde",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "selbstständig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "selbständig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "September",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "sich",
+    "pos": "Reflexivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "sie",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sie",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sie",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "sie",
+    "pos": "Personalpronomen (nur im Plural)",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sie",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "sieben",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "siebenzig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "siebzehn",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "siebzig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "sitzen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "so",
+    "pos": null,
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sofa",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "sofort",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sohn",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "sollen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sommer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Sonnabend",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Sonne",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Sonntag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Speisekarte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Speisenkarte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "spielen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Sport",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Sprache",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "sprechen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "spät",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "später",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "st",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Stadt",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "stehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Stelle",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "stellen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Stock",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Straße",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Straßenbahn",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Student",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "studieren",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Studium",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Stunde",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "suchen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Süden",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Tag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "tanzen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Tasche",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "tausend",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Taxi",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Tee",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Teil",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Telefon",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "telefonieren",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Termin",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Test",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "teuer",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Text",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Thema",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Ticket",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Tisch",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Tochter",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Toilette",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Tomate",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "tot",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "treffen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Treppe",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "trinken",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Tschüss",
+    "pos": "Interjektion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "tschüss",
+    "pos": "Interjektion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "tun",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Uhr",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "um",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "umziehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "und",
+    "pos": "Konjunktion",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "unser",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "unsere",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "unsre",
+    "pos": "Possessivpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "unten",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "unter",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Unterricht",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "unterschreiben",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Unterschrift",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Urlaub",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Vater",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "verboten",
+    "pos": "partizipiales Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "verdienen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Verein",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "verheiratet",
+    "pos": "partizipiales Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "verkaufen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Verkäufer",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "vermieten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Vermieter",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "verstehen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Verwandte",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "viel",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "vielleicht",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "vier",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "vierte",
+    "pos": "Ordinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Viertel",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "vierzehn",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "vierzig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "von",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "vor",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Vormittag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Vorname",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Vorsicht",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "vorstellen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Vorwahl",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Wagen",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "wandern",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wann",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "warten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "warum",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "was",
+    "pos": "Pronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "was für ein",
+    "pos": "Mehrwortausdruck",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "was für eine",
+    "pos": "Mehrwortausdruck",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "waschen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Wasser",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "weg sein",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wehtun",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "weiblich",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Wein",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "weit",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "weiter-",
+    "pos": "Affix",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "weiß",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "welche",
+    "pos": "Interrogativpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "welcher",
+    "pos": "Interrogativpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "welches",
+    "pos": "Interrogativpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Welt",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "wenig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wer",
+    "pos": "Pronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "werden",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Westen",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Wetter",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "wichtig",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wie",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wie viel",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wieder",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wieder holen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wiederholen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wiederholen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Wiederhören",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Wiedersehen",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "willkommen",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Wind",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Winter",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "wir",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wissen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wo",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Woche",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Wochenende",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "Wochentag",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "woher",
+    "pos": "Pronominaladverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wohin",
+    "pos": "Pronominaladverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "wohnen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Wohnung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "wollen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Wort",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "wunderbar",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zahlen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zehn",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Zeit",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Zeitung",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Zentimeter",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "Zigarette",
+    "pos": "Substantiv",
+    "article": "die",
+    "plural": null
+  },
+  {
+    "lemma": "Zimmer",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "zirka",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Zoll",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "zu",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zu",
+    "pos": "Partikel",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zu sein",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zufrieden",
+    "pos": "Adjektiv",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Zug",
+    "pos": "Substantiv",
+    "article": "der",
+    "plural": null
+  },
+  {
+    "lemma": "zurzeit",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zurück",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zusammen",
+    "pos": "Adverb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zwanzig",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zwei",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zweihundert",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zweite",
+    "pos": "Ordinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zwischen",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "zwölf",
+    "pos": "Kardinalzahlwort",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "öffnen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "Öl",
+    "pos": "Substantiv",
+    "article": "das",
+    "plural": null
+  },
+  {
+    "lemma": "über",
+    "pos": "Präposition",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "übernachten",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "überweisen",
+    "pos": "Verb",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "’s",
+    "pos": "Personalpronomen",
+    "article": null,
+    "plural": null
+  },
+  {
+    "lemma": "€",
+    "pos": "Symbol",
+    "article": null,
+    "plural": null
+  }
+]
