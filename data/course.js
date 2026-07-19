@@ -11,7 +11,7 @@ export const COURSE = [
     id: 'u0',
     title: '第0单元 · 发音入门',
     icon: '🔤',
-    track: 'grammar',
+    track: 'pron',
     intro: '德语发音规律性强：学完这8课的规则，看到任何生词基本都能读对。',
     nicosWeg: { name: 'Nicos Weg A1 · 0.4 Von A bis Z', url: 'https://learngerman.dw.com/zh/von-a-bis-z/l-49572682' },
     videos: [],

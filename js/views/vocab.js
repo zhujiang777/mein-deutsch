@@ -24,6 +24,14 @@ function wordHead(m, { big = true } = {}) {
     ${m.pl ? `<div class="wc-pl">复数 die ${esc(m.pl)}</div>` : ''}`;
 }
 
+/* 例句出处：'lesson:<id>' → 课程课；其他非空字符串 → 阅读文章；null/缺省 → 不显示 */
+function sourceLink(source) {
+  if (!source) return '';
+  if (source.startsWith('lesson:'))
+    return `<a class="wc-source" href="#/lesson/${esc(source.slice(7))}">出自课程 ›</a>`;
+  return `<a class="wc-source" href="#/reading/${esc(source)}">出自课文 ›</a>`;
+}
+
 /* ================= 概览页 ================= */
 export function renderVocab(host, sub) {
   if (sub === 'study') return startSession(host);
@@ -158,7 +166,7 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
       const sEl = el(`<div class="wc-sentence">
         <div class="wc-sent-de de"></div>
         <div class="wc-sent-zh">${esc(s.zh)}</div>
-        ${s.source ? `<a class="wc-source" href="#/reading/${esc(s.source)}">出自课文 ›</a>` : ''}
+        ${sourceLink(s.source)}
       </div>`);
       // 目标词高亮
       const re = new RegExp(`(${m.de.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'i');

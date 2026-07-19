@@ -1,4 +1,4 @@
-// 课程路径：双泳道（语法主线 / 场景口语），各自顺序解锁 + 掌握度 + 视频门槛
+// 课程路径：三泳道（语法主线 / 发音入门 / 场景口语），各自顺序解锁 + 掌握度 + 视频门槛
 import { COURSE } from '../../data/course.js';
 import { el, esc, videoCard, toast } from '../ui.js';
 import { allLessonStates, setLessonState, getVideoState } from '../storage.js';
@@ -6,12 +6,13 @@ import { lessonMastery } from '../mastery.js';
 
 const TRACKS = [
   { id: 'grammar', label: '📐 语法主线' },
+  { id: 'pron', label: '🔤 发音入门' },
   { id: 'scene', label: '🗣️ 场景口语' },
 ];
 
 export function renderPath(host) {
   host.appendChild(el(`<h1 class="page-title">🛤️ 课程路径</h1>`));
-  host.appendChild(el(`<p class="page-sub">两条线各自独立解锁。语法主线对齐德国之声 <a href="https://learngerman.dw.com/zh/beginners/c-36519789" target="_blank" rel="noopener">Nicos Weg A1</a>；场景口语线练开口。</p>`));
+  host.appendChild(el(`<p class="page-sub">三条线各自独立解锁：语法主线对齐德国之声 <a href="https://learngerman.dw.com/zh/beginners/c-36519789" target="_blank" rel="noopener">Nicos Weg A1</a>；发音入门可随时穿插学习；场景口语线练开口。</p>`));
 
   // 顶部分段切换：移动端单手可点，两条线互不干扰
   const seg = el(`<div class="track-seg"></div>`);
@@ -100,11 +101,14 @@ export function renderPath(host) {
       pane.appendChild(unitEl);
     });
 
-    // 旧版模块入口挂在语法主线下（内容迁移期间保留）
+    // 旧版模块入口：内容迁移期间保留，各自挂在对应泳道下
     if (active === 'grammar') {
       pane.appendChild(el(`<div class="section-label">更多单元制作中 · 先用旧版课程</div>`));
-      pane.appendChild(el(`<a class="list-item" href="#/pron"><span class="li-icon">🗣️</span><div class="li-main"><div class="li-title">发音系统课（旧版）</div><div class="li-sub">10 课拼读规则，迁移为微步课中</div></div><span class="li-arrow">›</span></a>`));
       pane.appendChild(el(`<a class="list-item" href="#/grammar"><span class="li-icon">📐</span><div class="li-main"><div class="li-title">语法课（旧版）</div><div class="li-sub">12 课 A1 语法，迁移为微步课中</div></div><span class="li-arrow">›</span></a>`));
+    }
+    if (active === 'pron') {
+      pane.appendChild(el(`<div class="section-label">新课覆盖前先用旧版对照</div>`));
+      pane.appendChild(el(`<a class="list-item" href="#/pron"><span class="li-icon">🗣️</span><div class="li-main"><div class="li-title">发音系统课（旧版）</div><div class="li-sub">10 课拼读规则，迁移为微步课中</div></div><span class="li-arrow">›</span></a>`));
     }
   }
 
