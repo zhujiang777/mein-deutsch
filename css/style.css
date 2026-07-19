@@ -239,10 +239,13 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 
 /* 跟读结果 */
 .speak-result { margin-top: 8px; font-size: .9rem; }
+.speak-result.pass { border-left: 3px solid var(--green); padding: 6px 0 6px 10px; }
+.speak-result.fail { border-left: 3px solid var(--red); padding: 6px 0 6px 10px; }
 .speak-result .heard { color: var(--text-2); font-size: .82rem; }
 .speak-result .w-ok { color: var(--green); font-weight: 600; }
 .speak-result .w-miss { color: var(--red); font-weight: 600; text-decoration: underline wavy var(--red); }
 .speak-result .score-line { margin-top: 2px; }
+.sp-judging { margin-top: 8px; color: var(--text-2); font-size: .85rem; animation: pulse 1.2s infinite; }
 
 /* ===== 语法课 ===== */
 .lesson-body h2 { font-size: 1.15rem; margin: 20px 0 8px; color: var(--accent); }

@@ -1,6 +1,7 @@
 // 录音封装：MediaRecorder + getUserMedia
-// 跟读的核心方案是"录音对比"（识别只是可选增强）——中国大陆的 SpeechRecognition
-// 依赖 Google 服务器常报 'network'，录音回放不依赖任何在线服务，随处可用。
+// 跟读的可靠底座是录音对比：SpeechRecognition 依赖浏览器背后的语音服务
+// （Chrome→Google，iPad 各浏览器均 WebKit 内核多不支持），随时可能因网络/权限/抢麦克风失败——
+// 录音回放不依赖任何在线服务，识别失败时无感兜底。
 
 export function recordingSupported() {
   return !!(navigator.mediaDevices?.getUserMedia && window.MediaRecorder);

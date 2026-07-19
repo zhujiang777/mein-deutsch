@@ -104,7 +104,7 @@ export function renderSettings(host) {
   voiceCard.appendChild(testBtn);
 
   if (!ttsAvailable()) voiceCard.appendChild(el(`<p class="meta" style="margin-top:8px">⚠️ 当前浏览器不支持语音合成</p>`));
-  voiceCard.appendChild(el(`<p class="meta" style="margin-top:8px">${recognitionAvailable() ? '✅ 支持跟读语音识别' : '⚠️ 当前浏览器不支持语音识别（跟读功能不可用），推荐 iPhone/iPad 用 Safari、安卓用 Chrome'}</p>`));
+  voiceCard.appendChild(el(`<p class="meta" style="margin-top:8px">${recognitionAvailable() ? '✅ 支持发音判定（跟读时自动逐词打分；识别服务异常会自动改用录音对比）' : '⚠️ 本浏览器不支持发音判定，跟读将使用录音对比模式（iPad 上各浏览器均为 WebKit 内核，识别多不可用，属正常）'}</p>`));
   host.appendChild(voiceCard);
 
   /* 学习偏好 */

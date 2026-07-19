@@ -1,5 +1,5 @@
 // 共享 UI 组件：音频按钮、跟读麦克风、练习题渲染、toast
-import { speak, stopSpeak, recognitionAvailable, recognizeOnce, scoreSpeech } from './speech.js';
+import { speak, stopSpeak, recognitionAvailable, recognizeOnce, scoreSpeech, SPEAK_PASS } from './speech.js';
 import { recordingSupported, startRecording } from './recorder.js';
 
 export function el(html) {
@@ -34,17 +34,17 @@ export function audioBtn(text, { slow = false } = {}) {
   return b;
 }
 
-/* ---- 跟读练习组件：🔊听标准 → 🎤录自己 → 并排对比（▶标准 | ▶我的）----
-   录音对比为核心（随处可用）；SpeechRecognition 可用时额外附加逐词识别对照。
-   录音和识别共用一次说话：录音期间同时启动识别，停止后一起展示。 */
+/* ---- 跟读练习组件：录一次音→识别判定（逐词标色+得分，≥70 通过）→并排对比；
+   识别不可用时无感退化为纯录音对比。
+   录音和识别共用一次说话：录音期间并发启动识别，停止后先判定后对比。 */
 export function speakPractice(host, targetText, { onScore } = {}) {
   const wrap = el(`<div class="speak-practice">
     <div class="sp-controls">
       <button class="sp-btn sp-listen">🔊 听标准</button>
     </div>
     <div class="sp-status"></div>
-    <div class="sp-compare"></div>
     <div class="sp-recog"></div>
+    <div class="sp-compare"></div>
   </div>`);
   const controls = wrap.querySelector('.sp-controls');
   const status = wrap.querySelector('.sp-status');
@@ -74,34 +74,43 @@ export function speakPractice(host, targetText, { onScore } = {}) {
   let recorderCtl = null;   // 录音控制器
   let recogCtl = null;      // 识别控制器
   let recogResult = null;   // 识别结果（或 {error}）
-  let stopped = false;
-  let recogRendered = false;
+  let phase = 'idle';       // idle | recording | judging | judged | no-recog
+  let judgeTimer = null;    // 判定超时兜底
   let myUrl = null;
 
   function renderRecog() {
-    if (recogRendered || !stopped) return;
+    clearTimeout(judgeTimer);
+    if (phase === 'recording') return; // 录音中不渲染，其余照渲染（含超时后迟到的真结果覆盖）
     if (!recognitionAvailable()) return;
-    if (recogResult == null) return; // 还没回来
-    recogRendered = true;
+    if (recogResult == null) return;   // 还没回来
+    phase = 'judged';
     const r = recogResult;
     if (r.error) {
       const msg = r.error === 'network'
-          ? '语音识别服务无法连接（需要 Google 网络），已用录音对比模式'
+          ? '语音识别暂时连不上，已用录音对比模式'
         : r.error === 'not-allowed'
           ? '麦克风权限被拒，识别不可用（录音对比仍可用）'
-        : r.error === 'no-speech'
-          ? '' // 没听到，不打扰
+        : r.error === 'service-not-allowed'
+          ? '此浏览器暂不支持发音判定，已用录音对比模式'
+        : (r.error === 'no-speech' || r.error === 'no-result' || r.error === 'timeout')
+          ? '本次没听清，可听录音对比自查'
           : `识别不可用（${r.error}），已用录音对比模式`;
       recogHost.innerHTML = msg ? `<div class="sp-recog-msg">${esc(msg)}</div>` : '';
       return;
     }
     const words = r.displayWords.map((w, i) =>
       `<span class="${r.ok[i] ? 'w-ok' : 'w-miss'}">${esc(w)}</span>`).join(' ');
-    const emoji = r.score >= 90 ? '🎉' : r.score >= 70 ? '👍' : '💪';
-    recogHost.innerHTML = `<div class="speak-result">
-      <div>${words}</div>
-      <div class="score-line"><b>${r.score}%</b> ${emoji} 逐词对照</div>
-    </div>`;
+    const emoji = r.score >= 90 ? '🎉' : r.score >= SPEAK_PASS ? '👍' : '💪';
+    const pass = r.score >= SPEAK_PASS;
+    recogHost.innerHTML = pass
+      ? `<div class="speak-result pass">
+          <div>${words}</div>
+          <div class="score-line"><b>${r.score}%</b> ${emoji} 发音不错！</div>
+        </div>`
+      : `<div class="speak-result fail">
+          <div>${words}</div>
+          <div class="score-line"><b>${r.score}%</b> ${emoji} 有几个词没读准，点「🔁 重录」再试试（也可以直接继续）</div>
+        </div>`;
     onScore?.(r.score);
   }
 
@@ -124,13 +133,16 @@ export function speakPractice(host, targetText, { onScore } = {}) {
     status.textContent = '';
     compare.innerHTML = '';
     recogHost.innerHTML = '';
+    clearTimeout(judgeTimer);
     if (myUrl) { URL.revokeObjectURL(myUrl); myUrl = null; }
-    stopped = false; recogRendered = false; recogResult = null;
+    recogCtl = null; recogResult = null;
+    phase = 'recording';
     recordBtn.disabled = true; // 等待 stream 就绪，防重复点击
     try {
       recorderCtl = await startRecording();
     } catch (err) {
       recordBtn.disabled = false;
+      phase = 'idle';
       status.textContent = err.message || '无法录音';
       return;
     }
@@ -140,7 +152,8 @@ export function speakPractice(host, targetText, { onScore } = {}) {
         recogCtl = recognizeOnce({
           onResult: (alts) => { recogResult = scoreSpeech(targetText, alts); renderRecog(); },
           onError: (errCode) => { recogResult = { error: errCode }; renderRecog(); },
-          onEnd: () => {},
+          // 识别静默结束（既无结果也无错误）时兜底，避免 judging 转圈凭空消失
+          onEnd: () => { if (recogResult == null) { recogResult = { error: 'no-result' }; renderRecog(); } },
         });
       } catch { recogCtl = null; }
     }
@@ -154,12 +167,25 @@ export function speakPractice(host, targetText, { onScore } = {}) {
     recordBtn.classList.remove('recording');
     recordBtn.textContent = '🔁 重录';
     status.textContent = '';
-    if (recogCtl) { try { recogCtl.stop(); } catch {} recogCtl = null; }
+    if (recogCtl) { try { recogCtl.stop(); } catch {} }
     const res = recorderCtl ? await recorderCtl.stop() : null;
     recorderCtl = null;
+    // 拿到录音立即出对比区，不等判定结果
     if (res?.url) { myUrl = res.url; renderCompare(res.url); }
-    stopped = true;
-    renderRecog();
+    if (recogCtl === null && recogResult === null) {
+      // 识别 API 不存在或启动失败：无感退化为纯录音对比，判定区留空
+      phase = 'no-recog';
+      recogHost.innerHTML = '';
+    } else if (recogResult != null) {
+      renderRecog();
+    } else {
+      // 识别已启动但结果未回：显示判定中，5s 超时兜底（迟到真结果仍会覆盖）
+      phase = 'judging';
+      recogHost.innerHTML = `<div class="sp-judging">🧐 正在判定发音…</div>`;
+      judgeTimer = setTimeout(() => {
+        if (recogResult == null) { recogResult = { error: 'timeout' }; renderRecog(); }
+      }, 5000);
+    }
   }
 
   recordBtn.addEventListener('click', (e) => {
@@ -188,14 +214,18 @@ function wireRecognitionOnly(btn, targetText, recogHost, status, onScore) {
         const r = scoreSpeech(targetText, alts);
         const words = r.displayWords.map((w, i) =>
           `<span class="${r.ok[i] ? 'w-ok' : 'w-miss'}">${esc(w)}</span>`).join(' ');
-        const emoji = r.score >= 90 ? '🎉' : r.score >= 70 ? '👍' : '💪';
-        recogHost.innerHTML = `<div class="speak-result"><div>${words}</div>
-          <div class="score-line"><b>${r.score}%</b> ${emoji}</div></div>`;
+        const emoji = r.score >= 90 ? '🎉' : r.score >= SPEAK_PASS ? '👍' : '💪';
+        const pass = r.score >= SPEAK_PASS;
+        recogHost.innerHTML = pass
+          ? `<div class="speak-result pass"><div>${words}</div>
+             <div class="score-line"><b>${r.score}%</b> ${emoji} 发音不错！</div></div>`
+          : `<div class="speak-result fail"><div>${words}</div>
+             <div class="score-line"><b>${r.score}%</b> ${emoji} 有几个词没读准，点「🔁 重录」再试试（也可以直接继续）</div></div>`;
         onScore?.(r.score);
       },
       onError: (err) => {
         got = true;
-        const msg = err === 'network' ? '语音识别服务无法连接（需要 Google 网络）'
+        const msg = err === 'network' ? '语音识别暂时连不上，请检查网络后再试'
           : err === 'not-allowed' ? '请在浏览器设置中允许使用麦克风'
           : err === 'no-speech' ? '没有听到声音，请再试一次'
           : `识别出错（${err}）`;

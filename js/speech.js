@@ -89,6 +89,8 @@ export function ttsAvailable() {
 /* ================= 语音识别（跟读检测） ================= */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+export const SPEAK_PASS = 70; // 跟读判定及格线
+
 export function recognitionAvailable() {
   return !!SR;
 }

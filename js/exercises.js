@@ -3,7 +3,7 @@
 // 题型: choice / assemble / fill / listenChoice / dictation / match / translate / speak
 //       + 微步课展示/复述步: scene / observe / reproduce / roleplay
 import { el, esc, audioBtn, speakPractice, toast } from './ui.js';
-import { speak, stopSpeak } from './speech.js';
+import { speak, stopSpeak, SPEAK_PASS } from './speech.js';
 import { recordingSupported, startRecording } from './recorder.js';
 
 // 德语特殊字符输入条（dictation 打字模式用）
@@ -283,27 +283,30 @@ function renderTranslate(host, item, ctx) {
   host.appendChild(wrap);
 }
 
-/* ---------- speak：跟读（录音对比为主，可跳过，不计错题） ---------- */
+/* ---------- speak：跟读（识别判定+录音对比；达标计正确，否则跳过不计，绝不计错） ---------- */
 function renderSpeak(host, item, ctx) {
   host.appendChild(el(`<div class="ex-prompt">
     <div class="ex-q">🎤 跟读这句</div>
     <div class="ex-de de" style="font-size:1.3rem;font-weight:700;margin:10px 0 4px">${esc(item.de)}</div>
     <div class="meta">${esc(item.zh || '')}</div>
   </div>`));
+  // done 按钮需先创建，供 onScore 达标时改文案
+  const done = el(`<button class="btn block secondary" style="margin-top:12px">完成，继续 ›</button>`);
+  let best = null;
   const practiceHost = el(`<div style="margin-top:8px"></div>`);
   speakPractice(practiceHost, item.de, {
     onScore: (score) => {
-      // 识别可用且达标时自动通过；否则靠下方"完成"按钮
       if (host.dataset.done) return;
-      if (score >= 70) { host.dataset.done = '1'; ctx.onSubmit(true, item.de); }
+      best = Math.max(best ?? 0, score); // 多次重录取最高，过线不回收
+      if (best >= SPEAK_PASS) { done.textContent = '✓ 继续 ›'; done.classList.remove('secondary'); }
     },
   });
   host.appendChild(practiceHost);
-  const done = el(`<button class="btn block secondary" style="margin-top:12px">完成，继续 ›</button>`);
   done.addEventListener('click', () => {
     if (host.dataset.done) return;
     host.dataset.done = '1';
-    ctx.onSubmit(null, item.de); // null = 不计入统计
+    // 达标→true（计入统计，走绿色反馈条）；未达标→null（跳过不计）；任何路径都不产生 false
+    ctx.onSubmit(best != null && best >= SPEAK_PASS ? true : null, item.de);
   });
   host.appendChild(done);
   setTimeout(() => speak(item.de), 250);
