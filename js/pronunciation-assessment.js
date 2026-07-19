@@ -1,4 +1,5 @@
 import { getAssessmentSecrets } from './secrets.js';
+import { assessWithAzureSpeechSdk } from './azure-speech-sdk.js';
 
 export const SPEAK_PASS = 70;
 const REQUEST_TIMEOUT_MS = 15000;
@@ -55,18 +56,23 @@ export function parseAssessmentResponse(value) {
 async function readError(res) {
   try {
     const value = await res.json();
-    return value?.error?.message || value?.message || '';
+    return {
+      code: String(value?.error?.code || ''),
+      message: String(value?.error?.message || value?.message || ''),
+    };
   } catch {
-    return '';
+    return { code: '', message: '' };
   }
 }
 
-function statusError(status, detail = '') {
+function statusError(status, detail = {}) {
+  const message = typeof detail === 'string' ? detail : detail.message;
+  const providerCode = typeof detail === 'object' ? detail.code : '';
   if (status === 401) return new AssessmentError('unauthorized', '访问码不正确，请到设置中重新填写', { status });
   if (status === 413) return new AssessmentError('audio-too-large', '录音过长，请控制在 20 秒内', { status });
-  if (status === 422) return new AssessmentError('no-speech', detail || '没有检测到有效语音，请靠近麦克风再试', { status, retryable: true });
+  if (status === 422) return new AssessmentError('no-speech', message || '没有检测到有效语音，请靠近麦克风再试', { status, retryable: true });
   if (status === 429) return new AssessmentError('quota', '本月免费额度或当前请求频率已达到限制', { status, retryable: true });
-  return new AssessmentError('service', detail || `评分服务暂时不可用（HTTP ${status}）`, { status, retryable: status >= 500 });
+  return new AssessmentError(providerCode || 'service', message || `评分服务暂时不可用（HTTP ${status}）`, { status, retryable: status >= 500 });
 }
 
 async function fetchWithTimeout(url, options = {}) {
@@ -98,6 +104,37 @@ export async function checkAssessmentConnection() {
   return true;
 }
 
+async function getSpeechSdkToken(endpoint, accessCode) {
+  const res = await fetchWithTimeout(`${endpoint}/v1/speech/token`, {
+    method: 'POST',
+    headers: authHeaders(accessCode),
+  });
+  if (!res.ok) throw statusError(res.status, await readError(res));
+  let value;
+  try { value = await res.json(); }
+  catch { throw new AssessmentError('invalid-response', 'Worker 没有返回可用的 Azure 临时令牌', { retryable: true }); }
+  if (value?.schemaVersion !== 1 || !value.token || !value.region) {
+    throw new AssessmentError('invalid-response', 'Worker 返回的 Azure 临时令牌无效', { retryable: true });
+  }
+  return { token: String(value.token), region: String(value.region) };
+}
+
+async function assessWithSdkFallback({ endpoint, accessCode, audioBlob, referenceText }) {
+  const credentials = await getSpeechSdkToken(endpoint, accessCode);
+  try {
+    return parseAssessmentResponse(await assessWithAzureSpeechSdk({
+      ...credentials,
+      audioBlob,
+      referenceText,
+    }));
+  } catch (err) {
+    if (err instanceof AssessmentError) throw err;
+    throw new AssessmentError(err?.code || 'service', err?.message || 'Azure Speech SDK 评分失败', {
+      retryable: err?.retryable !== false,
+    });
+  }
+}
+
 export async function assessPronunciation({ audioBlob, referenceText }) {
   const { endpoint, accessCode } = getAssessmentSecrets();
   if (!endpoint || !accessCode) throw new AssessmentError('not-configured', '请先到设置中配置发音评分');
@@ -115,7 +152,13 @@ export async function assessPronunciation({ audioBlob, referenceText }) {
     headers: authHeaders(accessCode),
     body,
   });
-  if (!res.ok) throw statusError(res.status, await readError(res));
+  if (!res.ok) {
+    const detail = await readError(res);
+    if (detail.code === 'provider-assessment-missing') {
+      return assessWithSdkFallback({ endpoint, accessCode, audioBlob, referenceText });
+    }
+    throw statusError(res.status, detail);
+  }
   return parseAssessmentResponse(await res.json());
 }
 

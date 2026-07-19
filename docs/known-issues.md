@@ -6,6 +6,10 @@
 
 云端部署前仍需按照 `worker/README.md` 创建 Azure Speech F0 与 Cloudflare Worker，并在三星 Chrome 和 Mac Chrome 上完成真机验收。因此这里记录为“已绕过”，不宣称旧接口的设备层根因已经查明。
 
+### Azure 短音频 REST 偶发缺少评分区块
+
+2026-07-19 真机测试发现：Azure 能成功识别德语文本，但 REST 响应可能缺少整个 `PronunciationAssessment`，因此没有 `PronScore`。新版保留 REST 快速路径；检测到该结构后自动通过 Worker 获取短期令牌，改用随站点固定版本发布的 Azure Speech SDK 对同一段 WAV 评分。诊断只记录 `hasNBest / hasAssessment / hasPronScore` 等结构布尔值，不记录参考文本、识别文本或音频。
+
 ### 旧版症状（历史记录）
 三星手机 Chrome（用户主力设备）上，speak 跟读步骤录完音后判定区不出逐词标色和分数。三种路径全部失败：
 

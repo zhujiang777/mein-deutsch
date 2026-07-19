@@ -42,7 +42,7 @@ export function audioBtn(text, { slow = false } = {}) {
 
 /* ---- 跟读练习组件：一次录音同时生成回放和 16k WAV；
    停止后立即给出录音对比，并异步请求真正的德语发音评测。 */
-export function speakPractice(host, targetText, { onScore } = {}) {
+export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
   const wrap = el(`<div class="speak-practice">
     <div class="sp-controls">
       <button class="sp-btn sp-listen">🔊 听标准</button>
@@ -208,6 +208,7 @@ export function speakPractice(host, targetText, { onScore } = {}) {
     status.textContent = '';
     if (res?.url) { myUrl = res.url; renderCompare(res.url); }
     assessmentBlob = res?.assessmentBlob || null;
+    onRecorded?.({ url: res?.url || null, assessmentAvailable: !!assessmentBlob });
     requestAssessment();
   }
 

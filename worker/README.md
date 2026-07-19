@@ -1,6 +1,8 @@
 # 德语发音评分 Worker
 
-这个 Worker 只做三件事：验证个人访问码、把短 WAV 录音转发给 Azure Pronunciation Assessment、把 Azure 响应整理成网页需要的固定格式。它不会保存录音、参考文本或评分结果。
+这个 Worker 验证个人访问码、把短 WAV 录音转发给 Azure Pronunciation Assessment、整理固定响应，并在 Azure REST 已识别语音却漏掉评分区块时签发约 9 分钟有效的 Speech SDK 临时令牌。长期 Azure Key 始终只存在 Worker Secret 中。Worker 不会保存录音、参考文本或评分结果。
+
+接口包括：`GET /v1/health`、`POST /v1/pronunciation/assess` 和供自动兼容回退使用的 `POST /v1/speech/token`。
 
 ## 1. 创建免费资源
 

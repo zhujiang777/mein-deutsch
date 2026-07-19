@@ -20,7 +20,7 @@
 
 - 网页本体是纯静态前端（原生 ES Modules、无构建步骤）；发音评分单独使用一个无状态 Cloudflare Worker
 - TTS 用 `speechSynthesis`（预生成 MP3 优先）；跟读使用同一条麦克风流生成本机回放和 16 kHz WAV，云端评分失败时自动保留录音对比
-- 发音评测由 Azure Pronunciation Assessment 提供，Cloudflare Worker 负责保护密钥；免费部署步骤见 [worker/README.md](worker/README.md)
+- 发音评测由 Azure Pronunciation Assessment 提供，Cloudflare Worker 负责保护密钥；短音频 REST 暂时漏分时，网页会使用 Worker 签发的短期令牌自动切换到同源托管的 Azure Speech SDK。免费部署步骤见 [worker/README.md](worker/README.md)
 - 学习进度存 `localStorage`，设置页支持导出/导入以在手机、平板间同步
 - 部署：GitHub Pages（main 分支根目录）
 

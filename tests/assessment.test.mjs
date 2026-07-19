@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseAssessmentResponse, SPEAK_PASS } from '../js/pronunciation-assessment.js';
+import { normalizeSpeechSdkResult } from '../js/azure-speech-sdk.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../js/secrets.js';
 import { exportAll } from '../js/storage.js';
 
@@ -31,6 +32,23 @@ test('normalizes the public assessment response and clamps scores', () => {
 
 test('rejects a response without a real pronunciation score', () => {
   assert.throws(() => parseAssessmentResponse({ schemaVersion: 1, overall: {}, words: [] }), /综合发音分/);
+});
+
+test('normalizes Speech SDK aggregate scores when REST detail is missing', () => {
+  const result = normalizeSpeechSdkResult({}, {
+    pronunciationScore: 79.6,
+    accuracyScore: 76.2,
+    fluencyScore: 84.4,
+    completenessScore: 100,
+  }, 'Guten Morgen');
+  assert.deepEqual(result.overall, {
+    pronunciation: 80,
+    accuracy: 76,
+    fluency: 84,
+    completeness: 100,
+  });
+  assert.equal(result.recognizedText, 'Guten Morgen');
+  assert.deepEqual(result.words, []);
 });
 
 test('keeps endpoint and access code out of progress export', () => {

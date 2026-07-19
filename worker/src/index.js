@@ -120,7 +120,14 @@ export function normalizeAzureResponse(value) {
   const overall = best?.PronunciationAssessment;
   const pronunciation = score(overall?.PronScore);
   if (!best || pronunciation == null) {
-    throw new HttpError(502, 'invalid-provider-response', 'Azure 未返回有效的德语发音分');
+    // 只记录响应结构状态，不记录识别文本、参考文本、音频或密钥。
+    console.warn('[azure-pa] assessment block missing', {
+      recognitionStatus: String(value?.RecognitionStatus || ''),
+      hasNBest: !!best,
+      hasAssessment: !!overall,
+      hasPronScore: overall?.PronScore != null,
+    });
+    throw new HttpError(502, 'provider-assessment-missing', 'Azure 已识别语音，但 REST 接口未返回发音分');
   }
 
   return {
@@ -142,6 +149,39 @@ export function normalizeAzureResponse(value) {
       })).filter(phone => phone.phoneme),
     })).filter(item => item.word),
   };
+}
+
+async function issueSpeechToken(env) {
+  if (!env.AZURE_SPEECH_KEY || !env.AZURE_SPEECH_REGION) {
+    throw new HttpError(503, 'not-configured', 'Worker 尚未配置 Azure Speech');
+  }
+  const region = String(env.AZURE_SPEECH_REGION).trim();
+  if (!/^[a-z0-9-]+$/i.test(region)) {
+    throw new HttpError(503, 'not-configured', 'Azure Speech 区域配置无效');
+  }
+  let res;
+  try {
+    res = await fetch(`https://${region}.api.cognitive.microsoft.com/sts/v1.0/issueToken`, {
+      method: 'POST',
+      headers: {
+        'Ocp-Apim-Subscription-Key': env.AZURE_SPEECH_KEY,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '0',
+      },
+      body: '',
+    });
+  } catch {
+    throw new HttpError(502, 'provider-network', '暂时无法获取 Azure Speech 临时令牌');
+  }
+  if (res.status === 429) {
+    throw new HttpError(429, 'quota', 'Azure 免费额度或当前请求频率已达到限制');
+  }
+  if (!res.ok) {
+    throw new HttpError(502, 'provider-error', `Azure Speech 临时令牌请求失败（HTTP ${res.status}）`);
+  }
+  const token = (await res.text()).trim();
+  if (!token) throw new HttpError(502, 'invalid-provider-response', 'Azure 未返回临时令牌');
+  return { schemaVersion: 1, token, region, expiresIn: 540 };
 }
 
 async function callAzure(audioBuffer, referenceText, env) {
@@ -219,7 +259,10 @@ async function handle(request, env) {
   if (request.method === 'GET' && url.pathname === '/v1/health') {
     const azureConfigured = !!(env.AZURE_SPEECH_KEY && env.AZURE_SPEECH_REGION);
     if (!azureConfigured) throw new HttpError(503, 'not-configured', 'Worker 尚未配置 Azure Speech');
-    return jsonResponse({ ok: true, azureConfigured }, 200, origin, env);
+    return jsonResponse({ ok: true, azureConfigured, speechSdkFallback: true }, 200, origin, env);
+  }
+  if (request.method === 'POST' && url.pathname === '/v1/speech/token') {
+    return jsonResponse(await issueSpeechToken(env), 200, origin, env);
   }
   if (request.method === 'POST' && url.pathname === '/v1/pronunciation/assess') {
     return jsonResponse(await assess(request, env), 200, origin, env);

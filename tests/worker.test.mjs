@@ -114,6 +114,51 @@ test('assessment forwards WAV to Azure and returns the stable schema', async () 
   }
 });
 
+test('issues a short-lived Speech SDK token without exposing the Azure key', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, options) => {
+    assert.match(String(url), /southeastasia\.api\.cognitive\.microsoft\.com\/sts\/v1\.0\/issueToken/);
+    assert.equal(options.headers['Ocp-Apim-Subscription-Key'], 'azure-secret');
+    return new Response('temporary-speech-token', { status: 200 });
+  };
+  try {
+    const res = await worker.fetch(new Request('https://worker.test/v1/speech/token', {
+      method: 'POST', headers: authHeaders(),
+    }), { ...env, AZURE_SPEECH_REGION: 'southeastasia' });
+    assert.equal(res.status, 200);
+    const value = await res.json();
+    assert.equal(value.token, 'temporary-speech-token');
+    assert.equal(value.region, 'southeastasia');
+    assert.equal(JSON.stringify(value).includes('azure-secret'), false);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('maps a successful recognition without assessment to the SDK fallback signal', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalWarn = console.warn;
+  console.warn = () => {};
+  globalThis.fetch = async () => new Response(JSON.stringify({
+    RecognitionStatus: 'Success',
+    NBest: [{ Display: 'Guten Morgen.' }],
+  }), { status: 200 });
+  try {
+    const form = new FormData();
+    form.append('audio', new Blob([encodePcm16Wav(new Float32Array(1600))], { type: 'audio/wav' }), 'speech.wav');
+    form.append('referenceText', 'Guten Morgen.');
+    form.append('locale', 'de-DE');
+    const res = await worker.fetch(new Request('https://worker.test/v1/pronunciation/assess', {
+      method: 'POST', headers: authHeaders(), body: form,
+    }), env);
+    assert.equal(res.status, 502);
+    assert.equal((await res.json()).error.code, 'provider-assessment-missing');
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.warn = originalWarn;
+  }
+});
+
 test('rejects unknown origins and invalid audio before calling Azure', async () => {
   const badOrigin = await worker.fetch(new Request('https://worker.test/v1/health', {
     headers: { Origin: 'https://attacker.example', Authorization: 'Bearer test-access-code' },

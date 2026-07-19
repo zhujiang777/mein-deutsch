@@ -2,10 +2,10 @@
 // onSubmit(correct: boolean, correctText: string) 每题只调用一次
 // 题型: choice / assemble / fill / listenChoice / dictation / match / translate / speak
 //       + 微步课展示/复述步: scene / observe / reproduce / roleplay
-import { el, esc, audioBtn, speakPractice, toast } from './ui.js';
-import { speak, stopSpeak } from './speech.js';
+import { el, esc, audioBtn, speakPractice } from './ui.js';
+import { speak } from './speech.js';
 import { SPEAK_PASS } from './pronunciation-assessment.js';
-import { recordingSupported, startRecording } from './recorder.js';
+import { recordingSupported } from './recorder.js';
 
 // 德语特殊字符输入条（dictation 打字模式用）
 const SPECIAL_CHARS = ['ä', 'ö', 'ü', 'ß', 'ẞ', 'Ä', 'Ö', 'Ü'];
@@ -41,54 +41,6 @@ function highlightHtml(de, hl) {
 function sequencePlay(texts, i = 0) {
   if (i >= texts.length) return;
   speak(texts[i], { onend: () => sequencePlay(texts, i + 1) });
-}
-
-// 并排对比回放：▶标准 | ▶我的录音（reproduce/roleplay 共用）
-function playbackCompare(targetText, myUrl) {
-  const row = el(`<div class="sp-compare"></div>`);
-  const std = el(`<button class="sp-cmp"><span class="sp-cmp-icon">▶</span><span>标准</span></button>`);
-  std.addEventListener('click', () => { stopSpeak(); speak(targetText); });
-  row.appendChild(std);
-  if (myUrl) {
-    const audio = new Audio(myUrl);
-    const mine = el(`<button class="sp-cmp mine"><span class="sp-cmp-icon">▶</span><span>我的录音</span></button>`);
-    mine.addEventListener('click', () => { stopSpeak(); audio.currentTime = 0; audio.play().catch(() => {}); });
-    row.appendChild(mine);
-  }
-  return row;
-}
-
-// 录音按钮：切换 录音/停止；停止后回调 onDone(url|null, err?)。object URL 由调用方管理
-function recordButton(onDone) {
-  const btn = el(`<button class="btn sp-record">🎤 录音</button>`);
-  let ctl = null;
-  let finishing = false;
-  const finish = async () => {
-    if (finishing || !ctl) return;
-    finishing = true;
-    btn.disabled = true;
-    const current = ctl;
-    ctl = null;
-    const res = await current.stop();
-    btn.classList.remove('recording');
-    btn.disabled = false;
-    btn.textContent = '🔁 重录';
-    finishing = false;
-    onDone(res?.url || null);
-  };
-  btn.addEventListener('click', async () => {
-    if (btn.classList.contains('recording')) {
-      finish();
-      return;
-    }
-    btn.disabled = true;
-    try { ctl = await startRecording({ onLimit: finish }); }
-    catch (err) { btn.disabled = false; onDone(null, err); return; }
-    btn.disabled = false;
-    btn.classList.add('recording');
-    btn.textContent = '⏹ 停止';
-  });
-  return btn;
 }
 
 function insertAtCursor(input, ch) {
@@ -478,17 +430,15 @@ function renderReproduce(host, item, ctx) {
   </div>`);
   const controls = card.querySelector('.reproduce-controls');
   const reveal = card.querySelector('.reproduce-reveal');
-  controls.appendChild(audioBtn(item.de));
-  controls.appendChild(audioBtn(item.de, { slow: true }));
   host.appendChild(card);
   setTimeout(() => speak(item.de), 300);
 
-  const finishReveal = (url) => {
-    controls.querySelectorAll('.sp-record').forEach(b => b.remove());
+  const finishReveal = () => {
+    if (reveal.dataset.shown) return;
+    reveal.dataset.shown = '1';
     reveal.innerHTML = '';
     reveal.appendChild(el(`<div class="reproduce-de de">${esc(item.de)}</div>`));
     reveal.appendChild(el(`<div class="reproduce-zh2">${esc(item.zh)}</div>`));
-    reveal.appendChild(playbackCompare(item.de, url));
     const assess = el(`<div class="reproduce-assess"></div>`);
     const ok = el(`<button class="btn">✅ 复现出来了</button>`);
     const no = el(`<button class="btn secondary">🔁 还不行</button>`);
@@ -499,10 +449,12 @@ function renderReproduce(host, item, ctx) {
   };
 
   if (recordingSupported()) {
-    controls.appendChild(recordButton((url, err) => { if (err) toast(err.message || '无法录音'); finishReveal(url); }));
+    speakPractice(controls, item.de, { onRecorded: finishReveal });
   } else {
+    controls.appendChild(audioBtn(item.de));
+    controls.appendChild(audioBtn(item.de, { slow: true }));
     const showBtn = el(`<button class="btn">听完了，看原文自评</button>`);
-    showBtn.addEventListener('click', () => finishReveal(null));
+    showBtn.addEventListener('click', finishReveal);
     controls.appendChild(showBtn);
   }
 }
@@ -557,21 +509,22 @@ function renderRoleplay(host, item, ctx) {
       const rc = turn.querySelector('.roleplay-controls');
       const rv = turn.querySelector('.roleplay-reveal');
       area.appendChild(turn);
-      const revealRef = (url) => {
-        rc.querySelectorAll('.sp-record, .roleplay-show').forEach(b => b.remove());
+      const revealRef = () => {
+        if (rv.dataset.shown) return;
+        rv.dataset.shown = '1';
+        rc.querySelectorAll('.roleplay-show').forEach(b => b.remove());
         rv.innerHTML = '';
         rv.appendChild(el(`<div class="reproduce-de de">${esc(ln.de)}</div>`));
-        rv.appendChild(playbackCompare(ln.de, url));
         log.appendChild(otherRow(ln, true));
         const nx = el(`<button class="btn block" style="margin-top:10px">下一句 ›</button>`);
         nx.addEventListener('click', () => { i++; next(); });
         rv.appendChild(nx);
       };
       if (recordingSupported()) {
-        rc.appendChild(recordButton((url, err) => { if (err) toast(err.message || '无法录音'); revealRef(url); }));
+        speakPractice(rc, ln.de, { onRecorded: revealRef });
       } else {
         const showBtn = el(`<button class="btn roleplay-show">看中文说德语 → 显示参考</button>`);
-        showBtn.addEventListener('click', () => revealRef(null));
+        showBtn.addEventListener('click', revealRef);
         rc.appendChild(showBtn);
       }
     }

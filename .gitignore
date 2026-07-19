@@ -9,3 +9,4 @@ claude-context-checkpoint-main/
 worker/.dev.vars
 .wrangler/
 .playwright-cli/
+node_modules/

@@ -681,6 +681,8 @@ body.immersive #app { padding-bottom: 24px; }
 .reproduce-step { padding: 6px 2px; text-align: center; }
 .reproduce-zh { font-size: 1.2rem; font-weight: 600; margin: 14px 0; }
 .reproduce-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.reproduce-controls .speak-practice,
+.roleplay-controls .speak-practice { width: 100%; }
 .reproduce-reveal { margin-top: 16px; }
 .reproduce-de { font-size: 1.25rem; font-weight: 700; }
 .reproduce-zh2 { color: var(--text-2); font-size: .88rem; margin-top: 4px; }
