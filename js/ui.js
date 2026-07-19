@@ -77,6 +77,37 @@ export function speakPractice(host, targetText, { onScore } = {}) {
   let phase = 'idle';       // idle | recording | judging | judged | no-recog
   let judgeTimer = null;    // 判定超时兜底
   let myUrl = null;
+  let judgeCtl = null;      // 单独判定的识别控制器
+
+  /* 单独判定入口：安卓 Chrome 识别与录音无法共享麦克风（start(track) 重载
+     截至 2026-07 仅桌面版且在 flag 后），并发判定在安卓必然无声。
+     此按钮只跑识别不录音，识别独占麦克风必定有声——代价是多读一遍。 */
+  function addJudgeBtn() {
+    const btn = el(`<button class="sp-btn sp-judge">🎤 单独读一遍打分</button>`);
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (btn.classList.contains('recording')) { try { judgeCtl?.stop(); } catch {} return; }
+      btn.classList.add('recording');
+      btn.textContent = '⏹ 停止';
+      status.textContent = '请朗读（本次只判定，不录音）';
+      recogResult = null; // 本次判定重新开始
+      try {
+        judgeCtl = recognizeOnce({
+          onResult: (alts) => { recogResult = scoreSpeech(targetText, alts); renderRecog(); },
+          onError: (errCode) => { recogResult = { error: errCode }; renderRecog(); },
+          onEnd: () => {
+            status.textContent = '';
+            if (recogResult == null) { recogResult = { error: 'no-result' }; renderRecog(); }
+          },
+        });
+      } catch {
+        btn.classList.remove('recording');
+        btn.textContent = '🎤 单独读一遍打分';
+        status.textContent = '';
+      }
+    });
+    recogHost.appendChild(btn);
+  }
 
   function renderRecog() {
     clearTimeout(judgeTimer);
@@ -96,6 +127,8 @@ export function speakPractice(host, targetText, { onScore } = {}) {
           ? '本次没听清，可听录音对比自查'
           : `识别不可用（${r.error}），已用录音对比模式`;
       recogHost.innerHTML = msg ? `<div class="sp-recog-msg">${esc(msg)}</div>` : '';
+      // 权限/服务/网络类错误单独判定也无解；其余（多为录音占用麦克风导致识别无声）给单独判定入口
+      if (!['not-allowed', 'service-not-allowed', 'network'].includes(r.error)) addJudgeBtn();
       return;
     }
     const words = r.displayWords.map((w, i) =>
@@ -177,9 +210,10 @@ export function speakPractice(host, targetText, { onScore } = {}) {
     // 拿到录音立即出对比区，不等判定结果
     if (res?.url) { myUrl = res.url; renderCompare(res.url); }
     if (recogCtl === null && recogResult === null) {
-      // 识别 API 不存在或启动失败：无感退化为纯录音对比，判定区留空
+      // 识别 API 不存在（判定区留空）或启动失败（给单独判定入口）：录音对比不受影响
       phase = 'no-recog';
       recogHost.innerHTML = '';
+      if (recognitionAvailable()) addJudgeBtn();
     } else if (recogResult != null) {
       renderRecog();
     } else {

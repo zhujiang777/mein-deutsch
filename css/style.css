@@ -246,6 +246,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 .speak-result .w-miss { color: var(--red); font-weight: 600; text-decoration: underline wavy var(--red); }
 .speak-result .score-line { margin-top: 2px; }
 .sp-judging { margin-top: 8px; color: var(--text-2); font-size: .85rem; animation: pulse 1.2s infinite; }
+.sp-recog .sp-judge { margin-top: 8px; }
 
 /* ===== 语法课 ===== */
 .lesson-body h2 { font-size: 1.15rem; margin: 20px 0 8px; color: var(--accent); }
