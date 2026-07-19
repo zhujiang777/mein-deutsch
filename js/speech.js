@@ -95,7 +95,7 @@ export function recognitionAvailable() {
   return !!SR;
 }
 
-export function recognizeOnce({ onResult, onError, onEnd }) {
+export function recognizeOnce({ onResult, onError, onEnd, track = null }) {
   const rec = new SR();
   rec.lang = 'de-DE';
   rec.interimResults = false;
@@ -108,8 +108,11 @@ export function recognizeOnce({ onResult, onError, onEnd }) {
     onResult?.(alts);
   };
   rec.onerror = (e) => onError?.(e.error);
-  rec.onend = () => { if (!ended) { ended = true; onEnd?.(); } };
-  rec.start();
+  rec.onend = () => { track?.stop(); if (!ended) { ended = true; onEnd?.(); } };
+  // 传入音频轨时识别器直接消费该轨（Chrome 2024+ 的 start(track) 重载），
+  // 不再自己抢麦克风；旧浏览器忽略此参数，照走原麦克风路径
+  try { rec.start(track || undefined); }
+  catch (err) { track?.stop(); throw err; }
   return { stop: () => { try { rec.stop(); } catch {} } };
 }
 

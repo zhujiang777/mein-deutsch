@@ -41,6 +41,7 @@ export async function startRecording() {
   const release = () => stream.getTracks().forEach(t => t.stop());
 
   return {
+    stream, // 暴露给调用方克隆音频轨喂识别器（避免识别与录音抢麦克风）
     stop() {
       return new Promise((resolve) => {
         rec.onstop = () => {

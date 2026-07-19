@@ -146,16 +146,20 @@ export function speakPractice(host, targetText, { onScore } = {}) {
       status.textContent = err.message || '无法录音';
       return;
     }
-    // 同时尝试识别（共用同一次说话）；部分浏览器会抢麦克风冲突，捕获后降级为纯录音
+    // 并发识别共用同一次说话：把录音流的克隆轨喂给识别器，根治安卓上识别与录音
+    // 抢麦克风导致的识别无声；克隆轨由 recognizeOnce 在识别结束时释放
     if (recognitionAvailable()) {
+      let track = null;
       try {
+        track = recorderCtl.stream?.getAudioTracks?.()[0]?.clone() || null;
         recogCtl = recognizeOnce({
+          track,
           onResult: (alts) => { recogResult = scoreSpeech(targetText, alts); renderRecog(); },
           onError: (errCode) => { recogResult = { error: errCode }; renderRecog(); },
           // 识别静默结束（既无结果也无错误）时兜底，避免 judging 转圈凭空消失
           onEnd: () => { if (recogResult == null) { recogResult = { error: 'no-result' }; renderRecog(); } },
         });
-      } catch { recogCtl = null; }
+      } catch { track?.stop(); recogCtl = null; }
     }
     recordBtn.disabled = false;
     recordBtn.classList.add('recording');
