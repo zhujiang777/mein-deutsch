@@ -23,6 +23,7 @@ for (const lesson of GRAMMAR_LESSONS)
 for (const w of VOCAB) {
   add(w.art ? `${w.art} ${w.de}` : w.de);
   add(w.ex);
+  for (const s of w.sentences || []) add(s.de);
 }
 
 // 阅读：逐句 + 全文（全文朗读按钮用）
