@@ -19,7 +19,7 @@
 ## 技术说明
 
 - 纯静态前端（原生 ES Modules），无构建步骤、无后端、无依赖
-- TTS 用 `speechSynthesis`，跟读检测用 `SpeechRecognition`（iOS Safari / Android Chrome 均支持）
+- TTS 用 `speechSynthesis`（预生成 MP3 优先），跟读 = 录音对比（随处可用）+ 识别判定（目前仅桌面 Chrome 可靠；安卓不出分为已知问题，见 [docs/known-issues.md](docs/known-issues.md)）
 - 学习进度存 `localStorage`，设置页支持导出/导入以在手机、平板间同步
 - 部署：GitHub Pages（main 分支根目录）
 
