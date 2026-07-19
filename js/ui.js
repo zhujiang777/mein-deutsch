@@ -1,6 +1,12 @@
 // 共享 UI 组件：音频按钮、跟读麦克风、练习题渲染、toast
-import { speak, stopSpeak, recognitionAvailable, recognizeOnce, scoreSpeech, SPEAK_PASS } from './speech.js';
+import { speak, stopSpeak } from './speech.js';
 import { recordingSupported, startRecording } from './recorder.js';
+import {
+  assessPronunciation,
+  assessmentConfigured,
+  assessmentErrorMessage,
+  SPEAK_PASS,
+} from './pronunciation-assessment.js';
 
 export function el(html) {
   const t = document.createElement('template');
@@ -34,9 +40,8 @@ export function audioBtn(text, { slow = false } = {}) {
   return b;
 }
 
-/* ---- 跟读练习组件：录一次音→识别判定（逐词标色+得分，≥70 通过）→并排对比；
-   识别不可用时无感退化为纯录音对比。
-   录音和识别共用一次说话：录音期间并发启动识别，停止后先判定后对比。 */
+/* ---- 跟读练习组件：一次录音同时生成回放和 16k WAV；
+   停止后立即给出录音对比，并异步请求真正的德语发音评测。 */
 export function speakPractice(host, targetText, { onScore } = {}) {
   const wrap = el(`<div class="speak-practice">
     <div class="sp-controls">
@@ -55,15 +60,9 @@ export function speakPractice(host, targetText, { onScore } = {}) {
     e.stopPropagation(); stopSpeak(); speak(targetText);
   });
 
-  // 无录音能力：识别可用则退回纯识别，否则只保留"听标准"
+  // 云端评测以录音为输入；没有录音能力时只保留标准音。
   if (!recordingSupported()) {
-    if (recognitionAvailable()) {
-      const recBtn = el(`<button class="sp-btn sp-record">🎤 跟读（识别）</button>`);
-      controls.appendChild(recBtn);
-      wireRecognitionOnly(recBtn, targetText, recogHost, status, onScore);
-    } else {
-      status.textContent = '本设备不支持录音，可听标准音后自己朗读';
-    }
+    status.textContent = '本设备不支持录音，可听标准音后自己朗读';
     host.appendChild(wrap);
     return wrap;
   }
@@ -71,80 +70,90 @@ export function speakPractice(host, targetText, { onScore } = {}) {
   const recordBtn = el(`<button class="sp-btn sp-record">🎤 录我的</button>`);
   controls.appendChild(recordBtn);
 
-  let recorderCtl = null;   // 录音控制器
-  let recogCtl = null;      // 识别控制器
-  let recogResult = null;   // 识别结果（或 {error}）
-  let phase = 'idle';       // idle | recording | judging | judged | no-recog
-  let judgeTimer = null;    // 判定超时兜底
+  let recorderCtl = null;
+  let phase = 'idle'; // idle | recording | stopping | judging | judged
   let myUrl = null;
-  let judgeCtl = null;      // 单独判定的识别控制器
+  let assessmentBlob = null;
+  let assessmentRun = 0;
 
-  /* 单独判定入口：安卓 Chrome 识别与录音无法共享麦克风（start(track) 重载
-     截至 2026-07 仅桌面版且在 flag 后），并发判定在安卓必然无声。
-     此按钮只跑识别不录音，识别独占麦克风必定有声——代价是多读一遍。 */
-  function addJudgeBtn() {
-    const btn = el(`<button class="sp-btn sp-judge">🎤 单独读一遍打分</button>`);
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (btn.classList.contains('recording')) { try { judgeCtl?.stop(); } catch {} return; }
-      btn.classList.add('recording');
-      btn.textContent = '⏹ 停止';
-      status.textContent = '请朗读（本次只判定，不录音）';
-      recogResult = null; // 本次判定重新开始
-      try {
-        judgeCtl = recognizeOnce({
-          onResult: (alts) => { recogResult = scoreSpeech(targetText, alts); renderRecog(); },
-          onError: (errCode) => { recogResult = { error: errCode }; renderRecog(); },
-          onEnd: () => {
-            status.textContent = '';
-            if (recogResult == null) { recogResult = { error: 'no-result' }; renderRecog(); }
-          },
-        });
-      } catch {
-        btn.classList.remove('recording');
-        btn.textContent = '🎤 单独读一遍打分';
-        status.textContent = '';
-      }
-    });
-    recogHost.appendChild(btn);
+  const errorLabels = {
+    Mispronunciation: '发音需改进',
+    Omission: '漏读',
+    Insertion: '多读',
+    UnexpectedBreak: '停顿异常',
+    MissingBreak: '缺少停顿',
+  };
+
+  function scoreMetric(label, value, main = false) {
+    const shown = value == null ? '—' : value;
+    return `<div class="pa-metric${main ? ' main' : ''}"><b>${shown}</b><span>${label}</span></div>`;
   }
 
-  function renderRecog() {
-    clearTimeout(judgeTimer);
-    if (phase === 'recording') return; // 录音中不渲染，其余照渲染（含超时后迟到的真结果覆盖）
-    if (!recognitionAvailable()) return;
-    if (recogResult == null) return;   // 还没回来
+  function renderAssessment(result) {
     phase = 'judged';
-    const r = recogResult;
-    if (r.error) {
-      const msg = r.error === 'network'
-          ? '语音识别暂时连不上，已用录音对比模式'
-        : r.error === 'not-allowed'
-          ? '麦克风权限被拒，识别不可用（录音对比仍可用）'
-        : r.error === 'service-not-allowed'
-          ? '此浏览器暂不支持发音判定，已用录音对比模式'
-        : (r.error === 'no-speech' || r.error === 'no-result' || r.error === 'timeout')
-          ? '本次没听清，可听录音对比自查'
-          : `识别不可用（${r.error}），已用录音对比模式`;
-      recogHost.innerHTML = msg ? `<div class="sp-recog-msg">${esc(msg)}</div>` : '';
-      // 权限/服务/网络类错误单独判定也无解；其余（多为录音占用麦克风导致识别无声）给单独判定入口
-      if (!['not-allowed', 'service-not-allowed', 'network'].includes(r.error)) addJudgeBtn();
+    const score = result.overall.pronunciation;
+    const pass = score >= SPEAK_PASS;
+    const words = result.words.map(item => {
+      const missed = item.errorType !== 'None' || (item.accuracy != null && item.accuracy < 60);
+      const label = errorLabels[item.errorType] || (missed ? '发音需改进' : '准确');
+      const phones = item.phonemes.length
+        ? `<div class="pa-phonemes">${item.phonemes.map(phone =>
+            `<span>${esc(phone.phoneme)} ${phone.accuracy ?? '—'}</span>`).join('')}</div>`
+        : '';
+      return `<div class="pa-word ${missed ? 'miss' : 'ok'}">
+        <b>${esc(item.word)}</b><span>${item.accuracy ?? '—'} · ${esc(label)}</span>${phones}
+      </div>`;
+    }).join('');
+    const heard = result.recognizedText
+      ? `<div class="pa-heard">识别到：${esc(result.recognizedText)}</div>` : '';
+    recogHost.innerHTML = `<div class="speak-result ${pass ? 'pass' : 'fail'}">
+      <div class="pa-summary">
+        ${scoreMetric('综合发音', score, true)}
+        ${scoreMetric('音素准确', result.overall.accuracy)}
+        ${scoreMetric('流利度', result.overall.fluency)}
+        ${scoreMetric('完整度', result.overall.completeness)}
+      </div>
+      ${heard}
+      ${words ? `<div class="pa-words">${words}</div>` : ''}
+      <div class="score-line"><b>${score} 分</b> ${pass ? '👍 已达到本次练习线' : '💪 再听标准音练一次'}</div>
+      <div class="pa-note">评分用于练习参考；德语暂不提供英语专属的韵律分。</div>
+    </div>`;
+    onScore?.(score);
+  }
+
+  function renderAssessmentError(err) {
+    phase = 'judged';
+    const canRetry = assessmentBlob && err?.code !== 'not-configured' && err?.code !== 'unauthorized';
+    recogHost.innerHTML = `<div class="sp-recog-msg">
+      ${esc(assessmentErrorMessage(err))}，录音对比仍可使用。
+      <div class="pa-error-actions">
+        ${canRetry ? '<button class="sp-btn sp-retry">重新评分这段录音</button>' : ''}
+        ${err?.code === 'not-configured' || err?.code === 'unauthorized'
+          ? '<a class="sp-btn" href="#/settings">去设置发音评分</a>' : ''}
+      </div>
+    </div>`;
+    recogHost.querySelector('.sp-retry')?.addEventListener('click', requestAssessment);
+  }
+
+  async function requestAssessment(e) {
+    e?.stopPropagation?.();
+    if (!assessmentBlob) {
+      renderAssessmentError({ code: 'audio-unavailable', message: '本设备未能生成评分音频' });
       return;
     }
-    const words = r.displayWords.map((w, i) =>
-      `<span class="${r.ok[i] ? 'w-ok' : 'w-miss'}">${esc(w)}</span>`).join(' ');
-    const emoji = r.score >= 90 ? '🎉' : r.score >= SPEAK_PASS ? '👍' : '💪';
-    const pass = r.score >= SPEAK_PASS;
-    recogHost.innerHTML = pass
-      ? `<div class="speak-result pass">
-          <div>${words}</div>
-          <div class="score-line"><b>${r.score}%</b> ${emoji} 发音不错！</div>
-        </div>`
-      : `<div class="speak-result fail">
-          <div>${words}</div>
-          <div class="score-line"><b>${r.score}%</b> ${emoji} 有几个词没读准，点「🔁 重录」再试试（也可以直接继续）</div>
-        </div>`;
-    onScore?.(r.score);
+    if (!assessmentConfigured()) {
+      renderAssessmentError({ code: 'not-configured', message: '请先到设置中配置发音评分' });
+      return;
+    }
+    const run = ++assessmentRun;
+    phase = 'judging';
+    recogHost.innerHTML = `<div class="sp-judging">🧐 正在分析音素、流利度和完整度…</div>`;
+    try {
+      const result = await assessPronunciation({ audioBlob: assessmentBlob, referenceText: targetText });
+      if (run === assessmentRun) renderAssessment(result);
+    } catch (err) {
+      if (run === assessmentRun) renderAssessmentError(err);
+    }
   }
 
   function renderCompare(url) {
@@ -166,64 +175,40 @@ export function speakPractice(host, targetText, { onScore } = {}) {
     status.textContent = '';
     compare.innerHTML = '';
     recogHost.innerHTML = '';
-    clearTimeout(judgeTimer);
+    assessmentRun++;
     if (myUrl) { URL.revokeObjectURL(myUrl); myUrl = null; }
-    recogCtl = null; recogResult = null;
+    assessmentBlob = null;
     phase = 'recording';
     recordBtn.disabled = true; // 等待 stream 就绪，防重复点击
     try {
-      recorderCtl = await startRecording();
+      recorderCtl = await startRecording({ onLimit: () => stopRec() });
     } catch (err) {
       recordBtn.disabled = false;
       phase = 'idle';
       status.textContent = err.message || '无法录音';
       return;
     }
-    // 并发识别共用同一次说话：把录音流的克隆轨喂给识别器，根治安卓上识别与录音
-    // 抢麦克风导致的识别无声；克隆轨由 recognizeOnce 在识别结束时释放
-    if (recognitionAvailable()) {
-      let track = null;
-      try {
-        track = recorderCtl.stream?.getAudioTracks?.()[0]?.clone() || null;
-        recogCtl = recognizeOnce({
-          track,
-          onResult: (alts) => { recogResult = scoreSpeech(targetText, alts); renderRecog(); },
-          onError: (errCode) => { recogResult = { error: errCode }; renderRecog(); },
-          // 识别静默结束（既无结果也无错误）时兜底，避免 judging 转圈凭空消失
-          onEnd: () => { if (recogResult == null) { recogResult = { error: 'no-result' }; renderRecog(); } },
-        });
-      } catch { track?.stop(); recogCtl = null; }
-    }
     recordBtn.disabled = false;
     recordBtn.classList.add('recording');
     recordBtn.textContent = '⏹ 停止';
-    status.textContent = '录音中…请朗读';
+    status.textContent = '录音中…请朗读（最长 20 秒）';
   }
 
   async function stopRec() {
+    if (phase !== 'recording') return;
+    phase = 'stopping';
+    recordBtn.disabled = true;
     recordBtn.classList.remove('recording');
-    recordBtn.textContent = '🔁 重录';
-    status.textContent = '';
-    if (recogCtl) { try { recogCtl.stop(); } catch {} }
+    recordBtn.textContent = '处理中…';
+    status.textContent = '正在准备录音…';
     const res = recorderCtl ? await recorderCtl.stop() : null;
     recorderCtl = null;
-    // 拿到录音立即出对比区，不等判定结果
+    recordBtn.disabled = false;
+    recordBtn.textContent = '🔁 重录';
+    status.textContent = '';
     if (res?.url) { myUrl = res.url; renderCompare(res.url); }
-    if (recogCtl === null && recogResult === null) {
-      // 识别 API 不存在（判定区留空）或启动失败（给单独判定入口）：录音对比不受影响
-      phase = 'no-recog';
-      recogHost.innerHTML = '';
-      if (recognitionAvailable()) addJudgeBtn();
-    } else if (recogResult != null) {
-      renderRecog();
-    } else {
-      // 识别已启动但结果未回：显示判定中，5s 超时兜底（迟到真结果仍会覆盖）
-      phase = 'judging';
-      recogHost.innerHTML = `<div class="sp-judging">🧐 正在判定发音…</div>`;
-      judgeTimer = setTimeout(() => {
-        if (recogResult == null) { recogResult = { error: 'timeout' }; renderRecog(); }
-      }, 5000);
-    }
+    assessmentBlob = res?.assessmentBlob || null;
+    requestAssessment();
   }
 
   recordBtn.addEventListener('click', (e) => {
@@ -234,49 +219,6 @@ export function speakPractice(host, targetText, { onScore } = {}) {
 
   host.appendChild(wrap);
   return wrap;
-}
-
-// 纯识别模式（无录音能力时的退路）：点击 → 识别 → 逐词比对
-function wireRecognitionOnly(btn, targetText, recogHost, status, onScore) {
-  let ctl = null;
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (btn.classList.contains('recording')) { ctl?.stop(); return; }
-    btn.classList.add('recording');
-    btn.textContent = '⏹ 停止';
-    status.textContent = '识别中…请朗读';
-    let got = false;
-    ctl = recognizeOnce({
-      onResult: (alts) => {
-        got = true;
-        const r = scoreSpeech(targetText, alts);
-        const words = r.displayWords.map((w, i) =>
-          `<span class="${r.ok[i] ? 'w-ok' : 'w-miss'}">${esc(w)}</span>`).join(' ');
-        const emoji = r.score >= 90 ? '🎉' : r.score >= SPEAK_PASS ? '👍' : '💪';
-        const pass = r.score >= SPEAK_PASS;
-        recogHost.innerHTML = pass
-          ? `<div class="speak-result pass"><div>${words}</div>
-             <div class="score-line"><b>${r.score}%</b> ${emoji} 发音不错！</div></div>`
-          : `<div class="speak-result fail"><div>${words}</div>
-             <div class="score-line"><b>${r.score}%</b> ${emoji} 有几个词没读准，点「🔁 重录」再试试（也可以直接继续）</div></div>`;
-        onScore?.(r.score);
-      },
-      onError: (err) => {
-        got = true;
-        const msg = err === 'network' ? '语音识别暂时连不上，请检查网络后再试'
-          : err === 'not-allowed' ? '请在浏览器设置中允许使用麦克风'
-          : err === 'no-speech' ? '没有听到声音，请再试一次'
-          : `识别出错（${err}）`;
-        recogHost.innerHTML = `<div class="sp-recog-msg">${esc(msg)}</div>`;
-      },
-      onEnd: () => {
-        btn.classList.remove('recording');
-        btn.textContent = '🎤 跟读（识别）';
-        status.textContent = '';
-        if (!got) recogHost.innerHTML = `<div class="sp-recog-msg">没有听清，请靠近麦克风再试</div>`;
-      },
-    });
-  });
 }
 
 /* ---- 兼容包装：micBtn 返回 🎤 按钮，点击后在 resultHost 里展开跟读练习组件 ----

@@ -1,5 +1,5 @@
-// 语音：预生成音频优先（真人级德语 MP3），设备 TTS 仅作德语语音回退
-// + 跟读识别（SpeechRecognition）
+// 语音播放：预生成音频优先（真人级德语 MP3），设备 TTS 仅作德语语音回退。
+// 跟读评分已移至 pronunciation-assessment.js，不再依赖浏览器 SpeechRecognition。
 import { getSettings } from './storage.js';
 import { AUDIO_MANIFEST } from '../data/audio-manifest.js';
 
@@ -84,76 +84,4 @@ export function stopSpeak() {
 
 export function ttsAvailable() {
   return 'speechSynthesis' in window;
-}
-
-/* ================= 语音识别（跟读检测） ================= */
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-export const SPEAK_PASS = 70; // 跟读判定及格线
-
-export function recognitionAvailable() {
-  return !!SR;
-}
-
-export function recognizeOnce({ onResult, onError, onEnd, track = null }) {
-  const rec = new SR();
-  rec.lang = 'de-DE';
-  rec.interimResults = false;
-  rec.maxAlternatives = 3;
-  rec.continuous = false;
-  let ended = false;
-  rec.onresult = (e) => {
-    const alts = [];
-    for (const alt of e.results[0]) alts.push(alt.transcript);
-    onResult?.(alts);
-  };
-  rec.onerror = (e) => onError?.(e.error);
-  rec.onend = () => { track?.stop(); if (!ended) { ended = true; onEnd?.(); } };
-  // 传入音频轨时识别器直接消费该轨（Chrome 2024+ 的 start(track) 重载），
-  // 不再自己抢麦克风；旧浏览器忽略此参数，照走原麦克风路径
-  try { rec.start(track || undefined); }
-  catch (err) { track?.stop(); throw err; }
-  return { stop: () => { try { rec.stop(); } catch {} } };
-}
-
-/* ================= 跟读比对 ================= */
-function normalizeWords(text) {
-  return text
-    .toLowerCase()
-    .replace(/ß/g, 'ss')
-    .replace(/[.,!?;:"„“”'’()\-–—]/g, ' ')
-    .split(/\s+/)
-    .filter(Boolean);
-}
-
-function lcsMatch(target, spoken) {
-  const n = target.length, m = spoken.length;
-  const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
-  for (let i = 1; i <= n; i++)
-    for (let j = 1; j <= m; j++)
-      dp[i][j] = target[i - 1] === spoken[j - 1]
-        ? dp[i - 1][j - 1] + 1
-        : Math.max(dp[i - 1][j], dp[i][j - 1]);
-  const ok = new Array(n).fill(false);
-  let i = n, j = m;
-  while (i > 0 && j > 0) {
-    if (target[i - 1] === spoken[j - 1]) { ok[i - 1] = true; i--; j--; }
-    else if (dp[i - 1][j] >= dp[i][j - 1]) i--;
-    else j--;
-  }
-  return ok;
-}
-
-export function scoreSpeech(targetText, alternatives) {
-  const target = normalizeWords(targetText);
-  let best = { score: 0, ok: new Array(target.length).fill(false), heard: alternatives[0] || '' };
-  for (const alt of alternatives) {
-    const spoken = normalizeWords(alt);
-    const ok = lcsMatch(target, spoken);
-    const matched = ok.filter(Boolean).length;
-    const score = target.length ? Math.round(100 * matched / target.length) : 0;
-    if (score >= best.score) best = { score, ok, heard: alt };
-  }
-  const displayWords = targetText.split(/\s+/).filter(Boolean);
-  return { ...best, displayWords };
 }

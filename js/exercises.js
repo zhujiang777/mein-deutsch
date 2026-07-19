@@ -3,7 +3,8 @@
 // 题型: choice / assemble / fill / listenChoice / dictation / match / translate / speak
 //       + 微步课展示/复述步: scene / observe / reproduce / roleplay
 import { el, esc, audioBtn, speakPractice, toast } from './ui.js';
-import { speak, stopSpeak, SPEAK_PASS } from './speech.js';
+import { speak, stopSpeak } from './speech.js';
+import { SPEAK_PASS } from './pronunciation-assessment.js';
 import { recordingSupported, startRecording } from './recorder.js';
 
 // 德语特殊字符输入条（dictation 打字模式用）
@@ -61,19 +62,27 @@ function playbackCompare(targetText, myUrl) {
 function recordButton(onDone) {
   const btn = el(`<button class="btn sp-record">🎤 录音</button>`);
   let ctl = null;
+  let finishing = false;
+  const finish = async () => {
+    if (finishing || !ctl) return;
+    finishing = true;
+    btn.disabled = true;
+    const current = ctl;
+    ctl = null;
+    const res = await current.stop();
+    btn.classList.remove('recording');
+    btn.disabled = false;
+    btn.textContent = '🔁 重录';
+    finishing = false;
+    onDone(res?.url || null);
+  };
   btn.addEventListener('click', async () => {
     if (btn.classList.contains('recording')) {
-      btn.disabled = true;
-      const res = ctl ? await ctl.stop() : null;
-      ctl = null;
-      btn.classList.remove('recording');
-      btn.disabled = false;
-      btn.textContent = '🔁 重录';
-      onDone(res?.url || null);
+      finish();
       return;
     }
     btn.disabled = true;
-    try { ctl = await startRecording(); }
+    try { ctl = await startRecording({ onLimit: finish }); }
     catch (err) { btn.disabled = false; onDone(null, err); return; }
     btn.disabled = false;
     btn.classList.add('recording');
@@ -283,7 +292,7 @@ function renderTranslate(host, item, ctx) {
   host.appendChild(wrap);
 }
 
-/* ---------- speak：跟读（识别判定+录音对比；达标计正确，否则跳过不计，绝不计错） ---------- */
+/* ---------- speak：跟读（云端发音评测+录音对比；达标计正确，否则跳过不计，绝不计错） ---------- */
 function renderSpeak(host, item, ctx) {
   host.appendChild(el(`<div class="ex-prompt">
     <div class="ex-q">🎤 跟读这句</div>

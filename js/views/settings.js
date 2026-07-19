@@ -1,8 +1,10 @@
 // 设置：语音选择、语速、每日新词、Gist 同步、进度导出/导入
 import { el, esc, toast } from '../ui.js';
-import { germanVoices, speak, ttsAvailable, recognitionAvailable } from '../speech.js';
+import { germanVoices, speak, ttsAvailable } from '../speech.js';
 import { getSettings, setSetting, exportAll, importAll, resetAll } from '../storage.js';
 import { pullMerge, pushNow, syncConfigured } from '../sync.js';
+import { getAssessmentSecrets, setAssessmentSecrets } from '../secrets.js';
+import { assessmentConfigured, checkAssessmentConnection } from '../pronunciation-assessment.js';
 
 export function renderSettings(host) {
   const s = getSettings();
@@ -104,8 +106,48 @@ export function renderSettings(host) {
   voiceCard.appendChild(testBtn);
 
   if (!ttsAvailable()) voiceCard.appendChild(el(`<p class="meta" style="margin-top:8px">⚠️ 当前浏览器不支持语音合成</p>`));
-  voiceCard.appendChild(el(`<p class="meta" style="margin-top:8px">${recognitionAvailable() ? '✅ 支持发音判定（跟读时自动逐词打分；识别服务异常会自动改用录音对比）' : '⚠️ 本浏览器不支持发音判定，跟读将使用录音对比模式（iPad 上各浏览器均为 WebKit 内核，识别多不可用，属正常）'}</p>`));
   host.appendChild(voiceCard);
+
+  /* 发音评分：配置只保存在当前设备，不进入 Gist/导出 */
+  const assessment = getAssessmentSecrets();
+  const assessmentCard = el(`<div class="card"><h3>🎯 德语发音评分</h3>
+    <p class="meta">一次录音会同时用于本机回放和 Azure 德语发音评测，返回综合发音、音素准确、流利度、完整度及逐词反馈。短录音仅在评分时发送，不写入学习进度或 Gist。</p>
+    <div class="assessment-config" style="margin-top:10px">
+      <label class="secret-label">Cloudflare Worker 地址
+        <input type="url" class="quiz-fill-input assessment-endpoint" autocomplete="off" placeholder="https://….workers.dev" value="${esc(assessment.endpoint)}">
+      </label>
+      <label class="secret-label">个人访问码
+        <input type="password" class="quiz-fill-input assessment-code" autocomplete="off" placeholder="仅保存在本机" value="${esc(assessment.accessCode)}">
+      </label>
+      <button class="btn small assessment-save">保存并测试连接</button>
+      <span class="assessment-status meta">${assessmentConfigured() ? '已填写配置，尚未验证' : '未配置时跟读仍可录音对比，但不会打分'}</span>
+    </div>
+  </div>`);
+  const endpointInput = assessmentCard.querySelector('.assessment-endpoint');
+  const codeInput = assessmentCard.querySelector('.assessment-code');
+  const saveAssessment = assessmentCard.querySelector('.assessment-save');
+  const assessmentStatus = assessmentCard.querySelector('.assessment-status');
+  saveAssessment.addEventListener('click', async () => {
+    setAssessmentSecrets({ endpoint: endpointInput.value, accessCode: codeInput.value });
+    if (!endpointInput.value.trim() || !codeInput.value.trim()) {
+      assessmentStatus.textContent = '配置不完整，已保留录音对比模式';
+      toast('请填写 Worker 地址和个人访问码');
+      return;
+    }
+    saveAssessment.disabled = true;
+    assessmentStatus.textContent = '正在连接…';
+    try {
+      await checkAssessmentConnection();
+      assessmentStatus.textContent = '✅ 发音评分连接正常';
+      toast('发音评分已开启 ✅');
+    } catch (err) {
+      assessmentStatus.textContent = `⚠️ ${err.message || '连接失败'}`;
+      toast(`连接失败：${err.message || '请检查配置'}`, 4000);
+    } finally {
+      saveAssessment.disabled = false;
+    }
+  });
+  host.appendChild(assessmentCard);
 
   /* 学习偏好 */
   const prefCard = el(`<div class="card"><h3>📚 学习偏好</h3></div>`);
@@ -170,5 +212,5 @@ export function renderSettings(host) {
   dataCard.appendChild(resetBtn);
   host.appendChild(dataCard);
 
-  host.appendChild(el(`<p class="meta" style="text-align:center;margin-top:20px">Mein Deutsch · 专属德语学习 · 数据仅存本机</p>`));
+  host.appendChild(el(`<p class="meta" style="text-align:center;margin-top:20px">Mein Deutsch · 学习进度默认存本机 · 评分时短录音发送至 Azure</p>`));
 }

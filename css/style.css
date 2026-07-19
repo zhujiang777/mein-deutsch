@@ -575,7 +575,7 @@ body.immersive #app { padding-bottom: 24px; }
    v3 引擎新增（录音跟读 / 打字听写 / 场景步 / 双泳道 / 复现推荐 / valence）
    ======================================================================= */
 
-/* ===== 跟读练习：录音对比 + 可选识别（speakPractice） ===== */
+/* ===== 跟读练习：录音对比 + 云端德语发音评测（speakPractice） ===== */
 .speak-practice { margin-top: 10px; }
 .sp-controls { display: flex; flex-wrap: wrap; gap: 8px; }
 .sp-btn {
@@ -597,6 +597,33 @@ body.immersive #app { padding-bottom: 24px; }
 .sp-cmp.mine .sp-cmp-icon { color: var(--blue); }
 .sp-recog { margin-top: 10px; }
 .sp-recog-msg { font-size: .82rem; color: var(--text-2); background: var(--bg); border-radius: 8px; padding: 8px 12px; }
+.pa-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+.pa-metric { border-radius: 10px; background: var(--bg); padding: 8px 4px; text-align: center; }
+.pa-metric.main { background: var(--accent-soft); color: var(--accent); }
+.pa-metric b { display: block; font-size: 1.15rem; line-height: 1.2; }
+.pa-metric span { display: block; color: var(--text-2); font-size: .68rem; margin-top: 3px; }
+.pa-heard { color: var(--text-2); font-size: .78rem; margin-bottom: 8px; }
+.pa-words { display: flex; flex-wrap: wrap; gap: 7px; margin: 8px 0; }
+.pa-word { border: 1px solid var(--line); border-radius: 10px; padding: 6px 9px; background: var(--card); }
+.pa-word.ok { border-color: var(--green); }
+.pa-word.miss { border-color: var(--red); background: var(--red-soft); }
+.pa-word > b { display: block; font-family: Georgia, serif; font-size: .92rem; }
+.pa-word > span { display: block; color: var(--text-2); font-size: .68rem; }
+.pa-phonemes { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.pa-phonemes span { border-radius: 99px; background: var(--bg); padding: 1px 5px; font-size: .62rem; }
+.pa-note { color: var(--text-2); font-size: .7rem; margin-top: 6px; }
+.pa-error-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+.pa-error-actions .sp-btn { display: inline-flex; align-items: center; padding: 6px 10px; font-size: .76rem; }
+
+/* 设置页中的本机发音评分配置 */
+.assessment-config { display: flex; flex-direction: column; gap: 9px; }
+.secret-label { display: flex; flex-direction: column; gap: 4px; font-size: .82rem; font-weight: 600; }
+.secret-label input { width: 100%; }
+.assessment-status { display: block; line-height: 1.5; }
+
+@media (max-width: 420px) {
+  .pa-summary { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* ===== dictation 打字模式 ===== */
 .dict-input {

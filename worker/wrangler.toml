@@ -1,0 +1,7 @@
+name = "mein-deutsch-pronunciation"
+main = "src/index.js"
+compatibility_date = "2026-07-19"
+
+[vars]
+ALLOWED_ORIGINS = "https://zhujiang777.github.io"
+MAX_AUDIO_BYTES = "1048576"

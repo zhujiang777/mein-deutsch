@@ -6,3 +6,6 @@
 英语学习以及其他人的德语学习经验/
 不背单词参考/
 claude-context-checkpoint-main/
+worker/.dev.vars
+.wrangler/
+.playwright-cli/

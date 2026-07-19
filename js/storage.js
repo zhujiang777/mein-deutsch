@@ -160,4 +160,5 @@ export function mergeRemote(json) {
 }
 export function resetAll() {
   Object.values(KEYS).forEach(k => localStorage.removeItem(k));
+  localStorage.removeItem('md.local.secrets.v1');
 }
