@@ -300,4 +300,10 @@ export const VOCAB = [
   w('immer', null, null, '总是', 'Er kommt immer zu spät.', '他总是迟到。', 'frage'),
   w('oft', null, null, '经常', 'Wir essen oft zusammen.', '我们常一起吃饭。', 'frage'),
   w('manchmal', null, null, '有时', 'Manchmal koche ich selbst.', '有时我自己做饭。', 'frage'),
+
+  /* 🗨 高频固定表达（id 按数组位置生成，新词条只能追加在末尾，勿插入中间） */
+  w('Kein Problem', null, null, '没问题', 'Kein Problem, ich spreche langsam.', '没问题，我说慢一点。', 'gruss'),
+  w('Einen Moment, bitte', null, null, '请稍等', 'Einen Moment, bitte. Der Arzt kommt gleich.', '请稍等，医生马上就来。', 'gruss'),
+  w('Wie bitte?', null, null, '请再说一遍？', 'Wie bitte? Ich verstehe das nicht.', '请再说一遍？我没听懂。', 'gruss'),
+  w('Gute Besserung', null, null, '祝早日康复', 'Gute Besserung!', '祝早日康复！', 'koerper'),
 ];

@@ -647,7 +647,7 @@ export const COURSE = [
         id: 'sb-l2',
         title: '大学场景 An der Uni',
         skills: ['uni-chunks', 'polite-request', 'du-sie'],
-        vocabRefs: ['w020', 'w176', 'w177', 'w223', 'w164', 'w247'],
+        vocabRefs: ['w020', 'w176', 'w177', 'w223', 'w164', 'w247', 'w252'],
         steps: [
           { type: 'scene', title: '到国际办公室报到', lines: [
             { who: 'Mia', de: 'Guten Tag! Ich bin Austauschstudentin aus China.', zh: '您好！我是来自中国的交换生。' },
@@ -715,7 +715,7 @@ export const COURSE = [
         id: 'sb-l3',
         title: '看医生与药店 Beim Arzt',
         skills: ['symptoms', 'wehtun', 'pharmacy', 'appointment'],
-        vocabRefs: ['w197', 'w185', 'w194', 'w196', 'w171', 'w080', 'w129'],
+        vocabRefs: ['w197', 'w185', 'w194', 'w196', 'w171', 'w080', 'w129', 'w253', 'w255'],
         steps: [
           { type: 'scene', title: '在诊所', lines: [
             { who: 'Mia', de: 'Guten Tag! Ich habe einen Termin um zehn Uhr.', zh: '您好！我预约了十点。' },
