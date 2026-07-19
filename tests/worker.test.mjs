@@ -41,12 +41,12 @@ function azureResult() {
   };
 }
 
-test('builds a UTF-8 pronunciation header with scripted phoneme scoring', () => {
+test('builds a UTF-8 pronunciation header with reliable de-DE word scoring', () => {
   const decoded = JSON.parse(Buffer.from(buildPronunciationHeader('Grüß dich!'), 'base64').toString('utf8'));
   assert.equal(decoded.ReferenceText, 'Grüß dich!');
-  assert.equal(decoded.Granularity, 'Phoneme');
+  assert.equal(decoded.Granularity, 'Word');
   assert.equal(decoded.Dimension, 'Comprehensive');
-  assert.equal(decoded.EnableMiscue, true);
+  assert.equal(decoded.EnableMiscue, 'True');
 });
 
 test('validates exactly the WAV format sent to Azure', () => {

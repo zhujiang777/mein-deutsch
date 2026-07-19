@@ -1,8 +1,13 @@
 import { getAssessmentSecrets } from './secrets.js';
-import { assessWithAzureSpeechSdk } from './azure-speech-sdk.js';
+import { assessWithAzureSpeechSdk, loadAzureSpeechSdk } from './azure-speech-sdk.js';
 
 export const SPEAK_PASS = 70;
 const REQUEST_TIMEOUT_MS = 15000;
+const SDK_PREFERENCE_KEY = 'md.pa.sdk-preferred.v1';
+const SDK_PREFERENCE_MS = 60 * 60 * 1000;
+
+let tokenCache = null;
+let sdkPreparation = null;
 
 export class AssessmentError extends Error {
   constructor(code, message, { status = 0, retryable = false } = {}) {
@@ -94,6 +99,22 @@ function authHeaders(accessCode) {
   return { Authorization: `Bearer ${accessCode}` };
 }
 
+function sdkPreferred(endpoint) {
+  try {
+    const value = JSON.parse(globalThis.sessionStorage?.getItem(SDK_PREFERENCE_KEY) || 'null');
+    return value?.endpoint === endpoint && Number(value?.until) > Date.now();
+  } catch { return false; }
+}
+
+function rememberSdkPreference(endpoint) {
+  try {
+    globalThis.sessionStorage?.setItem(SDK_PREFERENCE_KEY, JSON.stringify({
+      endpoint,
+      until: Date.now() + SDK_PREFERENCE_MS,
+    }));
+  } catch { /* 非关键性能提示，存储不可用时忽略 */ }
+}
+
 export async function checkAssessmentConnection() {
   const { endpoint, accessCode } = getAssessmentSecrets();
   if (!endpoint || !accessCode) throw new AssessmentError('not-configured', '请先填写 Worker 地址和访问码');
@@ -105,6 +126,11 @@ export async function checkAssessmentConnection() {
 }
 
 async function getSpeechSdkToken(endpoint, accessCode) {
+  if (tokenCache?.endpoint === endpoint
+      && tokenCache?.accessCode === accessCode
+      && tokenCache.expiresAt > Date.now()) {
+    return tokenCache.credentials;
+  }
   const res = await fetchWithTimeout(`${endpoint}/v1/speech/token`, {
     method: 'POST',
     headers: authHeaders(accessCode),
@@ -116,12 +142,39 @@ async function getSpeechSdkToken(endpoint, accessCode) {
   if (value?.schemaVersion !== 1 || !value.token || !value.region) {
     throw new AssessmentError('invalid-response', 'Worker 返回的 Azure 临时令牌无效', { retryable: true });
   }
-  return { token: String(value.token), region: String(value.region) };
+  const credentials = { token: String(value.token), region: String(value.region) };
+  tokenCache = {
+    endpoint,
+    accessCode,
+    credentials,
+    expiresAt: Date.now() + Math.min(Number(value.expiresIn) || 540, 540) * 1000,
+  };
+  return credentials;
+}
+
+// 已确认 REST 漏分的当前标签页，在用户录音期间提前加载 SDK 并获取短期令牌。
+// 不预热仍可用 REST 的新会话，避免不必要的 456KB 下载。
+export function preparePronunciationAssessment() {
+  const { endpoint, accessCode } = getAssessmentSecrets();
+  if (!endpoint || !accessCode || !sdkPreferred(endpoint)) return Promise.resolve(false);
+  if (!sdkPreparation) {
+    sdkPreparation = Promise.all([
+      getSpeechSdkToken(endpoint, accessCode),
+      loadAzureSpeechSdk(),
+    ]).then(() => true).catch((err) => {
+      sdkPreparation = null;
+      throw err;
+    });
+  }
+  return sdkPreparation;
 }
 
 async function assessWithSdkFallback({ endpoint, accessCode, audioBlob, referenceText }) {
-  const credentials = await getSpeechSdkToken(endpoint, accessCode);
   try {
+    const [credentials] = await Promise.all([
+      getSpeechSdkToken(endpoint, accessCode),
+      loadAzureSpeechSdk(),
+    ]);
     return parseAssessmentResponse(await assessWithAzureSpeechSdk({
       ...credentials,
       audioBlob,
@@ -142,6 +195,10 @@ export async function assessPronunciation({ audioBlob, referenceText }) {
     throw new AssessmentError('audio-unavailable', '本设备未能生成评分音频，请使用录音对比自查');
   }
 
+  if (sdkPreferred(endpoint)) {
+    return assessWithSdkFallback({ endpoint, accessCode, audioBlob, referenceText });
+  }
+
   const body = new FormData();
   body.append('audio', audioBlob, 'speech.wav');
   body.append('referenceText', String(referenceText || '').trim());
@@ -155,6 +212,7 @@ export async function assessPronunciation({ audioBlob, referenceText }) {
   if (!res.ok) {
     const detail = await readError(res);
     if (detail.code === 'provider-assessment-missing') {
+      rememberSdkPreference(endpoint);
       return assessWithSdkFallback({ endpoint, accessCode, audioBlob, referenceText });
     }
     throw statusError(res.status, detail);

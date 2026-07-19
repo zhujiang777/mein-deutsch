@@ -83,9 +83,11 @@ export function buildPronunciationHeader(referenceText) {
   return utf8Base64(JSON.stringify({
     ReferenceText: referenceText,
     GradingSystem: 'HundredMark',
-    Granularity: 'Phoneme',
+    // de-DE 不返回可解释的音素名称；Word 粒度避开短音频 REST
+    // 当前对 Phoneme 配置偶发忽略整个评分区块的问题。
+    Granularity: 'Word',
     Dimension: 'Comprehensive',
-    EnableMiscue: true,
+    EnableMiscue: 'True',
   }));
 }
 
@@ -126,6 +128,7 @@ export function normalizeAzureResponse(value) {
       hasNBest: !!best,
       hasAssessment: !!overall,
       hasPronScore: overall?.PronScore != null,
+      granularity: 'Word',
     });
     throw new HttpError(502, 'provider-assessment-missing', 'Azure 已识别语音，但 REST 接口未返回发音分');
   }

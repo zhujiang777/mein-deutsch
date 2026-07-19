@@ -84,6 +84,11 @@ export async function assessWithAzureSpeechSdk({ token, region, audioBlob, refer
     enableMiscue: true,
   }));
   pronunciationConfig.applyTo(recognizer);
+  let connection = null;
+  try {
+    connection = sdk.Connection.fromRecognizer(recognizer);
+    connection.openConnection();
+  } catch { /* SDK 会在 recognizeOnceAsync 时自行建连 */ }
 
   try {
     const result = await new Promise((resolve, reject) => {
@@ -104,6 +109,7 @@ export async function assessWithAzureSpeechSdk({ token, region, audioBlob, refer
     const aggregate = sdk.PronunciationAssessmentResult.fromResult(result);
     return normalizeSpeechSdkResult(raw, aggregate, result.text);
   } finally {
+    try { connection?.closeConnection(); } catch { /* 已由 recognizer 关闭 */ }
     recognizer.close();
     pronunciationConfig.close?.();
     audioConfig.close?.();

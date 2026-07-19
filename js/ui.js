@@ -5,6 +5,7 @@ import {
   assessPronunciation,
   assessmentConfigured,
   assessmentErrorMessage,
+  preparePronunciationAssessment,
   SPEAK_PASS,
 } from './pronunciation-assessment.js';
 
@@ -178,6 +179,8 @@ export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
     assessmentRun++;
     if (myUrl) { URL.revokeObjectURL(myUrl); myUrl = null; }
     assessmentBlob = null;
+    // 若本标签页已确认 Azure REST 漏分，利用用户朗读时间预热 SDK 和短期令牌。
+    preparePronunciationAssessment().catch(() => {});
     phase = 'recording';
     recordBtn.disabled = true; // 等待 stream 就绪，防重复点击
     try {
