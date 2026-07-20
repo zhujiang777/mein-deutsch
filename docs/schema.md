@@ -240,12 +240,23 @@
   ],
   mnemonic: '🧩 联想助记文本',                    // ?
   valence: 'helfen + Dativ：jemandem helfen',     // ? 支配关系，词义下方浅金色小行显示
+
+  // ---- 维度字段（2026-07 补全，tests/vocab-data.test.mjs 强制校验）----
+  pos: 'v.',        // 非名词必填（名词由 art 隐含 n. 不填）。缩写集：v. adj. adv. num. prep. pron. interj. konj. phrase
+  noPl: true,       // ? 确无复数的名词标记；名词必须 pl 或 noPl 二选一（互斥）
+  forms: {          // 动词（pos:'v.'）必填。可分动词写分开形（ich:'stehe auf'）
+    ich:'trinke', du:'trinkst', er:'trinkt', wir:'trinken', ihr:'trinkt', sie:'trinken',
+    perfekt: 'hat getrunken',   // 完整含助动词；位移/状态变化动词用 ist
+    praeteritum: 'trank',       // ? 仅 sein/haben/werden/情态动词填（A1 教学范围）
+  },                            // 无人称动词（regnen/wehtun）只填 er + perfekt
+  phrases: [{ de: 'eine Tasse Kaffee', zh: '一杯咖啡' }],  // ? 高频固定搭配，每词 ≤3 条
 }
 ```
 
 - 名词的 `spoken`（朗读用）自动拼成 `art + de`（如 "der Kaffee"）；因此音频管线会收录带冠词形式。
 - `valence` 只做展示，无解析逻辑；写成便于记忆的一行即可（动词支配格、介词搭配等）。
-- 新增词请追加到对应主题分组内，保持 `id` 连续。
+- **新增词只能追加到 `VOCAB` 数组最末尾**——`id` 按位置自动生成，中插会让后续所有词的 id 位移、破坏 SRS 存档。主题归属靠 `theme` 字段，与数组位置无关。
+- `forms`/`phrases` 的德语文本暂未进音频提取（`tools/extract_texts.mjs` 未扫这两个字段）；词卡渲染这两个字段上屏时需同步扩展提取逻辑并重跑 `gen_audio.py`。
 
 ---
 

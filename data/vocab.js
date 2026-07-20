@@ -28,12 +28,14 @@ export const VOCAB = [
       { de: 'Hallo, wie geht’s?', zh: '你好，最近怎么样？', source: null },
       { de: 'Hallo! Ich bin Anna.', zh: '你好！我是安娜。', source: 'lesson:u1l1' },
     ],
+    pos: 'interj.',
   }),
   w('Guten Morgen', null, null, '早上好', 'Guten Morgen, Frau Schmidt!', '早上好，施密特女士！', 'gruss', {
     sentences: [
       { de: 'Guten Morgen, Frau Schmidt!', zh: '早上好，施密特女士！', source: null },
       { de: 'Guten Morgen! Wie geht es Ihnen?', zh: '早上好！您好吗？', source: 'lesson:u0l8' },
     ],
+    pos: 'phrase',
   }),
   w('Guten Tag', null, null, '你好（白天）', 'Guten Tag, Herr Müller!', '您好，米勒先生！', 'gruss', {
     sentences: [
@@ -41,35 +43,41 @@ export const VOCAB = [
       { de: 'Guten Tag! Wie heißen Sie?', zh: '您好！您叫什么名字？', source: 'lesson:sa-l1' },
       { de: 'Guten Tag! Ich habe einen Termin um zehn Uhr.', zh: '您好！我预约了十点。', source: 'lesson:sb-l3' },
     ],
+    pos: 'phrase',
   }),
   w('Guten Abend', null, null, '晚上好', 'Guten Abend zusammen!', '大家晚上好！', 'gruss', {
     sentences: [
       { de: 'Guten Abend zusammen!', zh: '大家晚上好！', source: null },
       { de: 'Guten Abend! Wie geht es Ihnen?', zh: '晚上好！您好吗？', source: null },
     ],
+    pos: 'phrase',
   }),
   w('Gute Nacht', null, null, '晚安', 'Gute Nacht, schlaf gut!', '晚安，睡个好觉！', 'gruss', {
     sentences: [
       { de: 'Gute Nacht, schlaf gut!', zh: '晚安，睡个好觉！', source: null },
       { de: 'Ich bin müde. Gute Nacht!', zh: '我累了。晚安！', source: null },
     ],
+    pos: 'phrase',
   }),
   w('Tschüss', null, null, '再见（口语）', 'Tschüss, bis morgen!', '再见，明天见！', 'gruss', {
     sentences: [
       { de: 'Tschüss, bis morgen!', zh: '再见，明天见！', source: null },
     ],
+    pos: 'interj.',
   }),
   w('Auf Wiedersehen', null, null, '再见（正式）', 'Auf Wiedersehen, Herr Doktor!', '再见，医生先生！', 'gruss', {
     sentences: [
       { de: 'Auf Wiedersehen, Herr Doktor!', zh: '再见，医生先生！', source: null },
       { de: 'Danke schön! Auf Wiedersehen!', zh: '非常感谢！再见！', source: 'lesson:sa-l2' },
     ],
+    pos: 'phrase',
   }),
   w('danke', null, null, '谢谢', 'Danke schön!', '非常感谢！', 'gruss', {
     sentences: [
       { de: 'Danke schön!', zh: '非常感谢！', source: null },
       { de: 'Sehr gut, danke!', zh: '很好，谢谢！', source: 'lesson:sa-l2' },
     ],
+    pos: 'adv.',
   }),
   w('bitte', null, null, '请；不客气', 'Bitte schön!', '不客气！', 'gruss', {
     senses: [{ pos: '', zh: '不客气（回应感谢）' }, { pos: '', zh: '请（礼貌用语，点单/请求时）' }],
@@ -78,6 +86,7 @@ export const VOCAB = [
       { de: 'Ich hätte gern einen Kaffee, bitte.', zh: '我想要一杯咖啡，谢谢。', source: 'lesson:sa-l2' },
       { de: 'Zehn Äpfel, bitte!', zh: '请来十个苹果！', source: 'lesson:u0l7' },
     ],
+    pos: 'adv.',
   }),
   w('Entschuldigung', 'die', 'Entschuldigungen', '对不起；打扰一下', 'Entschuldigung, wo ist der Bahnhof?', '打扰一下，火车站在哪？', 'gruss', {
     senses: [{ pos: 'n.', zh: '打扰一下（引起注意/问路时）' }, { pos: 'n.', zh: '对不起（道歉时）' }],
@@ -92,28 +101,33 @@ export const VOCAB = [
       { de: 'Ja, gern!', zh: '是的，乐意！', source: null },
       { de: 'Ja, ich bin Studentin. Und du?', zh: '是的，我是大学生。你呢？', source: 'lesson:u1l1' },
     ],
+    pos: 'adv.',
   }),
   w('nein', null, null, '不', 'Nein, danke.', '不，谢谢。', 'gruss', {
     sentences: [
       { de: 'Nein, danke.', zh: '不，谢谢。', source: null },
       { de: 'Nein, ich bin nicht müde.', zh: '不，我不累。', source: 'lesson:u1l1' },
     ],
+    pos: 'adv.',
   }),
   w('vielleicht', null, null, '也许', 'Vielleicht morgen.', '也许明天吧。', 'gruss', {
     sentences: [
       { de: 'Vielleicht morgen.', zh: '也许明天吧。', source: null },
     ],
+    pos: 'adv.',
   }),
   w('gern', null, null, '乐意地', 'Ich helfe dir gern.', '我很乐意帮你。', 'gruss', {
     sentences: [
       { de: 'Ich helfe dir gern.', zh: '我很乐意帮你。', source: null },
       { de: 'Ich trinke gern Wein.', zh: '我喜欢喝葡萄酒。', source: 'lesson:u0l4' },
     ],
+    pos: 'adv.',
   }),
   w('bis bald', null, null, '回头见', 'Mach’s gut, bis bald!', '保重，回头见！', 'gruss', {
     sentences: [
       { de: 'Mach’s gut, bis bald!', zh: '保重，回头见！', source: null },
     ],
+    pos: 'phrase',
   }),
 
   /* 🙋 自我介绍 */
@@ -124,6 +138,19 @@ export const VOCAB = [
       { de: 'Ich heiße Mia Wang.', zh: '我叫王米娅。', source: 'lesson:sb-l2' },
     ],
     mnemonic: 'heißen 与 heiß（热的）拼写相近但无关，heißen 意为"叫（名字）"',
+    pos: 'v.',
+    forms: {
+      ich: 'heiße',
+      du: 'heißt',
+      er: 'heißt',
+      wir: 'heißen',
+      ihr: 'heißt',
+      sie: 'heißen',
+      perfekt: 'hat geheißen',
+    },
+    phrases: [
+      { de: 'Wie heißt du?', zh: '你叫什么名字？（对同龄人）' },
+    ],
   }),
   w('kommen', null, null, '来', 'Ich komme aus China.', '我来自中国。', 'person', {
     sentences: [
@@ -131,12 +158,34 @@ export const VOCAB = [
       { de: 'Woher kommst du?', zh: '你从哪儿来？', source: 'lesson:sa-l1' },
     ],
     mnemonic: 'kommen ≈ 英语 come，同源好记',
+    pos: 'v.',
+    forms: {
+      ich: 'komme',
+      du: 'kommst',
+      er: 'kommt',
+      wir: 'kommen',
+      ihr: 'kommt',
+      sie: 'kommen',
+      perfekt: 'ist gekommen',
+    },
+    valence: 'kommen aus + Dativ：Ich komme aus China.',
   }),
   w('wohnen', null, null, '居住', 'Ich wohne in Peking.', '我住在北京。', 'person', {
     sentences: [
       { de: 'Ich wohne in Peking.', zh: '我住在北京。', source: null },
       { de: 'Ich wohne in der Stadt.', zh: '我住在城市里。', source: 'lesson:u0l2' },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'wohne',
+      du: 'wohnst',
+      er: 'wohnt',
+      wir: 'wohnen',
+      ihr: 'wohnt',
+      sie: 'wohnen',
+      perfekt: 'hat gewohnt',
+    },
+    valence: 'wohnen in + Dativ：Ich wohne in Berlin.',
   }),
   w('sprechen', null, null, '说（语言）', 'Sprechen Sie Deutsch?', '您说德语吗？', 'person', {
     sentences: [
@@ -144,6 +193,16 @@ export const VOCAB = [
       { de: 'Ich spreche ein bisschen Deutsch.', zh: '我会说一点德语。', source: 'lesson:u0l5' },
     ],
     mnemonic: 'sprechen ≈ 英语 speech，同根好记',
+    pos: 'v.',
+    forms: {
+      ich: 'spreche',
+      du: 'sprichst',
+      er: 'spricht',
+      wir: 'sprechen',
+      ihr: 'sprecht',
+      sie: 'sprechen',
+      perfekt: 'hat gesprochen',
+    },
   }),
   w('Name', 'der', 'Namen', '名字', 'Wie ist Ihr Name?', '您贵姓？', 'person', {
     sentences: [
@@ -164,6 +223,7 @@ export const VOCAB = [
       { de: 'Ich komme aus China.', zh: '我来自中国。', source: null },
       { de: 'Wir sind Studenten aus China.', zh: '我们是来自中国的大学生。', source: 'lesson:u1l3' },
     ],
+    noPl: true,
   }),
   w('Deutschland', 'das', null, '德国', 'Deutschland ist schön.', '德国很美。', 'person', {
     sentences: [
@@ -171,6 +231,7 @@ export const VOCAB = [
       { de: 'Ich komme aus Deutschland.', zh: '我来自德国。', source: 'lesson:sa-l1' },
       { de: 'Wir sind Studenten aus Deutschland.', zh: '我们是来自德国的大学生。', source: 'lesson:u1l3' },
     ],
+    noPl: true,
   }),
   w('Sprache', 'die', 'Sprachen', '语言', 'Deutsch ist eine schöne Sprache.', '德语是一门美丽的语言。', 'person', {
     sentences: [
@@ -184,18 +245,21 @@ export const VOCAB = [
       { de: 'Ich lerne Deutsch.', zh: '我在学德语。', source: null },
       { de: 'Ich spreche ein bisschen Deutsch, aber ich lerne jeden Tag.', zh: '我会说一点德语，但我每天都在学。', source: 'lesson:u0l8' },
     ],
+    noPl: true,
   }),
   w('Chinesisch', 'das', null, '中文', 'Chinesisch ist meine Muttersprache.', '中文是我的母语。', 'person', {
     sentences: [
       { de: 'Chinesisch ist meine Muttersprache.', zh: '中文是我的母语。', source: null },
     ],
     mnemonic: 'Chinesisch = China + -isch（构成语言/形容词的后缀）',
+    noPl: true,
   }),
   w('Englisch', 'das', null, '英语', 'Er spricht gut Englisch.', '他英语说得好。', 'person', {
     sentences: [
       { de: 'Er spricht gut Englisch.', zh: '他英语说得好。', source: null },
     ],
     mnemonic: 'Englisch ≈ English，同源；-isch 是德语构成"…语言"的常见后缀',
+    noPl: true,
   }),
   w('alt', null, null, '老的；…岁的', 'Wie alt bist du?', '你多大了？', 'person', {
     senses: [{ pos: 'adj.', zh: '老的' }, { pos: 'adj.', zh: '…岁（问/说年龄）' }],
@@ -203,11 +267,15 @@ export const VOCAB = [
       { de: 'Wie alt bist du?', zh: '你多大了？', source: null },
       { de: 'Mein Bruder ist zehn Jahre alt.', zh: '我弟弟十岁。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('Jahr', 'das', 'Jahre', '年；岁', 'Ich bin 25 Jahre alt.', '我 25 岁。', 'person', {
     sentences: [
       { de: 'Ich bin 25 Jahre alt.', zh: '我 25 岁。', source: null },
       { de: 'Mein Bruder ist zehn Jahre alt.', zh: '我弟弟十岁。', source: null },
+    ],
+    phrases: [
+      { de: '… Jahre alt sein', zh: '……岁（表示年龄）' },
     ],
   }),
   w('Hobby', 'das', 'Hobbys', '爱好', 'Was sind deine Hobbys?', '你有什么爱好？', 'person', {
@@ -222,6 +290,7 @@ export const VOCAB = [
       { de: 'Ich studiere Musik.', zh: '我学音乐专业。', source: 'lesson:sa-l1' },
     ],
     mnemonic: 'Musik ≈ 英语 music，同源好记',
+    noPl: true,
   }),
   w('Sport', 'der', null, '体育运动', 'Ich mache gern Sport.', '我喜欢运动。', 'person', {
     sentences: [
@@ -229,6 +298,7 @@ export const VOCAB = [
       { de: 'Ich studiere Sport.', zh: '我学体育专业。', source: 'lesson:sa-l1' },
     ],
     mnemonic: 'Sport ≈ 英语 sport，同源好记',
+    noPl: true,
   }),
   w('Freund', 'der', 'Freunde', '朋友（男）', 'Er ist mein bester Freund.', '他是我最好的朋友。', 'person', {
     sentences: [
@@ -251,43 +321,51 @@ export const VOCAB = [
       { de: 'Eins, zwei, drei, los!', zh: '一、二、三，开始！', source: null },
       { de: 'Der Kuchen kostet drei Euro.', zh: '蛋糕三欧元。', source: 'lesson:sa-l2' },
     ],
+    pos: 'num.',
   }),
   w('vier, fünf, sechs', null, null, '四、五、六', 'Ich habe vier Bücher.', '我有四本书。', 'zahl', {
     sentences: [
       { de: 'Ich habe vier Bücher.', zh: '我有四本书。', source: null },
       { de: 'Ich habe fünf Brüder.', zh: '我有五个兄弟。', source: 'lesson:u0l3' },
     ],
+    pos: 'num.',
   }),
   w('sieben, acht, neun, zehn', null, null, '七、八、九、十', 'Es ist zehn Uhr.', '现在十点。', 'zahl', {
     sentences: [
       { de: 'Es ist zehn Uhr.', zh: '现在十点。', source: null },
       { de: 'Ich habe einen Termin um zehn Uhr.', zh: '我预约了十点。', source: 'lesson:sb-l3' },
     ],
+    pos: 'num.',
   }),
   w('elf, zwölf', null, null, '十一、十二', 'Es ist zwölf Uhr.', '十二点了。', 'zahl', {
     sentences: [
       { de: 'Es ist zwölf Uhr.', zh: '十二点了。', source: null },
     ],
+    pos: 'num.',
   }),
   w('zwanzig', null, null, '二十', 'Sie ist zwanzig Jahre alt.', '她二十岁。', 'zahl', {
     sentences: [
       { de: 'Sie ist zwanzig Jahre alt.', zh: '她二十岁。', source: null },
     ],
+    pos: 'num.',
   }),
   w('dreißig', null, null, '三十', 'Der Bus kommt um halb dreißig... nein, um halb acht!', '公交七点半来！', 'zahl', {
     sentences: [
       { de: 'Der Bus kommt um halb dreißig... nein, um halb acht!', zh: '公交七点半来！', source: null },
     ],
+    pos: 'num.',
   }),
   w('hundert', null, null, '一百', 'Das kostet hundert Euro.', '这个一百欧元。', 'zahl', {
     sentences: [
       { de: 'Das kostet hundert Euro.', zh: '这个一百欧元。', source: null },
     ],
+    pos: 'num.',
   }),
   w('tausend', null, null, '一千', 'Tausend Dank!', '万分感谢！', 'zahl', {
     sentences: [
       { de: 'Tausend Dank!', zh: '万分感谢！', source: null },
     ],
+    pos: 'num.',
   }),
   w('Uhr', 'die', 'Uhren', '钟；…点钟', 'Es ist acht Uhr.', '现在八点。', 'zahl', {
     senses: [{ pos: 'n.', zh: '钟；手表' }, { pos: '', zh: '…点钟（报时）' }],
@@ -295,17 +373,28 @@ export const VOCAB = [
       { de: 'Es ist acht Uhr.', zh: '现在八点。', source: null },
       { de: 'Ich habe einen Termin um zehn Uhr.', zh: '我预约了十点。', source: 'lesson:sb-l3' },
     ],
+    phrases: [
+      { de: 'Wie viel Uhr ist es?', zh: '现在几点？' },
+      { de: 'um … Uhr', zh: '在……点（时刻）' },
+    ],
   }),
-  w('Zeit', 'die', null, '时间', 'Hast du Zeit?', '你有时间吗？', 'zahl', {
+  w('Zeit', 'die', 'Zeiten', '时间', 'Hast du Zeit?', '你有时间吗？', 'zahl', {
     sentences: [
       { de: 'Hast du Zeit?', zh: '你有时间吗？', source: null },
       { de: 'Ich habe heute keine Zeit.', zh: '我今天没时间。', source: null },
     ],
     mnemonic: 'Zeit 与英语 tide 同源（如 time and tide），引申为"时间"',
+    phrases: [
+      { de: 'Zeit haben', zh: '有时间' },
+      { de: 'keine Zeit haben', zh: '没时间' },
+    ],
   }),
   w('Stunde', 'die', 'Stunden', '小时', 'Der Kurs dauert zwei Stunden.', '课程持续两小时。', 'zahl', {
     sentences: [
       { de: 'Der Kurs dauert zwei Stunden.', zh: '课程持续两小时。', source: null },
+    ],
+    phrases: [
+      { de: 'eine halbe Stunde', zh: '半小时' },
     ],
   }),
   w('Minute', 'die', 'Minuten', '分钟', 'Fünf Minuten, bitte!', '请等五分钟！', 'zahl', {
@@ -320,10 +409,17 @@ export const VOCAB = [
       { de: 'Ich spreche ein bisschen Deutsch, aber ich lerne jeden Tag.', zh: '我会说一点德语，但我每天都在学。', source: 'lesson:u0l8' },
     ],
     mnemonic: 'Tag ≈ 英语 day，同源（辅音 t↔d 音变）',
+    phrases: [
+      { de: 'jeden Tag', zh: '每天' },
+    ],
   }),
   w('Woche', 'die', 'Wochen', '周', 'Bis nächste Woche!', '下周见！', 'zahl', {
     sentences: [
       { de: 'Bis nächste Woche!', zh: '下周见！', source: null },
+    ],
+    phrases: [
+      { de: 'nächste Woche', zh: '下周' },
+      { de: 'letzte Woche', zh: '上周' },
     ],
   }),
   w('Monat', 'der', 'Monate', '月', 'Der Kurs beginnt nächsten Monat.', '课程下个月开始。', 'zahl', {
@@ -331,6 +427,9 @@ export const VOCAB = [
       { de: 'Der Kurs beginnt nächsten Monat.', zh: '课程下个月开始。', source: null },
     ],
     mnemonic: 'Monat ≈ 英语 month，同源',
+    phrases: [
+      { de: 'nächsten Monat', zh: '下个月' },
+    ],
   }),
   w('Montag', 'der', 'Montage', '周一', 'Am Montag arbeite ich.', '周一我上班。', 'zahl', {
     sentences: [
@@ -379,6 +478,7 @@ export const VOCAB = [
       { de: 'Was machst du heute?', zh: '你今天做什么？', source: null },
       { de: 'Ich bin heute müde.', zh: '我今天很累。', source: 'lesson:u0l4' },
     ],
+    pos: 'adv.',
   }),
   w('morgen', null, null, '明天', 'Bis morgen!', '明天见！', 'zahl', {
     sentences: [
@@ -386,18 +486,21 @@ export const VOCAB = [
       { de: 'Morgen fahre ich nach Berlin.', zh: '我明天去柏林。', source: null },
     ],
     mnemonic: '小写 morgen=明天（副词），大写 Morgen=早晨（名词），靠大小写区分',
+    pos: 'adv.',
   }),
   w('gestern', null, null, '昨天', 'Gestern war ich müde.', '昨天我很累。', 'zahl', {
     sentences: [
       { de: 'Gestern war ich müde.', zh: '昨天我很累。', source: null },
     ],
     mnemonic: 'gestern 和英语 yesterday 的 yester- 同源',
+    pos: 'adv.',
   }),
   w('jetzt', null, null, '现在', 'Ich muss jetzt gehen.', '我现在得走了。', 'zahl', {
     sentences: [
       { de: 'Ich muss jetzt gehen.', zh: '我现在得走了。', source: null },
       { de: 'Gut, wir sind jetzt Freunde!', zh: '太好了，我们现在是朋友了！', source: 'lesson:u1l3' },
     ],
+    pos: 'adv.',
   }),
 
   /* 👨‍👩‍👧 家庭与人 */
@@ -426,6 +529,7 @@ export const VOCAB = [
       { de: 'Meine Eltern wohnen in Shanghai.', zh: '我父母住在上海。', source: null },
     ],
     mnemonic: 'Eltern 与 alt（老的）同根，本义是"年长者"',
+    noPl: true,
   }),
   w('Bruder', 'der', 'Brüder', '兄弟', 'Mein Bruder ist jünger als ich.', '我弟弟比我小。', 'familie', {
     sentences: [
@@ -489,6 +593,7 @@ export const VOCAB = [
     sentences: [
       { de: 'Die Leute sind freundlich.', zh: '这里的人很友好。', source: null },
     ],
+    noPl: true,
   }),
   w('Mensch', 'der', 'Menschen', '人', 'Er ist ein guter Mensch.', '他是个好人。', 'familie', {
     sentences: [
@@ -508,12 +613,16 @@ export const VOCAB = [
     sentences: [
       { de: 'Das Essen schmeckt gut.', zh: '饭菜很好吃。', source: null },
     ],
+    noPl: true,
   }),
   w('Brot', 'das', 'Brote', '面包', 'Ich kaufe ein Brot.', '我买一个面包。', 'essen', {
     sentences: [
       { de: 'Ich kaufe ein Brot.', zh: '我买一个面包。', source: null },
       { de: 'Entschuldigung, wo finde ich Brot?', zh: '打扰一下，面包在哪儿？', source: 'lesson:sa-l3' },
       { de: 'Das Brot ist dort links.', zh: '面包在那边左侧。', source: 'lesson:sa-l3' },
+    ],
+    phrases: [
+      { de: 'ein Stück Brot', zh: '一块面包' },
     ],
   }),
   w('Brötchen', 'das', 'Brötchen', '小面包', 'Zum Frühstück esse ich Brötchen.', '早餐我吃小面包。', 'essen', {
@@ -529,6 +638,10 @@ export const VOCAB = [
       { de: 'Trinken Sie viel Wasser und schlafen Sie gut.', zh: '多喝水，好好休息。', source: 'lesson:sb-l3' },
     ],
     mnemonic: 'Wasser ≈ 英语 water，同源（ss↔t 音变）',
+    noPl: true,
+    phrases: [
+      { de: 'ein Glas Wasser', zh: '一杯水' },
+    ],
   }),
   w('Kaffee', 'der', 'Kaffees', '咖啡', 'Ich trinke morgens Kaffee.', '我早上喝咖啡。', 'essen', {
     sentences: [
@@ -536,6 +649,9 @@ export const VOCAB = [
       { de: 'Ich hätte gern einen Kaffee, bitte.', zh: '我想要一杯咖啡，谢谢。', source: 'lesson:sa-l2' },
     ],
     mnemonic: 'Kaffee ≈ 英语 coffee，同源好记',
+    phrases: [
+      { de: 'eine Tasse Kaffee', zh: '一杯咖啡' },
+    ],
   }),
   w('Tee', 'der', 'Tees', '茶', 'Möchtest du Tee?', '你想喝茶吗？', 'essen', {
     sentences: [
@@ -543,6 +659,9 @@ export const VOCAB = [
       { de: 'Ich hätte gern einen Tee, bitte.', zh: '我想要一杯茶，谢谢。', source: 'lesson:sa-l2' },
     ],
     mnemonic: 'Tee ≈ 英语 tea，同源好记',
+    phrases: [
+      { de: 'eine Tasse Tee', zh: '一杯茶' },
+    ],
   }),
   w('Milch', 'die', null, '牛奶', 'Der Kaffee ist mit Milch.', '咖啡加了牛奶。', 'essen', {
     sentences: [
@@ -550,12 +669,16 @@ export const VOCAB = [
       { de: 'Wo finde ich Milch?', zh: '牛奶在哪儿能找到？', source: 'lesson:sa-l3' },
     ],
     mnemonic: 'Milch ≈ 英语 milk，同源（ch↔k 音变）',
+    noPl: true,
   }),
   w('Bier', 'das', 'Biere', '啤酒', 'Ein Bier, bitte!', '请来一杯啤酒！', 'essen', {
     sentences: [
       { de: 'Ein Bier, bitte!', zh: '请来一杯啤酒！', source: null },
     ],
     mnemonic: 'Bier ≈ 英语 beer，同源好记',
+    phrases: [
+      { de: 'ein Glas Bier', zh: '一杯啤酒' },
+    ],
   }),
   w('Wein', 'der', 'Weine', '葡萄酒', 'Der Wein kommt aus Frankreich.', '这酒产自法国。', 'essen', {
     sentences: [
@@ -563,6 +686,9 @@ export const VOCAB = [
       { de: 'Ich trinke gern Wein.', zh: '我喜欢喝葡萄酒。', source: 'lesson:u0l4' },
     ],
     mnemonic: 'Wein ≈ 英语 wine，同源好记',
+    phrases: [
+      { de: 'ein Glas Wein', zh: '一杯葡萄酒' },
+    ],
   }),
   w('Apfel', 'der', 'Äpfel', '苹果', 'Der Apfel ist süß.', '这苹果很甜。', 'essen', {
     sentences: [
@@ -584,12 +710,14 @@ export const VOCAB = [
       { de: 'Ja, der Käse ist hier rechts.', zh: '有，奶酪在这边右侧。', source: 'lesson:sa-l3' },
     ],
     mnemonic: 'Käse ≈ 英语 cheese，同源（拉丁词源 caseus）',
+    noPl: true,
   }),
   w('Fleisch', 'das', null, '肉', 'Ich esse kein Fleisch.', '我不吃肉。', 'essen', {
     sentences: [
       { de: 'Ich esse kein Fleisch.', zh: '我不吃肉。', source: null },
     ],
     mnemonic: 'Fleisch ≈ 英语 flesh，同源好记',
+    noPl: true,
   }),
   w('Fisch', 'der', 'Fische', '鱼', 'Der Fisch ist frisch.', '鱼很新鲜。', 'essen', {
     sentences: [
@@ -602,71 +730,104 @@ export const VOCAB = [
       { de: 'Wir essen oft Reis.', zh: '我们常吃米饭。', source: null },
     ],
     mnemonic: 'Reis ≈ 英语 rice，同源好记',
+    noPl: true,
   }),
   w('Gemüse', 'das', null, '蔬菜', 'Gemüse ist gesund.', '蔬菜很健康。', 'essen', {
     sentences: [
       { de: 'Gemüse ist gesund.', zh: '蔬菜很健康。', source: null },
     ],
     mnemonic: 'Gemüse = Ge-(集合前缀)+Mus(酱糊) → 蔬菜类食物',
+    noPl: true,
   }),
   w('Obst', 'das', null, '水果', 'Ich kaufe Obst auf dem Markt.', '我在市场买水果。', 'essen', {
     sentences: [
       { de: 'Ich kaufe Obst auf dem Markt.', zh: '我在市场买水果。', source: null },
     ],
+    noPl: true,
   }),
   w('Frühstück', 'das', null, '早餐', 'Was isst du zum Frühstück?', '你早餐吃什么？', 'essen', {
     sentences: [
       { de: 'Was isst du zum Frühstück?', zh: '你早餐吃什么？', source: null },
     ],
     mnemonic: 'Frühstück = früh(早)+Stück(一份) → 早上的一份，即早餐',
+    noPl: true,
+    phrases: [
+      { de: 'zum Frühstück', zh: '作为早餐' },
+    ],
   }),
   w('Mittagessen', 'das', null, '午餐', 'Das Mittagessen ist fertig.', '午饭好了。', 'essen', {
     sentences: [
       { de: 'Das Mittagessen ist fertig.', zh: '午饭好了。', source: null },
     ],
     mnemonic: 'Mittagessen = Mittag(中午)+Essen(吃饭) → 午餐',
+    noPl: true,
+    phrases: [
+      { de: 'zum Mittagessen', zh: '作为午餐' },
+    ],
   }),
   w('Abendessen', 'das', null, '晚餐', 'Zum Abendessen gibt es Suppe.', '晚餐有汤。', 'essen', {
     sentences: [
       { de: 'Zum Abendessen gibt es Suppe.', zh: '晚餐有汤。', source: null },
     ],
     mnemonic: 'Abendessen = Abend(晚上)+Essen(吃饭) → 晚餐',
+    noPl: true,
+    phrases: [
+      { de: 'zum Abendessen', zh: '作为晚餐' },
+    ],
   }),
   w('Restaurant', 'das', 'Restaurants', '餐馆', 'Wir gehen ins Restaurant.', '我们去餐馆。', 'essen', {
     sentences: [
       { de: 'Wir gehen ins Restaurant.', zh: '我们去餐馆。', source: null },
     ],
     mnemonic: 'Restaurant ≈ 英语 restaurant，同源（法语借词）',
+    phrases: [
+      { de: 'ins Restaurant gehen', zh: '去餐馆' },
+    ],
   }),
   w('Speisekarte', 'die', 'Speisekarten', '菜单', 'Die Speisekarte, bitte!', '请给我菜单！', 'essen', {
     sentences: [
       { de: 'Die Speisekarte, bitte!', zh: '请给我菜单！', source: null },
     ],
     mnemonic: 'Speisekarte = Speise(食物/菜肴)+Karte(单子) → 菜单',
+    phrases: [
+      { de: 'Die Speisekarte, bitte!', zh: '请给我菜单！' },
+    ],
   }),
   w('Rechnung', 'die', 'Rechnungen', '账单', 'Die Rechnung, bitte!', '请结账！', 'essen', {
     sentences: [
       { de: 'Die Rechnung, bitte!', zh: '请结账！', source: null },
     ],
     mnemonic: 'Rechnung 来自动词 rechnen（计算）→ 账单',
+    phrases: [
+      { de: 'Die Rechnung, bitte!', zh: '请结账！' },
+    ],
   }),
   w('lecker', null, null, '美味的', 'Das ist sehr lecker!', '这个非常好吃！', 'essen', {
     sentences: [
       { de: 'Das ist sehr lecker!', zh: '这个非常好吃！', source: null },
       { de: 'Der Käse ist lecker.', zh: '奶酪很好吃。', source: 'lesson:u0l3' },
     ],
+    pos: 'adj.',
   }),
   w('Hunger', 'der', null, '饥饿', 'Ich habe Hunger.', '我饿了。', 'essen', {
     sentences: [
       { de: 'Ich habe Hunger.', zh: '我饿了。', source: null },
     ],
     mnemonic: 'Hunger ≈ 英语 hunger，同源好记',
+    noPl: true,
+    phrases: [
+      { de: 'Hunger haben', zh: '饿了' },
+    ],
   }),
   w('Durst', 'der', null, '口渴', 'Hast du Durst?', '你渴吗？', 'essen', {
     sentences: [
       { de: 'Hast du Durst?', zh: '你渴吗？', source: null },
     ],
     mnemonic: 'Durst ≈ 英语 thirst，同源（d↔th 音变）',
+    noPl: true,
+    phrases: [
+      { de: 'Durst haben', zh: '渴了' },
+    ],
   }),
 
   /* 🏃 高频动词 I */
@@ -675,11 +836,38 @@ export const VOCAB = [
       { de: 'Was machst du?', zh: '你在做什么？', source: null },
       { de: 'Das macht sechs Euro.', zh: '一共六欧元。', source: 'lesson:sa-l2' },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'mache',
+      du: 'machst',
+      er: 'macht',
+      wir: 'machen',
+      ihr: 'macht',
+      sie: 'machen',
+      perfekt: 'hat gemacht',
+    },
+    phrases: [
+      { de: 'Sport machen', zh: '做运动' },
+    ],
   }),
   w('gehen', null, null, '走；去', 'Ich gehe nach Hause.', '我回家。', 'verb1', {
     sentences: [
       { de: 'Ich gehe nach Hause.', zh: '我回家。', source: null },
       { de: 'Gehen Sie hier geradeaus und dann links.', zh: '您这里直走，然后往左拐。', source: 'lesson:sb-l1' },
+    ],
+    pos: 'v.',
+    forms: {
+      ich: 'gehe',
+      du: 'gehst',
+      er: 'geht',
+      wir: 'gehen',
+      ihr: 'geht',
+      sie: 'gehen',
+      perfekt: 'ist gegangen',
+    },
+    phrases: [
+      { de: 'nach Hause gehen', zh: '回家' },
+      { de: 'einkaufen gehen', zh: '去购物' },
     ],
   }),
   w('essen', null, null, '吃（er isst）', 'Er isst einen Apfel.', '他在吃苹果。', 'verb1', {
@@ -688,6 +876,16 @@ export const VOCAB = [
       { de: 'Ich esse zwei Eier.', zh: '我吃两个鸡蛋。', source: null },
       { de: 'Ich esse kein Fleisch.', zh: '我不吃肉。', source: null },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'esse',
+      du: 'isst',
+      er: 'isst',
+      wir: 'essen',
+      ihr: 'esst',
+      sie: 'essen',
+      perfekt: 'hat gegessen',
+    },
   }),
   w('trinken', null, null, '喝', 'Wir trinken Tee.', '我们喝茶。', 'verb1', {
     sentences: [
@@ -695,24 +893,64 @@ export const VOCAB = [
       { de: 'Mein Vater trinkt gern Wasser.', zh: '我爸爸喜欢喝水。', source: 'lesson:u0l7' },
       { de: 'Trinken Sie viel Wasser und schlafen Sie gut.', zh: '多喝水，好好休息。', source: 'lesson:sb-l3' },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'trinke',
+      du: 'trinkst',
+      er: 'trinkt',
+      wir: 'trinken',
+      ihr: 'trinkt',
+      sie: 'trinken',
+      perfekt: 'hat getrunken',
+    },
   }),
   w('sehen', null, null, '看（er sieht）', 'Siehst du das Haus?', '你看见那房子了吗？', 'verb1', {
     sentences: [
       { de: 'Siehst du das Haus?', zh: '你看见那房子了吗？', source: null },
     ],
     mnemonic: 'sehen ≈ 英语 see，同源好记',
+    pos: 'v.',
+    forms: {
+      ich: 'sehe',
+      du: 'siehst',
+      er: 'sieht',
+      wir: 'sehen',
+      ihr: 'seht',
+      sie: 'sehen',
+      perfekt: 'hat gesehen',
+    },
   }),
   w('hören', null, null, '听', 'Ich höre Musik.', '我在听音乐。', 'verb1', {
     sentences: [
       { de: 'Ich höre Musik.', zh: '我在听音乐。', source: null },
     ],
     mnemonic: 'hören ≈ 英语 hear，同源好记',
+    pos: 'v.',
+    forms: {
+      ich: 'höre',
+      du: 'hörst',
+      er: 'hört',
+      wir: 'hören',
+      ihr: 'hört',
+      sie: 'hören',
+      perfekt: 'hat gehört',
+    },
   }),
   w('lesen', null, null, '读（er liest）', 'Sie liest eine Zeitung.', '她在读报纸。', 'verb1', {
     sentences: [
       { de: 'Sie liest eine Zeitung.', zh: '她在读报纸。', source: null },
       { de: 'Am Abend lese ich.', zh: '晚上我看书。', source: null },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'lese',
+      du: 'liest',
+      er: 'liest',
+      wir: 'lesen',
+      ihr: 'lest',
+      sie: 'lesen',
+      perfekt: 'hat gelesen',
+    },
   }),
   w('schreiben', null, null, '写', 'Ich schreibe eine E-Mail.', '我在写邮件。', 'verb1', {
     sentences: [
@@ -720,6 +958,17 @@ export const VOCAB = [
       { de: 'Ich schreibe oft E-Mails.', zh: '我经常写邮件。', source: null },
     ],
     mnemonic: 'schreiben ≈ 英语 script/scribe，同源（拉丁词根 scribere）',
+    pos: 'v.',
+    forms: {
+      ich: 'schreibe',
+      du: 'schreibst',
+      er: 'schreibt',
+      wir: 'schreiben',
+      ihr: 'schreibt',
+      sie: 'schreiben',
+      perfekt: 'hat geschrieben',
+    },
+    valence: 'schreiben + Dativ + Akkusativ：jemandem etwas schreiben（给某人写……）',
   }),
   w('kaufen', null, null, '买', 'Er kauft ein Auto.', '他买了一辆车。', 'verb1', {
     sentences: [
@@ -727,6 +976,17 @@ export const VOCAB = [
       { de: 'Ich kaufe ein Brot.', zh: '我买一个面包。', source: null },
       { de: 'Ich kaufe Obst auf dem Markt.', zh: '我在市场买水果。', source: null },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'kaufe',
+      du: 'kaufst',
+      er: 'kauft',
+      wir: 'kaufen',
+      ihr: 'kauft',
+      sie: 'kaufen',
+      perfekt: 'hat gekauft',
+    },
+    valence: 'kaufen + Dativ + Akkusativ：jemandem etwas kaufen（给某人买……）',
   }),
   w('lernen', null, null, '学习', 'Wir lernen zusammen Deutsch.', '我们一起学德语。', 'verb1', {
     sentences: [
@@ -734,12 +994,33 @@ export const VOCAB = [
       { de: 'Wir lernen Deutsch.', zh: '我们在学德语。', source: 'lesson:u1l1' },
     ],
     mnemonic: 'lernen ≈ 英语 learn，同源好记',
+    pos: 'v.',
+    forms: {
+      ich: 'lerne',
+      du: 'lernst',
+      er: 'lernt',
+      wir: 'lernen',
+      ihr: 'lernt',
+      sie: 'lernen',
+      perfekt: 'hat gelernt',
+    },
   }),
   w('arbeiten', null, null, '工作', 'Sie arbeitet in einem Büro.', '她在办公室工作。', 'verb1', {
     sentences: [
       { de: 'Sie arbeitet in einem Büro.', zh: '她在办公室工作。', source: null },
       { de: 'Am Montag arbeite ich.', zh: '周一我上班。', source: null },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'arbeite',
+      du: 'arbeitest',
+      er: 'arbeitet',
+      wir: 'arbeiten',
+      ihr: 'arbeitet',
+      sie: 'arbeiten',
+      perfekt: 'hat gearbeitet',
+    },
+    valence: 'arbeiten als + Nominativ（不加冠词）：Sie arbeitet als Lehrerin.',
   }),
   w('spielen', null, null, '玩；演奏', 'Die Kinder spielen Fußball.', '孩子们在踢足球。', 'verb1', {
     sentences: [
@@ -747,11 +1028,38 @@ export const VOCAB = [
       { de: 'Die Kinder spielen im Garten.', zh: '孩子们在花园玩。', source: null },
     ],
     mnemonic: '英语借用了德语词 Spiel（游戏），spielen 就是"玩/做游戏"',
+    pos: 'v.',
+    forms: {
+      ich: 'spiele',
+      du: 'spielst',
+      er: 'spielt',
+      wir: 'spielen',
+      ihr: 'spielt',
+      sie: 'spielen',
+      perfekt: 'hat gespielt',
+    },
+    phrases: [
+      { de: 'Fußball spielen', zh: '踢足球' },
+      { de: 'Klavier spielen', zh: '弹钢琴' },
+    ],
   }),
   w('schlafen', null, null, '睡觉（er schläft）', 'Das Baby schläft gut.', '宝宝睡得香。', 'verb1', {
     sentences: [
       { de: 'Das Baby schläft gut.', zh: '宝宝睡得香。', source: null },
       { de: 'In der Nacht schlafe ich.', zh: '夜里我睡觉。', source: null },
+    ],
+    pos: 'v.',
+    forms: {
+      ich: 'schlafe',
+      du: 'schläfst',
+      er: 'schläft',
+      wir: 'schlafen',
+      ihr: 'schlaft',
+      sie: 'schlafen',
+      perfekt: 'hat geschlafen',
+    },
+    phrases: [
+      { de: 'lange schlafen', zh: '睡懒觉' },
     ],
   }),
   w('fahren', null, null, '乘（车）；驾驶（er fährt）', 'Ich fahre mit dem Fahrrad.', '我骑自行车去。', 'verb1', {
@@ -760,6 +1068,20 @@ export const VOCAB = [
       { de: 'Der Bus fährt direkt zum Bahnhof.', zh: '这趟车直达火车站。', source: 'lesson:sb-l1' },
     ],
     mnemonic: 'fahren 与英语 fare（如 thoroughfare）同源，本义"行进/乘坐"',
+    pos: 'v.',
+    forms: {
+      ich: 'fahre',
+      du: 'fährst',
+      er: 'fährt',
+      wir: 'fahren',
+      ihr: 'fahrt',
+      sie: 'fahren',
+      perfekt: 'ist gefahren',
+    },
+    phrases: [
+      { de: 'mit dem Bus fahren', zh: '坐公交去' },
+      { de: 'Fahrrad fahren', zh: '骑自行车' },
+    ],
   }),
   w('kochen', null, null, '做饭', 'Mein Vater kocht heute.', '今天我爸爸做饭。', 'verb1', {
     sentences: [
@@ -767,12 +1089,35 @@ export const VOCAB = [
       { de: 'Die Mutter kocht gut.', zh: '妈妈做饭做得好。', source: 'lesson:u0l2' },
     ],
     mnemonic: 'kochen ≈ 英语 cook，同源（拉丁词源 coquere）',
+    pos: 'v.',
+    forms: {
+      ich: 'koche',
+      du: 'kochst',
+      er: 'kocht',
+      wir: 'kochen',
+      ihr: 'kocht',
+      sie: 'kochen',
+      perfekt: 'hat gekocht',
+    },
   }),
   w('wissen', null, null, '知道（ich weiß）', 'Ich weiß es nicht.', '我不知道。', 'verb1', {
     sentences: [
       { de: 'Ich weiß es nicht.', zh: '我不知道。', source: null },
     ],
     mnemonic: 'wissen 与英语 wit/wisdom 同源，本义"知道"',
+    pos: 'v.',
+    forms: {
+      ich: 'weiß',
+      du: 'weißt',
+      er: 'weiß',
+      wir: 'wissen',
+      ihr: 'wisst',
+      sie: 'wissen',
+      perfekt: 'hat gewusst',
+    },
+    phrases: [
+      { de: 'Ich weiß nicht.', zh: '我不知道。' },
+    ],
   }),
 
   /* ✍️ 高频动词 II */
@@ -781,12 +1126,33 @@ export const VOCAB = [
       { de: 'Gibst du mir das Buch?', zh: '你把书给我好吗？', source: null },
     ],
     mnemonic: 'geben ≈ 英语 give，同源好记',
+    pos: 'v.',
+    forms: {
+      ich: 'gebe',
+      du: 'gibst',
+      er: 'gibt',
+      wir: 'geben',
+      ihr: 'gebt',
+      sie: 'geben',
+      perfekt: 'hat gegeben',
+    },
+    valence: 'es gibt + Akkusativ：Es gibt hier keinen Kaffee.',
   }),
   w('nehmen', null, null, '拿；取（er nimmt）', 'Ich nehme den Bus.', '我坐公交。', 'verb2', {
     sentences: [
       { de: 'Ich nehme den Bus.', zh: '我坐公交。', source: null },
       { de: 'Nehmen Sie es zweimal am Tag.', zh: '请每天服用两次。', source: 'lesson:sb-l3' },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'nehme',
+      du: 'nimmst',
+      er: 'nimmt',
+      wir: 'nehmen',
+      ihr: 'nehmt',
+      sie: 'nehmen',
+      perfekt: 'hat genommen',
+    },
   }),
   w('finden', null, null, '找到；觉得', 'Ich finde Deutsch interessant.', '我觉得德语有意思。', 'verb2', {
     senses: [{ pos: 'v.', zh: '觉得（表达看法）' }, { pos: 'v.', zh: '找到' }],
@@ -794,6 +1160,17 @@ export const VOCAB = [
       { de: 'Ich finde Deutsch interessant.', zh: '我觉得德语有意思。', source: null },
       { de: 'Wo finde ich Brot?', zh: '面包在哪儿能找到？', source: 'lesson:sa-l3' },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'finde',
+      du: 'findest',
+      er: 'findet',
+      wir: 'finden',
+      ihr: 'findet',
+      sie: 'finden',
+      perfekt: 'hat gefunden',
+    },
+    valence: 'finden + Akkusativ + Adjektiv：Ich finde Deutsch interessant.',
   }),
   w('helfen', null, null, '帮助（+三格）', 'Kannst du mir helfen?', '你能帮我吗？', 'verb2', {
     valence: 'helfen + Dativ：jemandem helfen',
@@ -801,17 +1178,49 @@ export const VOCAB = [
       { de: 'Kannst du mir helfen?', zh: '你能帮我吗？', source: null },
       { de: 'Ich helfe meiner Mutter in der Küche.', zh: '我在厨房里帮我妈妈。', source: null },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'helfe',
+      du: 'hilfst',
+      er: 'hilft',
+      wir: 'helfen',
+      ihr: 'helft',
+      sie: 'helfen',
+      perfekt: 'hat geholfen',
+    },
   }),
   w('fragen', null, null, '问', 'Darf ich etwas fragen?', '我能问个问题吗？', 'verb2', {
     sentences: [
       { de: 'Darf ich etwas fragen?', zh: '我能问个问题吗？', source: null },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'frage',
+      du: 'fragst',
+      er: 'fragt',
+      wir: 'fragen',
+      ihr: 'fragt',
+      sie: 'fragen',
+      perfekt: 'hat gefragt',
+    },
+    valence: 'fragen + Akkusativ：jemanden fragen',
   }),
   w('antworten', null, null, '回答', 'Er antwortet nicht.', '他不回答。', 'verb2', {
     sentences: [
       { de: 'Er antwortet nicht.', zh: '他不回答。', source: null },
     ],
     mnemonic: 'antworten 由 Antwort（回答）而来，字面有"对着话回应"的意思',
+    pos: 'v.',
+    forms: {
+      ich: 'antworte',
+      du: 'antwortest',
+      er: 'antwortet',
+      wir: 'antworten',
+      ihr: 'antwortet',
+      sie: 'antworten',
+      perfekt: 'hat geantwortet',
+    },
+    valence: 'antworten + Dativ：jemandem antworten',
   }),
   w('verstehen', null, null, '理解', 'Ich verstehe das nicht.', '我不明白。', 'verb2', {
     sentences: [
@@ -819,23 +1228,63 @@ export const VOCAB = [
       { de: 'Wie bitte? Ich verstehe das nicht.', zh: '请再说一遍？我没听懂。', source: 'lesson:u0l4' },
     ],
     mnemonic: 'verstehen = ver-(不可分前缀)+stehen(站) → 理解',
+    pos: 'v.',
+    forms: {
+      ich: 'verstehe',
+      du: 'verstehst',
+      er: 'versteht',
+      wir: 'verstehen',
+      ihr: 'versteht',
+      sie: 'verstehen',
+      perfekt: 'hat verstanden',
+    },
   }),
   w('brauchen', null, null, '需要', 'Ich brauche Hilfe.', '我需要帮助。', 'verb2', {
     sentences: [
       { de: 'Ich brauche Hilfe.', zh: '我需要帮助。', source: null },
     ],
+    pos: 'v.',
+    forms: {
+      ich: 'brauche',
+      du: 'brauchst',
+      er: 'braucht',
+      wir: 'brauchen',
+      ihr: 'braucht',
+      sie: 'brauchen',
+      perfekt: 'hat gebraucht',
+    },
   }),
   w('suchen', null, null, '寻找', 'Ich suche meinen Schlüssel.', '我在找钥匙。', 'verb2', {
     sentences: [
       { de: 'Ich suche meinen Schlüssel.', zh: '我在找钥匙。', source: null },
     ],
     mnemonic: 'suchen ≈ 英语 seek，同源（ch↔k 音变）',
+    pos: 'v.',
+    forms: {
+      ich: 'suche',
+      du: 'suchst',
+      er: 'sucht',
+      wir: 'suchen',
+      ihr: 'sucht',
+      sie: 'suchen',
+      perfekt: 'hat gesucht',
+    },
   }),
   w('bezahlen', null, null, '付款', 'Ich möchte bezahlen.', '我要买单。', 'verb2', {
     sentences: [
       { de: 'Ich möchte bezahlen.', zh: '我要买单。', source: null },
     ],
     mnemonic: 'bezahlen = be-(动词前缀)+zahlen(付钱) → 付清钱款',
+    pos: 'v.',
+    forms: {
+      ich: 'bezahle',
+      du: 'bezahlst',
+      er: 'bezahlt',
+      wir: 'bezahlen',
+      ihr: 'bezahlt',
+      sie: 'bezahlen',
+      perfekt: 'hat bezahlt',
+    },
   }),
   w('kosten', null, null, '值…钱', 'Was kostet das?', '这个多少钱？', 'verb2', {
     sentences: [
@@ -844,36 +1293,100 @@ export const VOCAB = [
       { de: 'Das kostet fünf Euro.', zh: '五欧元。', source: 'lesson:sb-l3' },
     ],
     mnemonic: 'kosten ≈ 英语 cost，同源好记',
+    pos: 'v.',
+    forms: {
+      ich: 'koste',
+      du: 'kostest',
+      er: 'kostet',
+      wir: 'kosten',
+      ihr: 'kostet',
+      sie: 'kosten',
+      perfekt: 'hat gekostet',
+    },
   }),
   w('aufstehen', null, null, '起床（可分）', 'Ich stehe um sieben auf.', '我七点起床。', 'verb2', {
     sentences: [
       { de: 'Ich stehe um sieben auf.', zh: '我七点起床。', source: null },
     ],
     mnemonic: 'aufstehen = auf(向上)+stehen(站) → 起床',
+    pos: 'v.',
+    forms: {
+      ich: 'stehe auf',
+      du: 'stehst auf',
+      er: 'steht auf',
+      wir: 'stehen auf',
+      ihr: 'steht auf',
+      sie: 'stehen auf',
+      perfekt: 'ist aufgestanden',
+    },
+    phrases: [
+      { de: 'früh aufstehen', zh: '早起' },
+    ],
   }),
   w('einkaufen', null, null, '购物（可分）', 'Wir kaufen im Supermarkt ein.', '我们在超市购物。', 'verb2', {
     sentences: [
       { de: 'Wir kaufen im Supermarkt ein.', zh: '我们在超市购物。', source: null },
     ],
     mnemonic: 'einkaufen = ein-(可分前缀)+kaufen(买) → 去买东西，购物',
+    pos: 'v.',
+    forms: {
+      ich: 'kaufe ein',
+      du: 'kaufst ein',
+      er: 'kauft ein',
+      wir: 'kaufen ein',
+      ihr: 'kauft ein',
+      sie: 'kaufen ein',
+      perfekt: 'hat eingekauft',
+    },
   }),
   w('anrufen', null, null, '打电话（可分）', 'Ruf mich an!', '给我打电话！', 'verb2', {
     sentences: [
       { de: 'Ruf mich an!', zh: '给我打电话！', source: null },
     ],
     mnemonic: 'anrufen = an-(可分前缀，"朝着")+rufen(喊) → 打电话',
+    pos: 'v.',
+    forms: {
+      ich: 'rufe an',
+      du: 'rufst an',
+      er: 'ruft an',
+      wir: 'rufen an',
+      ihr: 'ruft an',
+      sie: 'rufen an',
+      perfekt: 'hat angerufen',
+    },
+    valence: 'anrufen + Akkusativ：jemanden anrufen（中文说"打电话给某人"，德语直接接第四格）',
   }),
   w('fernsehen', null, null, '看电视（可分）', 'Abends sehe ich fern.', '晚上我看电视。', 'verb2', {
     sentences: [
       { de: 'Abends sehe ich fern.', zh: '晚上我看电视。', source: null },
     ],
     mnemonic: 'fernsehen = fern(远的)+sehen(看) → 看电视，字面"远距离看"',
+    pos: 'v.',
+    forms: {
+      ich: 'sehe fern',
+      du: 'siehst fern',
+      er: 'sieht fern',
+      wir: 'sehen fern',
+      ihr: 'seht fern',
+      sie: 'sehen fern',
+      perfekt: 'hat ferngesehen',
+    },
   }),
   w('mitkommen', null, null, '一起来（可分）', 'Kommst du mit?', '你一起来吗？', 'verb2', {
     sentences: [
       { de: 'Kommst du mit?', zh: '你一起来吗？', source: null },
     ],
     mnemonic: 'mitkommen = mit-(可分前缀，"一起")+kommen(来) → 一起来',
+    pos: 'v.',
+    forms: {
+      ich: 'komme mit',
+      du: 'kommst mit',
+      er: 'kommt mit',
+      wir: 'kommen mit',
+      ihr: 'kommt mit',
+      sie: 'kommen mit',
+      perfekt: 'ist mitgekommen',
+    },
   }),
 
   /* 🏠 居住与家 */
@@ -911,6 +1424,9 @@ export const VOCAB = [
     sentences: [
       { de: 'Das Buch liegt auf dem Tisch.', zh: '书在桌上。', source: null },
     ],
+    phrases: [
+      { de: 'auf dem Tisch', zh: '在桌子上' },
+    ],
   }),
   w('Stuhl', 'der', 'Stühle', '椅子', 'Der Stuhl ist bequem.', '这椅子很舒服。', 'wohnen', {
     sentences: [
@@ -923,6 +1439,9 @@ export const VOCAB = [
       { de: 'Ich gehe ins Bett.', zh: '我去睡觉了。', source: null },
     ],
     mnemonic: 'Bett ≈ 英语 bed，同源好记',
+    phrases: [
+      { de: 'ins Bett gehen', zh: '去睡觉' },
+    ],
   }),
   w('Lampe', 'die', 'Lampen', '灯', 'Die Lampe ist an.', '灯开着。', 'wohnen', {
     sentences: [
@@ -970,6 +1489,9 @@ export const VOCAB = [
       { de: 'Ich wohne in der Stadt.', zh: '我住在城市里。', source: 'lesson:u0l2' },
       { de: 'Die Stadt ist schön.', zh: '这座城市很美。', source: 'lesson:u0l3' },
     ],
+    phrases: [
+      { de: 'in die Stadt gehen', zh: '进城' },
+    ],
   }),
   w('Straße', 'die', 'Straßen', '街道', 'Ich wohne in der Hauptstraße.', '我住在主街。', 'stadt', {
     sentences: [
@@ -1009,6 +1531,9 @@ export const VOCAB = [
       { de: 'Das Auto ist neu.', zh: '这辆车是新的。', source: null },
     ],
     mnemonic: 'Auto ≈ 英语 auto(mobile)，国际通用词',
+    phrases: [
+      { de: 'mit dem Auto fahren', zh: '开车去' },
+    ],
   }),
   w('Fahrrad', 'das', 'Fahrräder', '自行车', 'Ich fahre gern Fahrrad.', '我喜欢骑车。', 'stadt', {
     sentences: [
@@ -1027,6 +1552,9 @@ export const VOCAB = [
       { de: 'Der Supermarkt ist um die Ecke.', zh: '超市就在拐角。', source: null },
     ],
     mnemonic: 'Supermarkt = super(超级)+Markt(市场)，构词和英语 supermarket 一致',
+    phrases: [
+      { de: 'im Supermarkt einkaufen', zh: '在超市购物' },
+    ],
   }),
   w('Geschäft', 'das', 'Geschäfte', '商店', 'Das Geschäft öffnet um neun.', '商店九点开门。', 'stadt', {
     sentences: [
@@ -1044,6 +1572,7 @@ export const VOCAB = [
       { de: 'Wo ist die Post?', zh: '邮局在哪？', source: null },
     ],
     mnemonic: 'Post ≈ 英语 post(office)，国际借词',
+    noPl: true,
   }),
   w('Park', 'der', 'Parks', '公园', 'Wir gehen in den Park.', '我们去公园。', 'stadt', {
     sentences: [
@@ -1064,11 +1593,19 @@ export const VOCAB = [
       { de: 'Gehen Sie hier geradeaus und dann links.', zh: '您这里直走，然后往左拐。', source: 'lesson:sb-l1' },
       { de: 'Das Brot ist dort links.', zh: '面包在那边左侧。', source: 'lesson:sa-l3' },
     ],
+    pos: 'adv.',
+    phrases: [
+      { de: 'nach links', zh: '向左（转）' },
+    ],
   }),
   w('rechts', null, null, '右边', 'Gehen Sie rechts!', '请往右走！', 'stadt', {
     sentences: [
       { de: 'Gehen Sie rechts!', zh: '请往右走！', source: null },
       { de: 'Ja, der Käse ist hier rechts.', zh: '有，奶酪在这边右侧。', source: 'lesson:sa-l3' },
+    ],
+    pos: 'adv.',
+    phrases: [
+      { de: 'nach rechts', zh: '向右（转）' },
     ],
   }),
   w('geradeaus', null, null, '直走', 'Immer geradeaus!', '一直直走！', 'stadt', {
@@ -1076,6 +1613,7 @@ export const VOCAB = [
       { de: 'Immer geradeaus!', zh: '一直直走！', source: null },
       { de: 'Das Wasser ist geradeaus.', zh: '水在直走的地方。', source: 'lesson:sa-l3' },
     ],
+    pos: 'adv.',
   }),
 
   /* 💼 工作与学习 */
@@ -1083,12 +1621,19 @@ export const VOCAB = [
     sentences: [
       { de: 'Ich gehe zur Arbeit.', zh: '我去上班。', source: null },
     ],
+    noPl: true,
+    phrases: [
+      { de: 'zur Arbeit gehen', zh: '去上班' },
+    ],
   }),
   w('Beruf', 'der', 'Berufe', '职业', 'Was sind Sie von Beruf?', '您做什么工作？', 'arbeit', {
     sentences: [
       { de: 'Was sind Sie von Beruf?', zh: '您做什么工作？', source: null },
     ],
     mnemonic: 'Beruf 来自动词 rufen（喊/召唤）→ 被"召唤"去做的事，即职业',
+    phrases: [
+      { de: 'von Beruf', zh: '职业是……' },
+    ],
   }),
   w('Lehrer', 'der', 'Lehrer', '老师（男）', 'Der Lehrer erklärt die Grammatik.', '老师在讲语法。', 'arbeit', {
     sentences: [
@@ -1106,6 +1651,9 @@ export const VOCAB = [
     sentences: [
       { de: 'Ich muss zum Arzt.', zh: '我得去看医生。', source: null },
       { de: 'Einen Moment, bitte. Der Arzt kommt gleich.', zh: '请稍等，医生马上就来。', source: 'lesson:sb-l3' },
+    ],
+    phrases: [
+      { de: 'zum Arzt gehen', zh: '去看医生' },
     ],
   }),
   w('Ärztin', 'die', 'Ärztinnen', '医生（女）', 'Die Ärztin ist sehr nett.', '这位医生很和气。', 'arbeit', {
@@ -1130,6 +1678,9 @@ export const VOCAB = [
       { de: 'Die Kinder gehen zur Schule.', zh: '孩子们去上学。', source: null },
     ],
     mnemonic: 'Schule ≈ 英语 school，同源（拉丁词源 schola）',
+    phrases: [
+      { de: 'zur Schule gehen', zh: '去上学' },
+    ],
   }),
   w('Universität', 'die', 'Universitäten', '大学', 'Die Universität ist berühmt.', '这所大学很有名。', 'arbeit', {
     sentences: [
@@ -1137,11 +1688,17 @@ export const VOCAB = [
       { de: 'Willkommen an der Universität, Frau Wang!', zh: '欢迎来到大学，王女士！', source: 'lesson:sb-l2' },
     ],
     mnemonic: 'Universität ≈ 英语 university，同源',
+    phrases: [
+      { de: 'an der Universität', zh: '在大学（里）' },
+    ],
   }),
   w('Kurs', 'der', 'Kurse', '课程', 'Der Deutschkurs macht Spaß.', '德语课很有趣。', 'arbeit', {
     sentences: [
       { de: 'Der Deutschkurs macht Spaß.', zh: '德语课很有趣。', source: null },
       { de: 'Danke schön! Wo ist Raum 205? Ich habe dort einen Kurs.', zh: '非常感谢！205教室在哪？我在那里有节课。', source: 'lesson:sb-l2' },
+    ],
+    phrases: [
+      { de: 'einen Kurs machen', zh: '上一门课程' },
     ],
   }),
   w('Büro', 'das', 'Büros', '办公室', 'Er arbeitet im Büro.', '他在办公室工作。', 'arbeit', {
@@ -1183,6 +1740,10 @@ export const VOCAB = [
       { de: 'Ich habe kein Geld dabei.', zh: '我没带钱。', source: null },
     ],
     mnemonic: '注意 Geld（钱）≠ Gold（金子），拼写相近但意思不同',
+    noPl: true,
+    phrases: [
+      { de: 'kein Geld haben', zh: '没钱' },
+    ],
   }),
 
   /* 🧑‍⚕️ 身体与健康 */
@@ -1190,6 +1751,9 @@ export const VOCAB = [
     sentences: [
       { de: 'Mein Kopf tut weh.', zh: '我头疼。', source: null },
       { de: 'Mein Kopf tut weh und ich habe Fieber.', zh: '我头疼，还发烧。', source: 'lesson:sb-l3' },
+    ],
+    phrases: [
+      { de: 'Kopfschmerzen haben', zh: '头疼' },
     ],
   }),
   w('Auge', 'das', 'Augen', '眼睛', 'Sie hat blaue Augen.', '她有蓝色的眼睛。', 'koerper', {
@@ -1202,6 +1766,9 @@ export const VOCAB = [
       { de: 'Wasch dir die Hände!', zh: '把手洗了！', source: null },
     ],
     mnemonic: 'Hand ≈ 英语 hand，同源好记',
+    phrases: [
+      { de: 'die Hände waschen', zh: '洗手' },
+    ],
   }),
   w('Fuß', 'der', 'Füße', '脚', 'Ich gehe zu Fuß.', '我步行去。', 'koerper', {
     sentences: [
@@ -1224,37 +1791,57 @@ export const VOCAB = [
     sentences: [
       { de: 'Ich bin heute krank.', zh: '我今天病了。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('gesund', null, null, '健康的', 'Obst ist gesund.', '水果有益健康。', 'koerper', {
     sentences: [
       { de: 'Obst ist gesund.', zh: '水果有益健康。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('müde', null, null, '疲惫的', 'Ich bin sehr müde.', '我很累。', 'koerper', {
     sentences: [
       { de: 'Ich bin sehr müde.', zh: '我很累。', source: null },
       { de: 'Bist du müde?', zh: '你累吗？', source: 'lesson:u1l1' },
     ],
+    pos: 'adj.',
   }),
   w('wehtun', null, null, '疼（可分）', 'Wo tut es weh?', '哪里疼？', 'koerper', {
     sentences: [
       { de: 'Wo tut es weh?', zh: '哪里疼？', source: null },
       { de: 'Was tut Ihnen weh?', zh: '您哪里疼？', source: 'lesson:sb-l3' },
     ],
+    pos: 'v.',
+    forms: {
+      er: 'tut weh',
+      perfekt: 'hat wehgetan',
+    },
+    valence: 'jemandem wehtun + Dativ：Der Kopf tut mir weh.',
   }),
   w('Schmerzen', 'die', null, '疼痛（复数）', 'Ich habe Kopfschmerzen.', '我头疼。', 'koerper', {
     sentences: [
       { de: 'Ich habe Kopfschmerzen.', zh: '我头疼。', source: null },
+    ],
+    noPl: true,
+    phrases: [
+      { de: 'Schmerzen haben', zh: '疼' },
     ],
   }),
   w('Medikament', 'das', 'Medikamente', '药', 'Nehmen Sie das Medikament!', '请服用这个药！', 'koerper', {
     sentences: [
       { de: 'Nehmen Sie das Medikament!', zh: '请服用这个药！', source: null },
     ],
+    phrases: [
+      { de: 'ein Medikament nehmen', zh: '吃药（服药）' },
+    ],
   }),
   w('Termin', 'der', 'Termine', '预约', 'Ich habe einen Termin beim Arzt.', '我约了医生。', 'koerper', {
     sentences: [
       { de: 'Ich habe einen Termin beim Arzt.', zh: '我约了医生。', source: null },
+    ],
+    phrases: [
+      { de: 'einen Termin haben', zh: '有个预约' },
+      { de: 'einen Termin machen', zh: '约个时间' },
     ],
   }),
 
@@ -1264,87 +1851,112 @@ export const VOCAB = [
       { de: 'Wie ist das Wetter heute?', zh: '今天天气怎么样？', source: null },
     ],
     mnemonic: 'Wetter ≈ 英语 weather，同源',
+    noPl: true,
+    phrases: [
+      { de: 'Wie ist das Wetter?', zh: '天气怎么样？' },
+    ],
   }),
   w('Sonne', 'die', null, '太阳', 'Die Sonne scheint.', '阳光明媚。', 'wetter', {
     sentences: [
       { de: 'Die Sonne scheint.', zh: '阳光明媚。', source: null },
     ],
     mnemonic: 'Sonne ≈ 英语 sun，同源',
+    noPl: true,
   }),
   w('Regen', 'der', null, '雨', 'Morgen gibt es Regen.', '明天有雨。', 'wetter', {
     sentences: [
       { de: 'Morgen gibt es Regen.', zh: '明天有雨。', source: null },
     ],
     mnemonic: 'Regen ≈ 英语 rain，同源',
+    noPl: true,
   }),
   w('regnen', null, null, '下雨', 'Es regnet schon wieder.', '又下雨了。', 'wetter', {
     sentences: [
       { de: 'Es regnet schon wieder.', zh: '又下雨了。', source: null },
     ],
     mnemonic: 'regnen 由名词 Regen（雨）派生：Regen+-en → 下雨',
+    pos: 'v.',
+    forms: {
+      er: 'regnet',
+      perfekt: 'hat geregnet',
+    },
+    valence: 'nur unpersönlich: es regnet',
   }),
   w('Schnee', 'der', null, '雪', 'Im Winter gibt es Schnee.', '冬天下雪。', 'wetter', {
     sentences: [
       { de: 'Im Winter gibt es Schnee.', zh: '冬天下雪。', source: null },
     ],
     mnemonic: 'Schnee ≈ 英语 snow，同源',
+    noPl: true,
   }),
   w('Wind', 'der', 'Winde', '风', 'Der Wind ist stark.', '风很大。', 'wetter', {
     sentences: [
       { de: 'Der Wind ist stark.', zh: '风很大。', source: null },
     ],
     mnemonic: 'Wind ≈ 英语 wind，同源好记',
+    phrases: [
+      { de: 'Der Wind weht.', zh: '风在刮。' },
+    ],
   }),
   w('warm', null, null, '温暖的', 'Heute ist es warm.', '今天很暖和。', 'wetter', {
     sentences: [
       { de: 'Heute ist es warm.', zh: '今天很暖和。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('kalt', null, null, '寒冷的', 'Im Winter ist es kalt.', '冬天很冷。', 'wetter', {
     sentences: [
       { de: 'Im Winter ist es kalt.', zh: '冬天很冷。', source: null },
     ],
     mnemonic: 'kalt ≈ 英语 cold，同源（辅音 k↔c，t↔d 音变）',
+    pos: 'adj.',
   }),
   w('heiß', null, null, '炎热的', 'Der Sommer ist heiß.', '夏天很热。', 'wetter', {
     sentences: [
       { de: 'Der Sommer ist heiß.', zh: '夏天很热。', source: null },
     ],
     mnemonic: 'heiß（热的）和 heißen（叫……名字）拼写相近但完全无关，别搞混',
+    pos: 'adj.',
   }),
-  w('Frühling', 'der', null, '春天', 'Im Frühling blühen die Blumen.', '春天百花盛开。', 'wetter', {
+  w('Frühling', 'der', 'Frühlinge', '春天', 'Im Frühling blühen die Blumen.', '春天百花盛开。', 'wetter', {
     sentences: [
       { de: 'Im Frühling blühen die Blumen.', zh: '春天百花盛开。', source: null },
     ],
     mnemonic: 'Frühling = früh(早)+-ling(名词后缀) → 一年中最早的季节，即春天',
   }),
-  w('Sommer', 'der', null, '夏天', 'Im Sommer fahren wir ans Meer.', '夏天我们去海边。', 'wetter', {
+  w('Sommer', 'der', 'Sommer', '夏天', 'Im Sommer fahren wir ans Meer.', '夏天我们去海边。', 'wetter', {
     sentences: [
       { de: 'Im Sommer fahren wir ans Meer.', zh: '夏天我们去海边。', source: null },
     ],
     mnemonic: 'Sommer ≈ 英语 summer，同源',
   }),
-  w('Herbst', 'der', null, '秋天', 'Der Herbst ist bunt.', '秋天色彩缤纷。', 'wetter', {
+  w('Herbst', 'der', 'Herbste', '秋天', 'Der Herbst ist bunt.', '秋天色彩缤纷。', 'wetter', {
     sentences: [
       { de: 'Der Herbst ist bunt.', zh: '秋天色彩缤纷。', source: null },
     ],
     mnemonic: 'Herbst 与英语 harvest 同源，本义"收获的季节"，即秋天',
   }),
-  w('Winter', 'der', null, '冬天', 'Der Winter ist lang.', '冬天很长。', 'wetter', {
+  w('Winter', 'der', 'Winter', '冬天', 'Der Winter ist lang.', '冬天很长。', 'wetter', {
     sentences: [
       { de: 'Der Winter ist lang.', zh: '冬天很长。', source: null },
     ],
   }),
-  w('Morgen', 'der', null, '早晨', 'Am Morgen trinke ich Kaffee.', '早晨我喝咖啡。', 'wetter', {
+  w('Morgen', 'der', 'Morgen', '早晨', 'Am Morgen trinke ich Kaffee.', '早晨我喝咖啡。', 'wetter', {
     sentences: [
       { de: 'Am Morgen trinke ich Kaffee.', zh: '早晨我喝咖啡。', source: null },
       { de: 'Guten Morgen! Wie geht es Ihnen?', zh: '早上好！您好吗？', source: 'lesson:u0l8' },
     ],
     mnemonic: 'Morgen（早晨，名词，大写）≠ morgen（明天，副词，小写），拼写相同靠大小写区分',
+    phrases: [
+      { de: 'am Morgen', zh: '在早晨' },
+    ],
   }),
   w('Abend', 'der', 'Abende', '晚上', 'Am Abend lese ich.', '晚上我看书。', 'wetter', {
     sentences: [
       { de: 'Am Abend lese ich.', zh: '晚上我看书。', source: null },
+    ],
+    phrases: [
+      { de: 'am Abend', zh: '在晚上' },
     ],
   }),
   w('Nacht', 'die', 'Nächte', '夜晚', 'In der Nacht schlafe ich.', '夜里我睡觉。', 'wetter', {
@@ -1352,6 +1964,9 @@ export const VOCAB = [
       { de: 'In der Nacht schlafe ich.', zh: '夜里我睡觉。', source: null },
     ],
     mnemonic: 'Nacht ≈ 英语 night，同源（ch↔gh 音变）',
+    phrases: [
+      { de: 'in der Nacht', zh: '在夜里' },
+    ],
   }),
 
   /* 🎨 常用形容词 */
@@ -1360,49 +1975,58 @@ export const VOCAB = [
       { de: 'Das ist eine gute Idee.', zh: '这是个好主意。', source: null },
       { de: 'Die Mutter kocht gut.', zh: '妈妈做饭做得好。', source: 'lesson:u0l2' },
     ],
+    pos: 'adj.',
   }),
   w('schlecht', null, null, '坏的', 'Das Wetter ist schlecht.', '天气很糟。', 'adj', {
     sentences: [
       { de: 'Das Wetter ist schlecht.', zh: '天气很糟。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('groß', null, null, '大的；高的', 'Er ist sehr groß.', '他个子很高。', 'adj', {
     sentences: [
       { de: 'Er ist sehr groß.', zh: '他个子很高。', source: null },
     ],
     mnemonic: 'groß ≈ 英语 gross（原意"大量的"），同源',
+    pos: 'adj.',
   }),
   w('klein', null, null, '小的', 'Die Wohnung ist klein.', '这公寓很小。', 'adj', {
     sentences: [
       { de: 'Die Wohnung ist klein.', zh: '这公寓很小。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('neu', null, null, '新的', 'Ich habe ein neues Handy.', '我有一部新手机。', 'adj', {
     sentences: [
       { de: 'Ich habe ein neues Handy.', zh: '我有一部新手机。', source: null },
     ],
     mnemonic: 'neu ≈ 英语 new，同源好记',
+    pos: 'adj.',
   }),
   w('schön', null, null, '美的', 'Die Stadt ist schön.', '这城市很美。', 'adj', {
     sentences: [
       { de: 'Die Stadt ist schön.', zh: '这城市很美。', source: null },
       { de: 'Die Stadt ist schön.', zh: '这座城市很美。', source: 'lesson:u0l3' },
     ],
+    pos: 'adj.',
   }),
   w('teuer', null, null, '贵的', 'Das Auto ist zu teuer.', '这车太贵了。', 'adj', {
     sentences: [
       { de: 'Das Auto ist zu teuer.', zh: '这车太贵了。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('billig', null, null, '便宜的', 'Das T-Shirt ist billig.', '这件T恤很便宜。', 'adj', {
     sentences: [
       { de: 'Das T-Shirt ist billig.', zh: '这件T恤很便宜。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('schnell', null, null, '快的', 'Der Zug ist schnell.', '火车很快。', 'adj', {
     sentences: [
       { de: 'Der Zug ist schnell.', zh: '火车很快。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('langsam', null, null, '慢的', 'Sprechen Sie bitte langsam!', '请说慢一点！', 'adj', {
     sentences: [
@@ -1410,28 +2034,33 @@ export const VOCAB = [
       { de: 'Kein Problem, ich spreche langsam.', zh: '没问题，我说慢一点。', source: 'lesson:sb-l2' },
     ],
     mnemonic: 'langsam = lang(长的)+-sam(形容词后缀) → 拖得久的，即"慢的"',
+    pos: 'adj.',
   }),
   w('einfach', null, null, '简单的', 'Die Aufgabe ist einfach.', '这道题很简单。', 'adj', {
     sentences: [
       { de: 'Die Aufgabe ist einfach.', zh: '这道题很简单。', source: null },
     ],
     mnemonic: 'einfach = ein(一)+-fach(……倍/……重) → 单一层的，即"简单的"',
+    pos: 'adj.',
   }),
   w('schwer', null, null, '难的；重的', 'Deutsch ist nicht so schwer.', '德语没那么难。', 'adj', {
     sentences: [
       { de: 'Deutsch ist nicht so schwer.', zh: '德语没那么难。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('interessant', null, null, '有趣的', 'Das Buch ist interessant.', '这本书很有趣。', 'adj', {
     sentences: [
       { de: 'Das Buch ist interessant.', zh: '这本书很有趣。', source: null },
     ],
+    pos: 'adj.',
   }),
   w('langweilig', null, null, '无聊的', 'Der Film ist langweilig.', '这电影很无聊。', 'adj', {
     sentences: [
       { de: 'Der Film ist langweilig.', zh: '这电影很无聊。', source: null },
     ],
     mnemonic: 'langweilig = lang(长)+Weile(一段时间)+-ig → 觉得时间过得很长，即"无聊的"',
+    pos: 'adj.',
   }),
   w('nett', null, null, '友好的', 'Die Nachbarn sind nett.', '邻居们很友好。', 'adj', {
     sentences: [
@@ -1439,24 +2068,28 @@ export const VOCAB = [
       { de: 'Du bist nett.', zh: '你人真好。', source: 'lesson:u1l1' },
     ],
     mnemonic: 'nett ≈ 英语 neat，同源，引申为"友好的"',
+    pos: 'adj.',
   }),
   w('richtig', null, null, '正确的', 'Die Antwort ist richtig.', '答案正确。', 'adj', {
     sentences: [
       { de: 'Die Antwort ist richtig.', zh: '答案正确。', source: null },
     ],
     mnemonic: 'richtig 与 Recht（法/权利）同根，和英语 right 同源，引申为"正确的"',
+    pos: 'adj.',
   }),
   w('falsch', null, null, '错误的', 'Das ist leider falsch.', '可惜这是错的。', 'adj', {
     sentences: [
       { de: 'Das ist leider falsch.', zh: '可惜这是错的。', source: null },
     ],
     mnemonic: 'falsch ≈ 英语 false，同源',
+    pos: 'adj.',
   }),
   w('glücklich', null, null, '幸福的', 'Ich bin sehr glücklich.', '我很幸福。', 'adj', {
     sentences: [
       { de: 'Ich bin sehr glücklich.', zh: '我很幸福。', source: null },
     ],
     mnemonic: 'glücklich = Glück(幸运/幸福)+-lich(形容词后缀) → 有幸福感的，即"幸福的"',
+    pos: 'adj.',
   }),
 
   /* ❓ 疑问词与小词 */
@@ -1465,18 +2098,21 @@ export const VOCAB = [
       { de: 'Wer ist das?', zh: '这是谁？', source: null },
     ],
     mnemonic: '德语 W-疑问词对应英语 Wh-：wer=who，was=what，wo=where，wann=when，warum=why',
+    pos: 'pron.',
   }),
   w('was', null, null, '什么', 'Was ist das?', '这是什么？', 'frage', {
     sentences: [
       { de: 'Was ist das?', zh: '这是什么？', source: null },
       { de: 'Was kostet der Kuchen?', zh: '蛋糕多少钱？', source: 'lesson:sa-l2' },
     ],
+    pos: 'pron.',
   }),
   w('wo', null, null, '在哪里', 'Wo wohnst du?', '你住在哪？', 'frage', {
     sentences: [
       { de: 'Wo wohnst du?', zh: '你住在哪？', source: null },
       { de: 'Wo finde ich Brot?', zh: '面包在哪儿能找到？', source: 'lesson:sa-l3' },
     ],
+    pos: 'adv.',
   }),
   w('woher', null, null, '从哪里来', 'Woher kommen Sie?', '您从哪里来？', 'frage', {
     sentences: [
@@ -1484,75 +2120,88 @@ export const VOCAB = [
       { de: 'Woher kommst du?', zh: '你从哪儿来？', source: 'lesson:sa-l1' },
     ],
     mnemonic: 'woher = wo(哪里)+her(朝这边而来) → 从哪里来',
+    pos: 'adv.',
   }),
   w('wohin', null, null, '到哪里去', 'Wohin fährst du?', '你去哪？', 'frage', {
     sentences: [
       { de: 'Wohin fährst du?', zh: '你去哪？', source: null },
     ],
     mnemonic: 'wohin = wo(哪里)+hin(朝那边而去) → 到哪里去，和 woher(从哪里来) 方向相反',
+    pos: 'adv.',
   }),
   w('wann', null, null, '什么时候', 'Wann beginnt der Kurs?', '课程什么时候开始？', 'frage', {
     sentences: [
       { de: 'Wann beginnt der Kurs?', zh: '课程什么时候开始？', source: null },
     ],
+    pos: 'adv.',
   }),
   w('wie', null, null, '如何', 'Wie geht es dir?', '你好吗？', 'frage', {
     sentences: [
       { de: 'Wie geht es dir?', zh: '你好吗？', source: null },
       { de: 'Wie heißt du?', zh: '你叫什么名字？', source: 'lesson:sa-l1' },
     ],
+    pos: 'adv.',
   }),
   w('warum', null, null, '为什么', 'Warum lernst du Deutsch?', '你为什么学德语？', 'frage', {
     sentences: [
       { de: 'Warum lernst du Deutsch?', zh: '你为什么学德语？', source: null },
     ],
     mnemonic: 'warum 由古体 wor-(哪)+um(关于) 构成，字面"关于什么"，即为什么',
+    pos: 'adv.',
   }),
   w('wie viel', null, null, '多少', 'Wie viel kostet das?', '这个多少钱？', 'frage', {
     sentences: [
       { de: 'Wie viel kostet das?', zh: '这个多少钱？', source: null },
     ],
+    pos: 'adv.',
   }),
   w('und', null, null, '和', 'Kaffee und Kuchen.', '咖啡和蛋糕。', 'frage', {
     sentences: [
       { de: 'Kaffee und Kuchen.', zh: '咖啡和蛋糕。', source: null },
       { de: 'Ich bin Anna und du bist Max.', zh: '我是安娜，你是马克斯。', source: 'lesson:u1l1' },
     ],
+    pos: 'konj.',
   }),
   w('oder', null, null, '或者', 'Tee oder Kaffee?', '茶还是咖啡？', 'frage', {
     sentences: [
       { de: 'Tee oder Kaffee?', zh: '茶还是咖啡？', source: null },
     ],
+    pos: 'konj.',
   }),
   w('aber', null, null, '但是', 'Klein, aber fein.', '小而精。', 'frage', {
     sentences: [
       { de: 'Klein, aber fein.', zh: '小而精。', source: null },
       { de: 'Ich spreche ein bisschen Deutsch, aber ich lerne jeden Tag.', zh: '我会说一点德语，但我每天都在学。', source: 'lesson:u0l8' },
     ],
+    pos: 'konj.',
   }),
   w('nicht', null, null, '不', 'Ich weiß nicht.', '我不知道。', 'frage', {
     sentences: [
       { de: 'Ich weiß nicht.', zh: '我不知道。', source: null },
       { de: 'Nein, ich bin nicht müde.', zh: '不，我不累。', source: 'lesson:u1l1' },
     ],
+    pos: 'adv.',
   }),
   w('auch', null, null, '也', 'Ich auch!', '我也是！', 'frage', {
     sentences: [
       { de: 'Ich auch!', zh: '我也是！', source: null },
       { de: 'Freut mich auch! Bist du Studentin?', zh: '我也是！你是大学生吗？', source: 'lesson:u1l1' },
     ],
+    pos: 'adv.',
   }),
   w('sehr', null, null, '非常', 'Danke sehr!', '非常感谢！', 'frage', {
     sentences: [
       { de: 'Danke sehr!', zh: '非常感谢！', source: null },
       { de: 'Du bist sehr nett.', zh: '你非常好。', source: 'lesson:u1l1' },
     ],
+    pos: 'adv.',
   }),
   w('hier', null, null, '这里', 'Hier ist mein Haus.', '这是我家。', 'frage', {
     sentences: [
       { de: 'Hier ist mein Haus.', zh: '这是我家。', source: null },
       { de: 'Ja, der Käse ist hier rechts.', zh: '有，奶酪在这边右侧。', source: 'lesson:sa-l3' },
     ],
+    pos: 'adv.',
   }),
   w('dort', null, null, '那里', 'Dort ist der Bahnhof.', '火车站在那边。', 'frage', {
     sentences: [
@@ -1560,23 +2209,27 @@ export const VOCAB = [
       { de: 'Das Brot ist dort links.', zh: '面包在那边左侧。', source: 'lesson:sa-l3' },
     ],
     mnemonic: 'dort ≈ 英语 there，同源（d↔th 音变，同 Tür≈door）',
+    pos: 'adv.',
   }),
   w('immer', null, null, '总是', 'Er kommt immer zu spät.', '他总是迟到。', 'frage', {
     sentences: [
       { de: 'Er kommt immer zu spät.', zh: '他总是迟到。', source: null },
     ],
+    pos: 'adv.',
   }),
   w('oft', null, null, '经常', 'Wir essen oft zusammen.', '我们常一起吃饭。', 'frage', {
     sentences: [
       { de: 'Wir essen oft zusammen.', zh: '我们常一起吃饭。', source: null },
     ],
     mnemonic: 'oft ≈ 英语 oft(en)，同源好记',
+    pos: 'adv.',
   }),
   w('manchmal', null, null, '有时', 'Manchmal koche ich selbst.', '有时我自己做饭。', 'frage', {
     sentences: [
       { de: 'Manchmal koche ich selbst.', zh: '有时我自己做饭。', source: null },
     ],
     mnemonic: 'manchmal = manch(有些)+Mal(次/回) → 有些次，即"有时"',
+    pos: 'adv.',
   }),
 
   /* 🗨 高频固定表达（id 按数组位置生成，新词条只能追加在末尾，勿插入中间） */
@@ -1585,20 +2238,156 @@ export const VOCAB = [
       { de: 'Kein Problem, ich spreche langsam.', zh: '没问题，我说慢一点。', source: null },
       { de: 'Ja, kein Problem.', zh: '可以，没问题。', source: 'lesson:sb-l2' },
     ],
+    pos: 'phrase',
   }),
   w('Einen Moment, bitte', null, null, '请稍等', 'Einen Moment, bitte. Der Arzt kommt gleich.', '请稍等，医生马上就来。', 'gruss', {
     sentences: [
       { de: 'Einen Moment, bitte. Der Arzt kommt gleich.', zh: '请稍等，医生马上就来。', source: null },
     ],
+    pos: 'phrase',
   }),
   w('Wie bitte?', null, null, '请再说一遍？', 'Wie bitte? Ich verstehe das nicht.', '请再说一遍？我没听懂。', 'gruss', {
     sentences: [
       { de: 'Wie bitte? Ich verstehe das nicht.', zh: '请再说一遍？我没听懂。', source: null },
     ],
+    pos: 'phrase',
   }),
   w('Gute Besserung', null, null, '祝早日康复', 'Gute Besserung!', '祝早日康复！', 'koerper', {
     sentences: [
       { de: 'Gute Besserung!', zh: '祝早日康复！', source: null },
     ],
+    pos: 'phrase',
+  }),
+  /* 🏃 核心动词补录（sein/haben/情态动词/werden） */
+  w('sein', null, null, '是', 'Ich bin Anna.', '我是安娜。', 'verb1', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Ich bin Anna.', zh: '我是安娜。', source: 'lesson:u1l1' },
+      { de: 'Wir sind Studenten aus China.', zh: '我们是来自中国的大学生。', source: 'lesson:u1l3' },
+      { de: 'Er ist Student.', zh: '他是大学生。', source: 'lesson:u1l2' },
+    ],
+    forms: {
+      ich: 'bin', du: 'bist', er: 'ist', wir: 'sind', ihr: 'seid', sie: 'sind',
+      perfekt: 'ist gewesen', praeteritum: 'war',
+    },
+    valence: 'sein + Nominativ：Ich bin Student.（表语用第一格，不用第四格）',
+    mnemonic: 'sein 的 ist ≈ 英语 is，同源好记；但整个变位表不规则，需要专门背熟。',
+  }),
+  w('haben', null, null, '有', 'Ich habe einen Termin um zehn Uhr.', '我预约了十点。', 'verb1', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Ich habe einen Termin um zehn Uhr.', zh: '我预约了十点。', source: 'lesson:sb-l3' },
+      { de: 'Ich habe Fieber.', zh: '我发烧了。', source: 'lesson:sb-l3' },
+      { de: 'Ich habe fünf Brüder.', zh: '我有五个兄弟。', source: 'lesson:u0l3' },
+    ],
+    forms: {
+      ich: 'habe', du: 'hast', er: 'hat', wir: 'haben', ihr: 'habt', sie: 'haben',
+      perfekt: 'hat gehabt', praeteritum: 'hatte',
+    },
+    mnemonic: 'haben ≈ 英语 have，同源好记。',
+  }),
+  w('möchten', null, null, '想要（礼貌）', 'Ich möchte einen Tee.', '我想要一杯茶。', 'verb1', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Möchten Sie auch einen Kuchen?', zh: '您也要蛋糕吗？', source: 'lesson:sa-l2' },
+      { de: 'Ich möchte einen Tee.', zh: '我想要一杯茶。', source: 'lesson:sa-l2' },
+    ],
+    forms: {
+      ich: 'möchte', du: 'möchtest', er: 'möchte', wir: 'möchten', ihr: 'möchtet', sie: 'möchten',
+      praeteritum: 'wollte',
+    },
+    valence: 'möchten + Akkusativ 或 + Infinitiv：Ich möchte einen Kaffee. / Ich möchte schlafen.',
+    mnemonic: 'möchten 是 mögen 的虚拟式，字面"想要"，比 wollen 语气更委婉客气，点单首选它。',
+  }),
+  w('können', null, null, '能够；会', 'Kannst du mir helfen?', '你能帮我吗？', 'verb1', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Können Sie das bitte wiederholen?', zh: '您能重复一遍吗？', source: 'lesson:sb-l2' },
+      { de: 'Kannst du mir helfen?', zh: '你能帮我吗？', source: null },
+    ],
+    forms: {
+      ich: 'kann', du: 'kannst', er: 'kann', wir: 'können', ihr: 'könnt', sie: 'können',
+      praeteritum: 'konnte',
+    },
+    valence: 'können + Infinitiv（不带 zu）：Ich kann schwimmen.',
+    mnemonic: 'können ≈ 英语 can，同源好记。',
+  }),
+  w('müssen', null, null, '必须', 'Muss ich umsteigen?', '我需要换乘吗？', 'verb1', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Muss ich umsteigen?', zh: '我需要换乘吗？', source: 'lesson:sb-l1' },
+      { de: 'Ich muss jetzt gehen.', zh: '我现在得走了。', source: null },
+    ],
+    forms: {
+      ich: 'muss', du: 'musst', er: 'muss', wir: 'müssen', ihr: 'müsst', sie: 'müssen',
+      praeteritum: 'musste',
+    },
+    valence: 'müssen + Infinitiv（不带 zu）：Ich muss jetzt gehen.',
+    mnemonic: 'müssen ≈ 英语 must，同源好记。',
+  }),
+  w('wollen', null, null, '想要（意愿）', 'Ich will nach Hause gehen.', '我想回家。', 'verb2', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Ich will nach Hause gehen.', zh: '我想回家。', source: null },
+      { de: 'Was willst du machen?', zh: '你想做什么？', source: null },
+    ],
+    forms: {
+      ich: 'will', du: 'willst', er: 'will', wir: 'wollen', ihr: 'wollt', sie: 'wollen',
+      praeteritum: 'wollte',
+    },
+    valence: 'wollen + Infinitiv（不带 zu）：Ich will nach Hause gehen.',
+    mnemonic: 'wollen ≈ 英语 will（意愿），同源，但德语语气比 möchten 更直接、更强。',
+  }),
+  w('mögen', null, null, '喜欢', 'Ich mag Kaffee.', '我喜欢咖啡。', 'verb2', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Ich mag Kaffee.', zh: '我喜欢咖啡。', source: null },
+      { de: 'Magst du Musik?', zh: '你喜欢音乐吗？', source: null },
+    ],
+    forms: {
+      ich: 'mag', du: 'magst', er: 'mag', wir: 'mögen', ihr: 'mögt', sie: 'mögen',
+      praeteritum: 'mochte',
+    },
+    valence: 'mögen + Akkusativ（不接不定式）：Ich mag Kaffee.（想要做某事用 möchten，不用 mögen+Infinitiv）',
+    mnemonic: 'mögen ≈ 英语 may，同源，但德语 mögen 主要表示"喜欢"。',
+  }),
+  w('dürfen', null, null, '被允许；可以', 'Darf ich fragen?', '我可以问一下吗？', 'verb2', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Darf ich fragen?', zh: '我可以问一下吗？', source: null },
+      { de: 'Darf ich mitkommen?', zh: '我可以一起来吗？', source: null },
+    ],
+    forms: {
+      ich: 'darf', du: 'darfst', er: 'darf', wir: 'dürfen', ihr: 'dürft', sie: 'dürfen',
+      praeteritum: 'durfte',
+    },
+    valence: 'dürfen + Infinitiv（不带 zu）：Darf ich fragen?',
+    mnemonic: 'dürfen 与英语 dare 同源，但德语意思是"被允许做……"，不是"敢"。',
+  }),
+  w('sollen', null, null, '应该', 'Was soll ich machen?', '我该做什么？', 'verb2', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Was soll ich machen?', zh: '我该做什么？', source: null },
+      { de: 'Ich soll früh aufstehen.', zh: '我应该早起。', source: null },
+    ],
+    forms: {
+      ich: 'soll', du: 'sollst', er: 'soll', wir: 'sollen', ihr: 'sollt', sie: 'sollen',
+      praeteritum: 'sollte',
+    },
+    valence: 'sollen + Infinitiv（不带 zu）：Was soll ich machen?',
+    mnemonic: 'sollen ≈ 英语 shall，同源好记。',
+  }),
+  w('werden', null, null, '变成；将要', 'Es wird kalt.', '天要变冷了。', 'verb2', {
+    pos: 'v.',
+    sentences: [
+      { de: 'Es wird kalt.', zh: '天要变冷了。', source: null },
+      { de: 'Ich werde Arzt.', zh: '我将成为医生。', source: null },
+    ],
+    forms: {
+      ich: 'werde', du: 'wirst', er: 'wird', wir: 'werden', ihr: 'werdet', sie: 'werden',
+      perfekt: 'ist geworden', praeteritum: 'wurde',
+    },
+    valence: 'werden + Nominativ：Er wird Arzt.（职业不加冠词，不是第四格）',
+    mnemonic: 'werden 与英语 worth 同源（古义"变成"），现代德语表示"变成/将要"。',
   }),
 ];
