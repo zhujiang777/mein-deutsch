@@ -2390,4 +2390,19 @@ export const VOCAB = [
     valence: 'werden + Nominativ：Er wird Arzt.（职业不加冠词，不是第四格）',
     mnemonic: 'werden 与英语 worth 同源（古义"变成"），现代德语表示"变成/将要"。',
   }),
+  /* 🔢 批次三课程配套补录 */
+  w('Nummer', 'die', 'Nummern', '号码', 'Meine Nummer ist hundertdreiundzwanzig.', '我的号码是123。', 'zahl', {
+    sentences: [
+      { de: 'Meine Nummer ist hundertdreiundzwanzig.', zh: '我的号码是123。', source: 'lesson:u3l3' },
+      { de: 'Ihre Nummer, bitte?', zh: '请问您的号码？', source: 'lesson:u3l3' },
+    ],
+    mnemonic: 'Nummer ≈ 英语 number，同源好记。',
+  }),
+  w('Adresse', 'die', 'Adressen', '地址', 'Wie ist Ihre Adresse?', '您的地址是什么？', 'wohnen', {
+    sentences: [
+      { de: 'Wie ist Ihre Adresse?', zh: '您的地址是什么？', source: 'lesson:u3l3' },
+      { de: 'Meine Adresse ist Bahnhofstraße zwölf.', zh: '我的地址是火车站街12号。', source: null },
+    ],
+    mnemonic: 'Adresse ≈ 英语 address 同源，注意德语只有一个 d。',
+  }),
 ];
