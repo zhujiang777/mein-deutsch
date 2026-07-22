@@ -256,14 +256,15 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "登记；报名"
+      "zh": "登记/注册（反身可分 sich anmelden）"
     }
   ],
   "Anmeldung": [
     {
       "pos": "n.",
       "art": "die",
-      "zh": "登记；报名"
+      "pl": "Anmeldungen",
+      "zh": "户籍登记/注册"
     }
   ],
   "Anrede": [
@@ -326,7 +327,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "广告；显示"
+      "pl": "Anzeigen",
+      "zh": "报案；广告/启事"
     }
   ],
   "anziehen": [
@@ -781,7 +783,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "得到；收到"
+      "zh": "得到/收到"
     }
   ],
   "benutzen": [
@@ -1564,7 +1566,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "推荐；建议"
+      "zh": "推荐"
     }
   ],
   "Empfänger": [
@@ -2151,14 +2153,14 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "喜欢；使满意"
+      "zh": "（令人）喜欢"
     }
   ],
   "gegen": [
     {
       "pos": "prep.",
       "art": null,
-      "zh": "反对；大约；朝向"
+      "zh": "针对/反对（+第四格）"
     }
   ],
   "gehen": [
@@ -2306,7 +2308,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "相信；认为"
+      "zh": "认为/相信"
     }
   ],
   "gleich": [
@@ -2667,7 +2669,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "帮助；救援"
+      "zh": "帮助"
     }
   ],
   "hinten": [
@@ -2950,7 +2952,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adj.",
       "art": null,
-      "zh": "坏的；破损的"
+      "zh": "坏掉的"
     }
   ],
   "Karte": [
@@ -3112,6 +3114,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Konten",
       "zh": "账户"
     }
   ],
@@ -3611,7 +3614,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "带来"
+      "zh": "带来（可分）"
     }
   ],
   "mitkommen": [
@@ -4044,7 +4047,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "警察；警方"
+      "zh": "警察（机构）"
     }
   ],
   "Pommes frites": [
@@ -4676,7 +4679,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adv.",
       "art": null,
-      "zh": "立刻；马上"
+      "zh": "立刻/马上"
     }
   ],
   "Sohn": [
@@ -4794,7 +4797,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "站立；位于"
+      "zh": "站；（文字）写着"
     }
   ],
   "Stelle": [
@@ -6258,6 +6261,193 @@ export const DICT_ENTRIES = {
       "zh": "想要（礼貌）"
     }
   ],
+  "Nebenkosten": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "zh": "杂费（水电暖等附加费用）"
+    }
+  ],
+  "Kaution": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Kautionen",
+      "zh": "押金"
+    }
+  ],
+  "Heizung": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Heizungen",
+      "zh": "暖气"
+    }
+  ],
+  "Wasserhahn": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Wasserhähne",
+      "zh": "水龙头"
+    }
+  ],
+  "funktionieren": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "运转/起作用"
+    }
+  ],
+  "eröffnen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "开设/开立"
+    }
+  ],
+  "Reisepass": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Reisepässe",
+      "zh": "护照"
+    }
+  ],
+  "IBAN": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "zh": "国际银行账号"
+    }
+  ],
+  "SIM-Karte": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "SIM-Karten",
+      "zh": "SIM卡"
+    }
+  ],
+  "Prepaid-Karte": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Prepaid-Karten",
+      "zh": "预付费卡"
+    }
+  ],
+  "Handynummer": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Handynummern",
+      "zh": "手机号"
+    }
+  ],
+  "reservieren": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "预订"
+    }
+  ],
+  "allergisch": [
+    {
+      "pos": "adj.",
+      "art": null,
+      "zh": "过敏的"
+    }
+  ],
+  "Person": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Personen",
+      "zh": "人"
+    }
+  ],
+  "Gericht": [
+    {
+      "pos": "n.",
+      "art": "das",
+      "pl": "Gerichte",
+      "zh": "菜肴/一道菜"
+    }
+  ],
+  "getrennt": [
+    {
+      "pos": "adj.",
+      "art": null,
+      "zh": "分开地（付款）"
+    }
+  ],
+  "verlieren": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "丢失"
+    }
+  ],
+  "stehlen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "偷"
+    }
+  ],
+  "zuletzt": [
+    {
+      "pos": "adv.",
+      "art": null,
+      "zh": "最后一次"
+    }
+  ],
+  "Diebstahl": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Diebstähle",
+      "zh": "盗窃"
+    }
+  ],
+  "melden": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "报告/申报"
+    }
+  ],
+  "passieren": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "发生"
+    }
+  ],
+  "Wohnungsgeberbestätigung": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Wohnungsgeberbestätigungen",
+      "zh": "房东确认书"
+    }
+  ],
+  "Meldebescheinigung": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Meldebescheinigungen",
+      "zh": "登记证明"
+    }
+  ],
+  "passen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "（时间/尺寸）合适"
+    }
+  ],
   "klasse": [
     {
       "pos": "adj.",
@@ -6439,17 +6629,29 @@ export const DICT_FORMS = {
   "anmachen": [
     "anmachen"
   ],
-  "anmelde": [
+  "melde mich an": [
     "anmelden"
   ],
-  "anmeldest": [
+  "meldest dich an": [
     "anmelden"
   ],
-  "anmeldet": [
+  "meldet sich an": [
     "anmelden"
   ],
-  "anmelden": [
+  "melden uns an": [
     "anmelden"
+  ],
+  "meldet euch an": [
+    "anmelden"
+  ],
+  "melden sich an": [
+    "anmelden"
+  ],
+  "hat sich angemeldet": [
+    "anmelden"
+  ],
+  "anmeldungen": [
+    "Anmeldung"
   ],
   "rufe an": [
     "anrufen"
@@ -6480,6 +6682,9 @@ export const DICT_FORMS = {
   ],
   "hat geantwortet": [
     "antworten"
+  ],
+  "anzeigen": [
+    "Anzeige"
   ],
   "anziehe": [
     "anziehen"
@@ -6743,6 +6948,9 @@ export const DICT_FORMS = {
     "bekommen"
   ],
   "bekommen": [
+    "bekommen"
+  ],
+  "hat bekommen": [
     "bekommen"
   ],
   "benutze": [
@@ -7203,13 +7411,19 @@ export const DICT_FORMS = {
   "empfehle": [
     "empfehlen"
   ],
-  "empfehlst": [
+  "empfiehlst": [
+    "empfehlen"
+  ],
+  "empfiehlt": [
+    "empfehlen"
+  ],
+  "empfehlen": [
     "empfehlen"
   ],
   "empfehlt": [
     "empfehlen"
   ],
-  "empfehlen": [
+  "hat empfohlen": [
     "empfehlen"
   ],
   "ende": [
@@ -7566,13 +7780,19 @@ export const DICT_FORMS = {
   "gefalle": [
     "gefallen"
   ],
-  "gefallst": [
+  "gefällst": [
+    "gefallen"
+  ],
+  "gefällt": [
+    "gefallen"
+  ],
+  "gefallen": [
     "gefallen"
   ],
   "gefallt": [
     "gefallen"
   ],
-  "gefallen": [
+  "hat gefallen": [
     "gefallen"
   ],
   "gehe": [
@@ -7657,6 +7877,9 @@ export const DICT_FORMS = {
     "glauben"
   ],
   "glauben": [
+    "glauben"
+  ],
+  "hat geglaubt": [
     "glauben"
   ],
   "gleiche": [
@@ -8147,6 +8370,9 @@ export const DICT_FORMS = {
   "ist gekommen": [
     "kommen"
   ],
+  "konten": [
+    "Konto"
+  ],
   "köpfe": [
     "Kopf"
   ],
@@ -8570,16 +8796,19 @@ export const DICT_FORMS = {
   "minuten": [
     "Minute"
   ],
-  "mitbringe": [
+  "bringe mit": [
     "mitbringen"
   ],
-  "mitbringst": [
+  "bringst mit": [
     "mitbringen"
   ],
-  "mitbringt": [
+  "bringt mit": [
     "mitbringen"
   ],
-  "mitbringen": [
+  "bringen mit": [
+    "mitbringen"
+  ],
+  "hat mitgebracht": [
     "mitbringen"
   ],
   "komme mit": [
@@ -8838,6 +9067,9 @@ export const DICT_FORMS = {
     "reparieren"
   ],
   "reparieren": [
+    "reparieren"
+  ],
+  "hat repariert": [
     "reparieren"
   ],
   "restaurants": [
@@ -9282,6 +9514,9 @@ export const DICT_FORMS = {
     "stehen"
   ],
   "stehen": [
+    "stehen"
+  ],
+  "hat gestanden": [
     "stehen"
   ],
   "stelle": [
@@ -10061,6 +10296,192 @@ export const DICT_FORMS = {
   ],
   "möchtet": [
     "möchten"
+  ],
+  "kautionen": [
+    "Kaution"
+  ],
+  "heizungen": [
+    "Heizung"
+  ],
+  "wasserhähne": [
+    "Wasserhahn"
+  ],
+  "funktioniere": [
+    "funktionieren"
+  ],
+  "funktionierst": [
+    "funktionieren"
+  ],
+  "funktioniert": [
+    "funktionieren"
+  ],
+  "funktionieren": [
+    "funktionieren"
+  ],
+  "hat funktioniert": [
+    "funktionieren"
+  ],
+  "eröffne": [
+    "eröffnen"
+  ],
+  "eröffnest": [
+    "eröffnen"
+  ],
+  "eröffnet": [
+    "eröffnen"
+  ],
+  "eröffnen": [
+    "eröffnen"
+  ],
+  "hat eröffnet": [
+    "eröffnen"
+  ],
+  "reisepässe": [
+    "Reisepass"
+  ],
+  "sim-karten": [
+    "SIM-Karte"
+  ],
+  "prepaid-karten": [
+    "Prepaid-Karte"
+  ],
+  "handynummern": [
+    "Handynummer"
+  ],
+  "reserviere": [
+    "reservieren"
+  ],
+  "reservierst": [
+    "reservieren"
+  ],
+  "reserviert": [
+    "reservieren"
+  ],
+  "reservieren": [
+    "reservieren"
+  ],
+  "hat reserviert": [
+    "reservieren"
+  ],
+  "allergische": [
+    "allergisch"
+  ],
+  "allergischen": [
+    "allergisch"
+  ],
+  "allergischer": [
+    "allergisch"
+  ],
+  "allergisches": [
+    "allergisch"
+  ],
+  "allergischem": [
+    "allergisch"
+  ],
+  "personen": [
+    "Person"
+  ],
+  "gerichte": [
+    "Gericht"
+  ],
+  "getrennte": [
+    "getrennt"
+  ],
+  "getrennten": [
+    "getrennt"
+  ],
+  "getrennter": [
+    "getrennt"
+  ],
+  "getrenntes": [
+    "getrennt"
+  ],
+  "getrenntem": [
+    "getrennt"
+  ],
+  "verliere": [
+    "verlieren"
+  ],
+  "verlierst": [
+    "verlieren"
+  ],
+  "verliert": [
+    "verlieren"
+  ],
+  "verlieren": [
+    "verlieren"
+  ],
+  "hat verloren": [
+    "verlieren"
+  ],
+  "stehle": [
+    "stehlen"
+  ],
+  "stiehlst": [
+    "stehlen"
+  ],
+  "stiehlt": [
+    "stehlen"
+  ],
+  "stehlen": [
+    "stehlen"
+  ],
+  "stehlt": [
+    "stehlen"
+  ],
+  "hat gestohlen": [
+    "stehlen"
+  ],
+  "diebstähle": [
+    "Diebstahl"
+  ],
+  "melde": [
+    "melden"
+  ],
+  "meldest": [
+    "melden"
+  ],
+  "meldet": [
+    "melden"
+  ],
+  "melden": [
+    "melden"
+  ],
+  "hat gemeldet": [
+    "melden"
+  ],
+  "passiere": [
+    "passieren"
+  ],
+  "passierst": [
+    "passieren"
+  ],
+  "passiert": [
+    "passieren"
+  ],
+  "passieren": [
+    "passieren"
+  ],
+  "ist passiert": [
+    "passieren"
+  ],
+  "wohnungsgeberbestätigungen": [
+    "Wohnungsgeberbestätigung"
+  ],
+  "meldebescheinigungen": [
+    "Meldebescheinigung"
+  ],
+  "passe": [
+    "passen"
+  ],
+  "passt": [
+    "passen"
+  ],
+  "passen": [
+    "passen"
+  ],
+  "hat gepasst": [
+    "passen"
   ],
   "der": [
     "der",
@@ -12829,6 +13250,81 @@ export const DICT_POS = {
     "phrase"
   ],
   "möchten": [
+    "v."
+  ],
+  "Nebenkosten": [
+    "n."
+  ],
+  "Kaution": [
+    "n."
+  ],
+  "Heizung": [
+    "n."
+  ],
+  "Wasserhahn": [
+    "n."
+  ],
+  "funktionieren": [
+    "v."
+  ],
+  "eröffnen": [
+    "v."
+  ],
+  "Reisepass": [
+    "n."
+  ],
+  "IBAN": [
+    "n."
+  ],
+  "SIM-Karte": [
+    "n."
+  ],
+  "Prepaid-Karte": [
+    "n."
+  ],
+  "Handynummer": [
+    "n."
+  ],
+  "reservieren": [
+    "v."
+  ],
+  "allergisch": [
+    "adj."
+  ],
+  "Person": [
+    "n."
+  ],
+  "Gericht": [
+    "n."
+  ],
+  "getrennt": [
+    "adj."
+  ],
+  "verlieren": [
+    "v."
+  ],
+  "stehlen": [
+    "v."
+  ],
+  "zuletzt": [
+    "adv."
+  ],
+  "Diebstahl": [
+    "n."
+  ],
+  "melden": [
+    "v."
+  ],
+  "passieren": [
+    "v."
+  ],
+  "Wohnungsgeberbestätigung": [
+    "n."
+  ],
+  "Meldebescheinigung": [
+    "n."
+  ],
+  "passen": [
     "v."
   ],
   "klasse": [

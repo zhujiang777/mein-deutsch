@@ -2405,4 +2405,215 @@ export const VOCAB = [
     ],
     mnemonic: 'Adresse ≈ 英语 address 同源，注意德语只有一个 d。',
   }),
+  /* 🏙️ 批次四·场景线 S7-S11 配套补录（w268-w308） */
+  w('Nebenkosten', 'die', null, '杂费（水电暖等附加费用）', 'Die Nebenkosten sind schon dabei.', '杂费已包含在内。', 'wohnen', {
+    noPl: true,
+    sentences: [{ de: 'Die Nebenkosten sind schon dabei.', zh: '杂费已包含在内。', source: 'lesson:sc-l1' }],
+    mnemonic: 'Nebenkosten = neben(旁边/附带)+Kosten(费用) → 房租之外的附加费；恒用复数（sind）。',
+  }),
+  w('Kaution', 'die', 'Kautionen', '押金', 'Die Kaution ist zwei Monatsmieten.', '押金是两个月房租。', 'wohnen', {
+    sentences: [{ de: 'Die Kaution ist zwei Monatsmieten.', zh: '押金是两个月房租。', source: 'lesson:sc-l1' }],
+    mnemonic: 'Kaution ≈ 英语 caution money（担保金）→ 租房押金，退租时可退。',
+  }),
+  w('Heizung', 'die', 'Heizungen', '暖气', 'Die Heizung funktioniert nicht.', '暖气不工作了。', 'wohnen', {
+    sentences: [{ de: 'Die Heizung funktioniert nicht.', zh: '暖气不工作了。', source: 'lesson:sc-l1' }],
+    mnemonic: 'Heizung ← heizen(供暖) → 暖气（-ung 结尾多为阴性 die）。',
+  }),
+  w('Wasserhahn', 'der', 'Wasserhähne', '水龙头', 'Der Wasserhahn ist kaputt.', '水龙头坏了。', 'wohnen', {
+    sentences: [{ de: 'Der Wasserhahn ist kaputt.', zh: '水龙头坏了。', source: 'lesson:sc-l1' }],
+    mnemonic: 'Wasser(水)+Hahn(公鸡/龙头) → 水龙头；复数变元音 Wasserhähne。',
+  }),
+  w('kaputt', null, null, '坏掉的', 'Der Wasserhahn ist kaputt.', '水龙头坏了。', 'adj', {
+    pos: 'adj.',
+    sentences: [{ de: 'Der Wasserhahn ist kaputt.', zh: '水龙头坏了。', source: 'lesson:sc-l1' }],
+    mnemonic: 'kaputt ≈ 英语 kaput（完蛋的、坏了的），同源好记。',
+  }),
+  w('funktionieren', null, null, '运转/起作用', 'Die Heizung funktioniert nicht.', '暖气不工作了。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'funktioniere', du: 'funktionierst', er: 'funktioniert', wir: 'funktionieren', ihr: 'funktioniert', sie: 'funktionieren', perfekt: 'hat funktioniert' },
+    sentences: [{ de: 'Die Heizung funktioniert nicht.', zh: '暖气不工作了。', source: 'lesson:sc-l1' }],
+    mnemonic: 'funktionieren ≈ 英语 function；-ieren 动词分词不加 ge-（hat funktioniert）。',
+  }),
+  w('reparieren', null, null, '修理', 'Ich repariere das heute noch.', '我今天就把它修好。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'repariere', du: 'reparierst', er: 'repariert', wir: 'reparieren', ihr: 'repariert', sie: 'reparieren', perfekt: 'hat repariert' },
+    sentences: [{ de: 'Ich repariere das heute noch.', zh: '我今天就把它修好。', source: 'lesson:sc-l1' }],
+    mnemonic: 'reparieren ≈ 英语 repair；-ieren 不加 ge-（hat repariert）。',
+  }),
+  w('gefallen', null, null, '（令人）喜欢', 'Das Zimmer gefällt mir sehr gut.', '我很喜欢这个房间。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'gefalle', du: 'gefällst', er: 'gefällt', wir: 'gefallen', ihr: 'gefallt', sie: 'gefallen', perfekt: 'hat gefallen' },
+    valence: 'gefallen + Dativ：Das Zimmer gefällt mir.（喜欢的人用第三格，不是第一格）',
+    sentences: [{ de: 'Das Zimmer gefällt mir sehr gut.', zh: '我很喜欢这个房间。', source: 'lesson:sc-l1' }],
+    mnemonic: 'gefallen 用第三格：主语是"被喜欢的东西"，喜欢者用 mir/dir/ihm；a→ä 变音 er gefällt。',
+  }),
+  w('Konto', 'das', 'Konten', '账户', 'Ich möchte ein Konto eröffnen.', '我想开一个账户。', 'arbeit', {
+    sentences: [{ de: 'Ich möchte ein Konto eröffnen.', zh: '我想开一个账户。', source: 'lesson:sc-l2' }],
+    mnemonic: 'Konto（银行账户）源自意大利语记账术语；复数 Konten，ein Konto eröffnen 开户。',
+  }),
+  w('eröffnen', null, null, '开设/开立', 'Ich möchte ein Konto eröffnen.', '我想开一个账户。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'eröffne', du: 'eröffnest', er: 'eröffnet', wir: 'eröffnen', ihr: 'eröffnet', sie: 'eröffnen', perfekt: 'hat eröffnet' },
+    sentences: [{ de: 'Ich möchte ein Konto eröffnen.', zh: '我想开一个账户。', source: 'lesson:sc-l2' }],
+    mnemonic: 'er-öffnen = er-(不可分前缀)+öffnen(打开) → 开立；分词不加 ge-（hat eröffnet）。',
+  }),
+  w('Reisepass', 'der', 'Reisepässe', '护照', 'Haben Sie Ihren Reisepass dabei?', '您带了护照吗？', 'person', {
+    sentences: [{ de: 'Haben Sie Ihren Reisepass dabei?', zh: '您带了护照吗？', source: 'lesson:sc-l2' }],
+    mnemonic: 'Reise(旅行)+Pass(通行证) → 护照；复数变元音 Reisepässe。',
+  }),
+  w('IBAN', 'die', null, '国际银行账号', 'Sie bekommen Ihre Karte und die IBAN.', '您会收到银行卡和IBAN账号。', 'arbeit', {
+    noPl: true,
+    sentences: [{ de: 'Sie bekommen Ihre Karte und die IBAN.', zh: '您会收到银行卡和IBAN账号。', source: 'lesson:sc-l2' }],
+    mnemonic: 'IBAN = International Bank Account Number 缩写，全欧统一账号格式。',
+  }),
+  w('SIM-Karte', 'die', 'SIM-Karten', 'SIM卡', 'Ich brauche eine SIM-Karte mit Internet.', '我需要一张带流量的SIM卡。', 'arbeit', {
+    sentences: [{ de: 'Ich brauche eine SIM-Karte mit Internet.', zh: '我需要一张带流量的SIM卡。', source: 'lesson:sc-l2' }],
+    mnemonic: 'SIM-Karte = 英语 SIM card；Karte=卡（die Karte）。',
+  }),
+  w('Prepaid-Karte', 'die', 'Prepaid-Karten', '预付费卡', 'Möchten Sie eine Prepaid-Karte?', '您想要预付费卡吗？', 'arbeit', {
+    sentences: [{ de: 'Möchten Sie eine Prepaid-Karte?', zh: '您想要预付费卡吗？', source: 'lesson:sc-l2' }],
+    mnemonic: 'Prepaid ≈ 英语 prepaid（预付）；充值用完再充，无合约。',
+  }),
+  w('Handynummer', 'die', 'Handynummern', '手机号', 'Wie ist meine neue Handynummer?', '我的新手机号是多少？', 'arbeit', {
+    sentences: [{ de: 'Wie ist meine neue Handynummer?', zh: '我的新手机号是多少？', source: 'lesson:sc-l2' }],
+    mnemonic: 'Handy(德式英语"手机")+Nummer(号码) → 手机号。',
+  }),
+  w('stehen', null, null, '站；（文字）写着', 'Ihre Handynummer steht hier auf der Karte.', '您的手机号写在这张卡上。', 'verb1', {
+    pos: 'v.',
+    forms: { ich: 'stehe', du: 'stehst', er: 'steht', wir: 'stehen', ihr: 'steht', sie: 'stehen', perfekt: 'hat gestanden' },
+    sentences: [{ de: 'Ihre Handynummer steht hier auf der Karte.', zh: '您的手机号写在这张卡上。', source: 'lesson:sc-l2' }],
+    mnemonic: 'stehen ≈ 英语 stand；除"站"外，"纸上写着/标着"也用 stehen：Hier steht…。',
+  }),
+  w('bekommen', null, null, '得到/收到', 'Sie bekommen Ihre Karte und die IBAN.', '您会收到银行卡和IBAN账号。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'bekomme', du: 'bekommst', er: 'bekommt', wir: 'bekommen', ihr: 'bekommt', sie: 'bekommen', perfekt: 'hat bekommen' },
+    sentences: [{ de: 'Sie bekommen Ihre Karte und die IBAN.', zh: '您会收到银行卡和IBAN账号。', source: 'lesson:sc-l2' }],
+    mnemonic: 'be-kommen ≠ "来"；be-(不可分)+kommen → 得到/收到，分词不加 ge-（hat bekommen）。假朋友：不是英语 become！',
+  }),
+  w('reservieren', null, null, '预订', 'Ich möchte einen Tisch für zwei Personen reservieren.', '我想订一张两人桌。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'reserviere', du: 'reservierst', er: 'reserviert', wir: 'reservieren', ihr: 'reserviert', sie: 'reservieren', perfekt: 'hat reserviert' },
+    sentences: [{ de: 'Ich möchte einen Tisch für zwei Personen reservieren.', zh: '我想订一张两人桌。', source: 'lesson:sc-l3' }],
+    mnemonic: 'reservieren ≈ 英语 reserve；-ieren 不加 ge-（hat reserviert）。',
+  }),
+  w('empfehlen', null, null, '推荐', 'Was können Sie empfehlen?', '您有什么推荐吗？', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'empfehle', du: 'empfiehlst', er: 'empfiehlt', wir: 'empfehlen', ihr: 'empfehlt', sie: 'empfehlen', perfekt: 'hat empfohlen' },
+    sentences: [{ de: 'Was können Sie empfehlen?', zh: '您有什么推荐吗？', source: 'lesson:sc-l3' }],
+    mnemonic: 'empfehlen 换音 e→ie：du empfiehlst, er empfiehlt；分词 empfohlen（emp- 不可分，不加 ge-）。',
+  }),
+  w('allergisch', null, null, '过敏的', 'Ich bin allergisch gegen Fisch.', '我对鱼过敏。', 'koerper', {
+    pos: 'adj.',
+    valence: 'allergisch gegen + Akkusativ：allergisch gegen Fisch/Nüsse（对…过敏）',
+    sentences: [{ de: 'Ich bin allergisch gegen Fisch.', zh: '我对鱼过敏。', source: 'lesson:sc-l3' }],
+    mnemonic: 'allergisch ≈ 英语 allergic；固定搭配 allergisch gegen + 第四格。',
+  }),
+  w('Person', 'die', 'Personen', '人', 'Ein Tisch für zwei Personen, bitte.', '请给我们一张两人桌。', 'person', {
+    sentences: [{ de: 'Ein Tisch für zwei Personen, bitte.', zh: '请给我们一张两人桌。', source: 'lesson:sc-l3' }],
+    mnemonic: 'Person ≈ 英语 person，同源；订位常说 für zwei Personen。',
+  }),
+  w('Gericht', 'das', 'Gerichte', '菜肴/一道菜', 'Das Gericht mit Fleisch ist auch sehr gut.', '这道肉菜也很不错。', 'essen', {
+    sentences: [{ de: 'Das Gericht mit Fleisch ist auch sehr gut.', zh: '这道肉菜也很不错。', source: 'lesson:sc-l3' }],
+    mnemonic: 'das Gericht 有两义：这里指"菜肴/一道菜"（另义"法院"）。',
+  }),
+  w('getrennt', null, null, '分开地（付款）', 'Wir zahlen getrennt.', '我们分开付。', 'essen', {
+    pos: 'adj.',
+    sentences: [{ de: 'Wir zahlen getrennt.', zh: '我们分开付。', source: 'lesson:sc-l3' }],
+    mnemonic: 'getrennt zahlen = 各付各的（AA）；反义 zusammen zahlen 一起付。',
+  }),
+  w('gegen', null, null, '针对/反对（+第四格）', 'Ich bin allergisch gegen Fisch.', '我对鱼过敏。', 'frage', {
+    pos: 'prep.',
+    valence: 'gegen + Akkusativ：allergisch gegen…；etwas gegen Kopfschmerzen（治…的药）',
+    sentences: [{ de: 'Ich bin allergisch gegen Fisch.', zh: '我对鱼过敏。', source: 'lesson:sc-l3' }],
+    mnemonic: 'gegen 永远接第四格：gegen den Wind；也表"对付/治疗"：etwas gegen…。',
+  }),
+  w('verlieren', null, null, '丢失', 'Ich habe mein Handy verloren.', '我的手机丢了。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'verliere', du: 'verlierst', er: 'verliert', wir: 'verlieren', ihr: 'verliert', sie: 'verlieren', perfekt: 'hat verloren' },
+    sentences: [{ de: 'Ich habe mein Handy verloren.', zh: '我的手机丢了。', source: 'lesson:sd-l1' }],
+    mnemonic: 'verlieren ≈ 英语 lose；ver- 不可分，分词 verloren（不加 ge-）。反义 finden。',
+  }),
+  w('stehlen', null, null, '偷', 'Man hat mein Handy gestohlen.', '有人偷了我的手机。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'stehle', du: 'stiehlst', er: 'stiehlt', wir: 'stehlen', ihr: 'stehlt', sie: 'stehlen', perfekt: 'hat gestohlen' },
+    sentences: [{ de: 'Man hat mein Handy gestohlen.', zh: '有人偷了我的手机。', source: 'lesson:sd-l1' }],
+    mnemonic: 'stehlen 换音 e→ie：du stiehlst, er stiehlt；分词 gestohlen。别和 stellen(放)混。',
+  }),
+  w('glauben', null, null, '认为/相信', 'Ich glaube, im Bus.', '我想是在公交车上。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'glaube', du: 'glaubst', er: 'glaubt', wir: 'glauben', ihr: 'glaubt', sie: 'glauben', perfekt: 'hat geglaubt' },
+    sentences: [{ de: 'Ich glaube, im Bus.', zh: '我想是在公交车上。', source: 'lesson:sd-l1' }],
+    mnemonic: 'glauben ≈ 英语 believe；口语"我想/大概" = Ich glaube, …。',
+  }),
+  w('zuletzt', null, null, '最后一次', 'Wo haben Sie es zuletzt gesehen?', '您最后在哪儿见到它的？', 'wetter', {
+    pos: 'adv.',
+    sentences: [{ de: 'Wo haben Sie es zuletzt gesehen?', zh: '您最后在哪儿见到它的？', source: 'lesson:sd-l1' }],
+    mnemonic: 'zuletzt = zu+letzt(最后) → 最后一次/上一次；报失常问 zuletzt gesehen。',
+  }),
+  w('sofort', null, null, '立刻/马上', 'Rufen Sie sofort die Polizei an!', '赶紧报警！', 'wetter', {
+    pos: 'adv.',
+    sentences: [{ de: 'Rufen Sie sofort die Polizei an!', zh: '赶紧报警！', source: 'lesson:sd-l1' }],
+    mnemonic: 'sofort = so+fort → 立刻、马上；比 gleich 更急。',
+  }),
+  w('Diebstahl', 'der', 'Diebstähle', '盗窃', 'Ich möchte einen Diebstahl melden.', '我想报案（东西被偷）。', 'stadt', {
+    sentences: [{ de: 'Ich möchte einen Diebstahl melden.', zh: '我想报案（东西被偷）。', source: 'lesson:sd-l1' }],
+    mnemonic: 'Dieb(小偷)+Stahl(← stehlen) → 盗窃；einen Diebstahl melden 报案。',
+  }),
+  w('melden', null, null, '报告/申报', 'Ich möchte einen Diebstahl melden.', '我想报案。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'melde', du: 'meldest', er: 'meldet', wir: 'melden', ihr: 'meldet', sie: 'melden', perfekt: 'hat gemeldet' },
+    sentences: [{ de: 'Ich möchte einen Diebstahl melden.', zh: '我想报案。', source: 'lesson:sd-l1' }],
+    mnemonic: 'melden（申报/报告）词干以 -d 结尾，du meldest/er meldet 加 e；名词 die Meldung/Anmeldung 同根。',
+  }),
+  w('passieren', null, null, '发生', 'Was ist passiert?', '发生了什么事？', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'passiere', du: 'passierst', er: 'passiert', wir: 'passieren', ihr: 'passiert', sie: 'passieren', perfekt: 'ist passiert' },
+    sentences: [{ de: 'Was ist passiert?', zh: '发生了什么事？', source: 'lesson:sd-l1' }],
+    mnemonic: 'passieren（发生）完成时用 sein：Was ist passiert?；-ieren 不加 ge-。别和 passen(合适) 混。',
+  }),
+  w('Anzeige', 'die', 'Anzeigen', '报案；广告/启事', 'Hier ist Ihre Anzeige.', '这是您的报案证明。', 'stadt', {
+    sentences: [{ de: 'Hier ist Ihre Anzeige.', zh: '这是您的报案证明。', source: 'lesson:sd-l1' }],
+    mnemonic: 'Anzeige ← anzeigen(报案/告发)；eine Anzeige machen = 报案。',
+  }),
+  w('Polizei', 'die', null, '警察（机构）', 'Rufen Sie die Polizei an!', '报警！', 'stadt', {
+    noPl: true,
+    sentences: [{ de: 'Rufen Sie die Polizei an!', zh: '报警！', source: 'lesson:sd-l1' }],
+    mnemonic: 'Polizei ≈ 英语 police；机构名词恒用单数 die Polizei；紧急电话 110。',
+  }),
+  w('Hilfe', 'die', null, '帮助', 'Vielen Dank für Ihre Hilfe!', '非常感谢您的帮助！', 'gruss', {
+    noPl: true,
+    sentences: [{ de: 'Vielen Dank für Ihre Hilfe!', zh: '非常感谢您的帮助！', source: 'lesson:sd-l1' }],
+    mnemonic: 'Hilfe ← helfen(帮助)；呼救直接喊 Hilfe!；Danke für Ihre Hilfe 谢谢帮忙。',
+  }),
+  w('Anmeldung', 'die', 'Anmeldungen', '户籍登记/注册', 'Ich möchte einen Termin für die Anmeldung.', '我想预约一个户籍登记的时间。', 'arbeit', {
+    sentences: [{ de: 'Ich möchte einen Termin für die Anmeldung.', zh: '我想预约一个户籍登记的时间。', source: 'lesson:sd-l2' }],
+    mnemonic: 'Anmeldung ← (sich) anmelden；落地后到 Bürgeramt 办 Anmeldung 登记住址。',
+  }),
+  w('anmelden', null, null, '登记/注册（反身可分 sich anmelden）', 'Ich melde mich beim Bürgeramt an.', '我在市民登记处登记。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'melde mich an', du: 'meldest dich an', er: 'meldet sich an', wir: 'melden uns an', ihr: 'meldet euch an', sie: 'melden sich an', perfekt: 'hat sich angemeldet' },
+    sentences: [{ de: 'Ich melde mich beim Bürgeramt an.', zh: '我在市民登记处登记。', source: 'lesson:sd-l2' }],
+    mnemonic: 'sich anmelden = 反身+可分：an- 拆到句尾，反身代词 mich/dich/sich：Ich melde mich an.',
+  }),
+  w('mitbringen', null, null, '带来（可分）', 'Bringen Sie bitte Ihren Reisepass mit.', '请带上您的护照。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'bringe mit', du: 'bringst mit', er: 'bringt mit', wir: 'bringen mit', ihr: 'bringt mit', sie: 'bringen mit', perfekt: 'hat mitgebracht' },
+    sentences: [{ de: 'Bringen Sie bitte Ihren Reisepass mit.', zh: '请带上您的护照。', source: 'lesson:sd-l2' }],
+    mnemonic: 'mit-bringen = mit(一起)+bringen(带) → 带来（可分）：mit 拆到句尾；分词 mitgebracht。',
+  }),
+  w('Wohnungsgeberbestätigung', 'die', 'Wohnungsgeberbestätigungen', '房东确认书', 'Bringen Sie bitte die Wohnungsgeberbestätigung mit.', '请带上房东确认书。', 'wohnen', {
+    sentences: [{ de: 'Bringen Sie bitte die Wohnungsgeberbestätigung mit.', zh: '请带上房东确认书。', source: 'lesson:sd-l2' }],
+    mnemonic: 'Wohnung(住房)+Geber(提供者)+Bestätigung(确认) → 房东开的入住确认书，Anmeldung 必备。',
+  }),
+  w('Meldebescheinigung', 'die', 'Meldebescheinigungen', '登记证明', 'Hier ist Ihre Meldebescheinigung.', '这是您的登记证明。', 'wohnen', {
+    sentences: [{ de: 'Hier ist Ihre Meldebescheinigung.', zh: '这是您的登记证明。', source: 'lesson:sd-l2' }],
+    mnemonic: 'melden(登记)+Bescheinigung(证明) → 登记证明；办完 Anmeldung 领这张。',
+  }),
+  w('passen', null, null, '（时间/尺寸）合适', 'Passt Ihnen Montag um neun Uhr?', '周一九点您方便吗？', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'passe', du: 'passt', er: 'passt', wir: 'passen', ihr: 'passt', sie: 'passen', perfekt: 'hat gepasst' },
+    valence: 'passen + Dativ：Passt Ihnen Montag?（时间/尺寸合不合适，人用第三格）',
+    sentences: [{ de: 'Passt Ihnen Montag um neun Uhr?', zh: '周一九点您方便吗？', source: 'lesson:sd-l2' }],
+    mnemonic: 'passen 用第三格：Passt dir das?（合适吗）；约时间常用。别和 passieren(发生) 混。',
+  }),
 ];

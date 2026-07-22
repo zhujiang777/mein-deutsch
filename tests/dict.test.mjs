@@ -85,8 +85,8 @@ test('hand-written glosses exactly cover the Goethe entries missing from VOCAB',
     !vocabLemmas.has(item.lemma) && !['Symbol', 'Affix'].includes(item.pos));
   const targetKeys = [...new Set(rawTargets.map(item => item.lemma))].sort();
   const glossKeys = Object.keys(DICT_GLOSSES).sort();
-  assert.equal(rawTargets.length, 616);
-  assert.equal(targetKeys.length, 607); // the source list contains repeated lemmas
+  assert.equal(rawTargets.length, 600);
+  assert.equal(targetKeys.length, 591); // the source list contains repeated lemmas
   assert.deepEqual(glossKeys, targetKeys);
   assert.ok(Object.values(DICT_GLOSSES).every(value =>
     typeof value === 'string' ? value.trim() : value?.zh?.trim()));
