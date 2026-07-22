@@ -5,24 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mein Deutsch · 我的德语</title>
   <meta name="description" content="个人定制的德语学习应用：发音系统课、跟读检测、体系化语法、间隔重复词汇、分级阅读">
-  <meta name="theme-color" content="#1a1a2e">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F5F3EF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181715">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="我的德语">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
+  <a class="skip-link" href="#app">跳到主要内容</a>
   <main id="app" aria-live="polite"></main>
-  <nav id="tabbar">
-    <a href="#/" data-tab="today"><span class="tab-icon">☀️</span><span>今日</span></a>
-    <a href="#/path" data-tab="path"><span class="tab-icon">🛤️</span><span>课程</span></a>
-    <a href="#/vocab" data-tab="vocab"><span class="tab-icon">🃏</span><span>词汇</span></a>
-    <a href="#/readlisten" data-tab="readlisten"><span class="tab-icon">📖</span><span>读·听</span></a>
-    <a href="#/me" data-tab="me"><span class="tab-icon">👤</span><span>我的</span></a>
+  <nav id="tabbar" aria-label="主导航" data-active="0">
+    <a href="#/" data-tab="today"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5M5.5 10.5V20h13v-9.5M9.5 20v-6h5v6"/></svg></span><span>今日</span></a>
+    <a href="#/path" data-tab="path"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M6 3v18M18 3v18M6 7c4 0 8 2 12 2M6 15c4 0 8-2 12-2"/><circle cx="6" cy="7" r="2"/><circle cx="18" cy="13" r="2"/></svg></span><span>旅程</span></a>
+    <a href="#/vocab" data-tab="vocab"><span class="tab-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="13" height="16" rx="2"/><path d="m8 5 1-2h11v15l-3 1M8 10h5M8 14h5"/></svg></span><span>词汇</span></a>
+    <a href="#/readlisten" data-tab="readlisten"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H12v18H7.5A3.5 3.5 0 0 0 4 23ZM20 5.5A3.5 3.5 0 0 0 16.5 2H12v18h4.5A3.5 3.5 0 0 1 20 23Z"/></svg></span><span>读·听</span></a>
+    <a href="#/me" data-tab="me"><span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></span><span>我的</span></a>
   </nav>
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/app.js?v=7"></script>
 </body>
 </html>

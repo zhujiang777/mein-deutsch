@@ -1,23 +1,23 @@
 // 发音系统课：课程列表 + 课程详情（讲解 + 示范朗读 + 跟读）
 import { PRON_LESSONS } from '../../data/pronunciation.js';
-import { el, esc, phraseRow, toast } from '../ui.js';
+import { el, esc, icon, phraseRow, toast } from '../ui.js';
 import { isDone, markDone } from '../storage.js';
 
 export function renderPron(host, id) {
   if (id) return renderLesson(host, id);
 
-  host.appendChild(el(`<h1 class="page-title">🗣️ 发音系统课</h1>`));
-  host.appendChild(el(`<p class="page-sub">德语拼读非常规律，学完这 ${PRON_LESSONS.length} 课你就能"见词能读"。每个示范都可以 🔊 听、慢 速听、🎤 跟读检测。</p>`));
+  host.appendChild(el(`<h1 class="page-title">发音系统课</h1>`));
+  host.appendChild(el(`<p class="page-sub">德语拼读非常规律，学完这 ${PRON_LESSONS.length} 课你就能“见词能读”。每个示范都支持正常朗读、慢速朗读和跟读检测。</p>`));
 
   PRON_LESSONS.forEach((lesson, i) => {
     const done = isDone('pron', lesson.id);
     host.appendChild(el(`<a class="list-item" href="#/pron/${lesson.id}">
-      <span class="li-icon">${done ? '✅' : `${i + 1}.`}</span>
+      <span class="li-icon">${done ? icon('check') : `${i + 1}`}</span>
       <div class="li-main">
         <div class="li-title">${esc(lesson.title)}</div>
         <div class="li-sub">${esc(lesson.sub)}</div>
       </div>
-      <span class="li-arrow">›</span>
+      <span class="li-arrow">${icon('arrow')}</span>
     </a>`));
   });
 }
@@ -39,15 +39,15 @@ function renderLesson(host, id) {
       sec.items.forEach(it => card.appendChild(phraseRow(it)));
       body.appendChild(card);
     }
-    if (sec.tip) body.appendChild(el(`<div class="tip">💡 ${esc(sec.tip)}</div>`));
+    if (sec.tip) body.appendChild(el(`<div class="tip"><b>提示</b> · ${esc(sec.tip)}</div>`));
   });
   host.appendChild(body);
 
-  const doneBtn = el(`<button class="btn block" style="margin-top:16px">${isDone('pron', id) ? '✅ 已完成，再标记一次' : '标记本课完成'}</button>`);
+  const doneBtn = el(`<button class="btn block" style="margin-top:16px">${isDone('pron', id) ? `${icon('check')} 已完成` : '标记本课完成'}</button>`);
   doneBtn.addEventListener('click', () => {
-    markDone('pron', id);
-    toast('已记录完成 🎉');
-    doneBtn.textContent = '✅ 已完成';
+    const reward = markDone('pron', id);
+    toast(reward ? `已完成 · +${reward.xpDelta} XP` : '已经记录过这节课');
+    doneBtn.innerHTML = `${icon('check')} 已完成`;
   });
   host.appendChild(doneBtn);
 

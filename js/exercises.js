@@ -2,7 +2,8 @@
 // onSubmit(correct: boolean, correctText: string) 每题只调用一次
 // 题型: choice / assemble / fill / listenChoice / dictation / match / translate / speak
 //       + 微步课展示/复述步: scene / observe / reproduce / roleplay
-import { el, esc, audioBtn, speakPractice } from './ui.js';
+import { el, esc, audioBtn, haptic, speakPractice } from './ui.js';
+import { setupChipBoard } from './chip-board.js';
 import { speak } from './speech.js';
 import { SPEAK_PASS } from './pronunciation-assessment.js';
 import { recordingSupported } from './recorder.js';
@@ -115,24 +116,33 @@ function renderAssemble(host, item, ctx, { dictation = false } = {}) {
     </div>`));
   }
 
-  const line = el(`<div class="ex-line" aria-label="你的答案"></div>`);
-  const bank = el(`<div class="ex-bank"></div>`);
+  const line = el(`<div class="ex-line" role="group" aria-label="你的答案，将词块拖到这里"></div>`);
+  const bank = el(`<div class="ex-bank" role="group" aria-label="可用词块"></div>`);
+  const live = el(`<div class="sr-only" role="status" aria-live="polite"></div>`);
   host.appendChild(line);
   host.appendChild(bank);
+  host.appendChild(live);
 
   const chips = shuffle([...tokens, ...(item.distractors || [])]);
+  let board;
   chips.forEach(word => {
     const chip = el(`<button class="ex-chip">${esc(word)}</button>`);
     chip.addEventListener('click', () => {
       if (host.dataset.done) return;
-      if (chip.parentElement === bank) line.appendChild(chip);
-      else bank.appendChild(chip);
-      checkBtn.disabled = !line.children.length;
+      const before = chip.parentElement;
+      board?.move(chip, before === bank ? line : bank);
     });
     bank.appendChild(chip);
   });
 
   const checkBtn = el(`<button class="btn block" style="margin-top:14px" disabled>检查</button>`);
+  board = setupChipBoard({
+    line,
+    bank,
+    live,
+    onChange: () => { checkBtn.disabled = !line.querySelector('.ex-chip'); },
+    onDrop: () => haptic('tap'),
+  });
   checkBtn.addEventListener('click', () => {
     if (host.dataset.done) return;
     host.dataset.done = '1';
@@ -140,6 +150,7 @@ function renderAssemble(host, item, ctx, { dictation = false } = {}) {
     const ok = norm(built) === norm(answer);
     line.classList.add(ok ? 'line-correct' : 'line-wrong');
     checkBtn.remove();
+    board.lock();
     [...bank.children, ...line.children].forEach(c => c.disabled = true);
     ctx.onSubmit(ok, answer);
   });

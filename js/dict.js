@@ -90,11 +90,19 @@ export function lookup(raw) {
 function closePop(pop) {
   pop?.remove();
   document.removeEventListener('pointerdown', pop?._closeOutside, true);
+  document.querySelectorAll('.gloss-backdrop').forEach(n => n.remove());
+  document.querySelectorAll('.dict-active-word').forEach(span => {
+    span.replaceWith(...span.childNodes);
+  });
 }
 
 export function clearDictPop() {
   const pop = document.querySelector('.gloss-pop');
   if (pop) closePop(pop);
+  document.querySelectorAll('.gloss-backdrop').forEach(n => n.remove());
+  document.querySelectorAll('.dict-active-word').forEach(span => {
+    span.replaceWith(...span.childNodes);
+  });
 }
 
 function readingGlossResult(word, entry) {
@@ -104,18 +112,16 @@ function readingGlossResult(word, entry) {
       ? { ...candidate, zh: entry.zh || candidate.zh }
       : candidate);
   }
-  const rawBase = String(entry.base || word).trim();
-  const article = rawBase.match(/^(der|die|das)\s+/i)?.[1]?.toLowerCase() || null;
-  const lemma = rawBase
-    .replace(/^(der|die|das)\s+/i, '')
-    .split(/[,=(（]/, 1)[0]
-    .trim() || normalize(word);
+  const article = entry.art || '';
+  const lemma = entry.base || word;
   return [{ lemma, zh: entry.zh || '', art: entry.art || article, pl: entry.pl || null, pos: entry.pos || '' }];
 }
 
 /** Display one lookup result. A reading glossary entry may be passed as `entry`. */
 export function showDictPop(word, { entry, sentence = '', source = '' } = {}) {
   clearDictPop();
+  const backdrop = el(`<div class="gloss-backdrop"></div>`);
+  document.body.appendChild(backdrop);
   const result = entry?.base
     ? readingGlossResult(word, entry)
     : (entry ? [entry] : lookup(word));
@@ -137,6 +143,7 @@ export function showDictPop(word, { entry, sentence = '', source = '' } = {}) {
     ${details}
     <div class="dict-actions"><span class="dict-audio"></span>
       <button class="btn small dict-add" ${knownWord || alreadyAdded || !first?.zh ? 'disabled' : ''}>${knownWord ? '✓ 课程词已收录' : alreadyAdded ? '✓ 已加入生词本' : '➕ 加入生词本'}</button>
+      ${vocabWord ? `<a class="btn small secondary dict-detail-link" href="#/vocab/word/${esc(vocabWord.id)}">完整词条</a>` : ''}
       <a class="btn small${first ? ' secondary' : ''}" target="_blank" rel="noopener" href="https://www.dwds.de/wb/${encodeURIComponent(title)}">DWDS ›</a>
     </div>
   </div>`);
@@ -162,11 +169,20 @@ function tokenAtPoint(event) {
   const pos = !range && document.caretPositionFromPoint?.(event.clientX, event.clientY);
   const node = range?.startContainer || pos?.offsetNode;
   const offset = range?.startOffset ?? pos?.offset;
-  if (!node || node.nodeType !== Node.TEXT_NODE || typeof offset !== 'number') return '';
+  if (!node || node.nodeType !== Node.TEXT_NODE || typeof offset !== 'number') return null;
   const text = node.textContent || '';
-  const left = text.slice(0, offset).match(/[\p{L}ÄÖÜäöüßẞ’'-]+$/u)?.[0] || '';
-  const right = text.slice(offset).match(/^[\p{L}ÄÖÜäöüßẞ’'-]+/u)?.[0] || '';
-  return `${left}${right}`;
+  const leftMatch = text.slice(0, offset).match(/[\p{L}ÄÖÜäöüßẞ’'-]+$/u);
+  const rightMatch = text.slice(offset).match(/^[\p{L}ÄÖÜäöüßẞ’'-]+/u);
+  const left = leftMatch ? leftMatch[0] : '';
+  const right = rightMatch ? rightMatch[0] : '';
+  const word = `${left}${right}`;
+  if (!word) return null;
+  return {
+    word,
+    node,
+    startOffset: offset - left.length,
+    endOffset: offset + right.length
+  };
 }
 
 /** Enable click-to-lookup without re-tokenising the rendered content. */
@@ -174,13 +190,27 @@ export function enableGloss(rootEl, { glossary = {}, sentenceSelector = '', sour
   rootEl?.addEventListener('click', (event) => {
     if (event.__dictHandled) return;
     if (event.target.closest('button,a,input,textarea,select,[data-no-gloss]')) return;
-    const word = tokenAtPoint(event);
-    if (!word) return; // browsers without a caret API degrade silently.
+    const tokenInfo = tokenAtPoint(event);
+    if (!tokenInfo) return; // browsers without a caret API degrade silently.
+
     event.__dictHandled = true;
+
+    // Highlight the clicked word
+    try {
+      const range = document.createRange();
+      range.setStart(tokenInfo.node, tokenInfo.startOffset);
+      range.setEnd(tokenInfo.node, tokenInfo.endOffset);
+      const span = document.createElement('span');
+      span.className = 'dict-active-word';
+      range.surroundContents(span);
+    } catch (e) {
+      // Ignore if surround fails due to crossing boundaries
+    }
+
     const sentenceEl = sentenceSelector ? event.target.closest(sentenceSelector) : null;
     const sentence = sentenceEl?.textContent?.replace(/\s+/g, ' ').trim() || '';
-    const glossaryEntry = glossary[lower(word)];
-    showDictPop(word, { entry: glossaryEntry, sentence, source });
+    const glossaryEntry = glossary[lower(tokenInfo.word)];
+    showDictPop(tokenInfo.word, { entry: glossaryEntry, sentence, source });
   });
 }
 

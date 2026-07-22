@@ -1,9 +1,9 @@
 // 微步课播放器：一步一屏，答错重排队，断点续学，完成结算
-import { el, esc, audioBtn, toast } from '../ui.js';
+import { el, esc, audioBtn, haptic, icon, motionIn, rewardBurst, setProgress } from '../ui.js';
 import { speak, stopSpeak } from '../speech.js';
-import { renderExercise } from '../exercises.js';
+import { renderExercise } from '../exercises.js?v=2';
 import { recordAnswer, addMistake } from '../mastery.js';
-import { getLessonState, setLessonState, logActivity } from '../storage.js';
+import { getLessonState, setLessonState, logActivity, rewardSummary } from '../storage.js';
 import { findLesson } from '../../data/course.js';
 
 const EXERCISE_TYPES = new Set(['choice', 'listenChoice', 'assemble', 'dictation', 'fill', 'match', 'translate', 'speak', 'scene', 'observe', 'reproduce', 'roleplay']);
@@ -63,8 +63,10 @@ export function runLesson(host, lessonId, { onExit, onComplete } = {}) {
 
   const shell = el(`<div class="lesson-shell">
     <div class="lesson-top">
-      <button class="lesson-x" aria-label="退出">✕</button>
-      <div class="lesson-progress"><div></div></div>
+      <button class="lesson-x" aria-label="退出"><span>✕</span></button>
+      <div class="lesson-progress" role="progressbar" aria-label="课程进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div></div></div>
+      <span class="lesson-counter"></span>
+      <span class="lesson-xp">${icon('star')} ${rewardSummary().totalXp}</span>
     </div>
     <div class="lesson-stage"></div>
     <div class="lesson-bottom"></div>
@@ -73,6 +75,7 @@ export function runLesson(host, lessonId, { onExit, onComplete } = {}) {
   const stage = shell.querySelector('.lesson-stage');
   const bottom = shell.querySelector('.lesson-bottom');
   const progressBar = shell.querySelector('.lesson-progress > div');
+  const counter = shell.querySelector('.lesson-counter');
 
   shell.querySelector('.lesson-x').addEventListener('click', () => {
     // 保存断点：下一个未完成的原始步骤
@@ -87,17 +90,19 @@ export function runLesson(host, lessonId, { onExit, onComplete } = {}) {
     stage.innerHTML = '';
     bottom.innerHTML = '';
     stopSpeak();
-    progressBar.style.width = `${Math.round(100 * pos / queue.length)}%`;
+    setProgress(progressBar, pos / queue.length);
 
     if (pos >= queue.length) return finish();
     const stepIdx = queue[pos];
     const step = lesson.steps[stepIdx];
+    counter.textContent = `${Math.min(pos + 1, queue.length)}/${queue.length}`;
 
     if (!EXERCISE_TYPES.has(step.type)) {
       renderInfoStep(stage, step);
       const btn = el(`<button class="btn block">继续</button>`);
       btn.addEventListener('click', () => { pos++; showStep(); });
       bottom.appendChild(btn);
+      motionIn(stage, { x: 14, y: 0 });
       return;
     }
 
@@ -116,36 +121,45 @@ export function runLesson(host, lessonId, { onExit, onComplete } = {}) {
           if (!correct) queue.push(stepIdx); // 答错重排队尾，直到做对
         }
         const bar = el(`<div class="feedback ${correct === false ? 'bad' : 'good'}">
+          <span class="feedback-mark">${icon(correct === false ? 'arrow' : 'check')}</span>
           <div class="feedback-text">
-            <b>${correct === false ? '✗ 不对' : correct === null ? '已跳过' : '✓ 正确！'}</b>
+            <b>${correct === false ? '再看一次' : correct === null ? '已跳过' : '回答正确'}</b>
             ${correct === false ? `<div class="feedback-ans">正确答案：<span class="de">${esc(correctText)}</span></div>` : ''}
             ${step.explain ? `<div class="feedback-explain">${esc(step.explain)}</div>` : ''}
           </div>
-          <button class="btn ${correct === false ? 'feedback-btn-bad' : ''}">继续</button>
+          ${correct === true ? '<span class="feedback-xp">+2 XP</span>' : ''}
+          <button class="btn ${correct === false ? 'feedback-btn-bad' : ''}" aria-label="继续">${icon('arrow')}</button>
         </div>`);
         bar.querySelector('button').addEventListener('click', () => { pos++; showStep(); });
         bottom.appendChild(bar);
+        motionIn(bar, { y: 10 });
+        if (correct === true) rewardBurst(stage, '+2 XP');
+        else if (correct === false) haptic('error');
         if (correct === false && correctText && !correctText.includes('=')) speak(correctText);
       },
     });
+    motionIn(stage, { x: 14, y: 0 });
   }
 
   function finish() {
     setLessonState(lessonId, { done: true, step: 0, score: firstTotal ? Math.round(100 * firstCorrect / firstTotal) : 100 });
-    logActivity({ items: firstTotal, ok: firstCorrect, lessons: 1 });
+    const reward = logActivity({ items: firstTotal, ok: firstCorrect, lessons: 1, completionId: `lesson:${lessonId}` });
     cleanup();
     stage.innerHTML = '';
     bottom.innerHTML = '';
     const pct = firstTotal ? Math.round(100 * firstCorrect / firstTotal) : 100;
-    const emoji = pct >= 90 ? '🎉' : pct >= 70 ? '💪' : '🌱';
     stage.appendChild(el(`<div class="lesson-done">
-      <div class="lesson-done-emoji">${emoji}</div>
+      <div class="completion-seal">${icon('trophy')}</div>
+      <span class="eyebrow">STATION COMPLETE</span>
       <h2>完成《${esc(lesson.title)}》</h2>
-      <p class="meta">正确率 ${pct}%（${firstCorrect}/${firstTotal}）${pct < 70 ? '· 错题明天会再出现，别担心' : ''}</p>
+      <div class="completion-stats"><div><b>${pct}%</b><span>正确率</span></div><div><b>+${reward.xpDelta}</b><span>获得 XP</span></div><div><b>${reward.level}</b><span>当前等级</span></div></div>
+      <p class="meta">${pct < 70 ? '错题会进入明天的巩固路线。' : reward.goalReached ? '今天的学习目标已经完成。' : '下一站已经点亮。'}</p>
     </div>`));
     const btn = el(`<button class="btn block">继续</button>`);
     btn.addEventListener('click', () => onComplete?.({ correct: firstCorrect, total: firstTotal }));
     bottom.appendChild(btn);
+    motionIn(stage, { y: 18 });
+    haptic('success');
   }
 
   showStep();

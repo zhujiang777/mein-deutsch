@@ -1,14 +1,14 @@
 // 今日学习：一键串流 词卡复习 → 错题巩固 → 新微步课 → 今日视频 → 听写跟读
-import { el, esc, videoCard, toast } from '../ui.js';
+import { el, esc, guideBear, icon, motionIn, videoCard, toast } from '../ui.js';
 import { COURSE, findLesson, nextLesson } from '../../data/course.js';
 import { READINGS } from '../../data/readings.js';
 import { VOCAB } from '../../data/vocab.js';
 import { srsStats } from '../srs.js';
 import { dueMistakes, rateMistake, mistakeRef, recordAnswer } from '../mastery.js';
-import { allLessonStates, getVideoState, getDaily, getStreak, getWordbook } from '../storage.js';
+import { allLessonStates, getVideoState, getDaily, getStreak, getWordbook, rewardSummary } from '../storage.js';
 import { runLesson } from './lesson.js';
 import { runVocabSession } from './vocab.js';
-import { renderExercise } from '../exercises.js';
+import { renderExercise } from '../exercises.js?v=2';
 import { stopSpeak } from '../speech.js';
 
 /* 三档时长的队列配置 */
@@ -27,36 +27,62 @@ export function renderToday(host) {
   const next = nextLesson(allLessonStates());
   const hour = new Date().getHours();
   const greet = hour < 11 ? 'Guten Morgen!' : hour < 18 ? 'Guten Tag!' : 'Guten Abend!';
+  const reward = rewardSummary();
+  const remaining = Math.max(0, reward.dailyGoalXp - reward.dailyXp);
 
-  host.appendChild(el(`<div class="hero">
-    <h1 class="de">${greet} 👋</h1>
-    <p>${daily.items > 0 ? `今天已练 ${daily.items} 题 · 连续学习 ${streak} 天 🔥` : streak > 1 ? `连续学习 ${streak} 天 🔥 今天继续！` : '每天一点点，德语就是这样学会的。'}</p>
-    <div class="hero-stats">
-      <div class="hero-stat"><b>${stats.due}</b><span>待复习词</span></div>
-      <div class="hero-stat"><b>${mistakes}</b><span>待巩固错题</span></div>
-      <div class="hero-stat"><b>${next ? esc(next.lesson.title) : '✓'}</b><span>下一课</span></div>
+  const top = el(`<header class="today-topbar">
+    <div class="brand-lockup"><span class="brand-mark">M</span><div><small>MEIN DEUTSCH</small><b>${greet}</b></div></div>
+    <div class="status-cluster">
+      <span class="status-chip flame">${icon('flame')}<b>${streak}</b></span>
+      <span class="status-chip">${icon('star')}<b>${reward.totalXp}</b></span>
     </div>
-  </div>`));
+  </header>`);
+  host.appendChild(top);
 
-  host.appendChild(el(`<div class="section-label">今天有多少时间？</div>`));
-  const timeRow = el(`<div class="time-grid"></div>`);
+  const hero = el(`<section class="journey-hero" style="--goal:${reward.dailyPct}">
+    <div class="journey-copy">
+      <span class="journey-kicker">第 ${reward.level} 级 · 每日德语目标</span>
+      <h1>${next ? esc(next.lesson.title) : '今天的路线已完成'}</h1>
+      <p>${remaining > 0 ? `再获得 ${remaining} XP，完成今日学习目标` : `今日目标已达成 · 已练习 ${daily.items} 项`}</p>
+    </div>
+    <div class="goal-orbit" aria-label="今日目标完成 ${reward.dailyPct}%">
+      <div><b>${reward.dailyXp}</b><span>/${reward.dailyGoalXp} XP</span></div>
+    </div>
+  </section>`);
+  host.appendChild(hero);
+
+  const launcher = el(`<section class="mission-launcher">
+    <div class="mission-head"><div><span>选择今天的节奏</span><b>从下一站继续</b></div><span class="mission-count">${stats.due + mistakes} 项待复习</span></div>
+    <div class="time-grid" role="group" aria-label="学习时长"></div>
+    <button class="btn block journey-start">继续旅程 ${icon('arrow')}</button>
+  </section>`);
+  const timeRow = launcher.querySelector('.time-grid');
+  const startBtn = launcher.querySelector('.journey-start');
+  let selectedMinutes = 15;
   Object.entries(PLANS).forEach(([min, plan]) => {
-    const b = el(`<button class="time-card"><b>${min} 分钟</b><span>${plan.label.split('·')[1].trim()}</span></button>`);
-    b.addEventListener('click', () => startFlow(host, parseInt(min, 10)));
+    const value = parseInt(min, 10);
+    const b = el(`<button class="time-card${value === selectedMinutes ? ' active' : ''}" aria-pressed="${value === selectedMinutes}"><b>${min}</b><span>分钟 · ${plan.label.split('·')[1].trim()}</span></button>`);
+    b.addEventListener('click', () => {
+      selectedMinutes = value;
+      [...timeRow.children].forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
+      b.classList.add('active'); b.setAttribute('aria-pressed', 'true');
+    });
     timeRow.appendChild(b);
   });
-  host.appendChild(timeRow);
+  startBtn.addEventListener('click', () => startFlow(host, selectedMinutes));
+  host.appendChild(launcher);
 
-  host.appendChild(el(`<div class="section-label">或者单独练</div>`));
+  host.appendChild(el(`<div class="section-label">短途练习</div>`));
   const quick = el(`<div class="module-grid"></div>`);
   [
-    { href: '#/vocab/study', icon: '🃏', title: '词汇', sub: `${stats.due} 到期 · ${Math.min(stats.fresh, 10)} 新` },
-    { href: '#/path', icon: '🛤️', title: '课程路径', sub: next ? `下一课 ${next.lesson.title}` : '全部完成' },
-    { href: '#/readlisten', icon: '📖', title: '读·听', sub: '阅读与听力' },
+    { href: '#/vocab/study', icon: 'cards', title: '词汇站', sub: `${stats.due} 到期 · ${Math.min(stats.fresh, 10)} 新` },
+    { href: '#/path', icon: 'route', title: '城市路线', sub: next ? `下一站 · ${next.lesson.title}` : '全部完成' },
+    { href: '#/readlisten', icon: 'book', title: '书店与电台', sub: '阅读 · 听力 · 听写' },
   ].forEach(m => quick.appendChild(el(`<a class="module-card" href="${m.href}">
-    <div class="m-icon">${m.icon}</div><div class="m-title">${m.title}</div><div class="m-sub">${m.sub}</div>
+    <div class="m-icon">${icon(m.icon)}</div><div class="m-title">${m.title}</div><div class="m-sub">${m.sub}</div><span class="m-arrow">${icon('arrow')}</span>
   </a>`)));
   host.appendChild(quick);
+  [...host.querySelectorAll('.journey-hero,.mission-launcher,.module-card')].forEach((node, i) => motionIn(node, { y: 14, delay: i * 55 }));
 }
 
 /* ---- 串流执行 ---- */
@@ -91,10 +117,13 @@ function startFlow(host, minutes) {
     if (idx >= segments.length) {
       document.body.classList.remove('immersive');
       const daily = getDaily();
+      const reward = rewardSummary();
       host.appendChild(el(`<div class="lesson-done" style="margin-top:60px">
-        <div class="lesson-done-emoji">🏆</div>
-        <h2>今日学习完成！</h2>
-        <p class="meta">共 ${daily.items} 题 · 正确 ${daily.ok} · 连续 ${getStreak()} 天</p>
+        <div class="completion-seal">${icon('trophy')}</div>
+        <span class="eyebrow">TAGESZIEL</span>
+        <h2>今日路线完成</h2>
+        <div class="completion-stats"><div><b>${daily.items}</b><span>练习</span></div><div><b>${daily.ok}</b><span>答对</span></div><div><b>${reward.dailyXp}</b><span>XP</span></div></div>
+        <p class="meta">连续学习 ${getStreak()} 天</p>
         <a class="btn" style="margin-top:16px" href="#/">回到首页</a>
       </div>`));
       return;

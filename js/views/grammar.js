@@ -6,18 +6,18 @@ import { isDone, markDone } from '../storage.js';
 export function renderGrammar(host, id) {
   if (id) return renderLesson(host, id);
 
-  host.appendChild(el(`<h1 class="page-title">📐 体系化语法</h1>`));
+  host.appendChild(el(`<h1 class="page-title">体系化语法</h1>`));
   host.appendChild(el(`<p class="page-sub">按 A1 大纲编排，中文讲解，建议按顺序学习。每课后的练习做完（正确率不限）即算完成。</p>`));
 
   GRAMMAR_LESSONS.forEach((lesson, i) => {
     const done = isDone('grammar', lesson.id);
     host.appendChild(el(`<a class="list-item" href="#/grammar/${lesson.id}">
-      <span class="li-icon">${done ? '✅' : `${i + 1}.`}</span>
+      <span class="li-icon">${done ? icon('check') : `${i + 1}`}</span>
       <div class="li-main">
         <div class="li-title">${esc(lesson.title)}</div>
         <div class="li-sub">${esc(lesson.sub)}</div>
       </div>
-      <span class="li-arrow">›</span>
+      <span class="li-arrow">${icon('arrow')}</span>
     </a>`));
   });
 }
@@ -61,16 +61,16 @@ function renderLesson(host, id) {
       });
       body.appendChild(card);
     }
-    if (sec.tip) body.appendChild(el(`<div class="tip">💡 ${esc(sec.tip)}</div>`));
+    if (sec.tip) body.appendChild(el(`<div class="tip"><b>提示</b> · ${esc(sec.tip)}</div>`));
   });
   host.appendChild(body);
 
   if (lesson.exercises?.length) {
-    host.appendChild(el(`<h2 style="font-size:1.15rem;margin:20px 0 8px;color:var(--accent)">✏️ 练习</h2>`));
+    host.appendChild(el(`<h2 class="practice-title">练习</h2>`));
     const quizCard = el(`<div class="card"></div>`);
     renderQuiz(lesson.exercises, quizCard, (correct, total) => {
-      markDone('grammar', id);
-      toast(`练习完成：${correct}/${total} 🎉 本课已标记完成`);
+      const reward = markDone('grammar', id);
+      toast(`练习完成：${correct}/${total}${reward ? ` · +${reward.xpDelta} XP` : ' · 已记录'}`);
     });
     host.appendChild(quizCard);
   }

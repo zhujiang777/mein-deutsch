@@ -1,82 +1,125 @@
-// 读·听：阅读（分级课文）+ 听力（三层阶梯）
 import { READINGS } from '../../data/readings.js';
-import { el, esc } from '../ui.js';
+import { el, esc, icon, motionIn } from '../ui.js';
 import { isDone } from '../storage.js';
 import { scoreText } from '../recur.js';
 
-export function renderReadListen(host) {
-  host.appendChild(el(`<h1 class="page-title">📖 读 · 听</h1>`));
-  host.appendChild(el(`<p class="page-sub">可理解输入是语言习得的核心。精读弄懂每句，泛读泛听只求大意。</p>`));
+const PANELS = [
+  { id: 'read', label: '阅读', icon: 'book' },
+  { id: 'listen', label: '听力', icon: 'speaker' },
+];
 
-  /* ---- 为你推荐：让最近学的词在文章里复现 ---- */
+export function renderReadListen(host) {
+  host.appendChild(el(`<header class="page-head readlisten-head">
+    <span class="eyebrow">LESEN & HÖREN · 可理解输入</span>
+    <h1 class="page-title">读 · 听</h1>
+    <p class="page-sub">阅读负责看懂语境，听力负责把声音切成词。一次只练一种能力。</p>
+  </header>`));
+
+  const seg = el(`<div class="track-seg media-seg" role="tablist" aria-label="选择阅读或听力"></div>`);
+  const pane = el(`<section class="media-pane" aria-live="polite"></section>`);
+  let active = 'read';
+  seg.dataset.index = '0';
+
+  PANELS.forEach((panel, index) => {
+    const button = el(`<button class="track-tab${index === 0 ? ' active' : ''}" role="tab"
+      aria-selected="${index === 0}" aria-controls="media-panel">${icon(panel.icon)}<span>${panel.label}</span></button>`);
+    button.addEventListener('click', () => {
+      if (active === panel.id) return;
+      const direction = index > PANELS.findIndex(item => item.id === active) ? 1 : -1;
+      active = panel.id;
+      seg.dataset.index = String(index);
+      [...seg.children].forEach((child, childIndex) => {
+        const selected = childIndex === index;
+        child.classList.toggle('active', selected);
+        child.setAttribute('aria-selected', String(selected));
+      });
+      renderPanel(direction);
+    });
+    seg.appendChild(button);
+  });
+
+  host.appendChild(seg);
+  host.appendChild(pane);
+
+  function renderPanel(direction = 1) {
+    pane.innerHTML = '';
+    pane.id = 'media-panel';
+    pane.setAttribute('role', 'tabpanel');
+    if (active === 'read') renderReadingPanel(pane);
+    else renderListeningPanel(pane);
+    motionIn(pane, { x: 12 * direction, y: 0 });
+  }
+
+  renderPanel();
+}
+
+function renderReadingPanel(host) {
   const scored = READINGS
-    .map(r => ({ r, score: scoreText(r.vocabRefs) }))
-    .filter(x => x.score > 0)
+    .map(reading => ({ reading, score: scoreText(reading.vocabRefs) }))
+    .filter(item => item.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, 2);
+
   if (scored.length) {
-    host.appendChild(el(`<div class="section-label">✨ 为你推荐 · 复现最近学的词</div>`));
-    scored.forEach(({ r, score }) => {
-      const done = isDone('reading', r.id);
-      host.appendChild(el(`<a class="list-item" href="#/reading/${r.id}">
-        <span class="li-icon">${done ? '✅' : '✨'}</span>
+    host.appendChild(el(`<div class="section-label">为你推荐 · 复现最近学的词</div>`));
+    scored.forEach(({ reading, score }) => {
+      const done = isDone('reading', reading.id);
+      host.appendChild(el(`<a class="list-item" href="#/reading/${reading.id}">
+        <span class="li-icon">${done ? icon('check') : icon('star')}</span>
         <div class="li-main">
-          <div class="li-title de">${esc(r.title)}</div>
-          <div class="li-sub">${esc(r.titleZh)} · <span class="recur-tag">复现你最近学的 ${score} 个词</span></div>
+          <div class="li-title de">${esc(reading.title)}</div>
+          <div class="li-sub">${esc(reading.titleZh)} · <span class="recur-tag">复现你最近学的 ${score} 个词</span></div>
         </div>
-        <span class="li-arrow">›</span>
+        <span class="li-arrow">${icon('arrow')}</span>
       </a>`));
     });
   }
 
-  /* ---- 听力三层 ---- */
-  host.appendChild(el(`<div class="section-label">🎧 听力训练</div>`));
+  const intensive = READINGS.filter(reading => reading.mode === 'intensiv');
+  const extensive = READINGS.filter(reading => reading.mode === 'extensiv');
+  host.appendChild(el(`<div class="section-label">精读 · 点词查义 + 逐句翻译</div>`));
+  intensive.forEach(reading => host.appendChild(readingItem(reading)));
+  host.appendChild(el(`<div class="section-label">泛读 · 先读大意，再做理解题</div>`));
+  extensive.forEach(reading => host.appendChild(readingItem(reading)));
+}
 
-  const dictCard = el(`<a class="list-item" href="#/dictation">
-    <span class="li-icon">✍️</span>
+function renderListeningPanel(host) {
+  host.appendChild(el(`<div class="section-label">声音拆解 · 从句子开始</div>`));
+  host.appendChild(el(`<a class="list-item listen-primary" href="#/dictation">
+    <span class="li-icon">${icon('edit')}</span>
     <div class="li-main">
       <div class="li-title">句子精听（听写）</div>
-      <div class="li-sub">听音频拼句子 · 可无限重听/慢速 · 练"把声音切成词"</div>
-    </div><span class="li-arrow">›</span>
-  </a>`);
-  host.appendChild(dictCard);
+      <div class="li-sub">反复听、慢速听，再把听到的德语写下来</div>
+    </div><span class="li-arrow">${icon('arrow')}</span>
+  </a>`));
 
-  host.appendChild(el(`<div class="list-item" style="opacity:.65">
-    <span class="li-icon">🎬</span>
+  host.appendChild(el(`<div class="list-item is-disabled" aria-disabled="true">
+    <span class="li-icon">${icon('play')}</span>
     <div class="li-main">
       <div class="li-title">真实语料精听包</div>
-      <div class="li-sub">Nicos Weg 剧集 / Easy German / Deutschtrainer · 制作中，随课程单元陆续解锁</div>
+      <div class="li-sub">Nicos Weg、Easy German 与 Deutschtrainer，随课程单元陆续解锁</div>
     </div>
   </div>`));
 
-  const extCard = el(`<div class="card">
-    <h3>🛋️ 泛听磨耳朵（第三层）</h3>
-    <p class="meta" style="margin-bottom:10px">真实德语资源。A1 阶段目标是每天 5 分钟熟悉语音语调，<b>不求听懂</b>——这不是学习失败，是正常过程。</p>
+  host.appendChild(el(`<div class="section-label">泛听 · 每天五分钟熟悉语调</div>`));
+  host.appendChild(el(`<div class="card listening-resources">
+    <p class="meta">A1 阶段不要求每句都听懂。先熟悉节奏、重音和常见声音组合。</p>
     <div class="ext-links">
-      <a href="https://www.dw.com/de/deutsch-lernen/nachrichten/s-8030" target="_blank" rel="noopener">📻 DW 慢速新闻 Langsam gesprochene Nachrichten — 每日真新闻慢速朗读，学德语者的经典 ›</a>
-      <a href="https://slowgerman.com" target="_blank" rel="noopener">🎙️ Slow German 播客 — 慢速德语讲生活话题 ›</a>
-      <a href="https://www.youtube.com/@EasyGerman" target="_blank" rel="noopener">📺 Easy German 频道 — 街头真实德语，双语字幕 ›</a>
+      <a href="https://www.dw.com/de/deutsch-lernen/nachrichten/s-8030" target="_blank" rel="noopener">DW 慢速新闻 <span>Langsam gesprochene Nachrichten</span></a>
+      <a href="https://slowgerman.com" target="_blank" rel="noopener">Slow German <span>慢速德语生活播客</span></a>
+      <a href="https://www.youtube.com/@EasyGerman" target="_blank" rel="noopener">Easy German <span>真实街头德语与双语字幕</span></a>
     </div>
-  </div>`);
-  host.appendChild(extCard);
+  </div>`));
+}
 
-  /* ---- 阅读 ---- */
-  const intensive = READINGS.filter(r => r.mode === 'intensiv');
-  const extensive = READINGS.filter(r => r.mode === 'extensiv');
-  host.appendChild(el(`<div class="section-label">🔍 精读 · 点词查义 + 逐句翻译</div>`));
-  intensive.forEach(r => host.appendChild(item(r)));
-  host.appendChild(el(`<div class="section-label">🛋️ 泛读 · 读大意做理解题</div>`));
-  extensive.forEach(r => host.appendChild(item(r)));
-
-  function item(r) {
-    const done = isDone('reading', r.id);
-    return el(`<a class="list-item" href="#/reading/${r.id}">
-      <span class="li-icon">${done ? '✅' : r.mode === 'intensiv' ? '🔍' : '🛋️'}</span>
-      <div class="li-main">
-        <div class="li-title de">${esc(r.title)}</div>
-        <div class="li-sub">${esc(r.titleZh)} · ${r.level} · ${r.sentences.length} 句</div>
-      </div>
-      <span class="li-arrow">›</span>
-    </a>`);
-  }
+function readingItem(reading) {
+  const done = isDone('reading', reading.id);
+  return el(`<a class="list-item" href="#/reading/${reading.id}">
+    <span class="li-icon">${done ? icon('check') : icon('book')}</span>
+    <div class="li-main">
+      <div class="li-title de">${esc(reading.title)}</div>
+      <div class="li-sub">${esc(reading.titleZh)} · ${reading.level} · ${reading.sentences.length} 句</div>
+    </div>
+    <span class="li-arrow">${icon('arrow')}</span>
+  </a>`);
 }

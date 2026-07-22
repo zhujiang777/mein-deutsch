@@ -1,13 +1,13 @@
 // 分级阅读：精读（点词查义 + 逐句翻译 + 注释）/ 泛读（理解题）
 import { READINGS } from '../../data/readings.js';
-import { el, esc, audioBtn, micBtn, renderQuiz, toast } from '../ui.js';
+import { el, esc, audioBtn, icon, micBtn, renderQuiz, toast } from '../ui.js';
 import { isDone, markDone } from '../storage.js';
 import { enableGloss } from '../dict.js';
 
 export function renderReading(host, id) {
   if (id) return renderText(host, id);
 
-  host.appendChild(el(`<h1 class="page-title">📖 分级阅读</h1>`));
+  host.appendChild(el(`<h1 class="page-title">分级阅读</h1>`));
   host.appendChild(el(`<p class="page-sub"><b>精读</b>：逐句弄懂，点任意单词查词义，可显示逐句翻译。<b>泛读</b>：不查词，读懂大意即可，读完做理解题。建议精读:泛读 = 1:1 搭配。</p>`));
 
   const intensive = READINGS.filter(r => r.mode === 'intensiv');
@@ -21,12 +21,12 @@ export function renderReading(host, id) {
   function item(r) {
     const done = isDone('reading', r.id);
     return el(`<a class="list-item" href="#/reading/${r.id}">
-      <span class="li-icon">${done ? '✅' : r.mode === 'intensiv' ? '🔍' : '🛋️'}</span>
+      <span class="li-icon">${done ? icon('check') : r.mode === 'intensiv' ? icon('book') : icon('speaker')}</span>
       <div class="li-main">
         <div class="li-title de">${esc(r.title)}</div>
         <div class="li-sub">${esc(r.titleZh)} · ${r.level} · ${r.sentences.length} 句</div>
       </div>
-      <span class="li-arrow">›</span>
+      <span class="li-arrow">${icon('arrow')}</span>
     </a>`);
   }
 }
@@ -38,7 +38,7 @@ function renderText(host, id) {
   host.appendChild(el(`<a class="back-link" href="#/reading">‹ 阅读列表</a>`));
   host.appendChild(el(`<h1 class="page-title de">${esc(r.title)}</h1>`));
   host.appendChild(el(`<p class="page-sub">${esc(r.titleZh)} · <span class="pill ${r.mode === 'intensiv' ? '' : 'blue'}">${r.mode === 'intensiv' ? '精读' : '泛读'}</span> <span class="pill green">${r.level}</span></p>`));
-  if (r.intro) host.appendChild(el(`<div class="tip" style="background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.88rem;margin-bottom:12px">📌 ${esc(r.intro)}</div>`));
+  if (r.intro) host.appendChild(el(`<div class="tip"><b>阅读提示</b> · ${esc(r.intro)}</div>`));
 
   const card = el(`<div class="card"></div>`);
   const textWrap = el(`<div class="reading-text"></div>`);
@@ -53,7 +53,6 @@ function renderText(host, id) {
     });
     const btns = el(`<span style="white-space:nowrap"> </span>`);
     const inline = audioBtn(s.de);
-    inline.style.width = '26px'; inline.style.height = '26px'; inline.style.fontSize = '.8rem';
     btns.appendChild(inline);
     sent.appendChild(btns);
 
@@ -83,7 +82,7 @@ function renderText(host, id) {
     });
     controls.appendChild(toggle);
   }
-  const readAll = el(`<button class="btn small secondary">🔊 全文朗读</button>`);
+  const readAll = el(`<button class="btn small secondary">${icon('speaker')} 全文朗读</button>`);
   readAll.addEventListener('click', () => {
     import('../speech.js').then(({ speak }) => speak(r.sentences.map(s => s.de).join(' ')));
   });
@@ -92,7 +91,7 @@ function renderText(host, id) {
 
   // 跟读练习（精读）：挑选每篇的跟读句
   if (r.mode === 'intensiv') {
-    host.appendChild(el(`<div class="section-label">🎤 跟读这几句</div>`));
+    host.appendChild(el(`<div class="section-label">跟读这几句</div>`));
     const speakCard = el(`<div class="card"></div>`);
     const picks = r.speakPractice?.length ? r.speakPractice : [0, Math.floor(r.sentences.length / 2)];
     picks.forEach(i => {
@@ -116,19 +115,19 @@ function renderText(host, id) {
 
   // 泛读：理解题
   if (r.questions?.length) {
-    host.appendChild(el(`<div class="section-label">✏️ 读懂了吗</div>`));
+    host.appendChild(el(`<div class="section-label">读懂了吗</div>`));
     const quizCard = el(`<div class="card"></div>`);
     renderQuiz(r.questions, quizCard, (correct, total) => {
-      markDone('reading', id);
-      toast(`理解题 ${correct}/${total} 🎉 本篇已标记读完`);
+      const reward = markDone('reading', id);
+      toast(`理解题 ${correct}/${total} · 已读完${reward ? ` · +${reward.xpDelta} XP` : ''}`);
     });
     host.appendChild(quizCard);
   } else {
-    const doneBtn = el(`<button class="btn block" style="margin-top:14px">${isDone('reading', id) ? '✅ 已读完' : '标记读完'}</button>`);
+    const doneBtn = el(`<button class="btn block" style="margin-top:14px">${isDone('reading', id) ? `${icon('check')} 已读完` : '标记读完'}</button>`);
     doneBtn.addEventListener('click', () => {
-      markDone('reading', id);
-      toast('已记录 🎉');
-      doneBtn.textContent = '✅ 已读完';
+      const reward = markDone('reading', id);
+      toast(reward ? `已记录 · +${reward.xpDelta} XP` : '已经记录过这篇阅读');
+      doneBtn.innerHTML = `${icon('check')} 已读完`;
     });
     host.appendChild(doneBtn);
   }

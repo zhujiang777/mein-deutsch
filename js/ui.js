@@ -21,6 +21,65 @@ export function esc(s) {
   }[c]));
 }
 
+const ICONS = {
+  home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5M9.5 20v-6h5v6"/>',
+  route: '<path d="M6 3v18M18 3v18M6 7c4 0 8 2 12 2M6 15c4 0 8-2 12-2"/><circle cx="6" cy="7" r="2"/><circle cx="18" cy="13" r="2"/>',
+  cards: '<rect x="4" y="5" width="13" height="16" rx="2"/><path d="m8 5 1-2h11v15l-3 1"/><path d="M8 10h5M8 14h5"/>',
+  book: '<path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H12v18H7.5A3.5 3.5 0 0 0 4 23Z"/><path d="M20 5.5A3.5 3.5 0 0 0 16.5 2H12v18h4.5A3.5 3.5 0 0 1 20 23Z"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/>',
+  flame: '<path d="M12 22c4.2 0 7-3 7-7.2 0-3.1-1.8-5.8-5.2-8.8.1 2.5-1.1 4-2.2 4.8.2-3.8-1.8-6.6-4.1-8.8.2 3.7-2.5 6.3-2.5 10.2C5 17.8 7.9 22 12 22Z"/><path d="M9.5 18.5c0-2 1.2-3.3 2.8-4.8.1 1.5.8 2.2 1.5 3 .5.5.7 1.1.7 1.8a2.5 2.5 0 0 1-5 0Z"/>',
+  star: '<path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  play: '<path d="m9 7 8 5-8 5Z"/>',
+  speaker: '<path d="M5 10v4h3l4 3V7l-4 3Z"/><path d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7 7 0 0 1 0 10"/>',
+  mic: '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5.5 12a6.5 6.5 0 0 0 13 0M12 18.5V22M9 22h6"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/>',
+  lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+  check: '<path d="m5 12 4 4L19 6"/>',
+  arrow: '<path d="M5 12h14M14 7l5 5-5 5"/>',
+  trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0Z"/><path d="M8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4M12 13v5M8 21h8M9 18h6"/>',
+};
+
+export function icon(name, cls = '') {
+  return `<svg class="ui-icon ${esc(cls)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.star}</svg>`;
+}
+
+export function guideBear() {
+  return `<svg class="guide-bear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/>
+  </svg>`;
+}
+
+export function haptic(kind = 'tap') {
+  if (!navigator.vibrate) return;
+  navigator.vibrate(kind === 'error' ? [18, 35, 18] : kind === 'success' ? 16 : 8);
+}
+
+export function motionIn(node, { x = 0, y = 12, delay = 0 } = {}) {
+  if (!node?.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  node.animate([
+    { opacity: 0, transform: `translate3d(${x}px, ${y}px, 0) scale(.985)` },
+    { opacity: 1, transform: 'translate3d(0, 0, 0) scale(1)' },
+  ], { duration: 260, delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
+}
+
+export function setProgress(node, value) {
+  if (!node) return;
+  const progress = Math.min(1, Math.max(0, Number(value) || 0));
+  node.style.transform = `scaleX(${progress})`;
+  const track = node.parentElement;
+  if (track?.getAttribute('role') === 'progressbar') {
+    track.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
+  }
+}
+
+export function rewardBurst(host, label = '+2 XP') {
+  const burst = el(`<span class="reward-burst">${esc(label)}</span>`);
+  host.appendChild(burst);
+  haptic('success');
+  setTimeout(() => burst.remove(), 900);
+}
+
 export function toast(msg, ms = 2200) {
   document.querySelector('.toast')?.remove();
   const t = el(`<div class="toast">${esc(msg)}</div>`);
@@ -30,7 +89,7 @@ export function toast(msg, ms = 2200) {
 
 /* ---- 播放按钮（正常速 + 可选慢速） ---- */
 export function audioBtn(text, { slow = false } = {}) {
-  const b = el(`<button class="audio-btn${slow ? ' slow' : ''}" title="${slow ? '慢速朗读' : '朗读'}">${slow ? '慢' : '🔊'}</button>`);
+  const b = el(`<button class="audio-btn${slow ? ' slow' : ''}" aria-label="${slow ? '慢速朗读' : '朗读'}" title="${slow ? '慢速朗读' : '朗读'}">${slow ? '0.8×' : icon('speaker')}</button>`);
   b.addEventListener('click', (e) => {
     e.stopPropagation();
     document.querySelectorAll('.audio-btn.playing').forEach(x => x.classList.remove('playing'));
@@ -46,7 +105,7 @@ export function audioBtn(text, { slow = false } = {}) {
 export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
   const wrap = el(`<div class="speak-practice">
     <div class="sp-controls">
-      <button class="sp-btn sp-listen">🔊 听标准</button>
+      <button class="sp-btn sp-listen">${icon('speaker')} 听标准</button>
     </div>
     <div class="sp-status"></div>
     <div class="sp-recog"></div>
@@ -68,7 +127,7 @@ export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
     return wrap;
   }
 
-  const recordBtn = el(`<button class="sp-btn sp-record">🎤 录我的</button>`);
+  const recordBtn = el(`<button class="sp-btn sp-record">${icon('mic')} 录我的</button>`);
   controls.appendChild(recordBtn);
 
   let recorderCtl = null;
@@ -116,7 +175,7 @@ export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
       </div>
       ${heard}
       ${words ? `<div class="pa-words">${words}</div>` : ''}
-      <div class="score-line"><b>${score} 分</b> ${pass ? '👍 已达到本次练习线' : '💪 再听标准音练一次'}</div>
+      <div class="score-line"><b>${score} 分</b> ${pass ? '已达到本次练习线' : '再听标准音练一次'}</div>
       <div class="pa-note">评分用于练习参考；德语暂不提供英语专属的韵律分。</div>
     </div>`;
     onScore?.(score);
@@ -148,7 +207,7 @@ export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
     }
     const run = ++assessmentRun;
     phase = 'judging';
-    recogHost.innerHTML = `<div class="sp-judging">🧐 正在分析音素、流利度和完整度…</div>`;
+    recogHost.innerHTML = `<div class="sp-judging">正在分析音素、流利度和完整度…</div>`;
     try {
       const result = await assessPronunciation({ audioBlob: assessmentBlob, referenceText: targetText });
       if (run === assessmentRun) renderAssessment(result);
@@ -228,7 +287,7 @@ export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
 /* ---- 兼容包装：micBtn 返回 🎤 按钮，点击后在 resultHost 里展开跟读练习组件 ----
    历史调用点（reading.js / grammar.js / phraseRow）沿用不动 */
 export function micBtn(targetText, resultHost, opts = {}) {
-  const b = el(`<button class="mic-btn" title="跟读练习">🎤</button>`);
+  const b = el(`<button class="mic-btn" aria-label="跟读练习" title="跟读练习">${icon('mic')}</button>`);
   let shown = false;
   b.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -248,7 +307,7 @@ export function phraseRow({ de, ipa, zh, tip, mic = true, slowBtn = true }) {
       <div class="p-de de">${esc(de)}</div>
       ${ipa ? `<div class="p-ipa">${esc(ipa)}</div>` : ''}
       ${zh ? `<div class="p-zh">${esc(zh)}</div>` : ''}
-      ${tip ? `<div class="p-tip">💡 ${esc(tip)}</div>` : ''}
+      ${tip ? `<div class="p-tip"><b>提示</b> · ${esc(tip)}</div>` : ''}
       <div class="p-result"></div>
     </div>
     <div class="p-btns"></div>
@@ -287,7 +346,7 @@ export function videoCard(video, { onWatched } = {}) {
   const card = el(`<div class="video-card">
     <div class="video-facade" role="button" tabindex="0" aria-label="播放视频">
       <img loading="lazy" src="https://i.ytimg.com/vi/${esc(video.yt)}/hqdefault.jpg" alt="">
-      <span class="video-play">▶</span>
+      <span class="video-play">${icon('play')}</span>
     </div>
     <div class="video-meta">
       <div class="video-title">${esc(video.title)}${state.done ? ' <span class="pill green">已看完 ✓</span>' : ''}</div>
