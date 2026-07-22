@@ -3,7 +3,7 @@
 import { loadSrs, saveSrs, getSettings } from './storage.js';
 
 const DAY = 24 * 60 * 60 * 1000;
-const AGAIN_DELAY = 10 * 60 * 1000; // 忘了 → 10 分钟后重来
+export const LEARN_STEPS = [10 * 60 * 1000, DAY, 3 * DAY];
 
 export const RATINGS = [
   { key: 'again', label: '忘了', cls: 'rating-again' },
@@ -23,14 +23,32 @@ export function rate(id, rating) {
     c.ease = Math.max(1.3, c.ease - 0.2);
     c.ivl = 0;
     c.state = 'learn';
-    c.due = now + AGAIN_DELAY;
+    c.step = 0;
+    c.due = now + LEARN_STEPS[0];
   } else if (c.state === 'new' || c.state === 'learn') {
-    // 首次记住：hard 1 天 / good 1 天 / easy 3 天
-    c.ivl = rating === 'easy' ? 3 : 1;
+    // 新词/学习卡：10 分钟 → 1 天 → 3 天，最后一档发出即毕业。
     if (rating === 'hard') c.ease = Math.max(1.3, c.ease - 0.15);
     if (rating === 'easy') c.ease = Math.min(3.0, c.ease + 0.15);
-    c.state = 'review';
-    c.due = now + c.ivl * DAY;
+    if (rating === 'easy') {
+      c.step = LEARN_STEPS.length - 1;
+      c.ivl = 3;
+      c.state = 'review';
+      c.due = now + 3 * DAY;
+    } else {
+      // Old learn cards do not have `step`; safely resume from the first rung.
+      const step = (c.step ?? 0) + 1;
+      if (step >= LEARN_STEPS.length - 1) {
+        c.step = LEARN_STEPS.length - 1;
+        c.ivl = 3;
+        c.state = 'review';
+        c.due = now + 3 * DAY;
+      } else {
+        c.step = step;
+        c.ivl = 0;
+        c.state = 'learn';
+        c.due = now + LEARN_STEPS[step];
+      }
+    }
   } else {
     const factor = rating === 'hard' ? 1.2 : rating === 'good' ? c.ease : c.ease * 1.3;
     if (rating === 'hard') c.ease = Math.max(1.3, c.ease - 0.15);

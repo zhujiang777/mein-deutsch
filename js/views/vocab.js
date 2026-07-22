@@ -1,27 +1,40 @@
 // 词汇 v2："不背单词"式沉浸学习：全屏词卡（例句为主角）→ 回想式检验
 import { VOCAB, THEMES } from '../../data/vocab.js';
-import { el, esc, audioBtn, toast } from '../ui.js';
-import { speak, stopSpeak } from '../speech.js';
+import { AUDIO_MANIFEST } from '../../data/audio-manifest.js';
+import { el, esc, audioBtn, micBtn, toast } from '../ui.js';
+import { speak, stopSpeak, germanVoices } from '../speech.js';
 import { buildQueue, rate, srsStats, markKnown } from '../srs.js';
-import { logActivity } from '../storage.js';
+import { getWordbook, removeWordEntry, logActivity, loadSrs } from '../storage.js';
+import { renderExercise } from '../exercises.js';
 
 const byId = Object.fromEntries(VOCAB.map(w => [w.id, w]));
+const wordbookIds = () => Object.keys(getWordbook());
+const allIds = () => [...wordbookIds(), ...VOCAB.map(w => w.id)];
+const getWord = (id) => {
+  if (!id.startsWith('d:')) return byId[id];
+  const word = getWordbook()[id];
+  return word ? { id, de: word.lemma, ...word, theme: 'wordbook' } : null;
+};
 
 /* 兼容层：现有 schema → 词卡视图模型（Phase 4 换歌德词表后自然增强） */
 function wordModel(w) {
   return {
     ...w,
     senses: w.senses || [{ pos: w.art ? 'n.' : '', zh: w.zh }],
-    sentences: w.sentences || (w.ex ? [{ de: w.ex, zh: w.exZh || '', source: null }] : []),
+    sentences: w.sentences || (w.ex ? [{ de: w.ex, zh: w.exZh || '', source: null }]
+      : (w.sentence ? [{ de: w.sentence, zh: '', source: w.source || null }] : [])),
     mnemonic: w.mnemonic || null,
     spoken: w.art ? `${w.art} ${w.de}` : w.de,
+    phrases: w.phrases || [],
+    forms: w.forms || null,
   };
 }
 
 function wordHead(m, { big = true } = {}) {
   const artHtml = m.art ? `<span style="color:var(--${m.art})">${m.art}</span> ` : '';
   return `<div class="wc-word de${big ? '' : ' wc-word-small'}">${artHtml}${esc(m.de)}</div>
-    ${m.pl ? `<div class="wc-pl">复数 die ${esc(m.pl)}</div>` : ''}`;
+    ${m.pl ? `<div class="wc-pl">复数 die ${esc(m.pl)}</div>` : m.noPl ? '<div class="wc-pl wc-no-pl">只用单数</div>' : ''}
+    ${!m.art && m.pos ? `<span class="wc-pos wc-head-pos">${esc(m.pos)}</span>` : ''}`;
 }
 
 /* 例句出处：'lesson:<id>' → 课程课；其他非空字符串 → 阅读文章；null/缺省 → 不显示 */
@@ -35,9 +48,11 @@ function sourceLink(source) {
 /* ================= 概览页 ================= */
 export function renderVocab(host, sub) {
   if (sub === 'study') return startSession(host);
+  if (sub === 'wordbook') return renderWordbook(host);
   if (sub?.startsWith('theme-')) return renderTheme(host, sub.slice(6));
 
-  const stats = srsStats(VOCAB.map(w => w.id));
+  const bookIds = wordbookIds();
+  const stats = srsStats(allIds());
   host.appendChild(el(`<h1 class="page-title">🃏 词汇</h1>`));
   host.appendChild(el(`<p class="page-sub">词源：歌德学院 Goethe-Zertifikat A1 官方考纲词表（对齐中，当前 ${VOCAB.length} 词）。例句为主角，像"不背单词"一样在语境里记。</p>`));
 
@@ -49,6 +64,10 @@ export function renderVocab(host, sub) {
     </div>
     <a class="btn block" href="#/vocab/study">开始学习</a>
   </div>`));
+  host.appendChild(el(`<a class="list-item" href="#/vocab/wordbook">
+    <span class="li-icon">📒</span><div class="li-main"><div class="li-title">生词本</div>
+    <div class="li-sub">${bookIds.length ? `${bookIds.length} 个手动查词，优先进入学习队列` : '查词后可在这里集中复习'}</div></div><span class="li-arrow">›</span>
+  </a>`));
 
   host.appendChild(el(`<div class="section-label">按主题浏览</div>`));
   THEMES.forEach(t => {
@@ -60,6 +79,27 @@ export function renderVocab(host, sub) {
       <span class="li-arrow">›</span>
     </a>`));
   });
+}
+
+function renderWordbook(host) {
+  const entries = Object.entries(getWordbook()).sort((a, b) => b[1].addedAt - a[1].addedAt);
+  host.appendChild(el(`<a class="back-link" href="#/vocab">‹ 词汇</a>`));
+  host.appendChild(el('<h1 class="page-title">📒 生词本</h1>'));
+  if (!entries.length) {
+    host.appendChild(el('<div class="empty-hint">还没有生词。阅读页点任意词后，选择「加入生词本」。</div>'));
+    return;
+  }
+  const list = el('<div class="card wordbook-list"></div>');
+  entries.forEach(([id, word]) => {
+    const row = el(`<div class="wordbook-row"><div class="wb-main"><div class="de wb-de">${word.art ? `<span style="color:var(--${esc(word.art)})">${esc(word.art)}</span> ` : ''}${esc(word.lemma)}</div>
+      <div class="wb-zh">${esc(word.zh)}</div>${word.pl ? `<div class="wc-pl">复数 die ${esc(word.pl)}</div>` : ''}</div><button class="btn small secondary">删除</button></div>`);
+    row.querySelector('button').addEventListener('click', () => {
+      removeWordEntry(id); row.remove();
+      if (!list.children.length) { host.innerHTML = ''; renderVocab(host, 'wordbook'); }
+    });
+    list.appendChild(row);
+  });
+  host.appendChild(list);
 }
 
 function renderTheme(host, themeId) {
@@ -88,8 +128,8 @@ function startSession(host) {
   });
 }
 
-export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
-  const q = buildQueue(VOCAB.map(w => w.id));
+export function runVocabSession(host, { onDone, onExit, maxNew, maxDue, quickForms = false } = {}) {
+  const q = buildQueue(allIds());
   const fresh = q.fresh.slice(0, maxNew ?? q.fresh.length);
   const due = q.due.slice(0, maxDue ?? q.due.length);
 
@@ -101,11 +141,12 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
   document.body.classList.add('immersive');
   const cleanup = () => { document.body.classList.remove('immersive'); stopSpeak(); };
 
-  // 队列：新词卡片 → 检验（新词 + 到期），答错重排队
+  // 队列：新词卡片 → 新词首测 → 到期复习 → 新词二轮检验；答错重排队。
   const steps = [
     ...fresh.map(id => ({ kind: 'card', id })),
     ...fresh.map(id => ({ kind: 'test', id, isNew: true })),
     ...due.map(id => ({ kind: 'test', id })),
+    ...fresh.map(id => ({ kind: 'test', id, second: true })),
   ];
   let pos = 0, answered = 0, okCount = 0;
   const rated = new Set(); // 每词只计一次 SRS 评分
@@ -145,13 +186,16 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
 
   /* --- 新词卡（不背单词式：例句主角 + 助记 + 标熟） --- */
   function showCard(step) {
-    const m = wordModel(byId[step.id]);
+    const m = wordModel(getWord(step.id));
     const card = el(`<div class="wordcard">
       <div class="wc-head">${wordHead(m)}
         <div class="wc-audio"></div>
       </div>
+      <div class="wc-speak"></div>
       <div class="wc-senses">${m.senses.map(s => `<div class="wc-sense"><span class="wc-pos">${esc(s.pos || '')}</span> ${esc(s.zh)}</div>`).join('')}</div>
       ${m.valence ? `<div class="wc-valence">${esc(m.valence)}</div>` : ''}
+      ${m.forms ? '<div class="wc-forms"></div>' : ''}
+      ${m.phrases.length ? '<div class="wc-phrases"></div>' : ''}
       <div class="wc-sentences"></div>
       ${m.mnemonic ? `<div class="wc-mnemonic">🧩 ${esc(m.mnemonic)}</div>` : ''}
       <div class="wc-actions">
@@ -160,6 +204,26 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
     </div>`);
     const audioWrap = card.querySelector('.wc-audio');
     audioWrap.appendChild(audioBtn(m.spoken));
+    const speakHost = card.querySelector('.wc-speak');
+    speakHost.appendChild(micBtn(m.spoken, speakHost));
+
+    if (m.forms) {
+      const labels = [['ich', 'ich'], ['du', 'du'], ['er', 'er/sie/es'], ['wir', 'wir'], ['ihr', 'ihr'], ['sie', 'sie/Sie']];
+      const rows = labels.filter(([key]) => m.forms[key]).map(([key, label]) =>
+        `<div><span>${label}</span><b class="de">${esc(m.forms[key])}</b></div>`).join('');
+      const extras = [['perfekt', 'Perfekt'], ['praeteritum', 'Präteritum']].filter(([key]) => m.forms[key]).map(([key, label]) =>
+        `<div class="wc-form-extra"><span>${label}</span><b class="de">${esc(m.forms[key])}</b></div>`).join('');
+      card.querySelector('.wc-forms').innerHTML = `<div class="wc-block-title">动词变位</div><div class="wc-form-grid">${rows}</div>${extras}`;
+    }
+    if (m.phrases.length) {
+      const wrap = card.querySelector('.wc-phrases');
+      wrap.innerHTML = '<div class="wc-block-title">常用搭配</div>';
+      m.phrases.forEach(p => {
+        const row = el(`<div class="wc-phrase"><div><div class="de">${esc(p.de)}</div><div>${esc(p.zh)}</div></div><span></span></div>`);
+        row.querySelector('span').appendChild(audioBtn(p.de));
+        wrap.appendChild(row);
+      });
+    }
 
     const sentWrap = card.querySelector('.wc-sentences');
     m.sentences.forEach(s => {
@@ -197,40 +261,66 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
 
   /* --- 回想式检验：先回想，再选择；想不起来看答案 --- */
   function showTest(step) {
-    const m = wordModel(byId[step.id]);
+    const m = wordModel(getWord(step.id));
+    const heard = !!AUDIO_MANIFEST[m.spoken] || germanVoices().length > 0;
+    const reps = loadSrs()[step.id]?.reps || 0;
+    let kind = step.retry ? 'de2zh'
+      : step.second ? (heard ? 'listen' : 'zh2de')
+      : step.isNew ? 'de2zh'
+      : (reps % 3 === 0 ? 'listen' : reps % 3 === 1 ? 'zh2de' : 'spell');
+    if ((kind === 'listen' || kind === 'spell') && !heard) kind = 'zh2de';
+    if ((kind === 'listen' || kind === 'spell') && quickForms) kind = 'zh2de';
+
+    const complete = (ok) => {
+      answered++;
+      if (ok) { okCount++; applyRate(step.id, 'good'); }
+      else { applyRate(step.id, 'again'); steps.push({ kind: 'test', id: step.id, retry: true }); }
+      continueBar(ok, m);
+    };
+
+    if (kind === 'listen' || kind === 'spell') {
+      const box = el(`<div class="wordcard"><div class="wc-test-label">${kind === 'listen' ? '听音辨义' : '听写（含冠词）'}</div><div class="wc-exercise"></div></div>`);
+      stage.appendChild(box);
+      const distractors = pickDistractors(step.id, 3).map(d => d.zh);
+      const item = kind === 'listen'
+        ? { type: 'listenChoice', audioText: m.spoken, options: shuffleArr([m.zh, ...distractors]), a: 0 }
+        : { type: 'dictation', audioText: m.spoken, answer: m.spoken, mode: 'type' };
+      if (kind === 'listen') item.a = item.options.indexOf(m.zh);
+      renderExercise(box.querySelector('.wc-exercise'), item, { onSubmit: (ok) => complete(ok) });
+      return;
+    }
+
     const distractors = pickDistractors(step.id, 3);
-    const options = shuffleArr([{ zh: m.zh, ok: true }, ...distractors.map(d => ({ zh: d, ok: false }))]);
+    const options = kind === 'zh2de'
+      ? shuffleArr([{ label: m.de, ok: true }, ...distractors.map(d => ({ label: d.de, ok: false }))])
+      : shuffleArr([{ label: m.zh, ok: true }, ...distractors.map(d => ({ label: d.zh, ok: false }))]);
 
     const box = el(`<div class="wordcard">
-      <div class="wc-head">${wordHead(m)}
+      <div class="wc-test-label">${kind === 'zh2de' ? '看中文，想德语' : '先回想词义，再选择'}</div>
+      <div class="wc-head">${kind === 'zh2de' ? `<div class="wc-word wc-word-small">${esc(m.zh)}</div>` : wordHead(m)}
         <div class="wc-audio"></div>
       </div>
-      <p class="wc-recall-hint">先回想词义，再选择</p>
       <div class="wc-options"></div>
     </div>`);
-    box.querySelector('.wc-audio').appendChild(audioBtn(m.spoken));
+    if (kind !== 'zh2de') box.querySelector('.wc-audio').appendChild(audioBtn(m.spoken));
     const optWrap = box.querySelector('.wc-options');
-    setTimeout(() => speak(m.spoken), 300);
+    if (kind !== 'zh2de') setTimeout(() => speak(m.spoken), 300);
 
     let done = false;
     options.forEach(o => {
-      const b = el(`<button class="wc-opt">${esc(o.zh)}</button>`);
+      const b = el(`<button class="wc-opt${kind === 'zh2de' ? ' de' : ''}">${esc(o.label)}</button>`);
       b.addEventListener('click', () => {
         if (done) return;
         done = true;
-        answered++;
         [...optWrap.children].forEach(x => x.disabled = true);
         if (o.ok) {
-          okCount++;
           b.classList.add('correct');
-          applyRate(step.id, 'good');
-          continueBar(true, m);
+          if (kind === 'zh2de') speak(m.spoken);
+          complete(true);
         } else {
           b.classList.add('wrong');
-          [...optWrap.children].find(x => x.textContent === m.zh)?.classList.add('correct');
-          applyRate(step.id, 'again');
-          steps.push({ kind: 'test', id: step.id, retry: true }); // 本轮再考
-          continueBar(false, m);
+          [...optWrap.children].find(x => x.textContent === (kind === 'zh2de' ? m.de : m.zh))?.classList.add('correct');
+          complete(false);
         }
       });
       optWrap.appendChild(b);
@@ -241,14 +331,11 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
     peek.addEventListener('click', () => {
       if (done) return;
       done = true;
-      answered++;
       [...optWrap.children].forEach(x => {
         x.disabled = true;
-        if (x.textContent === m.zh) x.classList.add('correct');
+        if (x.textContent === (kind === 'zh2de' ? m.de : m.zh)) x.classList.add('correct');
       });
-      applyRate(step.id, 'again');
-      steps.push({ kind: 'test', id: step.id, retry: true });
-      continueBar(null, m);
+      complete(false);
     });
     bottom.appendChild(peek);
 
@@ -259,6 +346,7 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
           <b>${ok ? '✓ 正确！' : ok === false ? '✗ 记住它' : '看看答案'}</b>
           <div class="feedback-ans de">${m.spoken} — ${esc(m.zh)}</div>
           ${m.sentences[0] ? `<div class="feedback-explain de">${esc(m.sentences[0].de)}</div>` : ''}
+          ${m.mnemonic ? `<div class="feedback-mnemonic">🧩 助记行：${esc(m.mnemonic)}</div>` : ''}
         </div>
         <button class="btn">继续</button>
       </div>`);
@@ -286,13 +374,14 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue } = {}) {
 }
 
 function pickDistractors(id, n) {
-  const w = byId[id];
-  const sameTheme = VOCAB.filter(x => x.id !== id && x.theme === w.theme).map(x => x.zh);
-  const others = VOCAB.filter(x => x.id !== id && x.theme !== w.theme).map(x => x.zh);
+  const w = getWord(id);
+  const poolWords = [...Object.values(getWordbook()).map(word => ({ ...word, de: word.lemma, id: `d:${word.lemma}`, theme: 'wordbook' })), ...VOCAB];
+  const sameTheme = poolWords.filter(x => x.id !== id && x.theme === w.theme);
+  const others = poolWords.filter(x => x.id !== id && x.theme !== w.theme);
   const pool = [...shuffleArr(sameTheme), ...shuffleArr(others)];
   const out = [];
-  for (const zh of pool) {
-    if (zh !== w.zh && !out.includes(zh)) out.push(zh);
+  for (const item of pool) {
+    if (item.zh !== w.zh && !out.some(x => x.zh === item.zh)) out.push(wordModel(item));
     if (out.length === n) break;
   }
   return out;

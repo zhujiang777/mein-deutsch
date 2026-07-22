@@ -366,6 +366,16 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   max-width: 90vw;
 }
 .gloss-pop b { font-size: 1rem; }
+.dict-pop { width: min(430px, 92vw); padding: 14px 16px; }
+.dict-close { position: absolute; top: 6px; right: 8px; color: var(--text-2); font-size: .9rem; }
+.dict-result { padding-right: 24px; line-height: 1.55; }
+.dict-alt { border-top: 1px solid rgba(255,255,255,.22); margin-top: 8px; padding-top: 8px; }
+.dict-lemma { font-size: 1.12rem; font-weight: 700; }
+.dict-art.der { color: #79b8ff; }.dict-art.die { color: #f6a6c1; }.dict-art.das { color: #8bd5a5; }
+.dict-pl { color: rgba(255,255,255,.72); font-size: .8rem; }
+.dict-actions { display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-top:10px; }
+.dict-actions .audio-btn { width:32px; height:32px; }
+.dict-actions .btn { padding:7px 9px; font-size:.8rem; }
 
 /* ===== 设置 ===== */
 .settings-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
@@ -720,3 +730,20 @@ body.immersive #app { padding-bottom: 24px; }
   background: rgba(217, 164, 6, .1); border-radius: 8px; padding: 6px 12px;
   display: inline-block;
 }
+.feedback-mnemonic { color: var(--blue); font-size: .82rem; margin-top: 5px; }
+.wc-speak { margin-top: 8px; min-height: 30px; }
+.wc-speak .speak-practice { text-align: left; }
+.wc-head-pos { display: inline-block; margin-top: 5px; }
+.wc-no-pl { color: var(--text-2); font-style: italic; }
+.wc-forms, .wc-phrases { margin-top: 15px; text-align: left; background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; }
+.wc-block-title { color: var(--accent); font-size: .8rem; font-weight: 700; margin-bottom: 7px; }
+.wc-form-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:5px 12px; font-size:.88rem; }
+.wc-form-grid div, .wc-form-extra { display:flex; justify-content:space-between; gap:8px; }
+.wc-form-grid span, .wc-form-extra span { color:var(--text-2); }
+.wc-form-extra { border-top:1px solid var(--line); margin-top:7px; padding-top:6px; font-size:.86rem; }
+.wc-phrase { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0; border-top:1px solid var(--line); font-size:.88rem; }
+.wc-phrase:first-of-type { border-top:0; padding-top:0; }
+.wc-phrase > div > div:last-child { color:var(--text-2); font-size:.8rem; margin-top:2px; }
+.wc-test-label { color:var(--text-2); font-size:.85rem; margin:8px 0 4px; }
+.wordbook-row { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line); }
+.wordbook-row:last-child { border-bottom:0; }.wb-de { font-weight:700; }.wb-zh { color:var(--text-2); font-size:.88rem; }

@@ -5,6 +5,7 @@ import { GRAMMAR_LESSONS } from '../data/grammar.js';
 import { VOCAB } from '../data/vocab.js';
 import { READINGS } from '../data/readings.js';
 import { COURSE } from '../data/course.js';
+import { DICT_ENTRIES } from '../data/dict-core.js';
 
 const texts = new Set();
 const add = (t) => { if (t && t.trim()) texts.add(t.trim()); };
@@ -24,7 +25,14 @@ for (const w of VOCAB) {
   add(w.art ? `${w.art} ${w.de}` : w.de);
   add(w.ex);
   for (const s of w.sentences || []) add(s.de);
+  for (const p of w.phrases || []) add(p.de);
+  for (const form of Object.values(w.forms || {})) add(form);
 }
+
+// 全局查词的词条也可直接朗读；带冠词的名词与词卡口径一致。
+for (const [lemma, candidates] of Object.entries(DICT_ENTRIES))
+  for (const entry of candidates)
+    add(entry.art ? `${entry.art} ${lemma}` : lemma);
 
 // 阅读：逐句 + 全文（全文朗读按钮用）
 for (const r of READINGS) {

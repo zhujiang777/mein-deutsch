@@ -5,7 +5,7 @@ import { READINGS } from '../../data/readings.js';
 import { VOCAB } from '../../data/vocab.js';
 import { srsStats } from '../srs.js';
 import { dueMistakes, rateMistake, mistakeRef, recordAnswer } from '../mastery.js';
-import { allLessonStates, getVideoState, getDaily, getStreak } from '../storage.js';
+import { allLessonStates, getVideoState, getDaily, getStreak, getWordbook } from '../storage.js';
 import { runLesson } from './lesson.js';
 import { runVocabSession } from './vocab.js';
 import { renderExercise } from '../exercises.js';
@@ -13,13 +13,14 @@ import { stopSpeak } from '../speech.js';
 
 /* 三档时长的队列配置 */
 const PLANS = {
-  5: { label: '5 分钟 · 只复习', maxDue: 20, maxNew: 0, mistakes: 5, lesson: false, video: false, dictation: 0 },
+  5: { label: '5 分钟 · 只复习', maxDue: 20, maxNew: 0, quickForms: true, mistakes: 5, lesson: false, video: false, dictation: 0 },
   15: { label: '15 分钟 · 标准', maxDue: 20, maxNew: 10, mistakes: 5, lesson: true, video: true, dictation: 2 },
   30: { label: '30 分钟 · 充实', maxDue: 40, maxNew: 15, mistakes: 8, lesson: true, video: true, dictation: 3 },
 };
+const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB.map(w => w.id)];
 
 export function renderToday(host) {
-  const stats = srsStats(VOCAB.map(w => w.id));
+  const stats = srsStats(vocabIds());
   const mistakes = dueMistakes(99).length;
   const daily = getDaily();
   const streak = getStreak();
@@ -63,7 +64,7 @@ function startFlow(host, minutes) {
   const plan = PLANS[minutes];
   const segments = [];
 
-  const stats = srsStats(VOCAB.map(w => w.id));
+  const stats = srsStats(vocabIds());
   if (stats.due > 0 || (plan.maxNew > 0 && stats.fresh > 0)) {
     segments.push({ kind: 'vocab', title: '词汇复习与新词' });
   }
@@ -103,7 +104,7 @@ function startFlow(host, minutes) {
 
     if (seg.kind === 'vocab') {
       runVocabSession(host, {
-        maxDue: plan.maxDue, maxNew: plan.maxNew,
+        maxDue: plan.maxDue, maxNew: plan.maxNew, quickForms: !!plan.quickForms,
         onDone: () => { idx++; run(); },
         onExit: () => { location.hash = '#/'; renderTodayFresh(host); },
       });

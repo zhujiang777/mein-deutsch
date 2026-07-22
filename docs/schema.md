@@ -256,7 +256,7 @@
 - 名词的 `spoken`（朗读用）自动拼成 `art + de`（如 "der Kaffee"）；因此音频管线会收录带冠词形式。
 - `valence` 只做展示，无解析逻辑；写成便于记忆的一行即可（动词支配格、介词搭配等）。
 - **新增词只能追加到 `VOCAB` 数组最末尾**——`id` 按位置自动生成，中插会让后续所有词的 id 位移、破坏 SRS 存档。主题归属靠 `theme` 字段，与数组位置无关。
-- `forms`/`phrases` 的德语文本暂未进音频提取（`tools/extract_texts.mjs` 未扫这两个字段）；词卡渲染这两个字段上屏时需同步扩展提取逻辑并重跑 `gen_audio.py`。
+- `forms`/`phrases` 的德语文本已由 `tools/extract_texts.mjs` 提取；修改这些字段后需重跑 `gen_audio.py`。
 
 ---
 
@@ -305,9 +305,17 @@
 
   幂等：已存在的音频跳过，只补新增；同时重写 `data/audio-manifest.js`（勿手改）。
 - 需要发音的文本由 `tools/extract_texts.mjs` 统一提取，已覆盖：
-  发音/语法课例句、词汇（带冠词形式 + 例句）、阅读逐句 + 全文、
+  发音/语法课例句、词汇（带冠词形式 + 例句 + `phrases` + `forms`）、全局词典词头、阅读逐句 + 全文、
   课程步骤的 `example.de` / `audioText` / `answer` / `de`（speak·reproduce）/
   choice 正确项 / fill·translate 首个答案 / match 的 `de` /
   **scene·observe·roleplay 的 `lines[].de`**。
   新增题型若引入新的德语文本字段，需同步更新 `extract_texts.mjs` 再跑 `gen_audio.py`。
 - 自检：`node tools/extract_texts.mjs > /dev/null && echo OK` 应通过（数据文件语法正确）。
+
+---
+
+## 附录：全局词典与生词本
+
+- `data/dict-glosses.js` 是手写的补充释义，格式为 `export const DICT_GLOSSES = { 'Bahn': { zh: '铁路；火车/轨道交通', pl: 'Bahnen' } }`；值也可以是简短中文字符串。键必须保持 `tools/wortliste.json` 的 lemma 原样。
+- `data/dict-core.js` 是生成文件，不能手改。修改 `data/vocab.js` 的 `de`/`pl`/`forms`，修改 `data/dict-glosses.js`，或更新 `tools/wortliste.json` 后，都必须运行 `node tools/gen_dict.mjs`。脚本会打印缺释义和一形多解的 forms 冲突，缺释义阶段也会生成可运行的核心词典。
+- 用户从全局查词加入的词保存在本地 `md.wordbook.v1`，id 为 `d:<lemma>`，与课程词 `w*` 和错题 `m:*` 不冲突；其 SRS 状态与词条一起在导出/Gist 同步载荷中保存。

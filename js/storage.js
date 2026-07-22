@@ -8,6 +8,7 @@ const KEYS = {
   lessons: 'md.lessons.v1',     // 课程状态 { lessonId: {step, done, score, t} }
   videos: 'md.videos.v1',       // 视频观看 { videoId: {pct, done, t} }
   daily: 'md.daily.v1',         // 每日日志 { 'YYYY-MM-DD': {items, ok, lessons, minutes} }
+  wordbook: 'md.wordbook.v1',   // 全局查词加入的自定义词条（d:lemma 命名空间）
   meta: 'md.meta.v1',           // { schemaVersion, lastSync }
 };
 
@@ -64,6 +65,31 @@ export function setSetting(key, value) {
 /* ---- SRS（词卡 + 错题共用） ---- */
 export function loadSrs() { return load(KEYS.srs, {}); }
 export function saveSrs(state) { save(KEYS.srs, state); }
+
+/* ---- 生词本 ---- */
+export function getWordbook() { return load(KEYS.wordbook, {}); }
+export function addWordEntry(entry) {
+  const lemma = String(entry?.lemma || '').trim();
+  if (!lemma) return null;
+  const id = `d:${lemma}`;
+  const all = getWordbook();
+  all[id] = {
+    lemma, zh: entry.zh || '', art: entry.art || null, pl: entry.pl || null,
+    pos: entry.pos || '', sentence: entry.sentence || '', source: entry.source || '',
+    addedAt: all[id]?.addedAt || Date.now(),
+  };
+  save(KEYS.wordbook, all);
+  return id;
+}
+export function removeWordEntry(id) {
+  const all = getWordbook();
+  if (!all[id]) return false;
+  delete all[id];
+  save(KEYS.wordbook, all);
+  const srs = loadSrs();
+  if (srs[id]) { delete srs[id]; saveSrs(srs); }
+  return true;
+}
 
 /* ---- 技能掌握度 ---- */
 export function loadSkills() { return load(KEYS.skills, {}); }

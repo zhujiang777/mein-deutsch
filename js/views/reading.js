@@ -2,6 +2,7 @@
 import { READINGS } from '../../data/readings.js';
 import { el, esc, audioBtn, micBtn, renderQuiz, toast } from '../ui.js';
 import { isDone, markDone } from '../storage.js';
+import { enableGloss } from '../dict.js';
 
 export function renderReading(host, id) {
   if (id) return renderText(host, id);
@@ -30,18 +31,6 @@ export function renderReading(host, id) {
   }
 }
 
-let glossTimer = null;
-function showGloss(word, entry) {
-  document.querySelector('.gloss-pop')?.remove();
-  clearTimeout(glossTimer);
-  const html = entry
-    ? `<b>${esc(entry.base || word)}</b>　${esc(entry.zh)}`
-    : `<b>${esc(word)}</b>　（本文词表未收录）`;
-  const pop = el(`<div class="gloss-pop">${html}</div>`);
-  document.body.appendChild(pop);
-  glossTimer = setTimeout(() => pop.remove(), 4000);
-}
-
 function renderText(host, id) {
   const r = READINGS.find(x => x.id === id);
   if (!r) { location.hash = '#/reading'; return; }
@@ -56,16 +45,10 @@ function renderText(host, id) {
 
   r.sentences.forEach((s, si) => {
     const sent = el(`<span class="rt-sent"></span>`);
-    // 分词渲染：每个词可点击查义
+    // 保留分词/高亮；实际取词由 dict.js caret API 在父容器事件委托完成。
     s.de.split(/(\s+)/).forEach(part => {
       if (/^\s+$/.test(part)) { sent.appendChild(document.createTextNode(part)); return; }
-      const clean = part.replace(/[.,!?;:"„“”'’()]/g, '').toLowerCase();
       const tok = el(`<span class="tok de">${esc(part)}</span>`);
-      tok.addEventListener('click', () => {
-        document.querySelectorAll('.tok-hl').forEach(t => t.classList.remove('tok-hl'));
-        tok.classList.add('tok-hl');
-        showGloss(part.replace(/[.,!?;:"„“”'’()]/g, ''), r.glossary?.[clean]);
-      });
       sent.appendChild(tok);
     });
     const btns = el(`<span style="white-space:nowrap"> </span>`);
@@ -82,6 +65,13 @@ function renderText(host, id) {
   });
   card.appendChild(textWrap);
   host.appendChild(card);
+  textWrap.addEventListener('click', (event) => {
+    const tok = event.target.closest('.tok');
+    if (!tok) return;
+    textWrap.querySelectorAll('.tok-hl').forEach(t => t.classList.remove('tok-hl'));
+    tok.classList.add('tok-hl');
+  });
+  enableGloss(textWrap, { glossary: r.glossary || {}, sentenceSelector: '.rt-sent', source: r.id });
 
   // 精读：翻译开关 + 全文朗读；泛读：只有全文朗读
   const controls = el(`<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>`);

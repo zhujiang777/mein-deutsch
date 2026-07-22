@@ -13,10 +13,12 @@ import { migrate } from './storage.js';
 import { initSync } from './sync.js';
 import { stopSpeak } from './speech.js';
 import { el, toast } from './ui.js';
+import { clearDictPop, enableGloss } from './dict.js';
 
 migrate();
 
 const app = document.getElementById('app');
+enableGloss(app, { sentenceSelector: '.rt-sent,.wc-sentence,.phrase-row,.ex-prompt,.step-p,p' });
 
 const routes = [
   { pattern: /^\/?$/, tab: 'today', render: (h) => renderToday(h) },
@@ -41,7 +43,7 @@ function route() {
   document.body.classList.remove('immersive');
   const path = location.hash.replace(/^#/, '') || '/';
   app.innerHTML = '';
-  document.querySelector('.gloss-pop')?.remove();
+  clearDictPop();
   for (const r of routes) {
     const m = path.match(r.pattern);
     if (m) {
