@@ -2616,4 +2616,71 @@ export const VOCAB = [
     sentences: [{ de: 'Passt Ihnen Montag um neun Uhr?', zh: '周一九点您方便吗？', source: 'lesson:sd-l2' }],
     mnemonic: 'passen 用第三格：Passt dir das?（合适吗）；约时间常用。别和 passieren(发生) 混。',
   }),
+  /* ⏰ U8 时间与可分动词 新词 */
+  w('Mai', 'der', null, '五月', 'Ich habe am 3. Mai Geburtstag.', '我5月3日过生日。', 'zahl', {
+    noPl: true,
+    sentences: [{ de: 'Ich habe am 3. Mai Geburtstag.', zh: '我5月3日过生日。', source: 'lesson:u8l3' }],
+    phrases: [{ de: 'am 3. Mai', zh: '在5月3日' }],
+    mnemonic: 'Mai = 五月，和英语 May 同源；月份都是阳性 der：im Mai(在五月)、am 3. Mai(5月3日)。',
+  }),
+  w('Geburtstag', 'der', 'Geburtstage', '生日', 'Wann hast du Geburtstag?', '你什么时候过生日？', 'person', {
+    sentences: [{ de: 'Wann hast du Geburtstag?', zh: '你什么时候过生日？', source: 'lesson:u8l3' }],
+    phrases: [{ de: 'Geburtstag haben', zh: '过生日' }],
+    mnemonic: 'Geburt(出生)+Tag(日) → 生日；固定搭配 Geburtstag haben：Ich habe am 3. Mai Geburtstag.',
+  }),
+  w('zuerst', null, null, '首先；最先', 'Zuerst stehe ich auf.', '我先起床。', 'zahl', {
+    pos: 'adv.',
+    sentences: [{ de: 'Zuerst stehe ich auf, dann esse ich Frühstück.', zh: '我先起床，然后吃早餐。', source: 'lesson:u8l4' }],
+    mnemonic: 'zu+erst(最早的) → 首先；讲一天顺序的第一步。放句首触发 V2：Zuerst stehe ich auf.',
+  }),
+  w('dann', null, null, '然后；那么', 'Dann esse ich Frühstück.', '然后我吃早餐。', 'zahl', {
+    pos: 'adv.',
+    sentences: [{ de: 'Zuerst stehe ich auf, dann esse ich Frühstück.', zh: '我先起床，然后吃早餐。', source: 'lesson:u8l4' }],
+    mnemonic: 'dann = 然后；也表"那么"(Gut, dann trinken wir Kaffee.)。放句首触发 V2：Dann esse ich...。',
+  }),
+  w('danach', null, null, '之后；随后', 'Danach kaufe ich ein.', '之后我去购物。', 'zahl', {
+    pos: 'adv.',
+    sentences: [{ de: 'Danach kaufe ich ein.', zh: '之后我去购物。', source: 'lesson:u8l4' }],
+    mnemonic: 'da(那)+nach(之后) → 在那之后；比 dann 更强调"紧接着上一件事之后"。',
+  }),
+  w('später', null, null, '晚点；后来', 'Später rufe ich meine Freundin an.', '晚点我给我朋友打电话。', 'zahl', {
+    pos: 'adv.',
+    sentences: [{ de: 'Später rufe ich meine Freundin an.', zh: '晚点我给我朋友打电话。', source: 'lesson:u8l4' }],
+    mnemonic: 'spät(晚)的比较级 später = 更晚/晚点；也用于告别 Bis später!(回头见)。',
+  }),
+  /* 🤝 U11 第三格动词 新词 */
+  w('gehören', null, null, '属于（+第三格）', 'Das Buch gehört meinem Bruder.', '这本书是我哥哥的。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'gehöre', du: 'gehörst', er: 'gehört', wir: 'gehören', ihr: 'gehört', sie: 'gehören', perfekt: 'hat gehört' },
+    valence: 'gehören + Dativ：etwas gehört jemandem（某物属于某人）',
+    sentences: [{ de: 'Das Buch gehört meinem Bruder.', zh: '这本书是我哥哥的。', source: 'lesson:u11l1' }],
+    mnemonic: 'gehören 用第三格：Das gehört mir.(这是我的)；问归属 Wessen…? 常用它回答。',
+  }),
+  w('danken', null, null, '感谢（+第三格）', 'Ich danke dir sehr.', '我非常感谢你。', 'gruss', {
+    pos: 'v.',
+    forms: { ich: 'danke', du: 'dankst', er: 'dankt', wir: 'danken', ihr: 'dankt', sie: 'danken', perfekt: 'hat gedankt' },
+    valence: 'danken + Dativ：jemandem danken（感谢某人）',
+    sentences: [{ de: 'Ich danke dir sehr.', zh: '我非常感谢你。', source: 'lesson:u11l1' }],
+    mnemonic: 'danken 用第三格：Ich danke dir/Ihnen.；与感叹词 danke(w008) 同源，正式感谢用 danken。',
+  }),
+  w('schmecken', null, null, '（食物）合口味；好吃（+第三格）', 'Der Kaffee schmeckt mir gut.', '这咖啡很合我口味。', 'essen', {
+    pos: 'v.',
+    forms: { ich: 'schmecke', du: 'schmeckst', er: 'schmeckt', wir: 'schmecken', ihr: 'schmeckt', sie: 'schmecken', perfekt: 'hat geschmeckt' },
+    valence: 'schmecken + Dativ：etwas schmeckt jemandem（某物合某人口味）',
+    sentences: [{ de: 'Der Kaffee schmeckt mir gut.', zh: '这咖啡很合我口味。', source: 'lesson:u11l1' }],
+    mnemonic: 'schmecken 用第三格：Schmeckt dir das?(合你口味吗)；常用第三人称 es schmeckt mir。',
+  }),
+  /* ⏳🏁 U12-U13 收官新词 */
+  w('bleiben', null, null, '停留；保持不变', 'Ich bin nicht lange geblieben.', '我没待很久。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'bleibe', du: 'bleibst', er: 'bleibt', wir: 'bleiben', ihr: 'bleibt', sie: 'bleiben', perfekt: 'ist geblieben' },
+    sentences: [{ de: 'Ich bin nicht lange geblieben.', zh: '我没待很久。', source: 'lesson:u12l3' }],
+    mnemonic: 'bleiben 完成时用 sein：ist geblieben；表"状态延续"、不带宾语，所以助动词用 sein 不用 haben。',
+  }),
+  w('spät', null, null, '晚的；迟的', 'Es ist schon spät.', '已经很晚了。', 'zahl', {
+    pos: 'adj.',
+    sentences: [{ de: 'Es ist schon spät.', zh: '已经很晚了。', source: 'lesson:u13l2' }],
+    phrases: [{ de: 'Wie spät ist es?', zh: '现在几点？' }],
+    mnemonic: 'spät = 晚；问时间 Wie spät ist es?(现在几点)。比较级 später(晚点，w314) 已学。',
+  }),
 ];

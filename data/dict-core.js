@@ -940,7 +940,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "留下；保持"
+      "zh": "停留；保持不变"
     }
   ],
   "Bleistift": [
@@ -1163,14 +1163,14 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "感谢"
+      "zh": "感谢（+第三格）"
     }
   ],
   "dann": [
     {
       "pos": "adv.",
       "art": null,
-      "zh": "然后；那时"
+      "zh": "然后；那么"
     }
   ],
   "das": [
@@ -2146,6 +2146,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Geburtstage",
       "zh": "生日"
     }
   ],
@@ -2174,7 +2175,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "属于"
+      "zh": "属于（+第三格）"
     }
   ],
   "gelb": [
@@ -4401,7 +4402,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "尝起来；品尝"
+      "zh": "（食物）合口味；好吃（+第三格）"
     }
   ],
   "schnell": [
@@ -4780,9 +4781,9 @@ export const DICT_ENTRIES = {
   ],
   "später": [
     {
-      "pos": "adj.",
+      "pos": "adv.",
       "art": null,
-      "zh": "稍后；较晚的"
+      "zh": "晚点；后来"
     }
   ],
   "Stadt": [
@@ -6448,6 +6449,20 @@ export const DICT_ENTRIES = {
       "zh": "（时间/尺寸）合适"
     }
   ],
+  "zuerst": [
+    {
+      "pos": "adv.",
+      "art": null,
+      "zh": "首先；最先"
+    }
+  ],
+  "danach": [
+    {
+      "pos": "adv.",
+      "art": null,
+      "zh": "之后；随后"
+    }
+  ],
   "klasse": [
     {
       "pos": "adj.",
@@ -7136,6 +7151,9 @@ export const DICT_FORMS = {
   "bleiben": [
     "bleiben"
   ],
+  "ist geblieben": [
+    "bleiben"
+  ],
   "brauche": [
     "brauchen"
   ],
@@ -7253,6 +7271,9 @@ export const DICT_FORMS = {
     "danken"
   ],
   "danken": [
+    "danken"
+  ],
+  "hat gedankt": [
     "danken"
   ],
   "deutsche": [
@@ -7777,6 +7798,9 @@ export const DICT_FORMS = {
   "geborenem": [
     "geboren"
   ],
+  "geburtstage": [
+    "Geburtstag"
+  ],
   "gefalle": [
     "gefallen"
   ],
@@ -7821,6 +7845,10 @@ export const DICT_FORMS = {
   ],
   "gehören": [
     "gehören"
+  ],
+  "hat gehört": [
+    "gehören",
+    "hören"
   ],
   "gelbe": [
     "gelb"
@@ -8212,9 +8240,6 @@ export const DICT_FORMS = {
     "hören"
   ],
   "hören": [
-    "hören"
-  ],
-  "hat gehört": [
     "hören"
   ],
   "internationale": [
@@ -9228,6 +9253,9 @@ export const DICT_FORMS = {
   "schmecken": [
     "schmecken"
   ],
+  "hat geschmeckt": [
+    "schmecken"
+  ],
   "schnelle": [
     "schnell"
   ],
@@ -9485,21 +9513,6 @@ export const DICT_FORMS = {
   ],
   "spätem": [
     "spät"
-  ],
-  "spätere": [
-    "später"
-  ],
-  "späteren": [
-    "später"
-  ],
-  "späterer": [
-    "später"
-  ],
-  "späteres": [
-    "später"
-  ],
-  "späterem": [
-    "später"
   ],
   "städte": [
     "Stadt"
@@ -12634,7 +12647,7 @@ export const DICT_POS = {
     "adj."
   ],
   "später": [
-    "adj."
+    "adv."
   ],
   "Stadt": [
     "n."
@@ -13326,6 +13339,12 @@ export const DICT_POS = {
   ],
   "passen": [
     "v."
+  ],
+  "zuerst": [
+    "adv."
+  ],
+  "danach": [
+    "adv."
   ],
   "klasse": [
     "adj."
