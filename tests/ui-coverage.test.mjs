@@ -55,3 +55,11 @@ test('assemble exercises provide pointer drag and keyboard reorder', () => {
 test('vocabulary detail has a stable deep-link route', () => {
   assert.match(app, /\/vocab\\\/word\\\/\(\.\+\)/);
 });
+
+test('mobile routing has no fixed exit wait and uses lazy page modules', () => {
+  assert.doesNotMatch(app, /setTimeout\([\s\S]{0,180}120\)/);
+  assert.match(app, /load:\s*\(\)\s*=>\s*import\('\.\/views\/path\.js/);
+  assert.match(css, /max-width:\s*700px\)\s*and\s*\(pointer:\s*coarse/);
+  assert.match(css, /--glass-blur:\s*18px/);
+  assert.match(css, /content-visibility:\s*auto/);
+});

@@ -1,10 +1,29 @@
 // 语音播放：预生成音频优先（真人级德语 MP3），设备 TTS 仅作德语语音回退。
 // 跟读评分已移至 pronunciation-assessment.js，不再依赖浏览器 SpeechRecognition。
 import { getSettings } from './storage.js';
-import { AUDIO_MANIFEST } from '../data/audio-manifest.js';
 
 /* ================= 播放：预生成音频 ================= */
 let player = null; // 共享播放器，保证同时只放一个
+let audioManifest = null;
+let audioManifestPromise = null;
+let speakRequest = 0;
+
+function loadAudioManifest() {
+  if (audioManifest) return Promise.resolve(audioManifest);
+  if (!audioManifestPromise) {
+    audioManifestPromise = import('../data/audio-manifest.js')
+      .then(module => (audioManifest = module.AUDIO_MANIFEST))
+      .catch(error => {
+        audioManifestPromise = null;
+        throw error;
+      });
+  }
+  return audioManifestPromise;
+}
+
+export function preloadSpeechAssets() {
+  return loadAudioManifest().then(() => true).catch(() => false);
+}
 
 function playFile(file, { slow = false, onend } = {}) {
   stopSpeak();
@@ -68,12 +87,19 @@ function notifyNoGerman() {
 /* ================= 统一入口 ================= */
 export function speak(text, opts = {}) {
   const key = (text || '').trim();
-  const file = AUDIO_MANIFEST[key];
-  if (file) return playFile(file, opts);
-  return speakTTS(key, opts); // 内容库外的动态文本才走 TTS
+  const request = ++speakRequest;
+  return loadAudioManifest().then(manifest => {
+    if (request !== speakRequest) return;
+    const file = manifest[key];
+    if (file) return playFile(file, opts);
+    return speakTTS(key, opts); // 内容库外的动态文本才走 TTS
+  }).catch(() => {
+    if (request === speakRequest) speakTTS(key, opts);
+  });
 }
 
 export function stopSpeak() {
+  speakRequest++;
   if (player) {
     player.onended = null;
     player.pause();

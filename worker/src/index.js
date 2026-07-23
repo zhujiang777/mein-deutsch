@@ -1,6 +1,7 @@
 const DEFAULT_ORIGIN = 'https://zhujiang777.github.io';
 const DEFAULT_MAX_AUDIO_BYTES = 1024 * 1024;
 const MAX_REFERENCE_CHARS = 500;
+const DEFAULT_AZURE_REQUEST_TIMEOUT_MS = 9000;
 
 class HttpError extends Error {
   constructor(status, code, message) {
@@ -197,6 +198,12 @@ async function callAzure(audioBuffer, referenceText, env) {
   }
   const url = `https://${region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=de-DE&format=detailed&profanity=raw`;
   let res;
+  const ctl = new AbortController();
+  const configuredTimeout = Number(env.AZURE_REQUEST_TIMEOUT_MS);
+  const timeoutMs = Number.isFinite(configuredTimeout) && configuredTimeout > 0
+    ? configuredTimeout
+    : DEFAULT_AZURE_REQUEST_TIMEOUT_MS;
+  const timer = setTimeout(() => ctl.abort(), timeoutMs);
   try {
     res = await fetch(url, {
       method: 'POST',
@@ -207,9 +214,15 @@ async function callAzure(audioBuffer, referenceText, env) {
         'Accept': 'application/json',
       },
       body: audioBuffer,
+      signal: ctl.signal,
     });
-  } catch {
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      throw new HttpError(504, 'provider-timeout', 'Azure 评分响应超时');
+    }
     throw new HttpError(502, 'provider-network', '暂时无法连接 Azure Speech');
+  } finally {
+    clearTimeout(timer);
   }
 
   if (res.status === 429) {

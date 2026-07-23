@@ -1,5 +1,5 @@
 // 课程路径：三泳道（语法主线 / 发音入门 / 场景口语），各自顺序解锁 + 掌握度 + 视频门槛
-import { COURSE } from '../../data/course.js';
+import { COURSE_CATALOG } from '../../data/content-index.js';
 import { el, esc, icon, motionIn, videoCard, toast } from '../ui.js';
 import { allLessonStates, setLessonState, getVideoState } from '../storage.js';
 import { lessonMastery } from '../mastery.js';
@@ -37,7 +37,7 @@ export function renderPath(host) {
   function renderPane() {
     pane.innerHTML = '';
     const states = allLessonStates();
-    const units = COURSE.filter(u => (u.track || 'grammar') === active);
+    const units = COURSE_CATALOG.filter(u => (u.track || 'grammar') === active);
     if (!units.length) {
       pane.appendChild(el(`<div class="empty-hint">这条线的课程还在制作中。</div>`));
       return;
@@ -72,7 +72,7 @@ export function renderPath(host) {
           <${cardTag} class="route-card" ${cardAttrs}>
           <div class="li-main">
             <div class="li-title">${esc(lesson.title)}</div>
-            <div class="li-sub">${done ? `已完成 · 正确率 ${st.score ?? '–'}%` : thisUnlocked ? (st?.step ? '继续上次进度' : `${lesson.steps.length} 步`) : '完成上一课后解锁'}
+            <div class="li-sub">${done ? `已完成 · 正确率 ${st.score ?? '–'}%` : thisUnlocked ? (st?.step ? '继续上次进度' : `${lesson.stepCount} 步`) : '完成上一课后解锁'}
               ${mastery > 0 ? ` · 掌握度 ${mastery}%` : ''}</div>
           </div>
           ${thisUnlocked || done ? `<span class="li-arrow">${icon('arrow')}</span>` : `<button class="skip-btn" title="跳过">已经会了</button>`}

@@ -1,14 +1,9 @@
 // 今日学习：一键串流 词卡复习 → 错题巩固 → 新微步课 → 今日视频 → 听写跟读
 import { el, esc, guideBear, icon, motionIn, videoCard, toast } from '../ui.js';
-import { COURSE, findLesson, nextLesson } from '../../data/course.js';
-import { READINGS } from '../../data/readings.js';
-import { VOCAB } from '../../data/vocab.js';
+import { COURSE_CATALOG, VOCAB_IDS, nextCatalogLesson } from '../../data/content-index.js';
 import { srsStats } from '../srs.js';
 import { dueMistakes, rateMistake, mistakeRef, recordAnswer } from '../mastery.js';
 import { allLessonStates, getVideoState, getDaily, getStreak, getWordbook, rewardSummary } from '../storage.js';
-import { runLesson } from './lesson.js';
-import { runVocabSession } from './vocab.js';
-import { renderExercise } from '../exercises.js?v=2';
 import { stopSpeak } from '../speech.js';
 
 /* 三档时长的队列配置 */
@@ -17,14 +12,36 @@ const PLANS = {
   15: { label: '15 分钟 · 标准', maxDue: 20, maxNew: 10, mistakes: 5, lesson: true, video: true, dictation: 2 },
   30: { label: '30 分钟 · 充实', maxDue: 40, maxNew: 15, mistakes: 8, lesson: true, video: true, dictation: 3 },
 };
-const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB.map(w => w.id)];
+const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB_IDS];
+let todayRuntimePromise;
+
+function loadTodayRuntime() {
+  if (!todayRuntimePromise) {
+    todayRuntimePromise = Promise.all([
+      import('../../data/course.js'),
+      import('../../data/readings.js'),
+      import('./lesson.js'),
+      import('./vocab.js'),
+      import('../exercises.js?v=3'),
+    ]).then(([course, readings, lessonView, vocabView, exercises]) => ({
+      COURSE: course.COURSE,
+      READINGS: readings.READINGS,
+      findLesson: course.findLesson,
+      nextLesson: course.nextLesson,
+      runLesson: lessonView.runLesson,
+      runVocabSession: vocabView.runVocabSession,
+      renderExercise: exercises.renderExercise,
+    }));
+  }
+  return todayRuntimePromise;
+}
 
 export function renderToday(host) {
   const stats = srsStats(vocabIds());
   const mistakes = dueMistakes(99).length;
   const daily = getDaily();
   const streak = getStreak();
-  const next = nextLesson(allLessonStates());
+  const next = nextCatalogLesson(allLessonStates());
   const hour = new Date().getHours();
   const greet = hour < 11 ? 'Guten Morgen!' : hour < 18 ? 'Guten Tag!' : 'Guten Abend!';
   const reward = rewardSummary();
@@ -69,7 +86,18 @@ export function renderToday(host) {
     });
     timeRow.appendChild(b);
   });
-  startBtn.addEventListener('click', () => startFlow(host, selectedMinutes));
+  startBtn.addEventListener('click', async () => {
+    startBtn.disabled = true;
+    startBtn.textContent = '正在准备今日路线…';
+    try {
+      await startFlow(host, selectedMinutes);
+    } catch (error) {
+      startBtn.disabled = false;
+      startBtn.innerHTML = `继续旅程 ${icon('arrow')}`;
+      toast('内容加载失败，请检查网络后重试');
+      console.error(error);
+    }
+  });
   host.appendChild(launcher);
 
   host.appendChild(el(`<div class="section-label">短途练习</div>`));
@@ -86,7 +114,8 @@ export function renderToday(host) {
 }
 
 /* ---- 串流执行 ---- */
-function startFlow(host, minutes) {
+async function startFlow(host, minutes) {
+  const runtime = await loadTodayRuntime();
   const plan = PLANS[minutes];
   const segments = [];
 
@@ -96,7 +125,7 @@ function startFlow(host, minutes) {
   }
   const mistakes = dueMistakes(plan.mistakes);
   if (mistakes.length) segments.push({ kind: 'mistakes', title: '错题巩固', ids: mistakes });
-  const next = plan.lesson ? nextLesson(allLessonStates()) : null;
+  const next = plan.lesson ? runtime.nextLesson(allLessonStates()) : null;
   if (next) segments.push({ kind: 'lesson', title: `新课：${next.lesson.title}`, lessonId: next.lesson.id });
   if (plan.video) {
     const pending = pendingVideo();
@@ -132,19 +161,19 @@ function startFlow(host, minutes) {
     const header = el(`<div class="flow-header">第 ${idx + 1}/${segments.length} 段 · ${esc(seg.title)}</div>`);
 
     if (seg.kind === 'vocab') {
-      runVocabSession(host, {
+      runtime.runVocabSession(host, {
         maxDue: plan.maxDue, maxNew: plan.maxNew, quickForms: !!plan.quickForms,
         onDone: () => { idx++; run(); },
         onExit: () => { location.hash = '#/'; renderTodayFresh(host); },
       });
     } else if (seg.kind === 'lesson') {
-      runLesson(host, seg.lessonId, {
+      runtime.runLesson(host, seg.lessonId, {
         onComplete: () => { idx++; run(); },
         onExit: () => { renderTodayFresh(host); },
       });
     } else if (seg.kind === 'mistakes') {
       host.appendChild(header);
-      runMistakeDrill(host, seg.ids, () => { idx++; run(); });
+      runMistakeDrill(host, seg.ids, () => { idx++; run(); }, runtime);
     } else if (seg.kind === 'video') {
       host.appendChild(header);
       const wrap = el(`<div style="margin-top:10px"></div>`);
@@ -155,7 +184,7 @@ function startFlow(host, minutes) {
       host.appendChild(btn);
     } else if (seg.kind === 'dictation') {
       host.appendChild(header);
-      runDictationSet(host, seg.count, () => { idx++; run(); });
+      runDictationSet(host, seg.count, () => { idx++; run(); }, runtime);
     }
   };
   run();
@@ -168,14 +197,14 @@ function renderTodayFresh(host) {
 }
 
 function pendingVideo() {
-  for (const unit of COURSE)
+  for (const unit of COURSE_CATALOG)
     for (const v of unit.videos || [])
       if (!getVideoState(v.yt).done) return v;
   return null;
 }
 
 /* 错题巩固：从课程步骤引用还原题目 */
-function runMistakeDrill(host, ids, onDone) {
+function runMistakeDrill(host, ids, onDone, runtime) {
   document.body.classList.add('immersive');
   const stage = el(`<div class="lesson-stage" style="margin-top:10px"></div>`);
   const bottom = el(`<div class="lesson-bottom"></div>`);
@@ -188,10 +217,10 @@ function runMistakeDrill(host, ids, onDone) {
     if (i >= ids.length) { document.body.classList.remove('immersive'); onDone(); return; }
     const id = ids[i];
     const { lessonId, stepIdx } = mistakeRef(id);
-    const lesson = findLesson(lessonId);
+    const lesson = runtime.findLesson(lessonId);
     const step = lesson?.steps[stepIdx];
     if (!step) { rateMistake(id, true); i++; show(); return; } // 内容已变更，出池
-    renderExercise(stage, step, {
+    runtime.renderExercise(stage, step, {
       onSubmit: (correct, correctText) => {
         if (correct !== null) {
           rateMistake(id, correct);
@@ -213,10 +242,11 @@ function runMistakeDrill(host, ids, onDone) {
 }
 
 /* 句子精听：从阅读文章随机抽句做听写 */
-export function runDictationSet(host, count, onDone) {
+export async function runDictationSet(host, count, onDone, suppliedRuntime = null) {
+  const runtime = suppliedRuntime || await loadTodayRuntime();
   document.body.classList.add('immersive');
   const pool = [];
-  READINGS.forEach(r => r.sentences.forEach(s => {
+  runtime.READINGS.forEach(r => r.sentences.forEach(s => {
     const words = s.de.split(/\s+/).length;
     if (words >= 3 && words <= 8) pool.push(s.de);
   }));
@@ -233,7 +263,7 @@ export function runDictationSet(host, count, onDone) {
   const show = () => {
     stage.innerHTML = ''; bottom.innerHTML = '';
     if (i >= picks.length) { document.body.classList.remove('immersive'); onDone(); return; }
-    renderExercise(stage, { type: 'dictation', audioText: picks[i], distractors: [] }, {
+    runtime.renderExercise(stage, { type: 'dictation', audioText: picks[i], distractors: [] }, {
       onSubmit: (correct, correctText) => {
         const fb = el(`<div class="feedback ${correct === false ? 'bad' : 'good'}">
           <div class="feedback-text"><b>${correct === false ? '✗ 对照一下' : '✓ 听得很准！'}</b>

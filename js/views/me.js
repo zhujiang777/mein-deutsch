@@ -2,15 +2,14 @@
 import { el, guideBear, icon, motionIn } from '../ui.js';
 import { getDaily, getStreak, todayKey, allLessonStates, rewardSummary } from '../storage.js';
 import { srsStats } from '../srs.js';
-import { VOCAB } from '../../data/vocab.js';
-import { COURSE } from '../../data/course.js';
+import { COURSE_CATALOG, VOCAB_IDS } from '../../data/content-index.js';
 import { syncConfigured } from '../sync.js';
 
 export function renderMe(host) {
-  const stats = srsStats(VOCAB.map(w => w.id));
+  const stats = srsStats(VOCAB_IDS);
   const streak = getStreak();
   const lessonStates = allLessonStates();
-  const totalLessons = COURSE.reduce((n, u) => n + u.lessons.length, 0);
+  const totalLessons = COURSE_CATALOG.reduce((n, u) => n + u.lessons.length, 0);
   const doneLessons = Object.values(lessonStates).filter(s => s.done).length;
   const reward = rewardSummary();
 

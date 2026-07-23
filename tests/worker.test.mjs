@@ -192,3 +192,27 @@ test('maps Azure free-tier throttling to a stable 429 response', async () => {
     globalThis.fetch = originalFetch;
   }
 });
+
+test('aborts a slow Azure REST request and returns provider-timeout', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (_url, options) => new Promise((_resolve, reject) => {
+    options.signal.addEventListener('abort', () => {
+      const error = new Error('aborted');
+      error.name = 'AbortError';
+      reject(error);
+    }, { once: true });
+  });
+  try {
+    const form = new FormData();
+    form.append('audio', new Blob([encodePcm16Wav(new Float32Array(160))], { type: 'audio/wav' }), 'speech.wav');
+    form.append('referenceText', 'Hallo!');
+    form.append('locale', 'de-DE');
+    const res = await worker.fetch(new Request('https://worker.test/v1/pronunciation/assess', {
+      method: 'POST', headers: authHeaders(), body: form,
+    }), { ...env, AZURE_REQUEST_TIMEOUT_MS: '5' });
+    assert.equal(res.status, 504);
+    assert.equal((await res.json()).error.code, 'provider-timeout');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

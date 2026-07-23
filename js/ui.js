@@ -60,7 +60,7 @@ export function motionIn(node, { x = 0, y = 12, delay = 0 } = {}) {
   node.animate([
     { opacity: 0, transform: `translate3d(${x}px, ${y}px, 0) scale(.985)` },
     { opacity: 1, transform: 'translate3d(0, 0, 0) scale(1)' },
-  ], { duration: 260, delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
+  ], { duration: 180, delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
 }
 
 export function setProgress(node, value) {
@@ -207,9 +207,23 @@ export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
     }
     const run = ++assessmentRun;
     phase = 'judging';
-    recogHost.innerHTML = `<div class="sp-judging">正在分析音素、流利度和完整度…</div>`;
+    const stageText = {
+      rest: '正在提交评分…',
+      slow: '服务器响应较慢，正在准备备用评分…',
+      fallback: '服务器响应较慢，正在切换备用评分…',
+      sdk: '正在使用备用评分通道…',
+    };
+    recogHost.innerHTML = `<div class="sp-judging">${stageText.rest}</div>`;
     try {
-      const result = await assessPronunciation({ audioBlob: assessmentBlob, referenceText: targetText });
+      const result = await assessPronunciation({
+        audioBlob: assessmentBlob,
+        referenceText: targetText,
+        onStage: stage => {
+          if (run !== assessmentRun) return;
+          const judging = recogHost.querySelector('.sp-judging');
+          if (judging) judging.textContent = stageText[stage] || stageText.rest;
+        },
+      });
       if (run === assessmentRun) renderAssessment(result);
     } catch (err) {
       if (run === assessmentRun) renderAssessmentError(err);
