@@ -61,7 +61,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "接；取回"
+      "zh": "取（东西）；接（人）"
     }
   ],
   "Absender": [
@@ -1503,7 +1503,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "邀请；装入"
+      "zh": "邀请（也含请客的意思）"
     }
   ],
   "Einladung": [
@@ -1821,7 +1821,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "庆祝；过节"
+      "zh": "庆祝；办派对"
     }
   ],
   "Feiertag": [
@@ -1965,7 +1965,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adj.",
       "art": null,
-      "zh": "空闲的；免费的"
+      "zh": "空闲的；有空位的"
     }
   ],
   "Freitag": [
@@ -3002,7 +3002,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "认识；了解"
+      "zh": "认识（新朋友）；结识"
     }
   ],
   "Kilo": [
@@ -4006,7 +4006,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "聚会；派对"
+      "pl": "Partys",
+      "zh": "派对；聚会"
     }
   ],
   "Pass": [
@@ -4041,7 +4042,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "地方；广场；座位"
+      "pl": "Plätze",
+      "zh": "位置；座位；广场"
     }
   ],
   "Polizei": [
@@ -4118,7 +4120,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "考试；检查"
+      "pl": "Prüfungen",
+      "zh": "考试"
     }
   ],
   "pünktlich": [
@@ -5031,7 +5034,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "遇见；碰面"
+      "zh": "见面；碰到"
     }
   ],
   "Treppe": [
@@ -6463,6 +6466,188 @@ export const DICT_ENTRIES = {
       "zh": "之后；随后"
     }
   ],
+  "Aufenthaltstitel": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Aufenthaltstitel",
+      "zh": "居留许可（卡）"
+    }
+  ],
+  "beantragen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "申请（正式）"
+    }
+  ],
+  "Ausländerbehörde": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Ausländerbehörden",
+      "zh": "外国人管理局"
+    }
+  ],
+  "Versicherungsbescheinigung": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Versicherungsbescheinigungen",
+      "zh": "保险证明"
+    }
+  ],
+  "Passfoto": [
+    {
+      "pos": "n.",
+      "art": "das",
+      "pl": "Passfotos",
+      "zh": "证件照"
+    }
+  ],
+  "Immatrikulationsbescheinigung": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Immatrikulationsbescheinigungen",
+      "zh": "在读证明（入学证明）"
+    }
+  ],
+  "Fingerabdruck": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Fingerabdrücke",
+      "zh": "指纹"
+    }
+  ],
+  "Vorlesung": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Vorlesungen",
+      "zh": "大课；讲座课"
+    }
+  ],
+  "Seminar": [
+    {
+      "pos": "n.",
+      "art": "das",
+      "pl": "Seminare",
+      "zh": "研讨课；小班课"
+    }
+  ],
+  "Koordinator": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Koordinatoren",
+      "zh": "（课程/项目）协调员"
+    }
+  ],
+  "wählen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "选择"
+    }
+  ],
+  "Bibliothek": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Bibliotheken",
+      "zh": "图书馆"
+    }
+  ],
+  "ausleihen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "借出；借入（可分）"
+    }
+  ],
+  "zurückgeben": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "归还（可分）"
+    }
+  ],
+  "behalten": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "留着；保留"
+    }
+  ],
+  "bestehen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "通过（考试）"
+    }
+  ],
+  "durchfallen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "没通过（考试）；落榜"
+    }
+  ],
+  "Wörterbuch": [
+    {
+      "pos": "n.",
+      "art": "das",
+      "pl": "Wörterbücher",
+      "zh": "词典"
+    }
+  ],
+  "Lust": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "zh": "兴致；想做某事的心情"
+    }
+  ],
+  "Mensa": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Mensen",
+      "zh": "（大学）食堂"
+    }
+  ],
+  "Döner": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Döner",
+      "zh": "德式土耳其烤肉卷"
+    }
+  ],
+  "WG": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "WGs",
+      "zh": "合租公寓（Wohngemeinschaft 的缩写）"
+    }
+  ],
+  "setzen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "（反身 sich setzen）坐下"
+    }
+  ],
+  "vorhaben": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "打算；有安排"
+    }
+  ],
   "klasse": [
     {
       "pos": "adj.",
@@ -6512,16 +6697,19 @@ export const DICT_FORMS = {
   "abgeben": [
     "abgeben"
   ],
-  "abhole": [
+  "hole ab": [
     "abholen"
   ],
-  "abholst": [
+  "holst ab": [
     "abholen"
   ],
-  "abholt": [
+  "holt ab": [
     "abholen"
   ],
-  "abholen": [
+  "holen ab": [
+    "abholen"
+  ],
+  "hat abgeholt": [
     "abholen"
   ],
   "adressen": [
@@ -6938,6 +7126,9 @@ export const DICT_FORMS = {
   "beginnen": [
     "beginnen"
   ],
+  "hat begonnen": [
+    "beginnen"
+  ],
   "bekannte": [
     "bekannt"
   ],
@@ -6975,6 +7166,9 @@ export const DICT_FORMS = {
     "benutzen"
   ],
   "benutzen": [
+    "benutzen"
+  ],
+  "hat benutzt": [
     "benutzen"
   ],
   "berufe": [
@@ -7417,6 +7611,9 @@ export const DICT_FORMS = {
   "ladet ein": [
     "einladen"
   ],
+  "hat eingeladen": [
+    "einladen"
+  ],
   "einsteige": [
     "einsteigen"
   ],
@@ -7590,6 +7787,21 @@ export const DICT_FORMS = {
   ],
   "fehlen": [
     "fehlen"
+  ],
+  "feiere": [
+    "feiern"
+  ],
+  "feierst": [
+    "feiern"
+  ],
+  "feiert": [
+    "feiern"
+  ],
+  "feiern": [
+    "feiern"
+  ],
+  "hat gefeiert": [
+    "feiern"
   ],
   "sehe fern": [
     "fernsehen"
@@ -8320,16 +8532,19 @@ export const DICT_FORMS = {
   "kennen": [
     "kennen"
   ],
-  "kennenlerne": [
+  "lerne kennen": [
     "kennenlernen"
   ],
-  "kennenlernst": [
+  "lernst kennen": [
     "kennenlernen"
   ],
-  "kennenlernt": [
+  "lernt kennen": [
     "kennenlernen"
   ],
-  "kennenlernen": [
+  "lernen kennen": [
+    "kennenlernen"
+  ],
+  "hat kennengelernt": [
     "kennenlernen"
   ],
   "kinder": [
@@ -9037,6 +9252,15 @@ export const DICT_FORMS = {
   "nächstem": [
     "nächst"
   ],
+  "partys": [
+    "Party"
+  ],
+  "plätze": [
+    "Platz"
+  ],
+  "prüfungen": [
+    "Prüfung"
+  ],
   "pünktliche": [
     "pünktlich"
   ],
@@ -9662,6 +9886,9 @@ export const DICT_FORMS = {
     "treffen"
   ],
   "trefft": [
+    "treffen"
+  ],
+  "hat getroffen": [
     "treffen"
   ],
   "trinke": [
@@ -10495,6 +10722,192 @@ export const DICT_FORMS = {
   ],
   "hat gepasst": [
     "passen"
+  ],
+  "aufenthaltstitel": [
+    "Aufenthaltstitel"
+  ],
+  "beantrage": [
+    "beantragen"
+  ],
+  "beantragst": [
+    "beantragen"
+  ],
+  "beantragt": [
+    "beantragen"
+  ],
+  "beantragen": [
+    "beantragen"
+  ],
+  "hat beantragt": [
+    "beantragen"
+  ],
+  "ausländerbehörden": [
+    "Ausländerbehörde"
+  ],
+  "versicherungsbescheinigungen": [
+    "Versicherungsbescheinigung"
+  ],
+  "passfotos": [
+    "Passfoto"
+  ],
+  "immatrikulationsbescheinigungen": [
+    "Immatrikulationsbescheinigung"
+  ],
+  "fingerabdrücke": [
+    "Fingerabdruck"
+  ],
+  "vorlesungen": [
+    "Vorlesung"
+  ],
+  "seminare": [
+    "Seminar"
+  ],
+  "koordinatoren": [
+    "Koordinator"
+  ],
+  "wähle": [
+    "wählen"
+  ],
+  "wählst": [
+    "wählen"
+  ],
+  "wählt": [
+    "wählen"
+  ],
+  "wählen": [
+    "wählen"
+  ],
+  "hat gewählt": [
+    "wählen"
+  ],
+  "bibliotheken": [
+    "Bibliothek"
+  ],
+  "leihe aus": [
+    "ausleihen"
+  ],
+  "leihst aus": [
+    "ausleihen"
+  ],
+  "leiht aus": [
+    "ausleihen"
+  ],
+  "leihen aus": [
+    "ausleihen"
+  ],
+  "hat ausgeliehen": [
+    "ausleihen"
+  ],
+  "gebe zurück": [
+    "zurückgeben"
+  ],
+  "gibst zurück": [
+    "zurückgeben"
+  ],
+  "gibt zurück": [
+    "zurückgeben"
+  ],
+  "geben zurück": [
+    "zurückgeben"
+  ],
+  "gebt zurück": [
+    "zurückgeben"
+  ],
+  "hat zurückgegeben": [
+    "zurückgeben"
+  ],
+  "behalte": [
+    "behalten"
+  ],
+  "behältst": [
+    "behalten"
+  ],
+  "behält": [
+    "behalten"
+  ],
+  "behalten": [
+    "behalten"
+  ],
+  "behaltet": [
+    "behalten"
+  ],
+  "hat behalten": [
+    "behalten"
+  ],
+  "bestehe": [
+    "bestehen"
+  ],
+  "bestehst": [
+    "bestehen"
+  ],
+  "besteht": [
+    "bestehen"
+  ],
+  "bestehen": [
+    "bestehen"
+  ],
+  "hat bestanden": [
+    "bestehen"
+  ],
+  "falle durch": [
+    "durchfallen"
+  ],
+  "fällst durch": [
+    "durchfallen"
+  ],
+  "fällt durch": [
+    "durchfallen"
+  ],
+  "fallen durch": [
+    "durchfallen"
+  ],
+  "fallt durch": [
+    "durchfallen"
+  ],
+  "ist durchgefallen": [
+    "durchfallen"
+  ],
+  "wörterbücher": [
+    "Wörterbuch"
+  ],
+  "mensen": [
+    "Mensa"
+  ],
+  "döner": [
+    "Döner"
+  ],
+  "wgs": [
+    "WG"
+  ],
+  "setze": [
+    "setzen"
+  ],
+  "setzt": [
+    "setzen"
+  ],
+  "setzen": [
+    "setzen"
+  ],
+  "hat gesetzt": [
+    "setzen"
+  ],
+  "habe vor": [
+    "vorhaben"
+  ],
+  "hast vor": [
+    "vorhaben"
+  ],
+  "hat vor": [
+    "vorhaben"
+  ],
+  "haben vor": [
+    "vorhaben"
+  ],
+  "habt vor": [
+    "vorhaben"
+  ],
+  "hat vorgehabt": [
+    "vorhaben"
   ],
   "der": [
     "der",
@@ -13345,6 +13758,78 @@ export const DICT_POS = {
   ],
   "danach": [
     "adv."
+  ],
+  "Aufenthaltstitel": [
+    "n."
+  ],
+  "beantragen": [
+    "v."
+  ],
+  "Ausländerbehörde": [
+    "n."
+  ],
+  "Versicherungsbescheinigung": [
+    "n."
+  ],
+  "Passfoto": [
+    "n."
+  ],
+  "Immatrikulationsbescheinigung": [
+    "n."
+  ],
+  "Fingerabdruck": [
+    "n."
+  ],
+  "Vorlesung": [
+    "n."
+  ],
+  "Seminar": [
+    "n."
+  ],
+  "Koordinator": [
+    "n."
+  ],
+  "wählen": [
+    "v."
+  ],
+  "Bibliothek": [
+    "n."
+  ],
+  "ausleihen": [
+    "v."
+  ],
+  "zurückgeben": [
+    "v."
+  ],
+  "behalten": [
+    "v."
+  ],
+  "bestehen": [
+    "v."
+  ],
+  "durchfallen": [
+    "v."
+  ],
+  "Wörterbuch": [
+    "n."
+  ],
+  "Lust": [
+    "n."
+  ],
+  "Mensa": [
+    "n."
+  ],
+  "Döner": [
+    "n."
+  ],
+  "WG": [
+    "n."
+  ],
+  "setzen": [
+    "v."
+  ],
+  "vorhaben": [
+    "v."
   ],
   "klasse": [
     "adj."

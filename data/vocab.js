@@ -2683,4 +2683,192 @@ export const VOCAB = [
     phrases: [{ de: 'Wie spät ist es?', zh: '现在几点？' }],
     mnemonic: 'spät = 晚；问时间 Wie spät ist es?(现在几点)。比较级 später(晚点，w314) 已学。',
   }),
+  /* 🛂 S12 居留许可 新词 */
+  w('Aufenthaltstitel', 'der', 'Aufenthaltstitel', '居留许可（卡）', 'Ich möchte einen Aufenthaltstitel beantragen.', '我想申请一个居留许可。', 'arbeit', {
+    sentences: [{ de: 'Ich möchte einen Aufenthaltstitel beantragen.', zh: '我想申请一个居留许可。', source: 'lesson:sd-l3' }],
+    mnemonic: 'Aufenthalt(逗留)+Titel(凭证) → 居留许可；非欧盟学生的塑料卡，复数同形。',
+  }),
+  w('beantragen', null, null, '申请（正式）', 'Ich möchte einen Aufenthaltstitel beantragen.', '我想申请一个居留许可。', 'arbeit', {
+    pos: 'v.',
+    forms: { ich: 'beantrage', du: 'beantragst', er: 'beantragt', wir: 'beantragen', ihr: 'beantragt', sie: 'beantragen', perfekt: 'hat beantragt' },
+    sentences: [{ de: 'Ich möchte einen Aufenthaltstitel beantragen.', zh: '我想申请一个居留许可。', source: 'lesson:sd-l3' }],
+    mnemonic: 'be+Antrag(申请表)+en → 递表申请；办证专用动词，不可分，分词无 ge-：beantragt。',
+  }),
+  w('Ausländerbehörde', 'die', 'Ausländerbehörden', '外国人管理局', 'Ich habe einen Termin bei der Ausländerbehörde.', '我在外国人管理局有一个预约。', 'arbeit', {
+    sentences: [{ de: 'Ich habe einen Termin bei der Ausländerbehörde.', zh: '我在外国人管理局有一个预约。', source: 'lesson:sd-l3' }],
+    mnemonic: 'Ausländer(外国人)+Behörde(官方机构) → 外国人管理局；办居留找它，办户籍登记找 Bürgeramt。',
+  }),
+  w('Versicherungsbescheinigung', 'die', 'Versicherungsbescheinigungen', '保险证明', 'Ich habe die Versicherungsbescheinigung dabei.', '我带着保险证明。', 'arbeit', {
+    sentences: [{ de: 'Ich habe die Versicherungsbescheinigung dabei.', zh: '我带着保险证明。', source: 'lesson:sd-l3' }],
+    mnemonic: 'Versicherung(保险)+Bescheinigung(证明) → 保险证明；注册和办居留都要交。',
+  }),
+  w('Passfoto', 'das', 'Passfotos', '证件照', 'Bringen Sie bitte ein Passfoto mit.', '请带上一张证件照。', 'arbeit', {
+    sentences: [{ de: 'Bringen Sie bitte ein Passfoto mit.', zh: '请带上一张证件照。', source: 'lesson:sd-l3' }],
+    mnemonic: 'Pass(护照)+Foto(照片) → 证件照；德国证件照有尺寸规定，超市门口的照相亭就能拍。',
+  }),
+  w('Immatrikulationsbescheinigung', 'die', 'Immatrikulationsbescheinigungen', '在读证明（入学证明）', 'Ich habe die Immatrikulationsbescheinigung dabei.', '我带着在读证明。', 'arbeit', {
+    sentences: [{ de: 'Ich habe die Immatrikulationsbescheinigung dabei.', zh: '我带着在读证明。', source: 'lesson:sd-l3' }],
+    mnemonic: 'Immatrikulation(注册入学)+Bescheinigung(证明) → 在读证明；每学期在学校系统能自己下载。',
+  }),
+  w('Fingerabdruck', 'der', 'Fingerabdrücke', '指纹', 'Jetzt brauche ich noch Ihren Fingerabdruck.', '现在我还需要您的指纹。', 'koerper', {
+    sentences: [{ de: 'Jetzt brauche ich noch Ihren Fingerabdruck.', zh: '现在我还需要您的指纹。', source: 'lesson:sd-l3' }],
+    mnemonic: 'Finger(手指)+Abdruck(印痕) → 指纹；办居留卡当场要按。',
+  }),
+  w('abholen', null, null, '取（东西）；接（人）', 'In vier Wochen können Sie Ihre Karte hier abholen.', '四周后您可以来这里取卡。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'hole ab', du: 'holst ab', er: 'holt ab', wir: 'holen ab', ihr: 'holt ab', sie: 'holen ab', perfekt: 'hat abgeholt' },
+    sentences: [{ de: 'In vier Wochen können Sie Ihre Karte hier abholen.', zh: '四周后您可以来这里取卡。', source: 'lesson:sd-l3' }],
+    mnemonic: 'ab-holen = ab(离开)+holen(拿) → 去取回/去接人（可分）：Ich hole dich ab.(我来接你)；分词 abgeholt。',
+  }),
+  /* 🎓 S13-S15 校园生活 新词 */
+  w('Vorlesung', 'die', 'Vorlesungen', '大课；讲座课', 'Ist es eine Vorlesung oder ein Seminar?', '是大课还是研讨课？', 'arbeit', {
+    sentences: [{ de: 'Ist es eine Vorlesung oder ein Seminar?', zh: '是大课还是研讨课？', source: 'lesson:se-l1' }],
+    mnemonic: 'vor(在前面)+lesen(念) → 教授在台前讲，学生听：大课；人多、不用发言。',
+  }),
+  w('Seminar', 'das', 'Seminare', '研讨课；小班课', 'Ein Seminar, glaube ich.', '研讨课，我想是。', 'arbeit', {
+    sentences: [{ de: 'Ein Seminar, glaube ich.', zh: '研讨课，我想是。', source: 'lesson:se-l1' }],
+    mnemonic: 'Seminar = 小班研讨课，人少要发言、常有 Referat(课堂报告)；和 Vorlesung(大课) 对着记。',
+  }),
+  w('Koordinator', 'der', 'Koordinatoren', '（课程/项目）协调员', 'Ich spreche mit dem Koordinator.', '我去找课程协调员谈。', 'arbeit', {
+    sentences: [{ de: 'Ich spreche mit dem Koordinator.', zh: '我去找课程协调员谈。', source: 'lesson:se-l1' }],
+    mnemonic: '交换生最常打交道的人：Erasmus-Koordinator/in；女性形式 Koordinatorin。',
+  }),
+  w('beginnen', null, null, '开始', 'Wann beginnt der Kurs?', '课程什么时候开始？', 'verb1', {
+    pos: 'v.',
+    forms: { ich: 'beginne', du: 'beginnst', er: 'beginnt', wir: 'beginnen', ihr: 'beginnt', sie: 'beginnen', perfekt: 'hat begonnen' },
+    sentences: [{ de: 'Wann beginnt der Kurs?', zh: '课程什么时候开始？', source: 'lesson:se-l1' }],
+    mnemonic: 'beginnen = 开始（比 anfangen 更书面）；分词不规则：hat begonnen。',
+  }),
+  w('frei', null, null, '空闲的；有空位的', 'Ist der Kurs noch frei?', '这门课还有名额吗？', 'adj', {
+    pos: 'adj.',
+    sentences: [{ de: 'Ist der Kurs noch frei?', zh: '这门课还有名额吗？', source: 'lesson:se-l1' }],
+    phrases: [{ de: 'Ist der Platz noch frei?', zh: '这个座位还空着吗？' }],
+    mnemonic: 'frei = 空着的/有位子；反义 voll(满了)、besetzt(有人了)。问座位、问名额都用它。',
+  }),
+  w('wählen', null, null, '选择', 'Ich möchte einen Kurs wählen.', '我想选一门课。', 'verb1', {
+    pos: 'v.',
+    forms: { ich: 'wähle', du: 'wählst', er: 'wählt', wir: 'wählen', ihr: 'wählt', sie: 'wählen', perfekt: 'hat gewählt' },
+    sentences: [{ de: 'Ich möchte einen Kurs wählen.', zh: '我想选一门课。', source: 'lesson:se-l1' }],
+    mnemonic: 'wählen = 选（课/号码/人）；Kurse wählen(选课)、eine Nummer wählen(拨号)。',
+  }),
+  w('Bibliothek', 'die', 'Bibliotheken', '图书馆', 'Ich lerne in der Bibliothek.', '我在图书馆学习。', 'stadt', {
+    sentences: [{ de: 'Ich lerne in der Bibliothek.', zh: '我在图书馆学习。', source: 'lesson:se-l2' }],
+    mnemonic: '口语常缩成 die Bib：Ich gehe in die Bib.(我去图书馆)。',
+  }),
+  w('ausleihen', null, null, '借出；借入（可分）', 'Ich leihe das Buch aus.', '我借这本书。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'leihe aus', du: 'leihst aus', er: 'leiht aus', wir: 'leihen aus', ihr: 'leiht aus', sie: 'leihen aus', perfekt: 'hat ausgeliehen' },
+    sentences: [{ de: 'Ich leihe das Buch aus.', zh: '我借这本书。', source: 'lesson:se-l2' }],
+    mnemonic: 'aus-leihen(可分)：自己变位时 aus 甩句尾 Ich leihe das Buch aus.；配 möchte 时整体不拆：Ich möchte das Buch ausleihen.',
+  }),
+  w('zurückgeben', null, null, '归还（可分）', 'Ich möchte dieses Buch zurückgeben.', '我想还这本书。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'gebe zurück', du: 'gibst zurück', er: 'gibt zurück', wir: 'geben zurück', ihr: 'gebt zurück', sie: 'geben zurück', perfekt: 'hat zurückgegeben' },
+    sentences: [{ de: 'Ich möchte dieses Buch zurückgeben.', zh: '我想还这本书。', source: 'lesson:se-l2' }],
+    mnemonic: 'zurück(回)+geben(给) → 还回去（可分）；词干变音 du gibst zurück。',
+  }),
+  w('behalten', null, null, '留着；保留', 'Bis wann kann ich das Buch behalten?', '我最晚什么时候要还？', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'behalte', du: 'behältst', er: 'behält', wir: 'behalten', ihr: 'behaltet', sie: 'behalten', perfekt: 'hat behalten' },
+    sentences: [{ de: 'Bis wann kann ich das Buch behalten?', zh: '我最晚什么时候要还？', source: 'lesson:se-l2' }],
+    mnemonic: 'be+halten(拿住) → 留着不还；不可分，分词无 ge-：hat behalten。',
+  }),
+  w('Platz', 'der', 'Plätze', '位置；座位；广场', 'Ist der Platz noch frei?', '这个座位还空着吗？', 'stadt', {
+    sentences: [{ de: 'Ist der Platz noch frei?', zh: '这个座位还空着吗？', source: 'lesson:se-l2' }],
+    mnemonic: 'Platz = 座位/空位，也指广场(Marktplatz)；占座前先问 Ist der Platz noch frei?',
+  }),
+  w('Prüfung', 'die', 'Prüfungen', '考试', 'Wann ist die Prüfung?', '考试是什么时候？', 'arbeit', {
+    sentences: [{ de: 'Wann ist die Prüfung?', zh: '考试是什么时候？', source: 'lesson:se-l3' }],
+    mnemonic: 'prüfen(检验)+ung → 考试；德国大学考试要单独报名 Prüfungsanmeldung。',
+  }),
+  w('bestehen', null, null, '通过（考试）', 'Ich habe die Prüfung bestanden!', '我通过考试了！', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'bestehe', du: 'bestehst', er: 'besteht', wir: 'bestehen', ihr: 'besteht', sie: 'bestehen', perfekt: 'hat bestanden' },
+    sentences: [{ de: 'Ich habe die Prüfung bestanden!', zh: '我通过考试了！', source: 'lesson:se-l3' }],
+    mnemonic: '带宾语"考试"，完成时用 haben：hat bestanden；反面是 durchfallen(w341)。',
+  }),
+  w('durchfallen', null, null, '没通过（考试）；落榜', 'Mein Freund Tom ist durchgefallen.', '我朋友汤姆没考过。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'falle durch', du: 'fällst durch', er: 'fällt durch', wir: 'fallen durch', ihr: 'fallt durch', sie: 'fallen durch', perfekt: 'ist durchgefallen' },
+    sentences: [{ de: 'Mein Freund Tom ist durchgefallen.', zh: '我朋友汤姆没考过。', source: 'lesson:se-l3' }],
+    mnemonic: 'durch(穿过)+fallen(掉) → 掉下去=没考过（可分）；不带宾语、表状态变化，完成时用 sein：ist durchgefallen。',
+  }),
+  w('Wörterbuch', 'das', 'Wörterbücher', '词典', 'Darf ich ein Wörterbuch benutzen?', '我可以用词典吗？', 'arbeit', {
+    sentences: [{ de: 'Darf ich ein Wörterbuch benutzen?', zh: '我可以用词典吗？', source: 'lesson:se-l3' }],
+    mnemonic: 'Wörter(词，复数)+Buch(书) → 词典；复数变音 Wörterbücher。',
+  }),
+  w('benutzen', null, null, '使用', 'Darf ich ein Wörterbuch benutzen?', '我可以用词典吗？', 'verb1', {
+    pos: 'v.',
+    forms: { ich: 'benutze', du: 'benutzt', er: 'benutzt', wir: 'benutzen', ihr: 'benutzt', sie: 'benutzen', perfekt: 'hat benutzt' },
+    sentences: [{ de: 'Darf ich ein Wörterbuch benutzen?', zh: '我可以用词典吗？', source: 'lesson:se-l3' }],
+    mnemonic: 'be+nutzen(利用) → 使用；不可分，分词无 ge-：hat benutzt。问许可 Darf ich … benutzen?',
+  }),
+  /* 🍻 S16-S18 交朋友 新词 */
+  w('Lust', 'die', null, '兴致；想做某事的心情', 'Hast du Lust auf Mittagessen?', '你想不想一起吃午饭？', 'person', {
+    noPl: true,
+    valence: 'Lust auf + Akk：Lust auf etwas haben（想做某事）',
+    sentences: [{ de: 'Hast du Lust auf Mittagessen?', zh: '你想不想一起吃午饭？', source: 'lesson:sf-l1' }],
+    phrases: [{ de: 'Hast du Lust auf …?', zh: '你想不想……？' }],
+    mnemonic: '约人万能开场：Hast du Lust auf Kaffee/Kino/Döner? 后面接第四格名词。',
+  }),
+  w('Mensa', 'die', 'Mensen', '（大学）食堂', 'Mensa oder Döner?', '食堂还是烤肉卷？', 'arbeit', {
+    sentences: [{ de: 'Mensa oder Döner?', zh: '食堂还是烤肉卷？', source: 'lesson:sf-l1' }],
+    mnemonic: '大学食堂；学生卡刷饭比外面便宜一半，复数不规则 Mensen。',
+  }),
+  w('Döner', 'der', 'Döner', '德式土耳其烤肉卷', 'Ich habe Lust auf Döner.', '我想吃烤肉卷。', 'essen', {
+    sentences: [{ de: 'Ich habe Lust auf Döner.', zh: '我想吃烤肉卷。', source: 'lesson:sf-l1' }],
+    mnemonic: '德国国民快餐，学生最常吃的一餐；复数同形。',
+  }),
+  w('treffen', null, null, '见面；碰到', 'Treffen wir uns um ein Uhr?', '我们一点见面，行吗？', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'treffe', du: 'triffst', er: 'trifft', wir: 'treffen', ihr: 'trefft', sie: 'treffen', perfekt: 'hat getroffen' },
+    valence: 'sich treffen：约见面，wir treffen uns（我们见面）',
+    sentences: [{ de: 'Treffen wir uns um ein Uhr?', zh: '我们一点见面，行吗？', source: 'lesson:sf-l1' }],
+    mnemonic: 'e→i 变音：du triffst, er trifft；约人用反身 sich treffen：Wir treffen uns um eins.',
+  }),
+  w('Party', 'die', 'Partys', '派对；聚会', 'Wir sind auf einer Party.', '我们在一个派对上。', 'stadt', {
+    sentences: [{ de: 'Wir sind auf einer Party.', zh: '我们在一个派对上。', source: 'lesson:sf-l2' }],
+    mnemonic: '德语复数 Partys（不是 Parties）；auf eine Party gehen(去派对)。',
+  }),
+  w('WG', 'die', 'WGs', '合租公寓（Wohngemeinschaft 的缩写）', 'Wir sind auf einer WG-Party.', '我们在一个合租公寓派对上。', 'wohnen', {
+    sentences: [{ de: 'Wir sind auf einer WG-Party.', zh: '我们在一个合租公寓派对上。', source: 'lesson:sf-l2' }],
+    mnemonic: 'Wohn(住)+Gemeinschaft(共同体) → 合租；德国学生最主流的住法，读作"Ve-Ge"。',
+  }),
+  w('setzen', null, null, '（反身 sich setzen）坐下', 'Darf ich mich zu dir setzen?', '我可以坐你旁边吗？', 'verb1', {
+    pos: 'v.',
+    forms: { ich: 'setze', du: 'setzt', er: 'setzt', wir: 'setzen', ihr: 'setzt', sie: 'setzen', perfekt: 'hat gesetzt' },
+    valence: 'sich setzen：坐下（反身），Setz dich!（坐吧！）',
+    sentences: [{ de: 'Darf ich mich zu dir setzen?', zh: '我可以坐你旁边吗？', source: 'lesson:sf-l2' }],
+    mnemonic: 'setzen 要带反身代词才是"坐下"：Ich setze mich.；对朋友说 Setz dich doch!(来坐吧)。',
+  }),
+  w('kennenlernen', null, null, '认识（新朋友）；结识', 'Es war schön, dich kennenzulernen!', '很高兴认识你！', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'lerne kennen', du: 'lernst kennen', er: 'lernt kennen', wir: 'lernen kennen', ihr: 'lernt kennen', sie: 'lernen kennen', perfekt: 'hat kennengelernt' },
+    sentences: [{ de: 'Es war schön, dich kennenzulernen!', zh: '很高兴认识你！', source: 'lesson:sf-l2' }],
+    mnemonic: 'kennen(认识)+lernen(学) → 结识（可分）；告别万能句 Es war schön, dich kennenzulernen!（zu 夹在中间）。',
+  }),
+  w('einladen', null, null, '邀请（也含请客的意思）', 'Ich lade dich ein!', '我请你！', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'lade ein', du: 'lädst ein', er: 'lädt ein', wir: 'laden ein', ihr: 'ladet ein', sie: 'laden ein', perfekt: 'hat eingeladen' },
+    valence: 'einladen + Akk：jemanden einladen（邀请/请客某人）',
+    sentences: [{ de: 'Ich lade dich ein!', zh: '我请你！', source: 'lesson:sf-l3' }],
+    mnemonic: 'ein-laden(可分)，a→ä 变音 du lädst ein；说 Ich lade dich ein 通常就是"我买单"。',
+  }),
+  w('vorhaben', null, null, '打算；有安排', 'Ich habe schon etwas vor.', '我已经有安排了。', 'verb2', {
+    pos: 'v.',
+    forms: { ich: 'habe vor', du: 'hast vor', er: 'hat vor', wir: 'haben vor', ihr: 'habt vor', sie: 'haben vor', perfekt: 'hat vorgehabt' },
+    sentences: [{ de: 'Ich habe schon etwas vor.', zh: '我已经有安排了。', source: 'lesson:sf-l3' }],
+    mnemonic: 'vor+haben(可分)，婉拒专用：Ich habe schon etwas vor.(我已经有安排了)——比 Ich will nicht 礼貌得多。',
+  }),
+  w('leider', null, null, '遗憾地；可惜', 'Leider kann ich nicht.', '很遗憾我不能去。', 'frage', {
+    pos: 'adv.',
+    sentences: [{ de: 'Leider kann ich nicht.', zh: '很遗憾我不能去。', source: 'lesson:sf-l3' }],
+    mnemonic: '婉拒开头词：Leider kann ich nicht + 理由；放句首时动词仍在第二位。',
+  }),
+  w('feiern', null, null, '庆祝；办派对', 'Wir feiern bei mir.', '我们在我那儿庆祝。', 'verb1', {
+    pos: 'v.',
+    forms: { ich: 'feiere', du: 'feierst', er: 'feiert', wir: 'feiern', ihr: 'feiert', sie: 'feiern', perfekt: 'hat gefeiert' },
+    sentences: [{ de: 'Wir feiern bei mir.', zh: '我们在我那儿庆祝。', source: 'lesson:sf-l3' }],
+    mnemonic: 'Geburtstag feiern(过生日)；ich feiere 保留 e，wir/sie feiern 省一个 e。',
+  }),
 ];
