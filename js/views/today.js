@@ -110,7 +110,8 @@ export function renderToday(host) {
     <div class="m-icon">${icon(m.icon)}</div><div class="m-title">${m.title}</div><div class="m-sub">${m.sub}</div><span class="m-arrow">${icon('arrow')}</span>
   </a>`)));
   host.appendChild(quick);
-  [...host.querySelectorAll('.journey-hero,.mission-launcher,.module-card')].forEach((node, i) => motionIn(node, { y: 14, delay: i * 55 }));
+  [...host.querySelectorAll('.journey-hero,.mission-launcher,.module-card')].forEach((node, i) =>
+    motionIn(node, { y: 12, delay: i * 32, skipOnCoarse: true }));
 }
 
 /* ---- 串流执行 ---- */

@@ -71,5 +71,6 @@ export function renderMe(host) {
     <li><b>发音</b><span>微软神经网络德语语音预生成，全设备一致</span></li>
     <li><b>方法</b><span>微步教学、间隔重复、错题循环与可理解输入</span></li>
   </ul></div>`));
-  [...host.querySelectorAll('.passport-hero,.passport-stats,.week-card,.badge-section,.settings-link')].forEach((node, i) => motionIn(node, { y: 14, delay: i * 55 }));
+  [...host.querySelectorAll('.passport-hero,.passport-stats,.week-card,.badge-section,.settings-link')].forEach((node, i) =>
+    motionIn(node, { y: 12, delay: i * 32, skipOnCoarse: true }));
 }

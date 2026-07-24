@@ -106,7 +106,7 @@ export function renderPath(host) {
         unitEl.appendChild(el(`<div class="source-card">课程参照 · <a href="${esc(unit.nicosWeg.url)}" target="_blank" rel="noopener">${esc(unit.nicosWeg.name)}</a></div>`));
       }
       pane.appendChild(unitEl);
-      motionIn(unitEl, { y: 16, delay: Math.min(240, units.indexOf(unit) * 55) });
+      motionIn(unitEl, { y: 12, delay: Math.min(120, units.indexOf(unit) * 24), skipOnCoarse: true });
     });
 
     // 旧版模块入口：内容迁移期间保留，各自挂在对应泳道下

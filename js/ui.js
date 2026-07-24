@@ -55,8 +55,9 @@ export function haptic(kind = 'tap') {
   navigator.vibrate(kind === 'error' ? [18, 35, 18] : kind === 'success' ? 16 : 8);
 }
 
-export function motionIn(node, { x = 0, y = 12, delay = 0 } = {}) {
+export function motionIn(node, { x = 0, y = 12, delay = 0, skipOnCoarse = false } = {}) {
   if (!node?.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (skipOnCoarse && matchMedia('(max-width: 700px) and (pointer: coarse)').matches) return;
   node.animate([
     { opacity: 0, transform: `translate3d(${x}px, ${y}px, 0) scale(.985)` },
     { opacity: 1, transform: 'translate3d(0, 0, 0) scale(1)' },

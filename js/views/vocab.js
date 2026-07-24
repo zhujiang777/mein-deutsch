@@ -1,6 +1,5 @@
 // 词汇 v2："不背单词"式沉浸学习：全屏词卡（例句为主角）→ 回想式检验
 import { VOCAB, THEMES } from '../../data/vocab.js';
-import { AUDIO_MANIFEST } from '../../data/audio-manifest.js';
 import { el, esc, audioBtn, haptic, icon, micBtn, motionIn, setProgress, toast } from '../ui.js';
 import { speak, stopSpeak, germanVoices } from '../speech.js';
 import { buildQueue, rate, srsStats, markKnown } from '../srs.js';
@@ -303,7 +302,8 @@ export function runVocabSession(host, { onDone, onExit, maxNew, maxDue, quickFor
   /* --- 回想式检验：先回想，再选择；想不起来看答案 --- */
   function showTest(step) {
     const m = normalizeWord(getWord(step.id));
-    const heard = !!AUDIO_MANIFEST[m.spoken] || germanVoices().length > 0;
+    // 课程词均有预生成音频；只有用户自行加入的生词需要检查设备德语语音。
+    const heard = !step.id.startsWith('d:') || germanVoices().length > 0;
     const reps = loadSrs()[step.id]?.reps || 0;
     let kind = step.retry ? 'de2zh'
       : step.second ? (heard ? 'listen' : 'zh2de')

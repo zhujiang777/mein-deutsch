@@ -56,10 +56,15 @@ test('vocabulary detail has a stable deep-link route', () => {
   assert.match(app, /\/vocab\\\/word\\\/\(\.\+\)/);
 });
 
-test('mobile routing has no fixed exit wait and uses lazy page modules', () => {
+test('main navigation keeps five rendered views and avoids mobile GPU-heavy effects', () => {
   assert.doesNotMatch(app, /setTimeout\([\s\S]{0,180}120\)/);
-  assert.match(app, /load:\s*\(\)\s*=>\s*import\('\.\/views\/path\.js/);
+  assert.match(app, /const rootViews = new Map\(\)/);
+  assert.match(app, /rootViews\.get\(path\)/);
+  assert.match(app, /view\.hidden = false/);
+  assert.match(app, /app\.classList\.remove\('route-loading'\)/);
+  assert.doesNotMatch(app, /requestIdleCallback[\s\S]{0,120}loadDictionary/);
   assert.match(css, /max-width:\s*700px\)\s*and\s*\(pointer:\s*coarse/);
-  assert.match(css, /--glass-blur:\s*18px/);
-  assert.match(css, /content-visibility:\s*auto/);
+  assert.match(css, /--glass-blur:\s*0px/);
+  assert.match(css, /backdrop-filter:\s*none/);
+  assert.doesNotMatch(css, /content-visibility:\s*auto/);
 });

@@ -1,4 +1,9 @@
-// 应用入口 v3：即时 hash 路由 + 页面模块按需加载
+// 应用入口 v4：五个主页面常驻缓存，深层页面按需加载
+import { renderToday, runDictationSet } from './views/today.js?v=9';
+import { renderPath } from './views/path.js?v=9';
+import { renderVocab } from './views/vocab.js?v=9';
+import { renderReadListen } from './views/readlisten.js?v=9';
+import { renderMe } from './views/me.js?v=9';
 import { getSettings, migrate } from './storage.js';
 import { initSync } from './sync.js';
 import { stopSpeak } from './speech.js';
@@ -16,14 +21,17 @@ const app = document.getElementById('app');
 const tabbar = document.getElementById('tabbar');
 const tabIndexes = { today: 0, path: 1, vocab: 2, readlisten: 3, me: 4 };
 const glossOptions = { sentenceSelector: '.rt-sent,.wc-sentence,.phrase-row,.ex-prompt,.step-p,p' };
+const rootPaths = new Set(['/', '/path', '/vocab', '/readlisten', '/me']);
+const rootViews = new Map();
+const rootScroll = new Map();
+let transientView = null;
 let dictModule = null;
 let dictPromise = null;
 
 function loadDictionary() {
   if (!dictPromise) {
-    dictPromise = import('./dict.js?v=3').then(module => {
+    dictPromise = import('./dict.js?v=4').then(module => {
       dictModule = module;
-      module.enableGloss(app, glossOptions);
       return module;
     }).catch(error => {
       dictPromise = null;
@@ -33,72 +41,87 @@ function loadDictionary() {
   return dictPromise;
 }
 
-// 查词资源约 300KB：空闲时预取；用户先触碰正文时立即启动，不阻塞首页。
-app.addEventListener('pointerover', () => { loadDictionary().catch(() => {}); }, { once: true, passive: true });
-app.addEventListener('pointerdown', () => { loadDictionary().catch(() => {}); }, { once: true, capture: true, passive: true });
-const idle = window.requestIdleCallback || ((callback) => setTimeout(callback, 1600));
-idle(() => { loadDictionary().catch(() => {}); }, { timeout: 2500 });
+// 不在启动或导航时预载词典。只有用户真的点击正文词语才加载并处理本次点击。
+app.addEventListener('click', event => {
+  if (event.target.closest('button,a,input,textarea,select,[data-no-gloss]')) return;
+  loadDictionary()
+    .then(module => module.handleGlossClick(event, glossOptions))
+    .catch(() => {});
+});
 
 const routes = [
-  { pattern: /^\/?$/, tab: 'today', load: () => import('./views/today.js?v=8'), render: (m, h) => m.renderToday(h) },
-  { pattern: /^\/path$/, tab: 'path', load: () => import('./views/path.js?v=8'), render: (m, h) => m.renderPath(h) },
-  { pattern: /^\/lesson\/(.+)$/, tab: 'path', load: () => import('./views/lesson.js?v=8'), render: (m, h, hit) => m.renderLessonRoute(h, hit[1]) },
-  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=8'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
-  { pattern: /^\/vocab(?:\/(.+))?$/, tab: 'vocab', load: () => import('./views/vocab.js?v=8'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
-  { pattern: /^\/readlisten$/, tab: 'readlisten', load: () => import('./views/readlisten.js?v=8'), render: (m, h) => m.renderReadListen(h) },
-  { pattern: /^\/reading\/(.+)$/, tab: 'readlisten', load: () => import('./views/reading.js?v=8'), render: (m, h, hit) => m.renderReading(h, hit[1]) },
-  { pattern: /^\/dictation$/, tab: 'readlisten', load: () => import('./views/today.js?v=8'), render: async (m, h) => {
+  { pattern: /^\/?$/, tab: 'today', root: true, render: (h) => renderToday(h) },
+  { pattern: /^\/path$/, tab: 'path', root: true, render: (h) => renderPath(h) },
+  { pattern: /^\/vocab$/, tab: 'vocab', root: true, render: (h) => renderVocab(h) },
+  { pattern: /^\/readlisten$/, tab: 'readlisten', root: true, render: (h) => renderReadListen(h) },
+  { pattern: /^\/me$/, tab: 'me', root: true, render: (h) => renderMe(h) },
+  { pattern: /^\/lesson\/(.+)$/, tab: 'path', load: () => import('./views/lesson.js?v=9'), render: (m, h, hit) => m.renderLessonRoute(h, hit[1]) },
+  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=9'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
+  { pattern: /^\/vocab\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=9'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
+  { pattern: /^\/reading\/(.+)$/, tab: 'readlisten', load: () => import('./views/reading.js?v=9'), render: (m, h, hit) => m.renderReading(h, hit[1]) },
+  { pattern: /^\/dictation$/, tab: 'readlisten', render: async (_m, h) => {
       h.appendChild(el(`<a class="back-link" href="#/readlisten">‹ 读·听</a>`));
-      await m.runDictationSet(h, 5, () => { location.hash = '#/readlisten'; });
+      await runDictationSet(h, 5, () => { location.hash = '#/readlisten'; });
     } },
-  { pattern: /^\/me$/, tab: 'me', load: () => import('./views/me.js?v=8'), render: (m, h) => m.renderMe(h) },
-  { pattern: /^\/settings$/, tab: 'me', load: () => import('./views/settings.js?v=8'), render: (m, h) => m.renderSettings(h) },
+  { pattern: /^\/settings$/, tab: 'me', load: () => import('./views/settings.js?v=9'), render: (m, h) => m.renderSettings(h) },
   // 旧版模块（内容迁移期间保留）
-  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'path', load: () => import('./views/pronunciation.js?v=8'), render: (m, h, hit) => m.renderPron(h, hit[1]) },
-  { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'path', load: () => import('./views/grammar.js?v=8'), render: (m, h, hit) => m.renderGrammar(h, hit[1]) },
+  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'path', load: () => import('./views/pronunciation.js?v=9'), render: (m, h, hit) => m.renderPron(h, hit[1]) },
+  { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'path', load: () => import('./views/grammar.js?v=9'), render: (m, h, hit) => m.renderGrammar(h, hit[1]) },
 ];
 
 let activePath = '';
 let routeRun = 0;
 
-async function route() {
-  const run = ++routeRun;
-  stopSpeak();
-  document.body.classList.remove('immersive');
-  const path = location.hash.replace(/^#/, '') || '/';
-  const routeMatch = routes.map(route => ({ route, hit: path.match(route.pattern) })).find(item => item.hit);
-  if (!routeMatch) {
-    location.hash = '#/';
-    return;
+function hideRootViews() {
+  rootViews.forEach(view => {
+    view.hidden = true;
+    view.inert = true;
+  });
+}
+
+function clearRootViews() {
+  rootViews.forEach(view => view.remove());
+  rootViews.clear();
+  rootScroll.clear();
+}
+
+function showRootView(path, selected) {
+  transientView?.remove();
+  transientView = null;
+  hideRootViews();
+
+  let view = rootViews.get(path);
+  const cached = !!view;
+  if (!view) {
+    view = el(`<section class="route-view" data-route-view="${path}"></section>`);
+    view.hidden = true;
+    app.appendChild(view);
+    selected.render(view);
+    rootViews.set(path, view);
   }
+  view.hidden = false;
+  view.inert = false;
+  if (cached && !matchMedia('(pointer: coarse)').matches) {
+    view.classList.remove('route-view-enter');
+    requestAnimationFrame(() => view.classList.add('route-view-enter'));
+  }
+  window.scrollTo(0, rootScroll.get(path) || 0);
+}
 
-  const { route: selected, hit } = routeMatch;
-  document.body.dataset.section = selected.tab;
-  tabbar.dataset.active = String(tabIndexes[selected.tab] ?? 0);
-  document.querySelectorAll('#tabbar a').forEach(link =>
-    link.classList.toggle('active', link.dataset.tab === selected.tab));
-  dictModule?.clearDictPop();
-
+async function showDeepView(selected, hit, run) {
+  hideRootViews();
+  transientView?.remove();
+  transientView = el('<section class="route-view route-view-deep"></section>');
+  app.appendChild(transientView);
   app.classList.add('route-loading');
   app.setAttribute('aria-busy', 'true');
-  if (!app.children.length) {
-    app.appendChild(el(`<div class="route-skeleton" aria-hidden="true"><span></span><span></span><span></span></div>`));
-  }
-
   try {
-    const module = await selected.load();
+    const module = selected.load ? await selected.load() : null;
     if (run !== routeRun) return;
-    app.innerHTML = '';
-    await selected.render(module, app, hit);
+    await selected.render(module, transientView, hit);
     if (run !== routeRun) return;
     window.scrollTo(0, 0);
-    const direction = path === '/' || path.split('/').length < activePath.split('/').length ? -1 : 1;
-    motionIn(app, { x: 10 * direction, y: 0 });
-    activePath = path;
-  } catch (error) {
-    if (run !== routeRun) return;
-    console.error(error);
-    app.innerHTML = '<div class="empty-hint">页面加载失败，请检查网络后重试。</div>';
+    motionIn(transientView, { x: 8, y: 0 });
   } finally {
     if (run === routeRun) {
       app.classList.remove('route-loading');
@@ -107,13 +130,56 @@ async function route() {
   }
 }
 
+async function route() {
+  const run = ++routeRun;
+  // 快速连点导航时，立即解除上一条异步深层路由留下的忙碌状态。
+  app.classList.remove('route-loading');
+  app.removeAttribute('aria-busy');
+  stopSpeak();
+  dictModule?.clearDictPop();
+  document.body.classList.remove('immersive');
+  const path = location.hash.replace(/^#/, '') || '/';
+  const routeMatch = routes.map(routeItem => ({ routeItem, hit: path.match(routeItem.pattern) }))
+    .find(item => item.hit);
+  if (!routeMatch) {
+    location.hash = '#/';
+    return;
+  }
+
+  const { routeItem: selected, hit } = routeMatch;
+  if (rootPaths.has(activePath)) rootScroll.set(activePath, window.scrollY);
+  document.body.dataset.section = selected.tab;
+  tabbar.dataset.active = String(tabIndexes[selected.tab] ?? 0);
+  document.querySelectorAll('#tabbar a').forEach(link =>
+    link.classList.toggle('active', link.dataset.tab === selected.tab));
+
+  try {
+    if (selected.root) {
+      // 深层学习会改变进度；回到主导航时刷新一次，普通五栏切换始终复用 DOM。
+      if (activePath && !rootPaths.has(activePath)) clearRootViews();
+      showRootView(path, selected);
+    } else {
+      await showDeepView(selected, hit, run);
+    }
+    if (run === routeRun) activePath = path;
+  } catch (error) {
+    if (run !== routeRun) return;
+    console.error(error);
+    transientView?.remove();
+    transientView = el('<section class="route-view"><div class="empty-hint">页面加载失败，请检查网络后重试。</div></section>');
+    app.appendChild(transientView);
+  }
+}
+
 window.addEventListener('hashchange', route);
 route();
 
-// 同步：启动拉取（拉到新数据就刷新当前页）
+// 同步拉取会改变所有统计和解锁状态，因此丢弃主页面缓存后重绘当前页。
 initSync({
   onPulled: () => {
     toast('已从云端同步最新进度 ☁️');
+    clearRootViews();
+    activePath = '';
     route();
   },
 });

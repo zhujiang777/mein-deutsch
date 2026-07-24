@@ -185,33 +185,34 @@ function tokenAtPoint(event) {
   };
 }
 
+/** Handle one click-to-lookup event. Exported so the dictionary can load on the first real word tap. */
+export function handleGlossClick(event, { glossary = {}, sentenceSelector = '', source = '' } = {}) {
+  if (event.__dictHandled) return;
+  if (event.target.closest('button,a,input,textarea,select,[data-no-gloss]')) return;
+  const tokenInfo = tokenAtPoint(event);
+  if (!tokenInfo) return;
+
+  event.__dictHandled = true;
+  try {
+    const range = document.createRange();
+    range.setStart(tokenInfo.node, tokenInfo.startOffset);
+    range.setEnd(tokenInfo.node, tokenInfo.endOffset);
+    const span = document.createElement('span');
+    span.className = 'dict-active-word';
+    range.surroundContents(span);
+  } catch {
+    // Ignore if surround fails due to crossing boundaries.
+  }
+
+  const sentenceEl = sentenceSelector ? event.target.closest(sentenceSelector) : null;
+  const sentence = sentenceEl?.textContent?.replace(/\s+/g, ' ').trim() || '';
+  const glossaryEntry = glossary[lower(tokenInfo.word)];
+  showDictPop(tokenInfo.word, { entry: glossaryEntry, sentence, source });
+}
+
 /** Enable click-to-lookup without re-tokenising the rendered content. */
-export function enableGloss(rootEl, { glossary = {}, sentenceSelector = '', source = '' } = {}) {
-  rootEl?.addEventListener('click', (event) => {
-    if (event.__dictHandled) return;
-    if (event.target.closest('button,a,input,textarea,select,[data-no-gloss]')) return;
-    const tokenInfo = tokenAtPoint(event);
-    if (!tokenInfo) return; // browsers without a caret API degrade silently.
-
-    event.__dictHandled = true;
-
-    // Highlight the clicked word
-    try {
-      const range = document.createRange();
-      range.setStart(tokenInfo.node, tokenInfo.startOffset);
-      range.setEnd(tokenInfo.node, tokenInfo.endOffset);
-      const span = document.createElement('span');
-      span.className = 'dict-active-word';
-      range.surroundContents(span);
-    } catch (e) {
-      // Ignore if surround fails due to crossing boundaries
-    }
-
-    const sentenceEl = sentenceSelector ? event.target.closest(sentenceSelector) : null;
-    const sentence = sentenceEl?.textContent?.replace(/\s+/g, ' ').trim() || '';
-    const glossaryEntry = glossary[lower(tokenInfo.word)];
-    showDictPop(tokenInfo.word, { entry: glossaryEntry, sentence, source });
-  });
+export function enableGloss(rootEl, options = {}) {
+  rootEl?.addEventListener('click', event => handleGlossClick(event, options));
 }
 
 export { DICT_POS };
