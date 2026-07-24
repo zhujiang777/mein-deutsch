@@ -235,8 +235,6 @@ body[data-section="me"] { --ambient-a: rgba(119,83,113,.14); --ambient-b: rgba(2
 
 #app.route-loading { pointer-events: none; }
 .route-view { min-height: 1px; }
-.route-view.route-view-enter { animation: route-view-fade 120ms ease-out both; }
-@keyframes route-view-fade { from { opacity: .88; } to { opacity: 1; } }
 .route-skeleton { display: grid; gap: 14px; padding-top: 12px; }
 .route-skeleton span {
   display: block; height: 76px; border-radius: var(--r-lg);
@@ -1318,7 +1316,6 @@ textarea.io-area { min-height: 110px; resize: vertical; margin-top: 10px; }
     backdrop-filter: none;
     background-color: color-mix(in srgb,var(--card) 94%,transparent);
   }
-  .route-view.route-view-enter { animation: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

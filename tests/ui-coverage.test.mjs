@@ -66,5 +66,8 @@ test('main navigation keeps five rendered views and avoids mobile GPU-heavy effe
   assert.match(css, /max-width:\s*700px\)\s*and\s*\(pointer:\s*coarse/);
   assert.match(css, /--glass-blur:\s*0px/);
   assert.match(css, /backdrop-filter:\s*none/);
+  // 不用 content-visibility：懒渲染的高度估算会在切到旅程页时让长列表下坠回流。
   assert.doesNotMatch(css, /content-visibility:\s*auto/);
+  // 底部导航切换恢复方向横滑淡入（含触屏），不再对 coarse 指针禁用。
+  assert.match(app, /routeMotion\(view/);
 });

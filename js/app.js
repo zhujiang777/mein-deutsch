@@ -85,13 +85,36 @@ function clearRootViews() {
   rootScroll.clear();
 }
 
-function showRootView(path, selected) {
+// 切页恢复滚动必须瞬间完成：全局 html{scroll-behavior:smooth} 会把它变成可见的
+// 平滑滚动动画，从长页(读听)切到短页(我的)时表现为纵向"下抖"。临时压成 auto 再还原。
+function scrollToInstant(top) {
+  const html = document.documentElement;
+  const prev = html.style.scrollBehavior;
+  html.style.scrollBehavior = 'auto';
+  window.scrollTo(0, top);
+  html.style.scrollBehavior = prev;
+}
+
+// 底部导航专用过渡：纯滑动+淡入、无缩放。起始透明度较高（0.6）让整页"滑进来"看得见，
+// 用匀柔的 standard 缓动（非 expo-out）避免"撞一下"，只有横向位移、绝不改变布局高度。
+function routeMotion(view, direction) {
+  if (!view.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const from = direction
+    ? { opacity: 0.6, transform: `translate3d(${22 * direction}px,0,0)` }
+    : { opacity: 0, transform: 'translate3d(0,8px,0)' };
+  view.animate([from, { opacity: 1, transform: 'translate3d(0,0,0)' }], {
+    duration: 320,
+    easing: 'cubic-bezier(.4,0,.2,1)',
+    fill: 'backwards',
+  });
+}
+
+function showRootView(path, selected, direction = 0) {
   transientView?.remove();
   transientView = null;
   hideRootViews();
 
   let view = rootViews.get(path);
-  const cached = !!view;
   if (!view) {
     view = el(`<section class="route-view" data-route-view="${path}"></section>`);
     view.hidden = true;
@@ -101,11 +124,9 @@ function showRootView(path, selected) {
   }
   view.hidden = false;
   view.inert = false;
-  if (cached && !matchMedia('(pointer: coarse)').matches) {
-    view.classList.remove('route-view-enter');
-    requestAnimationFrame(() => view.classList.add('route-view-enter'));
-  }
-  window.scrollTo(0, rootScroll.get(path) || 0);
+  scrollToInstant(rootScroll.get(path) || 0);
+  // 方向横滑淡入：右移的标签从右侧滑入，左移从左侧；首帧/同 tab 走纯淡入上浮。
+  routeMotion(view, direction);
 }
 
 async function showDeepView(selected, hit, run) {
@@ -120,7 +141,7 @@ async function showDeepView(selected, hit, run) {
     if (run !== routeRun) return;
     await selected.render(module, transientView, hit);
     if (run !== routeRun) return;
-    window.scrollTo(0, 0);
+    scrollToInstant(0);
     motionIn(transientView, { x: 8, y: 0 });
   } finally {
     if (run === routeRun) {
@@ -148,8 +169,12 @@ async function route() {
 
   const { routeItem: selected, hit } = routeMatch;
   if (rootPaths.has(activePath)) rootScroll.set(activePath, window.scrollY);
+  // 覆盖前先读旧标签位置，算横滑方向（右移从右来 +1，左移从左来 -1）。
+  const prevIndex = Number(tabbar.dataset.active);
+  const newIndex = tabIndexes[selected.tab] ?? 0;
+  const direction = Number.isFinite(prevIndex) ? Math.sign(newIndex - prevIndex) : 0;
   document.body.dataset.section = selected.tab;
-  tabbar.dataset.active = String(tabIndexes[selected.tab] ?? 0);
+  tabbar.dataset.active = String(newIndex);
   document.querySelectorAll('#tabbar a').forEach(link =>
     link.classList.toggle('active', link.dataset.tab === selected.tab));
 
@@ -157,7 +182,7 @@ async function route() {
     if (selected.root) {
       // 深层学习会改变进度；回到主导航时刷新一次，普通五栏切换始终复用 DOM。
       if (activePath && !rootPaths.has(activePath)) clearRootViews();
-      showRootView(path, selected);
+      showRootView(path, selected, direction);
     } else {
       await showDeepView(selected, hit, run);
     }
