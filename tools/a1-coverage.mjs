@@ -53,6 +53,24 @@ export function isKnown(word) {
   return false;
 }
 
+// 可分动词前缀。声明了 stattfinden，被甩到句尾的 statt 就不是另一个生词。
+const SEPARABLE_PREFIXES = ['ab', 'an', 'auf', 'aus', 'ein', 'mit', 'nach', 'vor',
+  'zurück', 'zusammen', 'weg', 'los', 'statt', 'fest'];
+
+/** 已声明 lemma 的常规屈折形。只按德语构词加尾，不做前缀模糊匹配。 */
+function declaredForms(lemma) {
+  const low = String(lemma || '').toLowerCase();
+  const out = new Set([low]);
+  for (const suffix of ['n', 'en', 'e', 'er', 'es', 's', 't', 'st', 'et']) out.add(low + suffix);
+  if (low.endsWith('en')) {                       // 动词：规则变位
+    const stem = low.slice(0, -2);
+    for (const suffix of ['e', 'st', 't', 'et', 'est']) out.add(stem + suffix);
+    const prefix = SEPARABLE_PREFIXES.find(p => low.startsWith(p) && low.length > p.length + 3);
+    if (prefix) out.add(prefix);
+  }
+  return out;
+}
+
 /**
  * coverage(text, { declared, proper })
  *   declared —— 作者已显式声明的生词（精听包的 newLemmas）
@@ -60,12 +78,17 @@ export function isKnown(word) {
  * 返回 { total, known, ratio, unknown[] }
  */
 export function coverage(text, { declared = [], proper = [] } = {}) {
-  const skip = new Set([...declared, ...proper].map(w => String(w).toLowerCase()));
+  const skip = new Set(proper.map(w => String(w).toLowerCase()));
+  for (const lemma of declared) for (const form of declaredForms(lemma)) skip.add(form);
   const list = words(text);
   const unknown = [];
   let known = 0;
   for (const word of list) {
-    if (skip.has(word.toLowerCase()) || isKnown(word)) known++;
+    // 单个字母是拼读练习的产物（"A, Y, D, I, N"），不构成词汇负担。
+    const declaredKnown = word.length === 1
+      || skip.has(word.toLowerCase())
+      || candidates(word).some(form => skip.has(form));
+    if (declaredKnown || isKnown(word)) known++;
     else unknown.push(word);
   }
   return { total: list.length, known, ratio: list.length ? known / list.length : 1, unknown };

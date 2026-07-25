@@ -187,8 +187,106 @@ for (const [lemma, list] of Object.entries(FUNCTION_FORMS)) {
 entries.klasse = [{ pos: 'adj.', art: null, zh: '很棒的；出色的' }];
 positions.klasse = ['adj.'];
 
+// The DWDS A1 scrape drops a batch of core function words (du/als/neben …).
+// Without them the lookup popup stays silent on the commonest words in a text,
+// and difficulty tooling is pushed into maintaining its own whitelist instead.
+const A1_GAPS = {
+  als: { pos: 'konj.', zh: '当……时；作为' },
+  deshalb: { pos: 'adv.', zh: '因此；所以' },
+  direkt: { pos: 'adj.', zh: '直接的；就在' },
+  doch: { pos: 'adv.', zh: '可是；还是' },
+  du: { pos: 'pron.', zh: '你' },
+  erst: { pos: 'adv.', zh: '才；起初' },
+  fallen: { pos: 'v.', zh: '落下；下降', forms: ['falle', 'fällst', 'fällt', 'fallen', 'fallt'] },
+  früh: { pos: 'adj.', zh: '早的；早' },
+  genau: { pos: 'adj.', zh: '准确的；正是' },
+  gegenüber: { pos: 'prep.', zh: '在……对面' },
+  hinter: { pos: 'prep.', zh: '在……后面' },
+  mich: { pos: 'pron.', zh: '我（第四格）' },
+  neben: { pos: 'prep.', zh: '在……旁边' },
+  null: { pos: 'num.', zh: '零' },
+  sondern: { pos: 'konj.', zh: '而是' },
+  Stück: { pos: 'n.', art: 'das', pl: 'Stücke', zh: '块；个（量词）' },
+  uns: { pos: 'pron.', zh: '我们（第三/四格）' },
+  vorbei: { pos: 'adv.', zh: '过去了；经过' },
+  Weg: { pos: 'n.', art: 'der', pl: 'Wege', zh: '路；道路' },
+  Markt: { pos: 'n.', art: 'der', pl: 'Märkte', zh: '市场；集市' },
+  Notiz: { pos: 'n.', art: 'die', pl: 'Notizen', zh: '便条；笔记' },
+  Telefonnummer: { pos: 'n.', art: 'die', pl: 'Telefonnummern', zh: '电话号码' },
+  Vorschlag: { pos: 'n.', art: 'der', pl: 'Vorschläge', zh: '建议' },
+  Wohnort: { pos: 'n.', art: 'der', pl: 'Wohnorte', zh: '居住地' },
+  Wunsch: { pos: 'n.', art: 'der', pl: 'Wünsche', zh: '愿望' },
+  denken: { pos: 'v.', zh: '想；思考', forms: ['denke', 'denkst', 'denkt', 'denken', 'dachte', 'dachten'] },
+  vergessen: { pos: 'v.', zh: '忘记', forms: ['vergesse', 'vergisst', 'vergessen', 'vergesst'] },
+  ausgehen: { pos: 'v.', zh: '外出；出门', forms: ['gehe aus', 'gehst aus', 'geht aus', 'gehen aus'] },
+  zurückkommen: { pos: 'v.', zh: '回来', forms: ['komme zurück', 'kommst zurück', 'kommt zurück', 'kommen zurück'] },
+  zurückfahren: { pos: 'v.', zh: '返回（乘车）', forms: ['fahre zurück', 'fährst zurück', 'fährt zurück', 'fahren zurück'] },
+};
+for (const [lemma, spec] of Object.entries(A1_GAPS)) {
+  if (entries[lemma]) continue; // 抓取里已经有了就不覆盖
+  entries[lemma] = [{
+    pos: spec.pos,
+    art: spec.art ?? null,
+    ...(spec.pl ? { pl: spec.pl } : {}),
+    ...(spec.zh ? { zh: spec.zh } : {}),
+  }];
+  positions[lemma] = [spec.pos];
+  if (spec.pl) addForm(spec.pl, lemma);
+  for (const form of spec.forms || []) addForm(form, lemma);
+}
+
+// Partizip II. The source lists infinitives only, but every L6/R6 text is Perfekt,
+// so without these the reader taps "gefahren" and gets nothing.
+const PARTICIPLES = {
+  angefangen: 'anfangen', aufgestanden: 'aufstehen', ausgegangen: 'ausgehen',
+  eingeladen: 'einladen', mitgenommen: 'mitnehmen', zurückgekommen: 'zurückkommen',
+  zurückgefahren: 'zurückfahren', gebracht: 'bringen', gedacht: 'denken',
+  gefahren: 'fahren', gefallen: 'fallen', gefunden: 'finden', gegangen: 'gehen',
+  gegeben: 'geben', gegessen: 'essen', geblieben: 'bleiben', gehabt: 'haben',
+  geholfen: 'helfen', gekommen: 'kommen', gelaufen: 'laufen', gelesen: 'lesen',
+  genommen: 'nehmen', geschlafen: 'schlafen', geschrieben: 'schreiben',
+  gesehen: 'sehen', gesprochen: 'sprechen', gestanden: 'stehen', getroffen: 'treffen',
+  getrunken: 'trinken', gewesen: 'sein', gewusst: 'wissen', geworden: 'werden',
+  verstanden: 'verstehen', verschoben: 'verschieben',
+  verloren: 'verlieren', begonnen: 'beginnen', gewonnen: 'gewinnen',
+  geschlossen: 'schließen', geflogen: 'fliegen', gestiegen: 'steigen',
+  gezogen: 'ziehen', angerufen: 'anrufen', geschwommen: 'schwimmen',
+  gesungen: 'singen', gewaschen: 'waschen', getragen: 'tragen',
+  gelassen: 'lassen', gehalten: 'halten', geheißen: 'heißen',
+};
+const PARTICIPLE_LEMMAS = new Set(Object.values(PARTICIPLES));
+// 单独导出一份分词表：难度/语法审计要判断"这是不是完成时"，
+// 靠 ge- 正则既漏掉 verschoben，又会误伤 Gesicht/Gebäude。
+const participles = {};
+const addParticiple = (form, lemma) => {
+  // 「这是第二分词」是形态事实，与该动词是否属于 A1 词表无关：
+  // verschieben 不在 A1 词库里，但 verschoben 仍然是完成时，审计必须看得见。
+  participles[key(form)] = lemma;
+  if (entries[lemma]) addForm(form, lemma);
+};
+for (const [form, lemma] of Object.entries(PARTICIPLES)) addParticiple(form, lemma);
+
+// Regular Partizip II, built with the same restraint as the present tense above:
+// never invented for a verb we already know to be irregular.
+const SEPARABLE = ['ab', 'an', 'auf', 'aus', 'ein', 'mit', 'nach', 'vor', 'zurück', 'zusammen', 'weg', 'los', 'statt', 'fest'];
+const INSEPARABLE = /^(be|emp|ent|er|ge|miss|ver|zer)/;
+function regularParticiple(lemma) {
+  if (!lemma.endsWith('en') || lemma.includes(' ')) return null;
+  const suffix = stem => `${stem}${/[td]$/.test(stem) ? 'et' : 't'}`;
+  const sep = SEPARABLE.find(p => lemma.startsWith(p) && lemma.length > p.length + 3);
+  if (sep) return `${sep}ge${suffix(lemma.slice(sep.length, -2))}`;
+  if (INSEPARABLE.test(lemma)) return suffix(lemma.slice(0, -2));
+  return `ge${suffix(lemma.slice(0, -2))}`;
+}
+for (const [lemma, list] of Object.entries(entries)) {
+  if (!list.some(entry => entry.pos === 'v.')) continue;
+  if (PARTICIPLE_LEMMAS.has(lemma) || IRREGULAR[key(lemma)]) continue;
+  const participle = regularParticiple(lemma);
+  if (participle) addParticiple(participle, lemma);
+}
+
 const missing = Object.entries(entries).filter(([, list]) => list.some(entry => !entry.zh)).map(([lemma]) => lemma);
-const output = `// Generated by tools/gen_dict.mjs. Do not edit manually.\nexport const DICT_ENTRIES = ${JSON.stringify(entries, null, 2)};\n\nexport const DICT_FORMS = ${JSON.stringify(forms, null, 2)};\n\nexport const DICT_POS = ${JSON.stringify(positions, null, 2)};\n`;
+const output = `// Generated by tools/gen_dict.mjs. Do not edit manually.\nexport const DICT_ENTRIES = ${JSON.stringify(entries, null, 2)};\n\nexport const DICT_FORMS = ${JSON.stringify(forms, null, 2)};\n\nexport const DICT_POS = ${JSON.stringify(positions, null, 2)};\n\nexport const DICT_PARTICIPLES = ${JSON.stringify(participles, null, 2)};\n`;
 fs.writeFileSync(path.join(root, 'data/dict-core.js'), output);
 console.log(`dict-core: ${Object.keys(entries).length} entries, ${Object.keys(forms).length} forms`);
 console.log(`缺释义 (${missing.length}): ${missing.join(', ') || '无'}`);

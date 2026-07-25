@@ -19,6 +19,7 @@ export const COURSE_CATALOG = [
           "alphabet",
           "spelling-rules"
         ],
+        "vocabRefs": [],
         "stepCount": 17
       },
       {
@@ -27,6 +28,7 @@ export const COURSE_CATALOG = [
         "skills": [
           "vowel-length"
         ],
+        "vocabRefs": [],
         "stepCount": 15
       },
       {
@@ -35,6 +37,7 @@ export const COURSE_CATALOG = [
         "skills": [
           "umlaut"
         ],
+        "vocabRefs": [],
         "stepCount": 17
       },
       {
@@ -43,6 +46,7 @@ export const COURSE_CATALOG = [
         "skills": [
           "diphthong"
         ],
+        "vocabRefs": [],
         "stepCount": 17
       },
       {
@@ -52,6 +56,7 @@ export const COURSE_CATALOG = [
           "s-family",
           "ch-sound"
         ],
+        "vocabRefs": [],
         "stepCount": 20
       },
       {
@@ -61,6 +66,7 @@ export const COURSE_CATALOG = [
           "r-sound",
           "final-devoicing"
         ],
+        "vocabRefs": [],
         "stepCount": 18
       },
       {
@@ -69,6 +75,7 @@ export const COURSE_CATALOG = [
         "skills": [
           "misc-consonants"
         ],
+        "vocabRefs": [],
         "stepCount": 20
       },
       {
@@ -78,6 +85,7 @@ export const COURSE_CATALOG = [
           "word-stress",
           "sentence-intonation"
         ],
+        "vocabRefs": [],
         "stepCount": 20
       }
     ]
@@ -101,6 +109,18 @@ export const COURSE_CATALOG = [
           "sein-sg",
           "pron-sg"
         ],
+        "vocabRefs": [
+          "w001",
+          "w012",
+          "w173",
+          "w174",
+          "w228",
+          "w241",
+          "w244",
+          "w245",
+          "w246",
+          "w015"
+        ],
         "stepCount": 16
       },
       {
@@ -110,6 +130,13 @@ export const COURSE_CATALOG = [
           "sein-sg",
           "sie-formal"
         ],
+        "vocabRefs": [
+          "w047",
+          "w071",
+          "w170",
+          "w002",
+          "w004"
+        ],
         "stepCount": 16
       },
       {
@@ -118,6 +145,10 @@ export const COURSE_CATALOG = [
         "skills": [
           "sein-pl",
           "sein-sg"
+        ],
+        "vocabRefs": [
+          "w025",
+          "w060"
         ],
         "stepCount": 16
       }
@@ -142,6 +173,18 @@ export const COURSE_CATALOG = [
           "verb-reg",
           "v2-order"
         ],
+        "vocabRefs": [
+          "w112",
+          "w117",
+          "w096",
+          "w031",
+          "w108",
+          "w137",
+          "w212",
+          "w057",
+          "w103",
+          "w250"
+        ],
         "stepCount": 22
       },
       {
@@ -149,6 +192,17 @@ export const COURSE_CATALOG = [
         "title": "haben：说\"有\"",
         "skills": [
           "haben-conj"
+        ],
+        "vocabRefs": [
+          "w257",
+          "w044",
+          "w101",
+          "w078",
+          "w088",
+          "w080",
+          "w086",
+          "w102",
+          "w243"
         ],
         "stepCount": 22
       },
@@ -158,6 +212,17 @@ export const COURSE_CATALOG = [
         "skills": [
           "kommen-wohnen",
           "w-frage-basic"
+        ],
+        "vocabRefs": [
+          "w017",
+          "w018",
+          "w022",
+          "w023",
+          "w235",
+          "w234",
+          "w061",
+          "w135",
+          "w136"
         ],
         "stepCount": 22
       }
@@ -183,6 +248,21 @@ export const COURSE_CATALOG = [
           "numbers-tens",
           "numbers-compound"
         ],
+        "vocabRefs": [
+          "w028",
+          "w029",
+          "w065",
+          "w066",
+          "w129",
+          "w081",
+          "w039",
+          "w041",
+          "w266",
+          "w242",
+          "w035",
+          "w240",
+          "w254"
+        ],
         "stepCount": 24
       },
       {
@@ -192,6 +272,17 @@ export const COURSE_CATALOG = [
           "w-frage",
           "v2-order"
         ],
+        "vocabRefs": [
+          "w233",
+          "w234",
+          "w235",
+          "w237",
+          "w238",
+          "w239",
+          "w177",
+          "w031",
+          "w206"
+        ],
         "stepCount": 22
       },
       {
@@ -200,6 +291,16 @@ export const COURSE_CATALOG = [
         "skills": [
           "numbers-large",
           "formal-amt"
+        ],
+        "vocabRefs": [
+          "w151",
+          "w150",
+          "w028",
+          "w029",
+          "w020",
+          "w266",
+          "w267",
+          "w038"
         ],
         "stepCount": 21
       }
@@ -224,6 +325,16 @@ export const COURSE_CATALOG = [
           "noun-gender",
           "def-article"
         ],
+        "vocabRefs": [
+          "w140",
+          "w143",
+          "w183",
+          "w146",
+          "w141",
+          "w145",
+          "w218",
+          "w226"
+        ],
         "stepCount": 22
       },
       {
@@ -231,6 +342,14 @@ export const COURSE_CATALOG = [
         "title": "ein · eine",
         "skills": [
           "indef-article"
+        ],
+        "vocabRefs": [
+          "w180",
+          "w181",
+          "w043",
+          "w183",
+          "w143",
+          "w176"
         ],
         "stepCount": 21
       },
@@ -240,6 +359,15 @@ export const COURSE_CATALOG = [
         "skills": [
           "nom-review",
           "pronoun-replace"
+        ],
+        "vocabRefs": [
+          "w183",
+          "w081",
+          "w181",
+          "w043",
+          "w184",
+          "w140",
+          "w248"
         ],
         "stepCount": 22
       }
@@ -263,6 +391,16 @@ export const COURSE_CATALOG = [
         "skills": [
           "kein-basic"
         ],
+        "vocabRefs": [
+          "w081",
+          "w083",
+          "w087",
+          "w079",
+          "w078",
+          "w094",
+          "w158",
+          "w077"
+        ],
         "stepCount": 22
       },
       {
@@ -271,6 +409,14 @@ export const COURSE_CATALOG = [
         "skills": [
           "nicht-kein"
         ],
+        "vocabRefs": [
+          "w183",
+          "w193",
+          "w044",
+          "w125",
+          "w081",
+          "w082"
+        ],
         "stepCount": 22
       },
       {
@@ -278,6 +424,18 @@ export const COURSE_CATALOG = [
         "title": "名词复数",
         "skills": [
           "plural"
+        ],
+        "vocabRefs": [
+          "w137",
+          "w141",
+          "w140",
+          "w143",
+          "w183",
+          "w142",
+          "w144",
+          "w155",
+          "w156",
+          "w036"
         ],
         "stepCount": 23
       }
@@ -301,6 +459,17 @@ export const COURSE_CATALOG = [
         "skills": [
           "vowel-change-ei"
         ],
+        "vocabRefs": [
+          "w098",
+          "w107",
+          "w105",
+          "w086",
+          "w019",
+          "w027",
+          "w109",
+          "w090",
+          "w182"
+        ],
         "stepCount": 24
       },
       {
@@ -310,6 +479,16 @@ export const COURSE_CATALOG = [
           "vowel-change-ae",
           "wissen"
         ],
+        "vocabRefs": [
+          "w116",
+          "w115",
+          "w118",
+          "w152",
+          "w153",
+          "w109",
+          "w058",
+          "w211"
+        ],
         "stepCount": 24
       },
       {
@@ -317,6 +496,16 @@ export const COURSE_CATALOG = [
         "title": "非正式命令式 du-Imperativ",
         "skills": [
           "imperative-du"
+        ],
+        "vocabRefs": [
+          "w017",
+          "w105",
+          "w120",
+          "w256",
+          "w181",
+          "w146",
+          "w222",
+          "w153"
         ],
         "stepCount": 24
       }
@@ -340,6 +529,16 @@ export const COURSE_CATALOG = [
         "skills": [
           "possessive-basic"
         ],
+        "vocabRefs": [
+          "w065",
+          "w066",
+          "w062",
+          "w063",
+          "w140",
+          "w183",
+          "w081",
+          "w064"
+        ],
         "stepCount": 23
       },
       {
@@ -349,6 +548,17 @@ export const COURSE_CATALOG = [
           "pred-adj",
           "zu-adj"
         ],
+        "vocabRefs": [
+          "w121",
+          "w219",
+          "w220",
+          "w143",
+          "w221",
+          "w217",
+          "w216",
+          "w183",
+          "w111"
+        ],
         "stepCount": 22
       },
       {
@@ -357,6 +567,14 @@ export const COURSE_CATALOG = [
         "skills": [
           "wessen-review",
           "possessive-basic"
+        ],
+        "vocabRefs": [
+          "w146",
+          "w181",
+          "w043",
+          "w156",
+          "w123",
+          "w183"
         ],
         "stepCount": 22
       }
@@ -381,6 +599,15 @@ export const COURSE_CATALOG = [
           "time-informal",
           "time-formal"
         ],
+        "vocabRefs": [
+          "w043",
+          "w153",
+          "w152",
+          "w044",
+          "w081",
+          "w229",
+          "w040"
+        ],
         "stepCount": 23
       },
       {
@@ -388,6 +615,13 @@ export const COURSE_CATALOG = [
         "title": "可分动词：前缀飞到句尾",
         "skills": [
           "separable-verbs"
+        ],
+        "vocabRefs": [
+          "w130",
+          "w131",
+          "w132",
+          "w134",
+          "w212"
         ],
         "stepCount": 24
       },
@@ -398,6 +632,14 @@ export const COURSE_CATALOG = [
           "prep-time-an-um",
           "ordinal-date"
         ],
+        "vocabRefs": [
+          "w050",
+          "w043",
+          "w044",
+          "w017",
+          "w309",
+          "w310"
+        ],
         "stepCount": 24
       },
       {
@@ -405,6 +647,18 @@ export const COURSE_CATALOG = [
         "title": "艾玛的一天：顺序副词综合",
         "skills": [
           "sequence-adverbs"
+        ],
+        "vocabRefs": [
+          "w130",
+          "w094",
+          "w131",
+          "w132",
+          "w034",
+          "w108",
+          "w311",
+          "w312",
+          "w313",
+          "w314"
         ],
         "stepCount": 24
       }
@@ -429,6 +683,16 @@ export const COURSE_CATALOG = [
           "modal-koennen-wollen",
           "satzklammer"
         ],
+        "vocabRefs": [
+          "w259",
+          "w261",
+          "w117",
+          "w122",
+          "w112",
+          "w108",
+          "w031",
+          "w014"
+        ],
         "stepCount": 24
       },
       {
@@ -436,6 +700,17 @@ export const COURSE_CATALOG = [
         "title": "müssen·sollen之辨",
         "skills": [
           "modal-muessen-sollen"
+        ],
+        "vocabRefs": [
+          "w260",
+          "w264",
+          "w191",
+          "w115",
+          "w080",
+          "w113",
+          "w008",
+          "w171",
+          "w167"
         ],
         "stepCount": 24
       },
@@ -445,6 +720,16 @@ export const COURSE_CATALOG = [
         "skills": [
           "modal-duerfen",
           "moechten"
+        ],
+        "vocabRefs": [
+          "w263",
+          "w120",
+          "w183",
+          "w258",
+          "w081",
+          "w082",
+          "w106",
+          "w105"
         ],
         "stepCount": 24
       }
@@ -468,6 +753,16 @@ export const COURSE_CATALOG = [
         "skills": [
           "akk-masc-only"
         ],
+        "vocabRefs": [
+          "w140",
+          "w141",
+          "w143",
+          "w183",
+          "w180",
+          "w126",
+          "w257",
+          "w120"
+        ],
         "stepCount": 24
       },
       {
@@ -476,6 +771,13 @@ export const COURSE_CATALOG = [
         "skills": [
           "pronoun-akk"
         ],
+        "vocabRefs": [
+          "w127",
+          "w107",
+          "w132",
+          "w262",
+          "w126"
+        ],
         "stepCount": 24
       },
       {
@@ -483,6 +785,15 @@ export const COURSE_CATALOG = [
         "title": "综合运用：购物找东西",
         "skills": [
           "akk-review"
+        ],
+        "vocabRefs": [
+          "w127",
+          "w180",
+          "w107",
+          "w120",
+          "w126",
+          "w143",
+          "w141"
         ],
         "stepCount": 24
       }
@@ -506,6 +817,17 @@ export const COURSE_CATALOG = [
         "skills": [
           "dativ-dem-der"
         ],
+        "vocabRefs": [
+          "w315",
+          "w122",
+          "w316",
+          "w317",
+          "w156",
+          "w183",
+          "w065",
+          "w066",
+          "w067"
+        ],
         "stepCount": 24
       },
       {
@@ -513,6 +835,17 @@ export const COURSE_CATALOG = [
         "title": "三格介词与缩合",
         "skills": [
           "prep-dativ-zu"
+        ],
+        "vocabRefs": [
+          "w061",
+          "w176",
+          "w158",
+          "w153",
+          "w155",
+          "w033",
+          "w022",
+          "w023",
+          "w188"
         ],
         "stepCount": 24
       },
@@ -522,6 +855,16 @@ export const COURSE_CATALOG = [
         "skills": [
           "location-dativ"
         ],
+        "vocabRefs": [
+          "w183",
+          "w140",
+          "w143",
+          "w181",
+          "w137",
+          "w142",
+          "w146",
+          "w145"
+        ],
         "stepCount": 24
       },
       {
@@ -529,6 +872,15 @@ export const COURSE_CATALOG = [
         "title": "人称代词第三格",
         "skills": [
           "pronoun-dativ"
+        ],
+        "vocabRefs": [
+          "w275",
+          "w119",
+          "w122",
+          "w294",
+          "w183",
+          "w143",
+          "w249"
         ],
         "stepCount": 24
       }
@@ -552,6 +904,16 @@ export const COURSE_CATALOG = [
         "skills": [
           "war-hatte"
         ],
+        "vocabRefs": [
+          "w191",
+          "w193",
+          "w044",
+          "w195",
+          "w197",
+          "w256",
+          "w257",
+          "w059"
+        ],
         "stepCount": 24
       },
       {
@@ -559,6 +921,17 @@ export const COURSE_CATALOG = [
         "title": "完成时：haben + 第二分词",
         "skills": [
           "perfekt-haben"
+        ],
+        "vocabRefs": [
+          "w113",
+          "w109",
+          "w117",
+          "w105",
+          "w106",
+          "w131",
+          "w108",
+          "w132",
+          "w091"
         ],
         "stepCount": 24
       },
@@ -568,6 +941,14 @@ export const COURSE_CATALOG = [
         "skills": [
           "perfekt-sein"
         ],
+        "vocabRefs": [
+          "w116",
+          "w104",
+          "w017",
+          "w176",
+          "w193",
+          "w318"
+        ],
         "stepCount": 24
       },
       {
@@ -575,6 +956,16 @@ export const COURSE_CATALOG = [
         "title": "昨天叙述综合",
         "skills": [
           "perfekt-narrate"
+        ],
+        "vocabRefs": [
+          "w311",
+          "w312",
+          "w313",
+          "w314",
+          "w130",
+          "w131",
+          "w104",
+          "w318"
         ],
         "stepCount": 24
       }
@@ -598,6 +989,16 @@ export const COURSE_CATALOG = [
         "skills": [
           "comparative"
         ],
+        "vocabRefs": [
+          "w028",
+          "w216",
+          "w214",
+          "w014",
+          "w220",
+          "w180",
+          "w183",
+          "w232"
+        ],
         "stepCount": 24
       },
       {
@@ -605,6 +1006,16 @@ export const COURSE_CATALOG = [
         "title": "gehen+不定式 与 es用法",
         "skills": [
           "es-impersonal"
+        ],
+        "vocabRefs": [
+          "w131",
+          "w201",
+          "w158",
+          "w115",
+          "w193",
+          "w005",
+          "w319",
+          "w213"
         ],
         "stepCount": 24
       },
@@ -628,6 +1039,12 @@ export const COURSE_CATALOG = [
           "perfekt-sein",
           "comparative"
         ],
+        "vocabRefs": [
+          "w112",
+          "w259",
+          "w019",
+          "w033"
+        ],
         "stepCount": 21
       }
     ]
@@ -648,6 +1065,16 @@ export const COURSE_CATALOG = [
           "greet-intro",
           "du-sie"
         ],
+        "vocabRefs": [
+          "w016",
+          "w235",
+          "w017",
+          "w022",
+          "w023",
+          "w031",
+          "w032",
+          "w003"
+        ],
         "stepCount": 16
       },
       {
@@ -655,6 +1082,17 @@ export const COURSE_CATALOG = [
         "title": "咖啡馆点单 Im Café",
         "skills": [
           "polite-order"
+        ],
+        "vocabRefs": [
+          "w003",
+          "w233",
+          "w014",
+          "w011",
+          "w009",
+          "w214",
+          "w008",
+          "w007",
+          "w099"
         ],
         "stepCount": 16
       },
@@ -664,6 +1102,17 @@ export const COURSE_CATALOG = [
         "skills": [
           "shop-chunks",
           "frag-order"
+        ],
+        "vocabRefs": [
+          "w010",
+          "w234",
+          "w121",
+          "w078",
+          "w080",
+          "w166",
+          "w088",
+          "w165",
+          "w281"
         ],
         "stepCount": 16
       }
@@ -686,6 +1135,14 @@ export const COURSE_CATALOG = [
           "bus-ticket",
           "zu-dativ"
         ],
+        "vocabRefs": [
+          "w151",
+          "w166",
+          "w164",
+          "w153",
+          "w163",
+          "w046"
+        ],
         "stepCount": 18
       },
       {
@@ -695,6 +1152,15 @@ export const COURSE_CATALOG = [
           "uni-chunks",
           "polite-request",
           "du-sie"
+        ],
+        "vocabRefs": [
+          "w020",
+          "w176",
+          "w177",
+          "w223",
+          "w164",
+          "w247",
+          "w252"
         ],
         "stepCount": 19
       },
@@ -706,6 +1172,18 @@ export const COURSE_CATALOG = [
           "wehtun",
           "pharmacy",
           "appointment"
+        ],
+        "vocabRefs": [
+          "w197",
+          "w185",
+          "w194",
+          "w196",
+          "w171",
+          "w080",
+          "w129",
+          "w253",
+          "w255",
+          "w291"
         ],
         "stepCount": 20
       }
@@ -728,6 +1206,22 @@ export const COURSE_CATALOG = [
           "repair-report",
           "gefallen-dat"
         ],
+        "vocabRefs": [
+          "w269",
+          "w270",
+          "w271",
+          "w272",
+          "w274",
+          "w275",
+          "w137",
+          "w148",
+          "w146",
+          "w049",
+          "w139",
+          "w268",
+          "w273",
+          "w302"
+        ],
         "stepCount": 25
       },
       {
@@ -737,6 +1231,18 @@ export const COURSE_CATALOG = [
           "bank-account",
           "sim-card",
           "possessive-agree"
+        ],
+        "vocabRefs": [
+          "w276",
+          "w277",
+          "w278",
+          "w280",
+          "w282",
+          "w284",
+          "w126",
+          "w018",
+          "w267",
+          "w279"
         ],
         "stepCount": 25
       },
@@ -748,6 +1254,17 @@ export const COURSE_CATALOG = [
           "allergy",
           "split-bill",
           "v2-order"
+        ],
+        "vocabRefs": [
+          "w285",
+          "w286",
+          "w287",
+          "w288",
+          "w289",
+          "w290",
+          "w098",
+          "w090",
+          "w089"
         ],
         "stepCount": 25
       }
@@ -770,6 +1287,20 @@ export const COURSE_CATALOG = [
           "perfekt-intro",
           "emergency-numbers"
         ],
+        "vocabRefs": [
+          "w292",
+          "w293",
+          "w297",
+          "w298",
+          "w299",
+          "w301",
+          "w122",
+          "w181",
+          "w107",
+          "w295",
+          "w296",
+          "w300"
+        ],
         "stepCount": 25
       },
       {
@@ -780,6 +1311,17 @@ export const COURSE_CATALOG = [
           "document-chunks",
           "separable-verb"
         ],
+        "vocabRefs": [
+          "w303",
+          "w304",
+          "w305",
+          "w306",
+          "w307",
+          "w308",
+          "w278",
+          "w197",
+          "w214"
+        ],
         "stepCount": 24
       },
       {
@@ -789,6 +1331,22 @@ export const COURSE_CATALOG = [
           "aufenthaltstitel",
           "document-chunks",
           "modal-bracket"
+        ],
+        "vocabRefs": [
+          "w278",
+          "w307",
+          "w197",
+          "w305",
+          "w048",
+          "w214",
+          "w320",
+          "w321",
+          "w322",
+          "w323",
+          "w324",
+          "w325",
+          "w326",
+          "w327"
         ],
         "stepCount": 25
       }
@@ -811,6 +1369,19 @@ export const COURSE_CATALOG = [
           "uni-chunks",
           "reflexive-prep"
         ],
+        "vocabRefs": [
+          "w304",
+          "w294",
+          "w019",
+          "w284",
+          "w214",
+          "w328",
+          "w329",
+          "w330",
+          "w331",
+          "w332",
+          "w333"
+        ],
         "stepCount": 25
       },
       {
@@ -819,6 +1390,18 @@ export const COURSE_CATALOG = [
         "skills": [
           "bibliothek",
           "separable-verb"
+        ],
+        "vocabRefs": [
+          "w283",
+          "w121",
+          "w259",
+          "w183",
+          "w334",
+          "w335",
+          "w336",
+          "w337",
+          "w338",
+          "w332"
         ],
         "stepCount": 25
       },
@@ -829,6 +1412,19 @@ export const COURSE_CATALOG = [
           "pruefung",
           "reflexive-prep",
           "perfekt-intro"
+        ],
+        "vocabRefs": [
+          "w263",
+          "w260",
+          "w304",
+          "w256",
+          "w043",
+          "w237",
+          "w339",
+          "w340",
+          "w341",
+          "w342",
+          "w343"
         ],
         "stepCount": 25
       }
@@ -850,6 +1446,17 @@ export const COURSE_CATALOG = [
           "verabredung",
           "du-vs-sie"
         ],
+        "vocabRefs": [
+          "w095",
+          "w101",
+          "w308",
+          "w014",
+          "w344",
+          "w345",
+          "w346",
+          "w347",
+          "w327"
+        ],
         "stepCount": 25
       },
       {
@@ -860,6 +1467,16 @@ export const COURSE_CATALOG = [
           "modalpartikel",
           "du-vs-sie"
         ],
+        "vocabRefs": [
+          "w106",
+          "w261",
+          "w219",
+          "w014",
+          "w348",
+          "w349",
+          "w350",
+          "w351"
+        ],
         "stepCount": 25
       },
       {
@@ -868,6 +1485,20 @@ export const COURSE_CATALOG = [
         "skills": [
           "einladung",
           "ablehnen"
+        ],
+        "vocabRefs": [
+          "w310",
+          "w305",
+          "w132",
+          "w044",
+          "w055",
+          "w054",
+          "w013",
+          "w224",
+          "w352",
+          "w353",
+          "w354",
+          "w355"
         ],
         "stepCount": 25
       }
@@ -905,6 +1536,32 @@ export const COURSE_CATALOG = [
           "verabredung",
           "party-chunks",
           "einladung"
+        ],
+        "vocabRefs": [
+          "w033",
+          "w048",
+          "w151",
+          "w153",
+          "w158",
+          "w177",
+          "w183",
+          "w197",
+          "w278",
+          "w301",
+          "w303",
+          "w305",
+          "w307",
+          "w320",
+          "w322",
+          "w326",
+          "w327",
+          "w330",
+          "w334",
+          "w339",
+          "w344",
+          "w345",
+          "w346",
+          "w350"
         ],
         "stepCount": 27
       }
@@ -1267,8 +1924,579 @@ export const VOCAB_IDS = [
   "w352",
   "w353",
   "w354",
-  "w355"
+  "w355",
+  "w356",
+  "w357",
+  "w358",
+  "w359",
+  "w360",
+  "w361",
+  "w362",
+  "w363",
+  "w364",
+  "w365",
+  "w366",
+  "w367",
+  "w368",
+  "w369",
+  "w370",
+  "w371",
+  "w372",
+  "w373",
+  "w374",
+  "w375",
+  "w376",
+  "w377",
+  "w378",
+  "w379",
+  "w380",
+  "w381",
+  "w382",
+  "w383",
+  "w384",
+  "w385",
+  "w386",
+  "w387",
+  "w388",
+  "w389",
+  "w390",
+  "w391",
+  "w392",
+  "w393",
+  "w394",
+  "w395",
+  "w396",
+  "w397",
+  "w398",
+  "w399",
+  "w400",
+  "w401",
+  "w402",
+  "w403",
+  "w404",
+  "w405",
+  "w406",
+  "w407",
+  "w408",
+  "w409",
+  "w410",
+  "w411",
+  "w412",
+  "w413",
+  "w414",
+  "w415",
+  "w416",
+  "w417",
+  "w418",
+  "w419",
+  "w420",
+  "w421",
+  "w422",
+  "w423",
+  "w424",
+  "w425",
+  "w426",
+  "w427",
+  "w428",
+  "w429",
+  "w430",
+  "w431",
+  "w432",
+  "w433",
+  "w434",
+  "w435",
+  "w436",
+  "w437",
+  "w438",
+  "w439",
+  "w440"
 ];
+
+// 精读/精听正文里实际出现的词（自动标注，见 tools/auto-vocab-refs.mjs）。
+// 推荐排序与"正合适/稍难"标签都读这里，不要读内容文件里手写的 vocabRefs——
+// 后者是作者标注意图，覆盖不全，当信号用会退化成噪声。
+export const CONTENT_VOCAB = {
+ "r01": [
+  "w016",
+  "w256",
+  "w029",
+  "w028",
+  "w017",
+  "w023",
+  "w018",
+  "w174",
+  "w405",
+  "w031",
+  "w061",
+  "w257",
+  "w065"
+ ],
+ "r02": [
+  "w256",
+  "w061",
+  "w062",
+  "w016",
+  "w029",
+  "w028",
+  "w113",
+  "w169",
+  "w063",
+  "w172",
+  "w257",
+  "w066",
+  "w104",
+  "w175",
+  "w371",
+  "w426",
+  "w056",
+  "w117",
+  "w103"
+ ],
+ "r03": [
+  "w283",
+  "w043",
+  "w106",
+  "w081",
+  "w397",
+  "w078",
+  "w088",
+  "w087",
+  "w116",
+  "w153",
+  "w176",
+  "w257",
+  "w037",
+  "w389",
+  "w378",
+  "w077",
+  "w345",
+  "w380",
+  "w112",
+  "w334",
+  "w135",
+  "w004",
+  "w117",
+  "w107",
+  "w104",
+  "w142"
+ ],
+ "r04": [
+  "w002",
+  "w003",
+  "w258",
+  "w081",
+  "w009",
+  "w120",
+  "w082",
+  "w077",
+  "w377",
+  "w008",
+  "w099",
+  "w103",
+  "w364",
+  "w240",
+  "w360",
+  "w219"
+ ],
+ "r05": [
+  "w257",
+  "w371",
+  "w016",
+  "w256",
+  "w029",
+  "w028",
+  "w216",
+  "w412",
+  "w077",
+  "w115",
+  "w240",
+  "w002",
+  "w104",
+  "w162",
+  "w114",
+  "w399",
+  "w222",
+  "w231",
+  "w004",
+  "w138",
+  "w424"
+ ],
+ "r06": [
+  "w391",
+  "w055",
+  "w283",
+  "w319",
+  "w043",
+  "w104",
+  "w131",
+  "w380",
+  "w017",
+  "w034",
+  "w106",
+  "w081",
+  "w019",
+  "w240",
+  "w004",
+  "w376",
+  "w366",
+  "w256",
+  "w056",
+  "w198",
+  "w219",
+  "w116",
+  "w156",
+  "w162",
+  "w103",
+  "w193",
+  "w231"
+ ],
+ "r07": [
+  "w111",
+  "w158",
+  "w126",
+  "w078",
+  "w083",
+  "w087",
+  "w093",
+  "w086",
+  "w256",
+  "w221",
+  "w375",
+  "w129",
+  "w364",
+  "w088",
+  "w090",
+  "w089",
+  "w220",
+  "w374",
+  "w128",
+  "w228",
+  "w404",
+  "w219",
+  "w003",
+  "w116",
+  "w156",
+  "w135"
+ ],
+ "r08": [
+  "w424",
+  "w256",
+  "w149",
+  "w216",
+  "w226",
+  "w331",
+  "w050",
+  "w177",
+  "w049",
+  "w136",
+  "w217",
+  "w219",
+  "w401",
+  "w148",
+  "w220",
+  "w364",
+  "w074",
+  "w391",
+  "w393",
+  "w257",
+  "w104",
+  "w240"
+ ],
+ "rp-a1-01": [
+  "w303",
+  "w020",
+  "w368",
+  "w025",
+  "w113",
+  "w103",
+  "w367",
+  "w256",
+  "w419",
+  "w019",
+  "w370",
+  "w218",
+  "w112",
+  "w004"
+ ],
+ "rp-a1-02": [
+  "w364",
+  "w256",
+  "w214",
+  "w381",
+  "w217",
+  "w218",
+  "w392",
+  "w143",
+  "w423",
+  "w126",
+  "w383"
+ ],
+ "rp-a1-03": [
+  "w052",
+  "w392",
+  "w112",
+  "w384",
+  "w382",
+  "w369",
+  "w366",
+  "w110",
+  "w119",
+  "w121",
+  "w347",
+  "w361",
+  "w003",
+  "w396",
+  "w043"
+ ],
+ "rp-a1-04": [
+  "w147",
+  "w364",
+  "w303",
+  "w200",
+  "w177",
+  "w031",
+  "w135",
+  "w362",
+  "w256",
+  "w332",
+  "w408",
+  "w259",
+  "w103",
+  "w420",
+  "w366",
+  "w077"
+ ],
+ "rp-a1-05": [
+  "w137",
+  "w151",
+  "w364",
+  "w138",
+  "w256",
+  "w139",
+  "w386",
+  "w153",
+  "w398",
+  "w135",
+  "w150",
+  "w422",
+  "w401",
+  "w144",
+  "w104",
+  "w116",
+  "w046"
+ ],
+ "rp-a1-06": [
+  "w256",
+  "w055",
+  "w152",
+  "w116",
+  "w257",
+  "w077",
+  "w399",
+  "w421",
+  "w439",
+  "w104",
+  "w314",
+  "w240",
+  "w367",
+  "w103",
+  "w080",
+  "w409",
+  "w253"
+ ],
+ "li-b01": [
+  "w002",
+  "w003",
+  "w258",
+  "w106",
+  "w081",
+  "w009",
+  "w083",
+  "w077",
+  "w377",
+  "w257",
+  "w120",
+  "w103",
+  "w364",
+  "w259",
+  "w280",
+  "w407",
+  "w008",
+  "w219",
+  "w007"
+ ],
+ "li-b02": [
+  "w018",
+  "w137",
+  "w256",
+  "w217",
+  "w418",
+  "w283",
+  "w142",
+  "w144",
+  "w257",
+  "w358",
+  "w138",
+  "w388",
+  "w173",
+  "w117",
+  "w004",
+  "w139",
+  "w332",
+  "w148",
+  "w129",
+  "w364",
+  "w049",
+  "w153",
+  "w176",
+  "w116",
+  "w408",
+  "w046",
+  "w391",
+  "w104",
+  "w162",
+  "w135"
+ ],
+ "li-p01": [
+  "w016",
+  "w017",
+  "w018",
+  "w077",
+  "w113",
+  "w025",
+  "w126",
+  "w167",
+  "w020",
+  "w256",
+  "w112",
+  "w369",
+  "w075",
+  "w019",
+  "w027",
+  "w428",
+  "w385"
+ ],
+ "li-p02": [
+  "w020",
+  "w009",
+  "w256",
+  "w365",
+  "w395",
+  "w406",
+  "w229",
+  "w384"
+ ],
+ "li-p03": [
+  "w356",
+  "w372",
+  "w177",
+  "w331",
+  "w004",
+  "w043",
+  "w417",
+  "w384",
+  "w256",
+  "w218",
+  "w104",
+  "w046",
+  "w361",
+  "w121",
+  "w240",
+  "w360"
+ ],
+ "li-p04": [
+  "w259",
+  "w056",
+  "w149",
+  "w103",
+  "w256",
+  "w002",
+  "w258",
+  "w425",
+  "w120",
+  "w380",
+  "w264",
+  "w201",
+  "w104",
+  "w314",
+  "w347",
+  "w376",
+  "w214",
+  "w419",
+  "w318"
+ ],
+ "li-p05": [
+  "w104",
+  "w151",
+  "w120",
+  "w357",
+  "w401",
+  "w217",
+  "w338",
+  "w107",
+  "w416",
+  "w135",
+  "w361",
+  "w359",
+  "w256"
+ ],
+ "li-p06": [
+  "w055",
+  "w256",
+  "w116",
+  "w257",
+  "w081",
+  "w106",
+  "w156",
+  "w387",
+  "w121",
+  "w274",
+  "w080",
+  "w399",
+  "w004",
+  "w193",
+  "w215",
+  "w003",
+  "w219"
+ ]
+};
+
+// 正文实词总数。readiness 的分母必须是它，不是 CONTENT_VOCAB 的长度——
+// 后者漏掉所有没有词卡的生词，算出的已知率会永远接近 100%。
+export const CONTENT_WORD_COUNTS = {
+ "r01": 13,
+ "r02": 19,
+ "r03": 26,
+ "r04": 17,
+ "r05": 21,
+ "r06": 27,
+ "r07": 26,
+ "r08": 22,
+ "rp-a1-01": 15,
+ "rp-a1-02": 13,
+ "rp-a1-03": 15,
+ "rp-a1-04": 17,
+ "rp-a1-05": 18,
+ "rp-a1-06": 19,
+ "li-b01": 20,
+ "li-b02": 30,
+ "li-p01": 17,
+ "li-p02": 10,
+ "li-p03": 16,
+ "li-p04": 22,
+ "li-p05": 14,
+ "li-p06": 19
+};
+
+/** 一份内容实际覆盖的词 id；没有索引时回退到手写 vocabRefs。 */
+export function contentVocabRefs(item) {
+  return CONTENT_VOCAB[item?.id] || item?.vocabRefs || [];
+}
+
+/** 一份内容的实词总数；没有索引时退回已知词数，至少不会除以 0。 */
+export function contentWordTotal(item) {
+  return CONTENT_WORD_COUNTS[item?.id] || contentVocabRefs(item).length;
+}
 
 export function nextCatalogLesson(states = {}) {
   for (const unit of COURSE_CATALOG) {

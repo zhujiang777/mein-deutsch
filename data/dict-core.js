@@ -82,7 +82,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "注意"
+      "zh": "注意；当心"
     }
   ],
   "achtzehn": [
@@ -118,7 +118,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "pron.",
       "art": null,
-      "zh": "所有人；全部"
+      "zh": "所有的；全部"
     }
   ],
   "allein": [
@@ -518,6 +518,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Ausgänge",
       "zh": "出口"
     }
   ],
@@ -826,7 +827,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adj.",
       "art": null,
-      "zh": "最好的"
+      "zh": "最好的（gut 的最高级）"
     }
   ],
   "bestellen": [
@@ -840,7 +841,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "拜访；上（学校）"
+      "zh": "拜访；上（学）"
     }
   ],
   "Bett": [
@@ -919,7 +920,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "请求；邀请"
+      "zh": "请求"
     }
   ],
   "bitter": [
@@ -961,6 +962,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
+      "pl": "Blumen",
       "zh": "花"
     }
   ],
@@ -1099,6 +1101,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Cafés",
       "zh": "咖啡馆"
     }
   ],
@@ -1482,6 +1485,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Eingänge",
       "zh": "入口"
     }
   ],
@@ -1538,7 +1542,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "入场；入场费"
+      "pl": "Eintritte",
+      "zh": "入场；门票"
     }
   ],
   "Einzelzimmer": [
@@ -1580,6 +1585,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Enden",
       "zh": "结尾；结束"
     }
   ],
@@ -1637,7 +1643,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "num.",
       "art": null,
-      "zh": "第一"
+      "zh": "第一（的）"
     }
   ],
   "Erwachsene": [
@@ -1693,6 +1699,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Euro",
       "zh": "欧元"
     }
   ],
@@ -1765,7 +1772,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "姓；家族名"
+      "pl": "Familiennamen",
+      "zh": "姓"
     }
   ],
   "Familienstand": [
@@ -1863,7 +1871,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "电影；胶片"
+      "pl": "Filme",
+      "zh": "电影"
     }
   ],
   "finden": [
@@ -1936,6 +1945,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Fotos",
       "zh": "照片"
     }
   ],
@@ -2139,6 +2149,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Geburtsorte",
       "zh": "出生地"
     }
   ],
@@ -2267,6 +2278,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Gespräche",
       "zh": "谈话；对话"
     }
   ],
@@ -2435,7 +2447,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "组；团体"
+      "pl": "Gruppen",
+      "zh": "小组；团体"
     }
   ],
   "Gruß": [
@@ -2526,7 +2539,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "拿着；停下/停靠；保持"
+      "zh": "拿着；停靠"
     }
   ],
   "Haltestelle": [
@@ -2720,6 +2733,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Hunde",
       "zh": "狗"
     }
   ],
@@ -2818,7 +2832,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "信息；资料"
+      "pl": "Informationen",
+      "zh": "信息"
     }
   ],
   "ins": [
@@ -2960,7 +2975,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "卡片；地图"
+      "pl": "Karten",
+      "zh": "卡片；票；地图"
     }
   ],
   "Kartoffel": [
@@ -2974,7 +2990,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "收银台；现金"
+      "pl": "Kassen",
+      "zh": "收银台"
     }
   ],
   "kaufen": [
@@ -3009,6 +3026,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Kilo",
       "zh": "公斤"
     }
   ],
@@ -3045,6 +3063,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Kinos",
       "zh": "电影院"
     }
   ],
@@ -3159,6 +3178,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Kuchen",
       "zh": "蛋糕"
     }
   ],
@@ -3288,7 +3308,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adj.",
       "art": null,
-      "zh": "大声的；吵闹的"
+      "zh": "大声的；吵的"
     }
   ],
   "leben": [
@@ -3401,14 +3421,14 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "爱；喜欢"
+      "zh": "爱"
     }
   ],
   "lieber": [
     {
-      "pos": "adj.",
+      "pos": "adv.",
       "art": null,
-      "zh": "更喜欢；宁愿"
+      "zh": "更愿意；宁可"
     }
   ],
   "Lieblingslied": [
@@ -3429,7 +3449,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "躺；位于"
+      "zh": "位于；躺"
     }
   ],
   "links": [
@@ -3519,7 +3539,7 @@ export const DICT_ENTRIES = {
   ],
   "mehr": [
     {
-      "pos": "adj.",
+      "pos": "adv.",
       "art": null,
       "zh": "更多；更"
     }
@@ -3572,7 +3592,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "租用"
+      "zh": "租"
     }
   ],
   "Milch": [
@@ -3643,7 +3663,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "中午；午餐"
+      "pl": "Mittage",
+      "zh": "中午"
     }
   ],
   "Mitte": [
@@ -3665,6 +3686,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Momente",
       "zh": "片刻；时刻"
     }
   ],
@@ -3773,6 +3795,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Nachmittage",
       "zh": "下午"
     }
   ],
@@ -3858,7 +3881,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adv.",
       "art": null,
-      "zh": "还；仍然；又"
+      "zh": "还；仍然"
     }
   ],
   "Norden": [
@@ -3908,7 +3931,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adv.",
       "art": null,
-      "zh": "在上面；向上"
+      "zh": "在上面"
     }
   ],
   "Obst": [
@@ -3985,6 +4008,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Papiere",
       "zh": "纸；文件"
     }
   ],
@@ -4021,7 +4045,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
-      "zh": "休息；课间休息"
+      "pl": "Pausen",
+      "zh": "休息；课间"
     }
   ],
   "Pfund": [
@@ -4092,7 +4117,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "价格；奖品"
+      "pl": "Preise",
+      "zh": "价格；奖"
     }
   ],
   "Problem": [
@@ -4156,6 +4182,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
+      "pl": "Räume",
       "zh": "房间；空间"
     }
   ],
@@ -4199,6 +4226,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
+      "pl": "Reisen",
       "zh": "旅行"
     }
   ],
@@ -4298,7 +4326,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "说；告诉"
+      "zh": "说"
     }
   ],
   "Salat": [
@@ -4419,7 +4447,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adv.",
       "art": null,
-      "zh": "已经；早就"
+      "zh": "已经"
     }
   ],
   "Schrank": [
@@ -4568,7 +4596,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "prep.",
       "art": null,
-      "zh": "自从；自……以来"
+      "zh": "自从"
     }
   ],
   "Sekunde": [
@@ -4822,7 +4850,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "楼层；棍子"
+      "pl": "Stockwerke",
+      "zh": "楼层"
     }
   ],
   "Straße": [
@@ -4903,6 +4932,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "die",
+      "pl": "Taschen",
       "zh": "包；口袋"
     }
   ],
@@ -4932,7 +4962,8 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "部分；份"
+      "pl": "Teile",
+      "zh": "部分"
     }
   ],
   "Telefon": [
@@ -5140,7 +5171,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "der",
-      "zh": "课程；上课"
+      "zh": "课；教学"
     }
   ],
   "unterschreiben": [
@@ -5246,7 +5277,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adj.",
       "art": null,
-      "zh": "许多；多的"
+      "zh": "许多的"
     }
   ],
   "vielleicht": [
@@ -5628,6 +5659,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Wochenenden",
       "zh": "周末"
     }
   ],
@@ -5678,6 +5710,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "n.",
       "art": "das",
+      "pl": "Wörter",
       "zh": "词；单词"
     }
   ],
@@ -5692,7 +5725,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "v.",
       "art": null,
-      "zh": "支付；付款"
+      "zh": "支付"
     }
   ],
   "zehn": [
@@ -5805,7 +5838,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "adv.",
       "art": null,
-      "zh": "一起；共同"
+      "zh": "一起"
     }
   ],
   "zwanzig": [
@@ -6654,6 +6687,224 @@ export const DICT_ENTRIES = {
       "art": null,
       "zh": "很棒的；出色的"
     }
+  ],
+  "als": [
+    {
+      "pos": "konj.",
+      "art": null,
+      "zh": "当……时；作为"
+    }
+  ],
+  "deshalb": [
+    {
+      "pos": "adv.",
+      "art": null,
+      "zh": "因此；所以"
+    }
+  ],
+  "direkt": [
+    {
+      "pos": "adj.",
+      "art": null,
+      "zh": "直接的；就在"
+    }
+  ],
+  "doch": [
+    {
+      "pos": "adv.",
+      "art": null,
+      "zh": "可是；还是"
+    }
+  ],
+  "du": [
+    {
+      "pos": "pron.",
+      "art": null,
+      "zh": "你"
+    }
+  ],
+  "erst": [
+    {
+      "pos": "adv.",
+      "art": null,
+      "zh": "才；起初"
+    }
+  ],
+  "fallen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "落下；下降"
+    }
+  ],
+  "früh": [
+    {
+      "pos": "adj.",
+      "art": null,
+      "zh": "早的；早"
+    }
+  ],
+  "genau": [
+    {
+      "pos": "adj.",
+      "art": null,
+      "zh": "准确的；正是"
+    }
+  ],
+  "gegenüber": [
+    {
+      "pos": "prep.",
+      "art": null,
+      "zh": "在……对面"
+    }
+  ],
+  "hinter": [
+    {
+      "pos": "prep.",
+      "art": null,
+      "zh": "在……后面"
+    }
+  ],
+  "mich": [
+    {
+      "pos": "pron.",
+      "art": null,
+      "zh": "我（第四格）"
+    }
+  ],
+  "neben": [
+    {
+      "pos": "prep.",
+      "art": null,
+      "zh": "在……旁边"
+    }
+  ],
+  "null": [
+    {
+      "pos": "num.",
+      "art": null,
+      "zh": "零"
+    }
+  ],
+  "sondern": [
+    {
+      "pos": "konj.",
+      "art": null,
+      "zh": "而是"
+    }
+  ],
+  "Stück": [
+    {
+      "pos": "n.",
+      "art": "das",
+      "pl": "Stücke",
+      "zh": "块；个（量词）"
+    }
+  ],
+  "uns": [
+    {
+      "pos": "pron.",
+      "art": null,
+      "zh": "我们（第三/四格）"
+    }
+  ],
+  "vorbei": [
+    {
+      "pos": "adv.",
+      "art": null,
+      "zh": "过去了；经过"
+    }
+  ],
+  "Weg": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Wege",
+      "zh": "路；道路"
+    }
+  ],
+  "Markt": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Märkte",
+      "zh": "市场；集市"
+    }
+  ],
+  "Notiz": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Notizen",
+      "zh": "便条；笔记"
+    }
+  ],
+  "Telefonnummer": [
+    {
+      "pos": "n.",
+      "art": "die",
+      "pl": "Telefonnummern",
+      "zh": "电话号码"
+    }
+  ],
+  "Vorschlag": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Vorschläge",
+      "zh": "建议"
+    }
+  ],
+  "Wohnort": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Wohnorte",
+      "zh": "居住地"
+    }
+  ],
+  "Wunsch": [
+    {
+      "pos": "n.",
+      "art": "der",
+      "pl": "Wünsche",
+      "zh": "愿望"
+    }
+  ],
+  "denken": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "想；思考"
+    }
+  ],
+  "vergessen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "忘记"
+    }
+  ],
+  "ausgehen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "外出；出门"
+    }
+  ],
+  "zurückkommen": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "回来"
+    }
+  ],
+  "zurückfahren": [
+    {
+      "pos": "v.",
+      "art": null,
+      "zh": "返回（乘车）"
+    }
   ]
 };
 
@@ -6979,6 +7230,9 @@ export const DICT_FORMS = {
   "ausfüllen": [
     "ausfüllen"
   ],
+  "ausgänge": [
+    "Ausgang"
+  ],
   "ausländische": [
     "ausländisch"
   ],
@@ -7255,6 +7509,9 @@ export const DICT_FORMS = {
   "besuchen": [
     "besuchen"
   ],
+  "hat besucht": [
+    "besuchen"
+  ],
   "betten": [
     "Bett"
   ],
@@ -7303,6 +7560,9 @@ export const DICT_FORMS = {
   "bitten": [
     "bitten"
   ],
+  "hat gebeten": [
+    "bitten"
+  ],
   "bittere": [
     "bitter"
   ],
@@ -7347,6 +7607,9 @@ export const DICT_FORMS = {
   ],
   "ist geblieben": [
     "bleiben"
+  ],
+  "blumen": [
+    "Blume"
   ],
   "brauche": [
     "brauchen"
@@ -7429,6 +7692,9 @@ export const DICT_FORMS = {
   "buchstabieren": [
     "buchstabieren"
   ],
+  "hat buchstabiert": [
+    "buchstabieren"
+  ],
   "busse": [
     "Bus"
   ],
@@ -7451,6 +7717,9 @@ export const DICT_FORMS = {
   "bösem": [
     "bös",
     "böse"
+  ],
+  "cafés": [
+    "Café"
   ],
   "computer": [
     "Computer"
@@ -7581,6 +7850,9 @@ export const DICT_FORMS = {
   "einfachem": [
     "einfach"
   ],
+  "eingänge": [
+    "Eingang"
+  ],
   "kaufe ein": [
     "einkaufen"
   ],
@@ -7626,6 +7898,9 @@ export const DICT_FORMS = {
   "einsteigen": [
     "einsteigen"
   ],
+  "eintritte": [
+    "Eintritt"
+  ],
   "empfehle": [
     "empfehlen"
   ],
@@ -7644,6 +7919,10 @@ export const DICT_FORMS = {
   "hat empfohlen": [
     "empfehlen"
   ],
+  "enden": [
+    "Ende",
+    "enden"
+  ],
   "ende": [
     "enden"
   ],
@@ -7653,7 +7932,7 @@ export const DICT_FORMS = {
   "endet": [
     "enden"
   ],
-  "enden": [
+  "hat geendet": [
     "enden"
   ],
   "entschuldige": [
@@ -7722,6 +8001,9 @@ export const DICT_FORMS = {
   "hat gegessen": [
     "essen"
   ],
+  "euro": [
+    "Euro"
+  ],
   "europäische": [
     "europäisch"
   ],
@@ -7775,6 +8057,9 @@ export const DICT_FORMS = {
   ],
   "familien": [
     "Familie"
+  ],
+  "familiennamen": [
+    "Familienname"
   ],
   "fehle": [
     "fehlen"
@@ -7836,6 +8121,9 @@ export const DICT_FORMS = {
   "fertigem": [
     "fertig"
   ],
+  "filme": [
+    "Film"
+  ],
   "finde": [
     "finden"
   ],
@@ -7871,6 +8159,9 @@ export const DICT_FORMS = {
   ],
   "flughäfen": [
     "Flughafen"
+  ],
+  "fotos": [
+    "Foto"
   ],
   "frage": [
     "fragen"
@@ -7971,6 +8262,9 @@ export const DICT_FORMS = {
   "frühstücken": [
     "frühstücken"
   ],
+  "hat gefrühstückt": [
+    "frühstücken"
+  ],
   "füße": [
     "Fuß"
   ],
@@ -8010,6 +8304,9 @@ export const DICT_FORMS = {
   "geborenem": [
     "geboren"
   ],
+  "geburtsorte": [
+    "Geburtsort"
+  ],
   "geburtstage": [
     "Geburtstag"
   ],
@@ -8023,7 +8320,8 @@ export const DICT_FORMS = {
     "gefallen"
   ],
   "gefallen": [
-    "gefallen"
+    "gefallen",
+    "fallen"
   ],
   "gefallt": [
     "gefallen"
@@ -8053,7 +8351,8 @@ export const DICT_FORMS = {
     "gehören"
   ],
   "gehört": [
-    "gehören"
+    "gehören",
+    "hören"
   ],
   "gehören": [
     "gehören"
@@ -8094,6 +8393,9 @@ export const DICT_FORMS = {
   ],
   "geschäfte": [
     "Geschäft"
+  ],
+  "gespräche": [
+    "Gespräch"
   ],
   "gewinne": [
     "gewinnen"
@@ -8212,6 +8514,9 @@ export const DICT_FORMS = {
   "großväter": [
     "Großvater"
   ],
+  "gruppen": [
+    "Gruppe"
+  ],
   "grüne": [
     "grün"
   ],
@@ -8324,6 +8629,9 @@ export const DICT_FORMS = {
     "halten"
   ],
   "haltet": [
+    "halten"
+  ],
+  "hat gehalten": [
     "halten"
   ],
   "hände": [
@@ -8442,6 +8750,9 @@ export const DICT_FORMS = {
   "holen": [
     "holen"
   ],
+  "hunde": [
+    "Hund"
+  ],
   "höre": [
     "hören"
   ],
@@ -8453,6 +8764,9 @@ export const DICT_FORMS = {
   ],
   "hören": [
     "hören"
+  ],
+  "informationen": [
+    "Information"
   ],
   "internationale": [
     "international"
@@ -8505,6 +8819,12 @@ export const DICT_FORMS = {
   "kaputtem": [
     "kaputt"
   ],
+  "karten": [
+    "Karte"
+  ],
+  "kassen": [
+    "Kasse"
+  ],
   "kaufe": [
     "kaufen"
   ],
@@ -8547,8 +8867,14 @@ export const DICT_FORMS = {
   "hat kennengelernt": [
     "kennenlernen"
   ],
+  "kilo": [
+    "Kilo"
+  ],
   "kinder": [
     "Kind"
+  ],
+  "kinos": [
+    "Kino"
   ],
   "klare": [
     "klar"
@@ -8657,6 +8983,9 @@ export const DICT_FORMS = {
   ],
   "kriegen": [
     "kriegen"
+  ],
+  "kuchen": [
+    "Kuchen"
   ],
   "kulturelle": [
     "kulturell"
@@ -8770,6 +9099,9 @@ export const DICT_FORMS = {
     "laufen"
   ],
   "lauft": [
+    "laufen"
+  ],
+  "ist gelaufen": [
     "laufen"
   ],
   "laute": [
@@ -8927,20 +9259,8 @@ export const DICT_FORMS = {
   "liebt": [
     "lieben"
   ],
-  "liebere": [
-    "lieber"
-  ],
-  "lieberen": [
-    "lieber"
-  ],
-  "lieberer": [
-    "lieber"
-  ],
-  "lieberes": [
-    "lieber"
-  ],
-  "lieberem": [
-    "lieber"
+  "hat geliebt": [
+    "lieben"
   ],
   "liege": [
     "liegen"
@@ -8952,6 +9272,9 @@ export const DICT_FORMS = {
     "liegen"
   ],
   "liegen": [
+    "liegen"
+  ],
+  "hat gelegen": [
     "liegen"
   ],
   "lustige": [
@@ -8987,21 +9310,6 @@ export const DICT_FORMS = {
   "männer": [
     "Mann"
   ],
-  "mehre": [
-    "mehr"
-  ],
-  "mehren": [
-    "mehr"
-  ],
-  "mehrer": [
-    "mehr"
-  ],
-  "mehres": [
-    "mehr"
-  ],
-  "mehrem": [
-    "mehr"
-  ],
   "meiste": [
     "meist"
   ],
@@ -9031,6 +9339,9 @@ export const DICT_FORMS = {
     "mieten"
   ],
   "mietet": [
+    "mieten"
+  ],
+  "hat gemietet": [
     "mieten"
   ],
   "minuten": [
@@ -9090,8 +9401,14 @@ export const DICT_FORMS = {
   "mitnehmen": [
     "mitnehmen"
   ],
+  "mittage": [
+    "Mittag"
+  ],
   "mittwoche": [
     "Mittwoch"
+  ],
+  "momente": [
+    "Moment"
   ],
   "montage": [
     "Montag"
@@ -9183,6 +9500,9 @@ export const DICT_FORMS = {
   "mussten": [
     "müssen"
   ],
+  "nachmittage": [
+    "Nachmittag"
+  ],
   "namen": [
     "Name"
   ],
@@ -9252,11 +9572,20 @@ export const DICT_FORMS = {
   "nächstem": [
     "nächst"
   ],
+  "papiere": [
+    "Papier"
+  ],
   "partys": [
     "Party"
   ],
+  "pausen": [
+    "Pause"
+  ],
   "plätze": [
     "Platz"
+  ],
+  "preise": [
+    "Preis"
   ],
   "prüfungen": [
     "Prüfung"
@@ -9288,6 +9617,9 @@ export const DICT_FORMS = {
   "rauchen": [
     "rauchen"
   ],
+  "räume": [
+    "Raum"
+  ],
   "rechnungen": [
     "Rechnung"
   ],
@@ -9297,13 +9629,17 @@ export const DICT_FORMS = {
   "hat geregnet": [
     "regnen"
   ],
+  "reisen": [
+    "Reise",
+    "reisen"
+  ],
   "reise": [
     "reisen"
   ],
   "reist": [
     "reisen"
   ],
-  "reisen": [
+  "ist gereist": [
     "reisen"
   ],
   "repariere": [
@@ -9391,6 +9727,9 @@ export const DICT_FORMS = {
     "sagen"
   ],
   "sagen": [
+    "sagen"
+  ],
+  "hat gesagt": [
     "sagen"
   ],
   "samstage": [
@@ -9768,6 +10107,9 @@ export const DICT_FORMS = {
   "stellen": [
     "stellen"
   ],
+  "stockwerke": [
+    "Stock"
+  ],
   "straßen": [
     "Straße"
   ],
@@ -9784,6 +10126,9 @@ export const DICT_FORMS = {
     "studieren"
   ],
   "studieren": [
+    "studieren"
+  ],
+  "hat studiert": [
     "studieren"
   ],
   "stunden": [
@@ -9816,8 +10161,14 @@ export const DICT_FORMS = {
   "tanzen": [
     "tanzen"
   ],
+  "taschen": [
+    "Tasche"
+  ],
   "tees": [
     "Tee"
+  ],
+  "teile": [
+    "Teil"
   ],
   "telefoniere": [
     "telefonieren"
@@ -10203,6 +10554,9 @@ export const DICT_FORMS = {
   "wiederholen": [
     "wiederholen"
   ],
+  "hat wiederholt": [
+    "wiederholen"
+  ],
   "willkommene": [
     "willkommen"
   ],
@@ -10242,6 +10596,9 @@ export const DICT_FORMS = {
   "wochen": [
     "Woche"
   ],
+  "wochenenden": [
+    "Wochenende"
+  ],
   "wohne": [
     "wohnen"
   ],
@@ -10279,6 +10636,9 @@ export const DICT_FORMS = {
   "wollten": [
     "wollen"
   ],
+  "wörter": [
+    "Wort"
+  ],
   "wunderbare": [
     "wunderbar"
   ],
@@ -10304,6 +10664,9 @@ export const DICT_FORMS = {
     "zahlen"
   ],
   "zahlen": [
+    "zahlen"
+  ],
+  "hat gezahlt": [
     "zahlen"
   ],
   "zeiten": [
@@ -11046,6 +11409,528 @@ export const DICT_FORMS = {
   ],
   "eures": [
     "euer"
+  ],
+  "falle": [
+    "fallen"
+  ],
+  "fällst": [
+    "fallen"
+  ],
+  "fällt": [
+    "fallen"
+  ],
+  "fallen": [
+    "fallen"
+  ],
+  "fallt": [
+    "fallen"
+  ],
+  "stücke": [
+    "Stück"
+  ],
+  "wege": [
+    "Weg"
+  ],
+  "märkte": [
+    "Markt"
+  ],
+  "notizen": [
+    "Notiz"
+  ],
+  "telefonnummern": [
+    "Telefonnummer"
+  ],
+  "vorschläge": [
+    "Vorschlag"
+  ],
+  "wohnorte": [
+    "Wohnort"
+  ],
+  "wünsche": [
+    "Wunsch"
+  ],
+  "denke": [
+    "denken"
+  ],
+  "denkst": [
+    "denken"
+  ],
+  "denkt": [
+    "denken"
+  ],
+  "denken": [
+    "denken"
+  ],
+  "dachte": [
+    "denken"
+  ],
+  "dachten": [
+    "denken"
+  ],
+  "vergesse": [
+    "vergessen"
+  ],
+  "vergisst": [
+    "vergessen"
+  ],
+  "vergessen": [
+    "vergessen"
+  ],
+  "vergesst": [
+    "vergessen"
+  ],
+  "gehe aus": [
+    "ausgehen"
+  ],
+  "gehst aus": [
+    "ausgehen"
+  ],
+  "geht aus": [
+    "ausgehen"
+  ],
+  "gehen aus": [
+    "ausgehen"
+  ],
+  "komme zurück": [
+    "zurückkommen"
+  ],
+  "kommst zurück": [
+    "zurückkommen"
+  ],
+  "kommt zurück": [
+    "zurückkommen"
+  ],
+  "kommen zurück": [
+    "zurückkommen"
+  ],
+  "fahre zurück": [
+    "zurückfahren"
+  ],
+  "fährst zurück": [
+    "zurückfahren"
+  ],
+  "fährt zurück": [
+    "zurückfahren"
+  ],
+  "fahren zurück": [
+    "zurückfahren"
+  ],
+  "angefangen": [
+    "anfangen"
+  ],
+  "aufgestanden": [
+    "aufstehen"
+  ],
+  "ausgegangen": [
+    "ausgehen"
+  ],
+  "eingeladen": [
+    "einladen"
+  ],
+  "mitgenommen": [
+    "mitnehmen"
+  ],
+  "zurückgekommen": [
+    "zurückkommen"
+  ],
+  "zurückgefahren": [
+    "zurückfahren"
+  ],
+  "gebracht": [
+    "bringen"
+  ],
+  "gedacht": [
+    "denken"
+  ],
+  "gefahren": [
+    "fahren"
+  ],
+  "gefunden": [
+    "finden"
+  ],
+  "gegangen": [
+    "gehen"
+  ],
+  "gegeben": [
+    "geben"
+  ],
+  "gegessen": [
+    "essen"
+  ],
+  "geblieben": [
+    "bleiben"
+  ],
+  "gehabt": [
+    "haben"
+  ],
+  "geholfen": [
+    "helfen"
+  ],
+  "gekommen": [
+    "kommen"
+  ],
+  "gelaufen": [
+    "laufen"
+  ],
+  "gelesen": [
+    "lesen"
+  ],
+  "genommen": [
+    "nehmen"
+  ],
+  "geschlafen": [
+    "schlafen"
+  ],
+  "geschrieben": [
+    "schreiben"
+  ],
+  "gesehen": [
+    "sehen"
+  ],
+  "gesprochen": [
+    "sprechen"
+  ],
+  "gestanden": [
+    "stehen"
+  ],
+  "getroffen": [
+    "treffen"
+  ],
+  "getrunken": [
+    "trinken"
+  ],
+  "gewesen": [
+    "sein"
+  ],
+  "gewusst": [
+    "wissen"
+  ],
+  "geworden": [
+    "werden"
+  ],
+  "verstanden": [
+    "verstehen"
+  ],
+  "verloren": [
+    "verlieren"
+  ],
+  "begonnen": [
+    "beginnen"
+  ],
+  "gewonnen": [
+    "gewinnen"
+  ],
+  "geschlossen": [
+    "schließen"
+  ],
+  "geflogen": [
+    "fliegen"
+  ],
+  "angerufen": [
+    "anrufen"
+  ],
+  "geschwommen": [
+    "schwimmen"
+  ],
+  "gewaschen": [
+    "waschen"
+  ],
+  "gehalten": [
+    "halten"
+  ],
+  "geheißen": [
+    "heißen"
+  ],
+  "abgefahrt": [
+    "abfahren"
+  ],
+  "abgefliegt": [
+    "abfliegen"
+  ],
+  "abgegebt": [
+    "abgeben"
+  ],
+  "abgeholt": [
+    "abholen"
+  ],
+  "angebietet": [
+    "anbieten"
+  ],
+  "angeklickt": [
+    "anklicken"
+  ],
+  "angekommt": [
+    "ankommen"
+  ],
+  "angekreuzt": [
+    "ankreuzen"
+  ],
+  "angemacht": [
+    "anmachen"
+  ],
+  "angemeldet": [
+    "anmelden"
+  ],
+  "angetwortet": [
+    "antworten"
+  ],
+  "angezieht": [
+    "anziehen"
+  ],
+  "gearbeitet": [
+    "arbeiten"
+  ],
+  "aufgehört": [
+    "aufhören"
+  ],
+  "ausgefüllt": [
+    "ausfüllen"
+  ],
+  "ausgemacht": [
+    "ausmachen"
+  ],
+  "ausgeseht": [
+    "aussehen"
+  ],
+  "ausgesteigt": [
+    "aussteigen"
+  ],
+  "ausgezieht": [
+    "ausziehen"
+  ],
+  "gebadet": [
+    "baden"
+  ],
+  "gebittet": [
+    "bitten"
+  ],
+  "gebraucht": [
+    "brauchen"
+  ],
+  "gebuchstabiert": [
+    "buchstabieren"
+  ],
+  "gedankt": [
+    "danken"
+  ],
+  "gedruckt": [
+    "drucken"
+  ],
+  "gedrückt": [
+    "drücken"
+  ],
+  "geduscht": [
+    "duschen"
+  ],
+  "eingekauft": [
+    "einkaufen"
+  ],
+  "eingesteigt": [
+    "einsteigen"
+  ],
+  "geendet": [
+    "enden"
+  ],
+  "gefehlt": [
+    "fehlen"
+  ],
+  "gefernseht": [
+    "fernsehen"
+  ],
+  "gefragt": [
+    "fragen"
+  ],
+  "gefreut": [
+    "freuen"
+  ],
+  "gefrühstückt": [
+    "frühstücken"
+  ],
+  "geglaubt": [
+    "glauben"
+  ],
+  "gegratuliert": [
+    "gratulieren"
+  ],
+  "gegrillt": [
+    "grillen"
+  ],
+  "geheiratet": [
+    "heiraten"
+  ],
+  "geholt": [
+    "holen"
+  ],
+  "gekauft": [
+    "kaufen"
+  ],
+  "gekennt": [
+    "kennen"
+  ],
+  "gekennenlernt": [
+    "kennenlernen"
+  ],
+  "gekocht": [
+    "kochen"
+  ],
+  "gekostet": [
+    "kosten"
+  ],
+  "gekriegt": [
+    "kriegen"
+  ],
+  "gelacht": [
+    "lachen"
+  ],
+  "gelebt": [
+    "leben"
+  ],
+  "gelegt": [
+    "legen"
+  ],
+  "gelernt": [
+    "lernen"
+  ],
+  "geliebt": [
+    "lieben"
+  ],
+  "geliegt": [
+    "liegen"
+  ],
+  "gemacht": [
+    "machen"
+  ],
+  "gemietet": [
+    "mieten"
+  ],
+  "mitgebringt": [
+    "mitbringen"
+  ],
+  "mitgekommt": [
+    "mitkommen"
+  ],
+  "mitgemacht": [
+    "mitmachen"
+  ],
+  "geraucht": [
+    "rauchen"
+  ],
+  "geregnt": [
+    "regnen"
+  ],
+  "gereist": [
+    "reisen"
+  ],
+  "gerepariert": [
+    "reparieren"
+  ],
+  "geriecht": [
+    "riechen"
+  ],
+  "gesagt": [
+    "sagen"
+  ],
+  "gescheint": [
+    "scheinen"
+  ],
+  "geschickt": [
+    "schicken"
+  ],
+  "geschmeckt": [
+    "schmecken"
+  ],
+  "gesitzt": [
+    "sitzen"
+  ],
+  "gespielt": [
+    "spielen"
+  ],
+  "gestellt": [
+    "stellen"
+  ],
+  "gestudiert": [
+    "studieren"
+  ],
+  "gesucht": [
+    "suchen"
+  ],
+  "getanzt": [
+    "tanzen"
+  ],
+  "getelefoniert": [
+    "telefonieren"
+  ],
+  "geumzieht": [
+    "umziehen"
+  ],
+  "geunterschreibt": [
+    "unterschreiben"
+  ],
+  "vorgestellt": [
+    "vorstellen"
+  ],
+  "gewartet": [
+    "warten"
+  ],
+  "gewiederholt": [
+    "wiederholen"
+  ],
+  "gewohnt": [
+    "wohnen"
+  ],
+  "gezahlt": [
+    "zahlen"
+  ],
+  "geöffnt": [
+    "öffnen"
+  ],
+  "geübernachtet": [
+    "übernachten"
+  ],
+  "geüberweist": [
+    "überweisen"
+  ],
+  "gemöchtet": [
+    "möchten"
+  ],
+  "gefunktioniert": [
+    "funktionieren"
+  ],
+  "eröffnt": [
+    "eröffnen"
+  ],
+  "gereserviert": [
+    "reservieren"
+  ],
+  "gestehlt": [
+    "stehlen"
+  ],
+  "gemeldet": [
+    "melden"
+  ],
+  "gepassiert": [
+    "passieren"
+  ],
+  "gepasst": [
+    "passen"
+  ],
+  "gewählt": [
+    "wählen"
+  ],
+  "ausgeleiht": [
+    "ausleihen"
+  ],
+  "zurückgegebt": [
+    "zurückgeben"
+  ],
+  "gedurchfallt": [
+    "durchfallen"
+  ],
+  "gesetzt": [
+    "setzen"
+  ],
+  "vorgehabt": [
+    "vorhaben"
   ]
 };
 
@@ -12482,7 +13367,7 @@ export const DICT_POS = {
     "v."
   ],
   "lieber": [
-    "adj."
+    "adv."
   ],
   "Lieblingslied": [
     "n."
@@ -12530,7 +13415,7 @@ export const DICT_POS = {
     "n."
   ],
   "mehr": [
-    "adj."
+    "adv."
   ],
   "mein": [
     "pron."
@@ -13833,5 +14718,264 @@ export const DICT_POS = {
   ],
   "klasse": [
     "adj."
+  ],
+  "als": [
+    "konj."
+  ],
+  "deshalb": [
+    "adv."
+  ],
+  "direkt": [
+    "adj."
+  ],
+  "doch": [
+    "adv."
+  ],
+  "du": [
+    "pron."
+  ],
+  "erst": [
+    "adv."
+  ],
+  "fallen": [
+    "v."
+  ],
+  "früh": [
+    "adj."
+  ],
+  "genau": [
+    "adj."
+  ],
+  "gegenüber": [
+    "prep."
+  ],
+  "hinter": [
+    "prep."
+  ],
+  "mich": [
+    "pron."
+  ],
+  "neben": [
+    "prep."
+  ],
+  "null": [
+    "num."
+  ],
+  "sondern": [
+    "konj."
+  ],
+  "Stück": [
+    "n."
+  ],
+  "uns": [
+    "pron."
+  ],
+  "vorbei": [
+    "adv."
+  ],
+  "Weg": [
+    "n."
+  ],
+  "Markt": [
+    "n."
+  ],
+  "Notiz": [
+    "n."
+  ],
+  "Telefonnummer": [
+    "n."
+  ],
+  "Vorschlag": [
+    "n."
+  ],
+  "Wohnort": [
+    "n."
+  ],
+  "Wunsch": [
+    "n."
+  ],
+  "denken": [
+    "v."
+  ],
+  "vergessen": [
+    "v."
+  ],
+  "ausgehen": [
+    "v."
+  ],
+  "zurückkommen": [
+    "v."
+  ],
+  "zurückfahren": [
+    "v."
   ]
+};
+
+export const DICT_PARTICIPLES = {
+  "angefangen": "anfangen",
+  "aufgestanden": "aufstehen",
+  "ausgegangen": "ausgehen",
+  "eingeladen": "einladen",
+  "mitgenommen": "mitnehmen",
+  "zurückgekommen": "zurückkommen",
+  "zurückgefahren": "zurückfahren",
+  "gebracht": "bringen",
+  "gedacht": "denken",
+  "gefahren": "fahren",
+  "gefallen": "fallen",
+  "gefunden": "finden",
+  "gegangen": "gehen",
+  "gegeben": "geben",
+  "gegessen": "essen",
+  "geblieben": "bleiben",
+  "gehabt": "haben",
+  "geholfen": "helfen",
+  "gekommen": "kommen",
+  "gelaufen": "laufen",
+  "gelesen": "lesen",
+  "genommen": "nehmen",
+  "geschlafen": "schlafen",
+  "geschrieben": "schreiben",
+  "gesehen": "sehen",
+  "gesprochen": "sprechen",
+  "gestanden": "stehen",
+  "getroffen": "treffen",
+  "getrunken": "trinken",
+  "gewesen": "sein",
+  "gewusst": "wissen",
+  "geworden": "werden",
+  "verstanden": "verstehen",
+  "verschoben": "verschieben",
+  "verloren": "verlieren",
+  "begonnen": "beginnen",
+  "gewonnen": "gewinnen",
+  "geschlossen": "schließen",
+  "geflogen": "fliegen",
+  "gestiegen": "steigen",
+  "gezogen": "ziehen",
+  "angerufen": "anrufen",
+  "geschwommen": "schwimmen",
+  "gesungen": "singen",
+  "gewaschen": "waschen",
+  "getragen": "tragen",
+  "gelassen": "lassen",
+  "gehalten": "halten",
+  "geheißen": "heißen",
+  "abgefahrt": "abfahren",
+  "abgefliegt": "abfliegen",
+  "abgegebt": "abgeben",
+  "abgeholt": "abholen",
+  "angebietet": "anbieten",
+  "angeklickt": "anklicken",
+  "angekommt": "ankommen",
+  "angekreuzt": "ankreuzen",
+  "angemacht": "anmachen",
+  "angemeldet": "anmelden",
+  "angetwortet": "antworten",
+  "angezieht": "anziehen",
+  "gearbeitet": "arbeiten",
+  "aufgehört": "aufhören",
+  "ausgefüllt": "ausfüllen",
+  "ausgemacht": "ausmachen",
+  "ausgeseht": "aussehen",
+  "ausgesteigt": "aussteigen",
+  "ausgezieht": "ausziehen",
+  "gebadet": "baden",
+  "bedeutet": "bedeuten",
+  "bekommt": "bekommen",
+  "benutzt": "benutzen",
+  "besichtigt": "besichtigen",
+  "bestellt": "bestellen",
+  "besucht": "besuchen",
+  "bezahlt": "bezahlen",
+  "gebittet": "bitten",
+  "gebraucht": "brauchen",
+  "gebuchstabiert": "buchstabieren",
+  "gedankt": "danken",
+  "gedruckt": "drucken",
+  "gedrückt": "drücken",
+  "geduscht": "duschen",
+  "eingekauft": "einkaufen",
+  "eingesteigt": "einsteigen",
+  "empfehlt": "empfehlen",
+  "geendet": "enden",
+  "entschuldigt": "entschuldigen",
+  "erklärt": "erklären",
+  "erlaubt": "erlauben",
+  "erzählt": "erzählen",
+  "gefehlt": "fehlen",
+  "gefernseht": "fernsehen",
+  "gefragt": "fragen",
+  "gefreut": "freuen",
+  "gefrühstückt": "frühstücken",
+  "gefallt": "gefallen",
+  "gehört": "hören",
+  "geglaubt": "glauben",
+  "gegratuliert": "gratulieren",
+  "gegrillt": "grillen",
+  "geheiratet": "heiraten",
+  "geholt": "holen",
+  "gekauft": "kaufen",
+  "gekennt": "kennen",
+  "gekennenlernt": "kennenlernen",
+  "gekocht": "kochen",
+  "gekostet": "kosten",
+  "gekriegt": "kriegen",
+  "gelacht": "lachen",
+  "gelebt": "leben",
+  "gelegt": "legen",
+  "gelernt": "lernen",
+  "geliebt": "lieben",
+  "geliegt": "liegen",
+  "gemacht": "machen",
+  "gemietet": "mieten",
+  "mitgebringt": "mitbringen",
+  "mitgekommt": "mitkommen",
+  "mitgemacht": "mitmachen",
+  "geraucht": "rauchen",
+  "geregnt": "regnen",
+  "gereist": "reisen",
+  "gerepariert": "reparieren",
+  "geriecht": "riechen",
+  "gesagt": "sagen",
+  "gescheint": "scheinen",
+  "geschickt": "schicken",
+  "geschmeckt": "schmecken",
+  "gesitzt": "sitzen",
+  "gespielt": "spielen",
+  "gestellt": "stellen",
+  "gestudiert": "studieren",
+  "gesucht": "suchen",
+  "getanzt": "tanzen",
+  "getelefoniert": "telefonieren",
+  "geumzieht": "umziehen",
+  "geunterschreibt": "unterschreiben",
+  "verdient": "verdienen",
+  "verkauft": "verkaufen",
+  "vermietet": "vermieten",
+  "vorgestellt": "vorstellen",
+  "gewartet": "warten",
+  "gewiederholt": "wiederholen",
+  "gewohnt": "wohnen",
+  "gezahlt": "zahlen",
+  "geöffnt": "öffnen",
+  "geübernachtet": "übernachten",
+  "geüberweist": "überweisen",
+  "gemöchtet": "möchten",
+  "gefunktioniert": "funktionieren",
+  "eröffnt": "eröffnen",
+  "gereserviert": "reservieren",
+  "gestehlt": "stehlen",
+  "gemeldet": "melden",
+  "gepassiert": "passieren",
+  "gepasst": "passen",
+  "beantragt": "beantragen",
+  "gewählt": "wählen",
+  "ausgeleiht": "ausleihen",
+  "zurückgegebt": "zurückgeben",
+  "behaltet": "behalten",
+  "besteht": "bestehen",
+  "gedurchfallt": "durchfallen",
+  "gesetzt": "setzen",
+  "vorgehabt": "vorhaben"
 };

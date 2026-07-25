@@ -231,6 +231,7 @@ export const COURSE = [
         id: 'u1l1',
         title: 'ich bin · du bist',
         skills: ['sein-sg', 'pron-sg'],
+        vocabRefs: ['w001', 'w012', 'w173', 'w174', 'w228', 'w241', 'w244', 'w245', 'w246', 'w015'],
         steps: [
           { type: 'scene', title: '安娜认识马克斯', lines: [
             { who: 'Anna', de: 'Hallo! Ich bin Anna.', zh: '你好！我是安娜。' },
@@ -272,6 +273,7 @@ export const COURSE = [
         id: 'u1l2',
         title: 'er/sie ist · Sie sind（尊称）',
         skills: ['sein-sg', 'sie-formal'],
+        vocabRefs: ['w047', 'w071', 'w170', 'w002', 'w004'],
         steps: [
           { type: 'scene', title: '安娜介绍新朋友', lines: [
             { who: 'Anna', de: 'Max, das ist Lena.', zh: '马克斯，这是莱娜。' },
@@ -313,6 +315,7 @@ export const COURSE = [
         id: 'u1l3',
         title: 'wir sind · ihr seid · sie sind',
         skills: ['sein-pl', 'sein-sg'],
+        vocabRefs: ['w025', 'w060'],
         steps: [
           { type: 'scene', title: '两组朋友互相认识', lines: [
             { who: 'Anna', de: 'Wir sind Studenten aus China.', zh: '我们是来自中国的大学生。' },
@@ -367,7 +370,7 @@ export const COURSE = [
         id: 'u2l1',
         title: '规则动词变位：lernen 型',
         skills: ['verb-reg', 'v2-order'],
-        vocabRefs: ['w112', 'w117', 'w096', 'w031', 'w108', 'w137', 'w212'],
+        vocabRefs: ['w112', 'w117', 'w096', 'w031', 'w108', 'w137', 'w212', 'w057', 'w103', 'w250'],
         steps: [
           { type: 'scene', title: '宿舍里的一天', lines: [
             { who: 'Jonas', de: 'Was machst du heute, Mia?', zh: '米娅，你今天做什么？' },
@@ -423,7 +426,7 @@ export const COURSE = [
         id: 'u2l2',
         title: 'haben：说"有"',
         skills: ['haben-conj'],
-        vocabRefs: ['w257', 'w044', 'w101', 'w078', 'w088', 'w080', 'w086'],
+        vocabRefs: ['w257', 'w044', 'w101', 'w078', 'w088', 'w080', 'w086', 'w102', 'w243'],
         steps: [
           { type: 'scene', title: '晚饭前的问候', lines: [
             { who: 'Tom', de: 'Hast du heute Zeit?', zh: '你今天有时间吗？' },
@@ -479,7 +482,7 @@ export const COURSE = [
         id: 'u2l3',
         title: '你来自哪：kommen · wohnen',
         skills: ['kommen-wohnen', 'w-frage-basic'],
-        vocabRefs: ['w017', 'w018', 'w022', 'w023', 'w235', 'w234', 'w061'],
+        vocabRefs: ['w017', 'w018', 'w022', 'w023', 'w235', 'w234', 'w061', 'w135', 'w136'],
         steps: [
           { type: 'scene', title: '国际学生见面会', lines: [
             { who: 'Mia', de: 'Woher kommst du, Jonas?', zh: '约纳斯，你从哪里来？' },
@@ -546,7 +549,7 @@ export const COURSE = [
         id: 'u3l1',
         title: '数字 1-100',
         skills: ['numbers-1-20', 'numbers-tens', 'numbers-compound'],
-        vocabRefs: ['w028', 'w029', 'w065', 'w066', 'w129', 'w081', 'w039', 'w041', 'w266'],
+        vocabRefs: ['w028', 'w029', 'w065', 'w066', 'w129', 'w081', 'w039', 'w041', 'w266', 'w242', 'w035', 'w240', 'w254'],
         steps: [
           { type: 'scene', title: '认识新朋友的年龄和房号', lines: [
             { who: 'Tom', de: 'Hallo! Wie alt bist du?', zh: '你好！你多大了？' },
@@ -605,7 +608,7 @@ export const COURSE = [
         id: 'u3l2',
         title: 'W-疑问句与动词第二位',
         skills: ['w-frage', 'v2-order'],
-        vocabRefs: ['w233', 'w234', 'w235', 'w237', 'w238', 'w239', 'w177', 'w031'],
+        vocabRefs: ['w233', 'w234', 'w235', 'w237', 'w238', 'w239', 'w177', 'w031', 'w206'],
         steps: [
           { type: 'scene', title: '在国际交流办公室', lines: [
             { who: 'Berater', de: 'Guten Tag! Wie heißen Sie?', zh: '您好！您叫什么名字？' },
@@ -664,7 +667,7 @@ export const COURSE = [
         id: 'u3l3',
         title: '大数字与正式场合',
         skills: ['numbers-large', 'formal-amt'],
-        vocabRefs: ['w151', 'w150', 'w028', 'w029', 'w020', 'w266', 'w267'],
+        vocabRefs: ['w151', 'w150', 'w028', 'w029', 'w020', 'w266', 'w267', 'w038'],
         steps: [
           { type: 'scene', title: '在市民登记处', lines: [
             { who: 'Beamter', de: 'Guten Tag! Ihre Nummer, bitte?', zh: '您好！请问您的号码？' },
@@ -730,7 +733,7 @@ export const COURSE = [
         id: 'u4l1',
         title: 'der · die · das',
         skills: ['noun-gender', 'def-article'],
-        vocabRefs: ['w140', 'w143', 'w183', 'w146', 'w141', 'w145'],
+        vocabRefs: ['w140', 'w143', 'w183', 'w146', 'w141', 'w145', 'w218', 'w226'],
         steps: [
           { type: 'scene', title: '打量新房间', lines: [
             { who: 'Jonas', de: 'Was ist das?', zh: '这是什么？' },
@@ -841,7 +844,7 @@ export const COURSE = [
         id: 'u4l3',
         title: '桌上是什么：第一格综合',
         skills: ['nom-review', 'pronoun-replace'],
-        vocabRefs: ['w183', 'w081', 'w181', 'w043', 'w184', 'w140'],
+        vocabRefs: ['w183', 'w081', 'w181', 'w043', 'w184', 'w140', 'w248'],
         steps: [
           { type: 'scene', title: '桌上有什么', lines: [
             { who: 'Mia', de: 'Was ist auf dem Tisch?', zh: '桌上有什么？' },
@@ -909,7 +912,7 @@ export const COURSE = [
         id: 'u5l1',
         title: 'kein：否定名词',
         skills: ['kein-basic'],
-        vocabRefs: ['w081', 'w083', 'w087', 'w079', 'w078', 'w094', 'w158'],
+        vocabRefs: ['w081', 'w083', 'w087', 'w079', 'w078', 'w094', 'w158', 'w077'],
         steps: [
           { type: 'scene', title: '厨房里没吃的了', lines: [
             { who: 'Mia', de: 'Ist noch Kaffee da?', zh: '还有咖啡吗？' },
@@ -1019,7 +1022,7 @@ export const COURSE = [
         id: 'u5l3',
         title: '名词复数',
         skills: ['plural'],
-        vocabRefs: ['w137', 'w141', 'w140', 'w143', 'w183', 'w142', 'w144', 'w155', 'w156'],
+        vocabRefs: ['w137', 'w141', 'w140', 'w143', 'w183', 'w142', 'w144', 'w155', 'w156', 'w036'],
         steps: [
           { type: 'scene', title: '看新公寓', lines: [
             { who: 'Jonas', de: 'Wie viele Zimmer hat die Wohnung?', zh: '这套公寓有几个房间？' },
@@ -1086,7 +1089,7 @@ export const COURSE = [
         id: 'u6l1',
         title: 'e→i · e→ie 换音',
         skills: ['vowel-change-ei'],
-        vocabRefs: ['w098', 'w107', 'w105', 'w086', 'w019', 'w027', 'w109', 'w090'],
+        vocabRefs: ['w098', 'w107', 'w105', 'w086', 'w019', 'w027', 'w109', 'w090', 'w182'],
         steps: [
           { type: 'scene', title: '在咖啡馆看菜单', lines: [
             { who: 'Jonas', de: 'Siehst du die Speisekarte?', zh: '你看到菜单了吗？' },
@@ -1145,7 +1148,7 @@ export const COURSE = [
         id: 'u6l2',
         title: 'a→ä 换音与 wissen',
         skills: ['vowel-change-ae', 'wissen'],
-        vocabRefs: ['w116', 'w115', 'w118', 'w152', 'w153', 'w109'],
+        vocabRefs: ['w116', 'w115', 'w118', 'w152', 'w153', 'w109', 'w058', 'w211'],
         steps: [
           { type: 'scene', title: '明天一起坐火车去柏林', lines: [
             { who: 'Mia', de: 'Fährst du morgen nach Berlin?', zh: '你明天去柏林吗？' },
@@ -1328,7 +1331,7 @@ export const COURSE = [
         id: 'u7l2',
         title: 'sein 后的形容词 · zu+形容词',
         skills: ['pred-adj', 'zu-adj'],
-        vocabRefs: ['w121', 'w219', 'w220', 'w143', 'w221', 'w217', 'w216', 'w183'],
+        vocabRefs: ['w121', 'w219', 'w220', 'w143', 'w221', 'w217', 'w216', 'w183', 'w111'],
         steps: [
           { type: 'scene', title: '在跳蚤市场挑东西', lines: [
             { who: 'Jonas', de: 'Wie findest du die Lampe?', zh: '你觉得这盏灯怎么样？' },
@@ -1453,7 +1456,7 @@ export const COURSE = [
         id: 'u8l1',
         title: '几点了：非正式与正式报时',
         skills: ['time-informal', 'time-formal'],
-        vocabRefs: ['w043', 'w153', 'w152', 'w044', 'w081', 'w229'],
+        vocabRefs: ['w043', 'w153', 'w152', 'w044', 'w081', 'w229', 'w040'],
         steps: [
           { type: 'scene', title: '约好几点见面', lines: [
             { who: 'Jonas', de: 'Wie viel Uhr ist es?', zh: '现在几点？' },
@@ -1753,7 +1756,7 @@ export const COURSE = [
         id: 'u9l2',
         title: 'müssen·sollen之辨',
         skills: ['modal-muessen-sollen'],
-        vocabRefs: ['w260', 'w264', 'w191', 'w115', 'w080', 'w113', 'w008', 'w171'],
+        vocabRefs: ['w260', 'w264', 'w191', 'w115', 'w080', 'w113', 'w008', 'w171', 'w167'],
         steps: [
           { type: 'scene', title: '生病去看医生', lines: [
             { who: 'Mia', de: 'Jonas, du bist krank! Gehst du zum Arzt?', zh: '约纳斯，你生病了！你去看医生吗？' },
@@ -2065,7 +2068,7 @@ export const COURSE = [
         id: 'u11l1',
         title: 'dem·der与三格动词',
         skills: ['dativ-dem-der'],
-        vocabRefs: ['w315', 'w122', 'w316', 'w317', 'w156', 'w183', 'w065', 'w066'],
+        vocabRefs: ['w315', 'w122', 'w316', 'w317', 'w156', 'w183', 'w065', 'w066', 'w067'],
         steps: [
           { type: 'scene', title: '这是谁的自行车？', lines: [
             { who: 'Mia', de: 'Wessen Fahrrad ist das? Gehört es dir?', zh: '这是谁的自行车？是你的吗？' },
@@ -2124,7 +2127,7 @@ export const COURSE = [
         id: 'u11l2',
         title: '三格介词与缩合',
         skills: ['prep-dativ-zu'],
-        vocabRefs: ['w061', 'w176', 'w158', 'w153', 'w155', 'w033', 'w022', 'w023'],
+        vocabRefs: ['w061', 'w176', 'w158', 'w153', 'w155', 'w033', 'w022', 'w023', 'w188'],
         steps: [
           { type: 'scene', title: '你从哪儿来？怎么去上学？', lines: [
             { who: 'Jonas', de: 'Woher kommst du? Aus China?', zh: '你从哪儿来？从中国吗？' },
@@ -2238,7 +2241,7 @@ export const COURSE = [
         id: 'u11l4',
         title: '人称代词第三格',
         skills: ['pronoun-dativ'],
-        vocabRefs: ['w275', 'w119', 'w122', 'w294', 'w183', 'w143'],
+        vocabRefs: ['w275', 'w119', 'w122', 'w294', 'w183', 'w143', 'w249'],
         steps: [
           { type: 'scene', title: '送什么礼物好', lines: [
             { who: 'Mia', de: 'Ich habe ein Buch für Tom. Gefällt es ihm?', zh: '我有一本书要给汤姆。他会喜欢吗？' },
@@ -2307,7 +2310,7 @@ export const COURSE = [
         id: 'u12l1',
         title: 'war·hatte：sein和haben的过去式',
         skills: ['war-hatte'],
-        vocabRefs: ['w191', 'w193', 'w044', 'w195', 'w197', 'w256', 'w257'],
+        vocabRefs: ['w191', 'w193', 'w044', 'w195', 'w197', 'w256', 'w257', 'w059'],
         steps: [
           { type: 'scene', title: '你昨天怎么了？', lines: [
             { who: 'Jonas', de: 'Wo warst du gestern?', zh: '你昨天在哪儿？' },
@@ -2364,7 +2367,7 @@ export const COURSE = [
         id: 'u12l2',
         title: '完成时：haben + 第二分词',
         skills: ['perfekt-haben'],
-        vocabRefs: ['w113', 'w109', 'w117', 'w105', 'w106', 'w131', 'w108', 'w132'],
+        vocabRefs: ['w113', 'w109', 'w117', 'w105', 'w106', 'w131', 'w108', 'w132', 'w091'],
         steps: [
           { type: 'scene', title: '你昨天做了什么', lines: [
             { who: 'Mia', de: 'Was hast du gestern gemacht?', zh: '你昨天做了什么？' },
@@ -2548,7 +2551,7 @@ export const COURSE = [
         id: 'u13l1',
         title: '比较级与wie·als',
         skills: ['comparative'],
-        vocabRefs: ['w028', 'w216', 'w214', 'w014', 'w220', 'w180', 'w183'],
+        vocabRefs: ['w028', 'w216', 'w214', 'w014', 'w220', 'w180', 'w183', 'w232'],
         steps: [
           { type: 'scene', title: '谁比较厉害', lines: [
             { who: 'Mia', de: 'Ist dein Bruder älter als du?', zh: '你哥哥比你大吗？' },
@@ -2605,7 +2608,7 @@ export const COURSE = [
         id: 'u13l2',
         title: 'gehen+不定式 与 es用法',
         skills: ['es-impersonal'],
-        vocabRefs: ['w131', 'w201', 'w158', 'w115', 'w193', 'w005', 'w319'],
+        vocabRefs: ['w131', 'w201', 'w158', 'w115', 'w193', 'w005', 'w319', 'w213'],
         steps: [
           { type: 'scene', title: '下雨了，去睡觉吧', lines: [
             { who: 'Mia', de: 'Gehst du heute einkaufen?', zh: '你今天要去购物吗？' },
@@ -2780,7 +2783,7 @@ export const COURSE = [
         id: 'sa-l2',
         title: '咖啡馆点单 Im Café',
         skills: ['polite-order'],
-        vocabRefs: ['w003', 'w233', 'w014', 'w011', 'w009', 'w214', 'w008', 'w007'],
+        vocabRefs: ['w003', 'w233', 'w014', 'w011', 'w009', 'w214', 'w008', 'w007', 'w099'],
         steps: [
           { type: 'scene', title: '在咖啡馆', lines: [
             { who: 'Lisa', de: 'Guten Tag! Was möchten Sie?', zh: '您好！您想要点什么？' },
@@ -2848,7 +2851,7 @@ export const COURSE = [
         id: 'sa-l3',
         title: '超市购物 Im Supermarkt',
         skills: ['shop-chunks', 'frag-order'],
-        vocabRefs: ['w010', 'w234', 'w121', 'w078', 'w080', 'w166', 'w088', 'w165'],
+        vocabRefs: ['w010', 'w234', 'w121', 'w078', 'w080', 'w166', 'w088', 'w165', 'w281'],
         steps: [
           { type: 'scene', title: '在超市', lines: [
             { who: 'Mia', de: 'Entschuldigung, wo finde ich Brot?', zh: '打扰一下，面包在哪儿？' },
@@ -3062,7 +3065,7 @@ export const COURSE = [
         id: 'sb-l3',
         title: '看医生与药店 Beim Arzt',
         skills: ['symptoms', 'wehtun', 'pharmacy', 'appointment'],
-        vocabRefs: ['w197', 'w185', 'w194', 'w196', 'w171', 'w080', 'w129', 'w253', 'w255'],
+        vocabRefs: ['w197', 'w185', 'w194', 'w196', 'w171', 'w080', 'w129', 'w253', 'w255', 'w291'],
         steps: [
           { type: 'scene', title: '在诊所', lines: [
             { who: 'Mia', de: 'Guten Tag! Ich habe einen Termin um zehn Uhr.', zh: '您好！我预约了十点。' },
@@ -3142,7 +3145,7 @@ export const COURSE = [
         id: 'sc-l1',
         title: '租房与宿舍 Wohnungssuche',
         skills: ['renting', 'repair-report', 'gefallen-dat'],
-        vocabRefs: ['w269', 'w270', 'w271', 'w272', 'w274', 'w275', 'w137', 'w148', 'w146'],
+        vocabRefs: ['w269', 'w270', 'w271', 'w272', 'w274', 'w275', 'w137', 'w148', 'w146', 'w049', 'w139', 'w268', 'w273', 'w302'],
         steps: [
           { type: 'scene', title: '看房', lines: [
             { who: 'Vermieterin', de: 'Guten Tag! Kommen Sie rein, das ist Ihr Zimmer.', zh: '您好！请进，这是您的房间。' },
@@ -3222,7 +3225,7 @@ export const COURSE = [
         id: 'sc-l2',
         title: '银行开户与手机卡 Konto und SIM-Karte',
         skills: ['bank-account', 'sim-card', 'possessive-agree'],
-        vocabRefs: ['w276', 'w277', 'w278', 'w280', 'w282', 'w284', 'w126', 'w018', 'w267'],
+        vocabRefs: ['w276', 'w277', 'w278', 'w280', 'w282', 'w284', 'w126', 'w018', 'w267', 'w279'],
         steps: [
           { type: 'scene', title: '在银行', lines: [
             { who: 'Mia', de: 'Guten Tag! Ich möchte ein Konto eröffnen.', zh: '您好！我想开一个账户。' },
@@ -3389,7 +3392,7 @@ export const COURSE = [
         id: 'sd-l1',
         title: '紧急情况 Notfall',
         skills: ['emergency-help', 'perfekt-intro', 'emergency-numbers'],
-        vocabRefs: ['w292', 'w293', 'w297', 'w298', 'w299', 'w301', 'w122', 'w181', 'w107'],
+        vocabRefs: ['w292', 'w293', 'w297', 'w298', 'w299', 'w301', 'w122', 'w181', 'w107', 'w295', 'w296', 'w300'],
         steps: [
           { type: 'scene', title: '手机不见了！', lines: [
             { who: 'Mia', de: 'Entschuldigung, können Sie mir helfen? Ich habe mein Handy verloren.', zh: '打扰一下，您能帮我吗？我的手机丢了。' },
