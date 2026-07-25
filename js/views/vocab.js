@@ -4,7 +4,7 @@ import { el, esc, audioBtn, haptic, icon, micBtn, motionIn, setProgress, toast }
 import { speak, stopSpeak, germanVoices } from '../speech.js';
 import { buildQueue, rate, srsStats, markKnown } from '../srs.js';
 import { getWordbook, removeWordEntry, logActivity, loadSrs } from '../storage.js';
-import { renderExercise } from '../exercises.js?v=2';
+import { renderExercise } from '../exercises.js?v=4';
 import { conjugationRows, getVocabWord, normalizeWord } from '../word-model.js';
 
 const wordbookIds = () => Object.keys(getWordbook());

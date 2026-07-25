@@ -22,7 +22,7 @@ function loadTodayRuntime() {
       import('../../data/readings.js'),
       import('./lesson.js'),
       import('./vocab.js'),
-      import('../exercises.js?v=3'),
+      import('../exercises.js?v=4'),
     ]).then(([course, readings, lessonView, vocabView, exercises]) => ({
       COURSE: course.COURSE,
       READINGS: readings.READINGS,

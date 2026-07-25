@@ -1,5 +1,8 @@
 // 共享 UI 组件：音频按钮、跟读麦克风、练习题渲染、toast
 import { speak, stopSpeak } from './speech.js';
+// 直接从 audio-timing.js 取常量而不是从 speech.js 转出：audio-timing.js 是新文件，
+// 不存在被浏览器缓存住的旧版本，避免「新 ui.js + 旧 speech.js」链接失败整页白屏。
+import { SLOW_RATE } from './audio-timing.js';
 import { recordingSupported, startRecording } from './recorder.js';
 import {
   assessPronunciation,
@@ -31,6 +34,8 @@ const ICONS = {
   star: '<path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"/>',
   target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
   play: '<path d="m9 7 8 5-8 5Z"/>',
+  pause: '<path d="M9.5 5v14M14.5 5v14"/>',
+  loop: '<path d="M4 10.5A3.5 3.5 0 0 1 7.5 7H19"/><path d="m16 4 3 3-3 3"/><path d="M20 13.5a3.5 3.5 0 0 1-3.5 3.5H5"/><path d="m8 20-3-3 3-3"/>',
   speaker: '<path d="M5 10v4h3l4 3V7l-4 3Z"/><path d="M15 9.5a4 4 0 0 1 0 5M17.5 7a7 7 0 0 1 0 10"/>',
   mic: '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5.5 12a6.5 6.5 0 0 0 13 0M12 18.5V22M9 22h6"/>',
   settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/>',
@@ -88,15 +93,19 @@ export function toast(msg, ms = 2200) {
   setTimeout(() => t.remove(), ms);
 }
 
-/* ---- 播放按钮（正常速 + 可选慢速） ---- */
-export function audioBtn(text, { slow = false } = {}) {
-  const b = el(`<button class="audio-btn${slow ? ' slow' : ''}" aria-label="${slow ? '慢速朗读' : '朗读'}" title="${slow ? '慢速朗读' : '朗读'}">${slow ? '0.8×' : icon('speaker')}</button>`);
+/* ---- 播放按钮（正常速 + 可选慢速）
+   source 传字符串走 speak()；传函数则由调用方决定怎么放（精听用它注入句级片段）。 ---- */
+export function audioBtn(source, { slow = false } = {}) {
+  const label = slow ? `${SLOW_RATE}×` : icon('speaker');
+  const b = el(`<button class="audio-btn${slow ? ' slow' : ''}" aria-label="${slow ? '慢速朗读' : '朗读'}" title="${slow ? '慢速朗读' : '朗读'}">${label}</button>`);
   b.addEventListener('click', (e) => {
     e.stopPropagation();
     document.querySelectorAll('.audio-btn.playing').forEach(x => x.classList.remove('playing'));
     b.classList.add('playing');
-    speak(text, { slow, onend: () => b.classList.remove('playing') });
-    setTimeout(() => b.classList.remove('playing'), 8000);
+    const done = () => b.classList.remove('playing');
+    if (typeof source === 'function') source({ slow, onend: done });
+    else speak(source, { slow, onend: done });
+    setTimeout(done, 8000);
   });
   return b;
 }

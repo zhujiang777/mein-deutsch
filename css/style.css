@@ -642,11 +642,68 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   transition: transform 150ms var(--ease-press), background-color 150ms ease;
 }
 .audio-btn:active, .mic-btn:active { transform: scale(0.92); }
-.audio-btn.slow { font-size: 0.78rem; font-weight: 800; }
+/* 慢速标签是 speech.js 的 SLOW_RATE 直出（"0.75×"），比旧的 "0.8×" 多一位，字号相应收紧 */
+.audio-btn.slow { font-size: 0.72rem; font-weight: 800; letter-spacing: -0.02em; }
 .audio-btn.playing { background: var(--accent); color: #ffffff; }
 
 .mic-btn { background: var(--blue-soft); color: var(--blue); }
 .mic-btn.listening { background: var(--red); color: #ffffff; animation: pulse 1.2s infinite; }
+
+/* ===== 精听播放条 ===== */
+.listen-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 12px;
+  margin: 12px 0;
+}
+.lb-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.lb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px; min-height: 44px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: transform 150ms var(--ease-press), background-color 150ms ease, color 150ms ease;
+}
+.lb-btn:active { transform: scale(0.94); }
+.lb-play { background: var(--accent); border-color: var(--accent); color: #ffffff; }
+.lb-mark.is-set, .lb-loop.is-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+.lb-track { margin-top: 12px; }
+/* 盲听阶段用圆点条，不泄露句子内容 */
+.lb-track.has-dots { display: flex; flex-wrap: wrap; gap: 8px; }
+.lb-dot {
+  width: 14px; height: 14px;
+  padding: 15px;                 /* 视觉 14px，触控 44px */
+  box-sizing: content-box;
+  background: var(--line-strong) content-box;
+  border-radius: 50%;
+  background-clip: content-box;
+}
+.lb-dot.in-range { background-color: var(--accent-soft); }
+.lb-dot.is-current { background-color: var(--accent); }
+
+/* 对照阶段用可点的句列表；长包在自己的容器里滚，页面不横向滚 */
+.lb-track.has-text { display: flex; flex-direction: column; gap: 4px; max-height: 46vh; overflow-y: auto; }
+.lb-sent {
+  display: flex; align-items: flex-start; gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 10px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  line-height: 1.5;
+}
+.lb-sent .lb-n { color: var(--text-2); font-size: 0.75rem; font-variant-numeric: tabular-nums; padding-top: 2px; }
+.lb-sent.in-range { background: var(--accent-soft); }
+.lb-sent.is-current { background: var(--accent-soft); box-shadow: inset 2px 0 0 var(--accent); }
 
 .phrase-row {
   display: flex; align-items: flex-start; gap: 14px;
