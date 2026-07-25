@@ -76,7 +76,12 @@ test('every word is either in the A1 dictionary or declared as new', () => {
   const undeclared = [];
   for (const pack of LISTENING_PACKS) {
     for (const [i, s] of pack.sentences.entries()) {
-      const { unknown } = coverage(s.de, { declared: s.newLemmas || [], proper: [...PROPER] });
+      const { unknown } = coverage(s.de, {
+        declared: pack.pilot
+          ? [...(pack.targetLemmas || []), ...(pack.newLemmas || [])]
+          : (s.newLemmas || []),
+        proper: [...PROPER, ...(pack.properNouns || [])]
+      });
       unknown.forEach(word => undeclared.push(`${pack.id}[${i}] ${word}`));
     }
   }
@@ -99,9 +104,30 @@ test('new-word density stays sane for an A1 pack', () => {
   }
 });
 
+test('pilot packs carry the production metadata and introduce 3-6 lemmas', () => {
+  const pilots = LISTENING_PACKS.filter(pack => pack.pilot);
+  assert.deepEqual(pilots.map(pack => pack.skillStage), ['L1', 'L2', 'L3', 'L4', 'L5', 'L6']);
+  for (const pack of pilots) {
+    for (const field of ['genre', 'topic', 'register', 'recommendedAfter', 'designReferences', 'provenance']) {
+      assert.ok(pack[field], `${pack.id} 缺 ${field}`);
+    }
+    assert.ok(Array.isArray(pack.grammarPrereqs) && pack.grammarPrereqs.length, `${pack.id} 缺 grammarPrereqs`);
+    assert.ok(Array.isArray(pack.targetLemmas) && pack.targetLemmas.length, `${pack.id} 缺 targetLemmas`);
+    assert.ok(pack.newLemmas.length >= 3 && pack.newLemmas.length <= 6, `${pack.id} 生词应为 3-6 个`);
+    assert.equal(pack.knownWordTarget, 0.92, `${pack.id} knownWordTarget 应为 0.92`);
+    const declared = new Set(pack.sentences.flatMap(s => s.newLemmas || []).map(x => x.toLowerCase()));
+    assert.deepEqual([...declared].sort(), pack.newLemmas.map(x => x.toLowerCase()).sort(),
+      `${pack.id} 句级 newLemmas 与材料级清单不一致`);
+  }
+});
+
 test('generated audio matches every pack and actually exists on disk', () => {
   for (const pack of LISTENING_PACKS) {
     const entry = LISTENING_AUDIO[pack.id];
+    if (pack.audioStatus === 'pending-tts') {
+      assert.equal(entry, undefined, `${pack.id} 已有音频，应把 audioStatus 改为 ready`);
+      continue;
+    }
     assert.ok(entry, `${pack.id} 没有生成音频，跑 python3 tools/gen_listening_audio.py`);
     const n = pack.sentences.length;
 
@@ -128,6 +154,7 @@ test('listening audio never leaks into the shared manifest pipeline', async () =
   }
   // 反过来，每句德语都应该在主库里有 Katja 兜底（查词弹窗与 SRS 复现要用）
   for (const pack of LISTENING_PACKS) {
+    if (pack.audioStatus === 'pending-tts') continue;
     for (const s of pack.sentences) {
       assert.ok(AUDIO_MANIFEST[s.de], `${pack.id} 的「${s.de}」缺主库兜底音频`);
     }

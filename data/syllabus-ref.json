@@ -1,0 +1,362 @@
+{
+  "version": 2,
+  "updatedAt": "2026-07-25",
+  "policy": {
+    "commercialMaterials": "abstract-only",
+    "publicMaterials": "calibration-only",
+    "repositoryContent": "abstract-specifications-and-original-content-only",
+    "knownWordTarget": 0.92,
+    "newLemmaRange": [3, 6],
+    "pilotGate": "6 listening packs and 6 intensive readings require automated audit and human review before batch two"
+  },
+  "sources": [
+    {
+      "id": "course-repo",
+      "title": "Mein Deutsch A1 course catalog",
+      "kind": "project",
+      "version": "repository snapshot 2026-07-25",
+      "role": ["recommended lesson", "taught grammar", "baseline vocabulary"],
+      "locator": "data/course.js and data/content-index.js",
+      "reusePolicy": "internal-cross-reference"
+    },
+    {
+      "id": "passwort-a1",
+      "title": "走遍德国 初级 学生用书 1 / Passwort Deutsch A1",
+      "kind": "commercial",
+      "version": "local purchased scan",
+      "role": ["course progression", "grammar order", "skill requirements"],
+      "locator": "正版图书/走遍德国A1.pdf",
+      "reusePolicy": "abstract-only"
+    },
+    {
+      "id": "dangdai-1",
+      "title": "当代大学德语 1 / Studienweg Deutsch 1",
+      "kind": "commercial",
+      "version": "2004 local purchased scan",
+      "role": ["phonetic progression", "Chinese learner difficulties"],
+      "locator": "正版图书/当代大学德语.pdf",
+      "reusePolicy": "abstract-only"
+    },
+    {
+      "id": "hueber-hoeren-a1",
+      "title": "Hören & Sprechen A1",
+      "kind": "commercial",
+      "version": "local purchased scan with 60 publisher tracks",
+      "role": ["listening discourse types", "task mechanics", "information density"],
+      "locator": "正版图书/Hoeren_und_SprechenA1Lehrer.ir.pdf",
+      "audioLocator": "正版图书/官方MP3/hören.zip",
+      "reusePolicy": "abstract-only"
+    },
+    {
+      "id": "hueber-lesen-a1",
+      "title": "Lesen & Schreiben A1",
+      "kind": "commercial",
+      "version": "local purchased scan",
+      "role": ["text genres", "discourse structure", "reading tasks"],
+      "locator": "正版图书/Hueber Lesen & Schreiben A1.pdf",
+      "reusePolicy": "abstract-only"
+    },
+    {
+      "id": "deutsch-im-blick",
+      "title": "Deutsch im Blick",
+      "kind": "public",
+      "version": "web edition checked 2026-07-25",
+      "role": ["multimedia calibration", "contemporary topic calibration", "English-German perspective"],
+      "url": "https://coerll.utexas.edu/coerll/oer/deutsch-im-blick/",
+      "license": "CC BY",
+      "reusePolicy": "calibration-only"
+    },
+    {
+      "id": "goethe-a1",
+      "title": "Goethe-Zertifikat A1 practice set 02",
+      "kind": "public",
+      "version": "official PDF checked 2026-07-25",
+      "role": ["upper-A1 difficulty", "task calibration"],
+      "url": "https://www.goethe.de/pro/relaunch/prf/materialien/A1_sd1/sd_1_uebungssatz02.pdf",
+      "reusePolicy": "calibration-only"
+    },
+    {
+      "id": "vhs-a1",
+      "title": "VHS-Lernportal A1 grammar list",
+      "kind": "public",
+      "version": "official PDF checked 2026-07-25",
+      "role": ["grammar boundary", "A1 progression calibration"],
+      "url": "https://www.vhs-lernportal.de/wws/bin/4007530-4015506-1-dvv_grammatiklisten_a1.pdf",
+      "reusePolicy": "calibration-only"
+    },
+    {
+      "id": "nicos-weg-a1",
+      "title": "Nicos Weg A1 grammar overview",
+      "kind": "public",
+      "version": "official DW PDF checked 2026-07-25",
+      "role": ["grammar boundary", "modern topic calibration"],
+      "url": "https://static.dw.com/downloads/52718691/grammar-overview-nicos-weg-a1.pdf",
+      "reusePolicy": "calibration-only"
+    }
+  ],
+  "evidenceUnits": [
+    {
+      "id": "repo-s1-u2l3",
+      "sourceId": "course-repo",
+      "locator": {"lessonId": "u2l3"},
+      "observations": ["identity fields", "origin and language", "present-tense self-introduction"],
+      "appliesTo": ["L1", "R1"]
+    },
+    {
+      "id": "repo-s2-u5l3",
+      "sourceId": "course-repo",
+      "locator": {"lessonId": "u5l3"},
+      "observations": ["noun gender", "indefinite article", "plural and basic object descriptions"],
+      "appliesTo": ["L2", "R2"]
+    },
+    {
+      "id": "repo-s3-u8l4",
+      "sourceId": "course-repo",
+      "locator": {"lessonId": "u8l4"},
+      "observations": ["clock time", "daily schedule", "separable verbs and V2"],
+      "appliesTo": ["L3", "R3"]
+    },
+    {
+      "id": "repo-s4-u9l3",
+      "sourceId": "course-repo",
+      "locator": {"lessonId": "u9l3"},
+      "observations": ["leisure plans", "modal verbs", "sentence bracket"],
+      "appliesTo": ["L4", "R4"]
+    },
+    {
+      "id": "repo-s5-u11l4",
+      "sourceId": "course-repo",
+      "locator": {"lessonId": "u11l4"},
+      "observations": ["housing and routes", "accusative and dative", "location prepositions"],
+      "appliesTo": ["L5", "R5"]
+    },
+    {
+      "id": "repo-s6-u12l4",
+      "sourceId": "course-repo",
+      "locator": {"lessonId": "u12l4"},
+      "observations": ["past experiences", "war and hatte", "Perfekt with haben and sein"],
+      "appliesTo": ["L6", "R6"]
+    },
+    {
+      "id": "passwort-a1-progression",
+      "sourceId": "passwort-a1",
+      "locator": {"pdfPages": "7-9", "printedPages": "3-5", "section": "contents"},
+      "observations": ["ten-unit A1 progression", "skills advance from personal information to daily activities and movement"],
+      "appliesTo": ["L1", "L2", "L3", "L4", "L5", "L6", "R1", "R2", "R3", "R4", "R5", "R6"]
+    },
+    {
+      "id": "dangdai-vorkurs-phonetics",
+      "sourceId": "dangdai-1",
+      "locator": {"pdfPages": "8-12", "section": "contents and Vorkurs"},
+      "observations": ["phonetic preparation precedes main lessons", "letter and number discrimination should be explicit for Chinese learners"],
+      "appliesTo": ["L1", "L2"]
+    },
+    {
+      "id": "hueber-h-a-contact",
+      "sourceId": "hueber-hoeren-a1",
+      "locator": {"printedPages": "7-16", "exercises": "1-8", "tracks": "2-16"},
+      "observations": ["greetings, contact, origin", "speaker matching", "listen-first then repeat and verify"],
+      "appliesTo": ["L1"]
+    },
+    {
+      "id": "hueber-h-b-codes",
+      "sourceId": "hueber-hoeren-a1",
+      "locator": {"printedPages": "19-25", "exercises": "9-13", "tracks": "17-26"},
+      "observations": ["alphabet and number strings", "selective listening", "dictation of names, dates and codes"],
+      "appliesTo": ["L2"]
+    },
+    {
+      "id": "hueber-h-b-time",
+      "sourceId": "hueber-hoeren-a1",
+      "locator": {"printedPages": "25-31", "exercises": "14-15", "tracks": "27-30"},
+      "observations": ["time and weekday information", "contrast close numerical forms", "record changed details"],
+      "appliesTo": ["L3"]
+    },
+    {
+      "id": "hueber-h-g-leisure",
+      "sourceId": "hueber-hoeren-a1",
+      "locator": {"printedPages": "59-63", "exercises": "27-29", "tracks": "50-53"},
+      "observations": ["short leisure interviews", "distinguish preferences, proposals and decisions"],
+      "appliesTo": ["L4"]
+    },
+    {
+      "id": "hueber-h-c-route",
+      "sourceId": "hueber-hoeren-a1",
+      "locator": {"printedPages": "33-39", "exercises": "16-18", "tracks": "31-35"},
+      "observations": ["continuous route information", "landmark ordering", "spatial relation reconstruction"],
+      "appliesTo": ["L5"]
+    },
+    {
+      "id": "hueber-h-g-narrative",
+      "sourceId": "hueber-hoeren-a1",
+      "locator": {"printedPages": "63-65", "exercise": "30", "track": "54"},
+      "observations": ["short account of completed leisure events", "reconstruct event order after gist"],
+      "appliesTo": ["L6"]
+    },
+    {
+      "id": "hueber-r-a-persons",
+      "sourceId": "hueber-lesen-a1",
+      "locator": {"printedPages": "5-11", "exercises": "A1-A4"},
+      "observations": ["person profile and form", "scan labels then recombine fields into a profile"],
+      "appliesTo": ["R1"]
+    },
+    {
+      "id": "hueber-r-b-things",
+      "sourceId": "hueber-lesen-a1",
+      "locator": {"printedPages": "12-18", "exercises": "B1-B4"},
+      "observations": ["object labels and prices", "articles, plurals, ownership and use"],
+      "appliesTo": ["R2"]
+    },
+    {
+      "id": "hueber-r-c-daily",
+      "sourceId": "hueber-lesen-a1",
+      "locator": {"printedPages": "21-30", "exercises": "C1-C5"},
+      "observations": ["daily schedule plus short messages", "connect time, activity and reason for change"],
+      "appliesTo": ["R3"]
+    },
+    {
+      "id": "hueber-r-f-programme",
+      "sourceId": "hueber-lesen-a1",
+      "locator": {"printedPages": "49-55", "exercises": "F1-F3"},
+      "observations": ["leisure programme", "compare options under multiple constraints"],
+      "appliesTo": ["R4"]
+    },
+    {
+      "id": "hueber-r-e-housing",
+      "sourceId": "hueber-lesen-a1",
+      "locator": {"printedPages": "40-46", "exercises": "E1-E4"},
+      "observations": ["housing descriptions", "compare location, facilities and spatial relations"],
+      "appliesTo": ["R5"]
+    },
+    {
+      "id": "hueber-r-fg-travel",
+      "sourceId": "hueber-lesen-a1",
+      "locator": {"printedPages": "58 and 66", "exercises": "F4 and G3"},
+      "observations": ["short completed-event narrative", "two accounts of related travel information", "fact-evaluation-order comparison"],
+      "appliesTo": ["R6"]
+    },
+    {
+      "id": "dib-ch1-interviews",
+      "sourceId": "deutsch-im-blick",
+      "locator": {"chapter": "1", "medium": "interviews"},
+      "observations": ["contemporary learner identities", "multiple brief first-person responses"],
+      "appliesTo": ["L1", "R1"]
+    },
+    {
+      "id": "dib-ch2-time-housing",
+      "sourceId": "deutsch-im-blick",
+      "locator": {"chapter": "2", "topics": ["time", "housing"]},
+      "observations": ["contemporary student schedules", "housing vocabulary and location comparison"],
+      "appliesTo": ["L3", "R3", "R5"]
+    },
+    {
+      "id": "dib-ch4-leisure",
+      "sourceId": "deutsch-im-blick",
+      "locator": {"chapter": "4", "topic": "leisure"},
+      "observations": ["modern leisure options", "preference and planning language"],
+      "appliesTo": ["L4", "R4"]
+    },
+    {
+      "id": "goethe-a1-listening",
+      "sourceId": "goethe-a1",
+      "locator": {"pdfPages": "6-12", "sections": "Hören Teile 1-3"},
+      "observations": ["short conversations and public announcements", "gist plus one decisive detail", "repeat exposure"],
+      "appliesTo": ["L2", "L3", "L4", "L5"]
+    },
+    {
+      "id": "goethe-a1-reading",
+      "sourceId": "goethe-a1",
+      "locator": {"pdfPages": "14-22", "sections": "Lesen Teile 1-3"},
+      "observations": ["short letters, notices and advertisements", "task answers require locating functionally relevant detail"],
+      "appliesTo": ["R2", "R3", "R4", "R5"]
+    },
+    {
+      "id": "vhs-a1-boundary",
+      "sourceId": "vhs-a1",
+      "locator": {"document": "A1 grammar list"},
+      "observations": ["A1 grammar boundary for articles, time, modal verbs, cases and basic past reference"],
+      "appliesTo": ["L1", "L2", "L3", "L4", "L5", "R1", "R2", "R3", "R4", "R5"]
+    },
+    {
+      "id": "nicos-m13-perfekt",
+      "sourceId": "nicos-weg-a1",
+      "locator": {"module": "13", "topics": ["weather", "holiday"], "grammar": "Perfekt"},
+      "observations": ["completed events are sequenced with common haben/sein participles", "holiday narration remains short and concrete"],
+      "appliesTo": ["L6", "R6"]
+    }
+  ],
+  "stageProfiles": [
+    {
+      "stage": 1,
+      "listening": "L1",
+      "reading": "R1",
+      "recommendedAfter": "u2l3",
+      "grammarPrereqs": ["sein", "haben", "regular-verbs", "w-questions"],
+      "hardConstraints": {
+        "listening": ["at least three speakers", "identity, origin and learning-purpose matching", "answer depends on speaker separation"],
+        "reading": ["form fields plus short profile", "scan fields then recombine information"]
+      },
+      "evidenceIds": ["repo-s1-u2l3", "passwort-a1-progression", "dangdai-vorkurs-phonetics", "hueber-h-a-contact", "hueber-r-a-persons", "dib-ch1-interviews", "vhs-a1-boundary"]
+    },
+    {
+      "stage": 2,
+      "listening": "L2",
+      "reading": "R2",
+      "recommendedAfter": "u5l3",
+      "grammarPrereqs": ["noun-gender", "ein-eine", "kein-nicht", "plural"],
+      "hardConstraints": {
+        "listening": ["spelled surname, telephone number and course code", "distinguish letters and close digits"],
+        "reading": ["labels or mini catalogue", "articles, plurals, prices and use"]
+      },
+      "evidenceIds": ["repo-s2-u5l3", "passwort-a1-progression", "dangdai-vorkurs-phonetics", "hueber-h-b-codes", "hueber-r-b-things", "goethe-a1-listening", "goethe-a1-reading", "vhs-a1-boundary"]
+    },
+    {
+      "stage": 3,
+      "listening": "L3",
+      "reading": "R3",
+      "recommendedAfter": "u8l4",
+      "grammarPrereqs": ["time", "separable-verbs", "v2-word-order"],
+      "hardConstraints": {
+        "listening": ["public announcement", "identify old and new time or place"],
+        "reading": ["schedule plus short message", "connect time, activity and reason for change"]
+      },
+      "evidenceIds": ["repo-s3-u8l4", "passwort-a1-progression", "hueber-h-b-time", "hueber-r-c-daily", "goethe-a1-listening", "goethe-a1-reading", "dib-ch2-time-housing", "vhs-a1-boundary"]
+    },
+    {
+      "stage": 4,
+      "listening": "L4",
+      "reading": "R4",
+      "recommendedAfter": "u9l3",
+      "grammarPrereqs": ["modal-verbs", "sentence-bracket"],
+      "hardConstraints": {
+        "listening": ["short leisure interview", "separate proposal, intention and final decision"],
+        "reading": ["leisure programme", "compare options using at least two conditions"]
+      },
+      "evidenceIds": ["repo-s4-u9l3", "passwort-a1-progression", "hueber-h-g-leisure", "hueber-r-f-programme", "dib-ch4-leisure", "goethe-a1-reading", "vhs-a1-boundary"]
+    },
+    {
+      "stage": 5,
+      "listening": "L5",
+      "reading": "R5",
+      "recommendedAfter": "u11l4",
+      "grammarPrereqs": ["accusative", "dative", "location-prepositions"],
+      "hardConstraints": {
+        "listening": ["one continuous route instruction", "reconstruct landmark order and spatial relations"],
+        "reading": ["two housing notices", "compare location, facilities and orientation"]
+      },
+      "evidenceIds": ["repo-s5-u11l4", "passwort-a1-progression", "hueber-h-c-route", "hueber-r-e-housing", "goethe-a1-listening", "goethe-a1-reading", "dib-ch2-time-housing", "vhs-a1-boundary"]
+    },
+    {
+      "stage": 6,
+      "listening": "L6",
+      "reading": "R6",
+      "recommendedAfter": "u12l4",
+      "grammarPrereqs": ["war-hatte", "perfect-with-haben", "perfect-with-sein"],
+      "hardConstraints": {
+        "listening": ["weekend micro-narrative", "reconstruct completed-event order"],
+        "reading": ["two accounts of the same trip", "compare facts, evaluation and sequence"]
+      },
+      "evidenceIds": ["repo-s6-u12l4", "passwort-a1-progression", "hueber-h-g-narrative", "hueber-r-fg-travel", "nicos-m13-perfekt"]
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-25T14:40:32.457Z",
+  "contentHash": "6d2d6c082c0b419d95719986e60522e83c1a707d0db4a76b1682998080966e72",
+  "pilotCount": 12,
+  "sourceHashes": {
+    "passwort-a1": {
+      "sha256": "2a815d3a5e4efd3b1eb36ea756d680b965dc9aff259b2536da8f14acc6dcaa34",
+      "bytes": 29171230
+    },
+    "dangdai-1": {
+      "sha256": "43f0a827a0abb2529dbd4b1552928f95847bd069bb5255a2c11d644e5cfe8051",
+      "bytes": 39104626
+    },
+    "hueber-hoeren-a1": {
+      "sha256": "50a9aa6b315e037273148e10ed41d8d61566f273c800e838f2b9147fcc8dcf1f",
+      "bytes": 20826978
+    },
+    "hueber-hoeren-a1-publisher-audio": {
+      "sha256": "61a0f8bf41af0b908808d0670a5dfa5591a632583b8d7f557ec8cb218a4bf248",
+      "bytes": 51954567
+    },
+    "hueber-lesen-a1": {
+      "sha256": "0c18e3a413bdd57df83b3b5c822e0d340b5b915f5cc5c028161f9f8478afc685",
+      "bytes": 33206246
+    }
+  },
+  "evidence": {
+    "failureCount": 0,
+    "failures": []
+  },
+  "courseReuse": {
+    "failureCount": 10,
+    "items": [
+      {
+        "id": "li-p01",
+        "floor": 0.45,
+        "ratio": 0.5,
+        "reused": 11,
+        "contentWords": 22,
+        "pass": true,
+        "coldWords": [
+          "heiße",
+          "arbeite",
+          "brauche",
+          "Arbeit",
+          "Name",
+          "Gespräche",
+          "Menschen",
+          "spreche",
+          "Englisch",
+          "nächste"
+        ]
+      },
+      {
+        "id": "li-p02",
+        "floor": 0.55,
+        "ratio": 0.0769,
+        "reused": 1,
+        "contentWords": 13,
+        "pass": false,
+        "coldWords": [
+          "bitte",
+          "ist",
+          "Familienname",
+          "Telefonnummer",
+          "Richtig",
+          "Raum",
+          "genau"
+        ]
+      },
+      {
+        "id": "li-p03",
+        "floor": 0.55,
+        "ratio": 0.381,
+        "reused": 8,
+        "contentWords": 21,
+        "pass": false,
+        "coldWords": [
+          "Achtung",
+          "Information",
+          "beginnt",
+          "halb",
+          "Raum",
+          "gehen",
+          "Minuten",
+          "Eingang",
+          "Vielen",
+          "Dank"
+        ]
+      },
+      {
+        "id": "li-p04",
+        "floor": 0.7,
+        "ratio": 0.375,
+        "reused": 9,
+        "contentWords": 24,
+        "pass": false,
+        "coldWords": [
+          "Sonntag",
+          "Stadt",
+          "Vorschlag",
+          "lieber",
+          "Nachmittag",
+          "regnen",
+          "Markt",
+          "gehen",
+          "treffen",
+          "Kino",
+          "Gut",
+          "klar",
+          "bleibt",
+          "Wunsch"
+        ]
+      },
+      {
+        "id": "li-p05",
+        "floor": 0.7,
+        "ratio": 0.3889,
+        "reused": 7,
+        "contentWords": 18,
+        "pass": false,
+        "coldWords": [
+          "Gehen",
+          "Ausgang",
+          "gehen",
+          "Direkt",
+          "liegt",
+          "Platz",
+          "graues",
+          "Eingang"
+        ]
+      },
+      {
+        "id": "li-p06",
+        "floor": 0.7,
+        "ratio": 0.75,
+        "reused": 21,
+        "contentWords": 28,
+        "pass": true,
+        "coldWords": [
+          "Samstag",
+          "früh",
+          "Tasche",
+          "repariert",
+          "gelaufen",
+          "zurückgekommen",
+          "schlecht"
+        ]
+      },
+      {
+        "id": "rp-a1-01",
+        "floor": 0.45,
+        "ratio": 0.4444,
+        "reused": 8,
+        "contentWords": 18,
+        "pass": false,
+        "coldWords": [
+          "Anmeldung",
+          "Name",
+          "Wohnort",
+          "arbeitet",
+          "Fotos",
+          "klar",
+          "spricht",
+          "Gruppe",
+          "neu"
+        ]
+      },
+      {
+        "id": "rp-a1-02",
+        "floor": 0.55,
+        "ratio": 0.0952,
+        "reused": 2,
+        "contentWords": 21,
+        "pass": false,
+        "coldWords": [
+          "Stück",
+          "Euro",
+          "sind",
+          "gut",
+          "Papier",
+          "kleine",
+          "Notizen",
+          "ist",
+          "Wörter",
+          "klein",
+          "leicht",
+          "braucht",
+          "Preise"
+        ]
+      },
+      {
+        "id": "rp-a1-03",
+        "floor": 0.55,
+        "ratio": 0.2105,
+        "reused": 4,
+        "contentWords": 19,
+        "pass": false,
+        "coldWords": [
+          "Mittwoch",
+          "Wörter",
+          "Raum",
+          "Pause",
+          "Gespräch",
+          "Film",
+          "schreibt",
+          "gibt",
+          "treffen",
+          "Eingang",
+          "endet"
+        ]
+      },
+      {
+        "id": "rp-a1-04",
+        "floor": 0.7,
+        "ratio": 0.4091,
+        "reused": 9,
+        "contentWords": 22,
+        "pass": false,
+        "coldWords": [
+          "Garten",
+          "Euro",
+          "Anmeldung",
+          "Regen",
+          "fällt",
+          "frei",
+          "Alle",
+          "kurzer",
+          "Film"
+        ]
+      },
+      {
+        "id": "rp-a1-05",
+        "floor": 0.7,
+        "ratio": 0.5357,
+        "reused": 15,
+        "contentWords": 28,
+        "pass": false,
+        "coldWords": [
+          "Euro",
+          "Küche",
+          "Bad",
+          "Stock",
+          "hält",
+          "direkt",
+          "laut",
+          "liegen",
+          "geht",
+          "Minuten"
+        ]
+      },
+      {
+        "id": "rp-a1-06",
+        "floor": 0.7,
+        "ratio": 0.6333,
+        "reused": 19,
+        "contentWords": 30,
+        "pass": false,
+        "coldWords": [
+          "Samstag",
+          "gelaufen",
+          "Weg",
+          "lang",
+          "wunderbar",
+          "direkt",
+          "viele",
+          "Fotos",
+          "bester",
+          "Moment"
+        ]
+      }
+    ]
+  },
+  "grammar": {
+    "failureCount": 0,
+    "failures": [],
+    "receptiveNotes": []
+  },
+  "difficulty": {
+    "target": 0.92,
+    "items": [
+      {
+        "id": "li-p01",
+        "totalTokens": 62,
+        "baselineKnownRatio": 0.9677,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "li-p02",
+        "totalTokens": 67,
+        "baselineKnownRatio": 0.9851,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "li-p03",
+        "totalTokens": 55,
+        "baselineKnownRatio": 0.9455,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "li-p04",
+        "totalTokens": 59,
+        "baselineKnownRatio": 0.9492,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "li-p05",
+        "totalTokens": 61,
+        "baselineKnownRatio": 0.9508,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "li-p06",
+        "totalTokens": 59,
+        "baselineKnownRatio": 0.9492,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "rp-a1-01",
+        "totalTokens": 44,
+        "baselineKnownRatio": 0.9545,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "rp-a1-02",
+        "totalTokens": 41,
+        "baselineKnownRatio": 0.9268,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "rp-a1-03",
+        "totalTokens": 43,
+        "baselineKnownRatio": 0.9302,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "rp-a1-04",
+        "totalTokens": 40,
+        "baselineKnownRatio": 0.95,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "rp-a1-05",
+        "totalTokens": 61,
+        "baselineKnownRatio": 0.9508,
+        "newLemmaCount": 3,
+        "undeclaredWords": []
+      },
+      {
+        "id": "rp-a1-06",
+        "totalTokens": 66,
+        "baselineKnownRatio": 0.9394,
+        "newLemmaCount": 4,
+        "undeclaredWords": []
+      }
+    ],
+    "failureCount": 0
+  },
+  "originality": {
+    "privateOcrFiles": [],
+    "privateOcrStatus": "blocked-toolchain",
+    "sixWordCollisions": [],
+    "unapprovedFiveWordCollisions": []
+  },
+  "audio": {
+    "pendingCount": 0,
+    "pendingIds": []
+  },
+  "gate": "incomplete"
+}

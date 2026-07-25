@@ -2,7 +2,7 @@
 // 全部存 localStorage；条目带 lastModified 供 Gist 同步合并（新者胜）
 const KEYS = {
   progress: 'md.progress.v1',   // v1 遗留：完成标记（迁移用）
-  srs: 'md.srs.v1',             // 词卡 + 错题池调度（id 命名空间: w=词卡, m=错题）
+  srs: 'md.srs.v1',             // 词卡 + 错题池调度（w=词卡, d=生词本, m=课程错题, l=精听错句）
   settings: 'md.settings.v1',
   skills: 'md.skills.v1',       // 技能掌握度 { skillId: {s, seen, ok, last} }
   lessons: 'md.lessons.v1',     // 课程状态 { lessonId: {step, done, score, t} }

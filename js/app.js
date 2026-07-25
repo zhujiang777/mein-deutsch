@@ -1,8 +1,8 @@
 // 应用入口 v4：五个主页面常驻缓存，深层页面按需加载
-import { renderToday, runDictationSet } from './views/today.js?v=10';
+import { renderToday, runDictationSet } from './views/today.js?v=11';
 import { renderPath } from './views/path.js?v=9';
-import { renderVocab } from './views/vocab.js?v=10';
-import { renderReadListen } from './views/readlisten.js?v=9';
+import { renderVocab } from './views/vocab.js?v=11';
+import { renderReadListen } from './views/readlisten.js?v=11';
 import { renderMe } from './views/me.js?v=9';
 import { getSettings, migrate } from './storage.js';
 import { initSync } from './sync.js';
@@ -56,9 +56,10 @@ const routes = [
   { pattern: /^\/readlisten$/, tab: 'readlisten', root: true, render: (h) => renderReadListen(h) },
   { pattern: /^\/me$/, tab: 'me', root: true, render: (h) => renderMe(h) },
   { pattern: /^\/lesson\/(.+)$/, tab: 'path', load: () => import('./views/lesson.js?v=10'), render: (m, h, hit) => m.renderLessonRoute(h, hit[1]) },
-  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=10'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
-  { pattern: /^\/vocab\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=10'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
-  { pattern: /^\/reading\/(.+)$/, tab: 'readlisten', load: () => import('./views/reading.js?v=9'), render: (m, h, hit) => m.renderReading(h, hit[1]) },
+  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=11'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
+  { pattern: /^\/vocab\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=11'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
+  { pattern: /^\/reading\/(.+)$/, tab: 'readlisten', load: () => import('./views/reading.js?v=10'), render: (m, h, hit) => m.renderReading(h, hit[1]) },
+  { pattern: /^\/listening\/(.+)$/, tab: 'readlisten', load: () => import('./views/listening.js?v=1'), render: (m, h, hit) => m.renderListening(h, hit[1]) },
   { pattern: /^\/dictation$/, tab: 'readlisten', render: async (_m, h) => {
       h.appendChild(el(`<a class="back-link" href="#/readlisten">‹ 读·听</a>`));
       await runDictationSet(h, 5, () => { location.hash = '#/readlisten'; });

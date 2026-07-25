@@ -294,10 +294,12 @@ function renderDictation(host, item, ctx) {
     <div class="ex-audio-row"></div>
   </div>`);
   const row = head.querySelector('.ex-audio-row');
-  row.appendChild(audioBtn(answer));
-  row.appendChild(audioBtn(answer, { slow: true }));
+  const play = item.audioPlay || answer;
+  row.appendChild(audioBtn(play));
+  row.appendChild(audioBtn(play, { slow: true }));
   host.appendChild(head);
-  setTimeout(() => speak(answer), 250);
+  if (item.audioPlay) setTimeout(() => item.audioPlay({}), 250);
+  else setTimeout(() => speak(answer), 250);
 
   const input = el(`<input class="dict-input de" type="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="在这里输入…">`);
   const charBar = el(`<div class="dict-charbar"></div>`);
@@ -354,6 +356,25 @@ function renderDictation(host, item, ctx) {
   toBlocksWrap.appendChild(toBlocks);
   host.appendChild(toBlocksWrap);
   setTimeout(() => input.focus(), 120);
+}
+
+function renderListening(host, item, ctx, showText) {
+  const title = showText ? '逐句拆解与复听' : '先听完整语篇';
+  host.appendChild(el(`<div class="ex-prompt">
+    <div class="ex-q">${title}</div>
+    <div class="meta">${esc(item.prompt || (showText ? '点击任一句重听；用 A/B 标记循环区间。' : '先不看文字，抓住人物、目的和结果。'))}</div>
+  </div>`));
+  const barHost = el(`<div></div>`);
+  host.appendChild(barHost);
+  item.renderPlayer?.(barHost, showText);
+  const done = el(`<button class="btn block" style="margin-top:14px">${showText ? '拆解完成，继续' : '已完整听过，继续'}</button>`);
+  done.addEventListener('click', () => {
+    if (host.dataset.done) return;
+    host.dataset.done = '1';
+    item.player?.pause?.();
+    ctx.onSubmit(true, '');
+  });
+  host.appendChild(done);
 }
 
 /* ---------- scene：对话展示步（逐句 + 连播 + 中文开关） ---------- */
@@ -433,6 +454,7 @@ function renderObserve(host, item, ctx) {
 
 /* ---------- reproduce：整句复述（听→录→揭示原文→自评） ---------- */
 function renderReproduce(host, item, ctx) {
+  const play = item.audioPlay || (options => speak(item.de, options));
   const card = el(`<div class="reproduce-step">
     <div class="ex-q">听德语 → 自己复述出来</div>
     <div class="reproduce-zh">${esc(item.zh)}</div>
@@ -442,7 +464,7 @@ function renderReproduce(host, item, ctx) {
   const controls = card.querySelector('.reproduce-controls');
   const reveal = card.querySelector('.reproduce-reveal');
   host.appendChild(card);
-  setTimeout(() => speak(item.de), 300);
+  setTimeout(() => play({}), 300);
 
   const finishReveal = () => {
     if (reveal.dataset.shown) return;
@@ -460,10 +482,10 @@ function renderReproduce(host, item, ctx) {
   };
 
   if (recordingSupported()) {
-    speakPractice(controls, item.de, { onRecorded: finishReveal });
+    speakPractice(controls, item.de, { onRecorded: finishReveal, play });
   } else {
-    controls.appendChild(audioBtn(item.de));
-    controls.appendChild(audioBtn(item.de, { slow: true }));
+    controls.appendChild(audioBtn(play));
+    controls.appendChild(audioBtn(play, { slow: true }));
     const showBtn = el(`<button class="btn">听完了，看原文自评</button>`);
     showBtn.addEventListener('click', finishReveal);
     controls.appendChild(showBtn);
@@ -558,10 +580,12 @@ export function renderExercise(host, item, ctx) {
     case 'observe': return renderObserve(host, item, ctx);
     case 'reproduce': return renderReproduce(host, item, ctx);
     case 'roleplay': return renderRoleplay(host, item, ctx);
+    case 'listenFull': return renderListening(host, item, ctx, false);
+    case 'listenReview': return renderListening(host, item, ctx, true);
     default:
       host.appendChild(el(`<p>未知题型 ${esc(item.type)}</p>`));
       ctx.onSubmit(null, '');
   }
 }
 
-export const EXERCISE_TYPES = ['choice', 'listenChoice', 'assemble', 'dictation', 'fill', 'match', 'translate', 'speak', 'scene', 'observe', 'reproduce', 'roleplay'];
+export const EXERCISE_TYPES = ['choice', 'listenChoice', 'assemble', 'dictation', 'fill', 'match', 'translate', 'speak', 'scene', 'observe', 'reproduce', 'roleplay', 'listenFull', 'listenReview'];

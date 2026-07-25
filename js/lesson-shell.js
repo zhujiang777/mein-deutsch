@@ -4,7 +4,7 @@
 // data/course.js 拖进不相干的路由——课程查找留在 views/lesson.js。
 import { el, esc, audioBtn, haptic, icon, motionIn, rewardBurst, setProgress } from './ui.js';
 import { speak, stopSpeak } from './speech.js';
-import { renderExercise } from './exercises.js?v=4';
+import { renderExercise } from './exercises.js?v=5';
 import { recordAnswer, addMistake } from './mastery.js';
 import { getLessonState, setLessonState, logActivity, rewardSummary } from './storage.js';
 

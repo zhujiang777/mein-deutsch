@@ -1,5 +1,7 @@
 // 分级阅读：精读(intensiv) 带完整词表+逐句翻译+注释；泛读(extensiv) 带理解题
 // glossary 的键 = 课文中出现的小写词形（含变位形式）
+import { A1_PILOT_READINGS } from './a1-pilot-readings.js';
+
 export const READINGS = [
   /* ============ 精读 ============ */
   {
@@ -431,4 +433,5 @@ export const READINGS = [
       { type: 'choice', q: '柏林有多少家博物馆？', options: ['约 70 家', '超过 170 家', '17 家'], a: 1, explain: 'mehr als 170 Museen。' },
     ],
   },
+  ...A1_PILOT_READINGS,
 ];

@@ -2,15 +2,17 @@
 import { el, esc, guideBear, icon, motionIn, videoCard, toast } from '../ui.js';
 import { COURSE_CATALOG, VOCAB_IDS, nextCatalogLesson } from '../../data/content-index.js';
 import { srsStats } from '../srs.js';
-import { dueMistakes, rateMistake, mistakeRef, recordAnswer } from '../mastery.js';
+import {
+  dueMistakes, dueListenMisses, rateMistake, mistakeRef, listenRef, recordAnswer
+} from '../mastery.js';
 import { allLessonStates, getVideoState, getDaily, getStreak, getWordbook, rewardSummary } from '../storage.js';
 import { stopSpeak } from '../speech.js';
 
 /* 三档时长的队列配置 */
 const PLANS = {
-  5: { label: '5 分钟 · 只复习', maxDue: 20, maxNew: 0, quickForms: true, mistakes: 5, lesson: false, video: false, dictation: 0 },
-  15: { label: '15 分钟 · 标准', maxDue: 20, maxNew: 10, mistakes: 5, lesson: true, video: true, dictation: 2 },
-  30: { label: '30 分钟 · 充实', maxDue: 40, maxNew: 15, mistakes: 8, lesson: true, video: true, dictation: 3 },
+  5: { label: '5 分钟 · 只复习', maxDue: 20, maxNew: 0, quickForms: true, mistakes: 5, listenMisses: 2, lesson: false, video: false },
+  15: { label: '15 分钟 · 标准', maxDue: 20, maxNew: 10, mistakes: 5, listenMisses: 3, lesson: true, video: true },
+  30: { label: '30 分钟 · 充实', maxDue: 40, maxNew: 15, mistakes: 8, listenMisses: 5, lesson: true, video: true },
 };
 const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB_IDS];
 let todayRuntimePromise;
@@ -22,8 +24,9 @@ function loadTodayRuntime() {
       import('../../data/readings.js'),
       import('./lesson.js'),
       import('./vocab.js'),
-      import('../exercises.js?v=4'),
-    ]).then(([course, readings, lessonView, vocabView, exercises]) => ({
+      import('../exercises.js?v=5'),
+      import('./listening.js?v=1'),
+    ]).then(([course, readings, lessonView, vocabView, exercises, listeningView]) => ({
       COURSE: course.COURSE,
       READINGS: readings.READINGS,
       findLesson: course.findLesson,
@@ -31,6 +34,7 @@ function loadTodayRuntime() {
       runLesson: lessonView.runLesson,
       runVocabSession: vocabView.runVocabSession,
       renderExercise: exercises.renderExercise,
+      findListeningLesson: listeningView.findListeningLesson,
     }));
   }
   return todayRuntimePromise;
@@ -39,6 +43,7 @@ function loadTodayRuntime() {
 export function renderToday(host) {
   const stats = srsStats(vocabIds());
   const mistakes = dueMistakes(99).length;
+  const listenMisses = dueListenMisses(99).length;
   const daily = getDaily();
   const streak = getStreak();
   const next = nextCatalogLesson(allLessonStates());
@@ -69,7 +74,7 @@ export function renderToday(host) {
   host.appendChild(hero);
 
   const launcher = el(`<section class="mission-launcher">
-    <div class="mission-head"><div><span>选择今天的节奏</span><b>从下一站继续</b></div><span class="mission-count">${stats.due + mistakes} 项待复习</span></div>
+    <div class="mission-head"><div><span>选择今天的节奏</span><b>从下一站继续</b></div><span class="mission-count">${stats.due + mistakes + listenMisses} 项待复习</span></div>
     <div class="time-grid" role="group" aria-label="学习时长"></div>
     <button class="btn block journey-start">继续旅程 ${icon('arrow')}</button>
   </section>`);
@@ -126,14 +131,14 @@ async function startFlow(host, minutes) {
   }
   const mistakes = dueMistakes(plan.mistakes);
   if (mistakes.length) segments.push({ kind: 'mistakes', title: '错题巩固', ids: mistakes });
+  const listenMisses = dueListenMisses(plan.listenMisses);
+  if (listenMisses.length) segments.push({ kind: 'listen-misses', title: '精听错句复现', ids: listenMisses });
   const next = plan.lesson ? runtime.nextLesson(allLessonStates()) : null;
   if (next) segments.push({ kind: 'lesson', title: `新课：${next.lesson.title}`, lessonId: next.lesson.id });
   if (plan.video) {
     const pending = pendingVideo();
     if (pending) segments.push({ kind: 'video', title: '今日视频', video: pending });
   }
-  if (plan.dictation > 0) segments.push({ kind: 'dictation', title: '句子精听', count: plan.dictation });
-
   if (!segments.length) {
     toast('今天的任务都清空了 🎉 可以去读·听里泛听磨耳朵');
     return;
@@ -175,6 +180,9 @@ async function startFlow(host, minutes) {
     } else if (seg.kind === 'mistakes') {
       host.appendChild(header);
       runMistakeDrill(host, seg.ids, () => { idx++; run(); }, runtime);
+    } else if (seg.kind === 'listen-misses') {
+      host.appendChild(header);
+      runListenMissDrill(host, seg.ids, () => { idx++; run(); }, runtime);
     } else if (seg.kind === 'video') {
       host.appendChild(header);
       const wrap = el(`<div style="margin-top:10px"></div>`);
@@ -183,12 +191,56 @@ async function startFlow(host, minutes) {
       const btn = el(`<button class="btn block" style="margin-top:14px">看完了，继续 ›</button>`);
       btn.addEventListener('click', () => { idx++; run(); });
       host.appendChild(btn);
-    } else if (seg.kind === 'dictation') {
-      host.appendChild(header);
-      runDictationSet(host, seg.count, () => { idx++; run(); }, runtime);
     }
   };
   run();
+}
+
+/* 精听错句复现：按 l: 引用还原原包、原句和原音频。 */
+function runListenMissDrill(host, ids, onDone, runtime) {
+  document.body.classList.add('immersive');
+  const stage = el(`<div class="lesson-stage" style="margin-top:10px"></div>`);
+  const bottom = el(`<div class="lesson-bottom"></div>`);
+  host.appendChild(stage);
+  host.appendChild(bottom);
+  let i = 0;
+  let activeLesson = null;
+
+  const show = () => {
+    activeLesson?.player?.destroy();
+    activeLesson = null;
+    stage.innerHTML = ''; bottom.innerHTML = '';
+    if (i >= ids.length) {
+      document.body.classList.remove('immersive');
+      onDone();
+      return;
+    }
+    const id = ids[i];
+    const { packId, sentenceIndex } = listenRef(id);
+    activeLesson = runtime.findListeningLesson(packId);
+    // 错句可能来自听写，也可能来自复述；听写优先，两者都没有才算内容已变更。
+    const at = type => activeLesson?.steps.find(item =>
+      item.type === type && item.sentenceIndex === sentenceIndex);
+    const step = at('dictation') || at('reproduce');
+    if (!step) { rateMistake(id, true); i++; show(); return; } // 内容已变更，出池
+    runtime.renderExercise(stage, step, {
+      onSubmit: (correct, correctText) => {
+        if (correct !== null) {
+          rateMistake(id, correct);
+          recordAnswer(step.skills || [], correct);
+        }
+        const fb = el(`<div class="feedback ${correct === false ? 'bad' : 'good'}">
+          <div class="feedback-text"><b>${correct === false ? '✗ 明天再听' : '✓ 这句已巩固'}</b>
+            ${correct === false ? `<div class="feedback-ans de">${esc(correctText)}</div>` : ''}
+          </div>
+          <button class="btn">继续</button>
+        </div>`);
+        fb.querySelector('button').addEventListener('click', () => { i++; show(); });
+        bottom.appendChild(fb);
+      },
+    });
+  };
+  show();
 }
 
 function renderTodayFresh(host) {
@@ -218,7 +270,7 @@ function runMistakeDrill(host, ids, onDone, runtime) {
     if (i >= ids.length) { document.body.classList.remove('immersive'); onDone(); return; }
     const id = ids[i];
     const { lessonId, stepIdx } = mistakeRef(id);
-    const lesson = runtime.findLesson(lessonId);
+    const lesson = runtime.findLesson(lessonId) || runtime.findListeningLesson(lessonId);
     const step = lesson?.steps[stepIdx];
     if (!step) { rateMistake(id, true); i++; show(); return; } // 内容已变更，出池
     runtime.renderExercise(stage, step, {

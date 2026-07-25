@@ -6,6 +6,7 @@
 // provenance 是硬门槛，tests/listening-data.test.mjs 会校验：
 //   kind:'corpus'   —— 外部语料内嵌，署名/授权/原文链接/抓取日期/是否改动 全部必填
 //   kind:'original' —— 原创撰写，必须有 adaptedFrom.statement 声明来源边界
+import { A1_PILOT_LISTENING } from './a1-pilot-listening.js';
 
 const ORIGINAL_FROM_OWN_SYLLABUS = {
   kind: 'original',
@@ -99,6 +100,7 @@ export const LISTENING_PACKS = [
     speakPractice: [3, 9],
     reproduce: [4],
   },
+  ...A1_PILOT_LISTENING,
 ];
 
 export function findPack(id) {

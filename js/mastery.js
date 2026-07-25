@@ -80,3 +80,31 @@ export function mistakeRef(id) {
   const [, lessonId, stepIdx] = id.split(':');
   return { lessonId, stepIdx: parseInt(stepIdx, 10) };
 }
+
+/* ---- 精听错句池：l:<packId>:<sentenceIndex> ----
+ * 与普通课程错题 m: 分开，确保复习时能还原原精听包、原句和原音频。
+ */
+export function addListenMiss(packId, sentenceIndex) {
+  if (!packId || !Number.isInteger(sentenceIndex) || sentenceIndex < 0) return;
+  const id = `l:${packId}:${sentenceIndex}`;
+  const all = loadSrs();
+  const c = all[id] || { ivl: 0, ease: 2.3, reps: 0, lapses: 0, state: 'learn' };
+  c.lapses += 1;
+  c.due = Date.now() + DAY;
+  all[id] = c;
+  saveSrs(all);
+}
+
+export function dueListenMisses(limit = 10) {
+  const all = loadSrs();
+  const now = Date.now();
+  return Object.keys(all)
+    .filter(id => id.startsWith('l:') && all[id].due <= now && all[id].state !== 'done')
+    .sort((a, b) => all[a].due - all[b].due)
+    .slice(0, limit);
+}
+
+export function listenRef(id) {
+  const [, packId, sentenceIndex] = String(id).split(':');
+  return { packId, sentenceIndex: parseInt(sentenceIndex, 10) };
+}

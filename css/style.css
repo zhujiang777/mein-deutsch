@@ -457,6 +457,37 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .pill.blue { background: var(--blue-soft); color: var(--blue); }
 .pill.red { background: var(--red-soft); color: var(--red); }
 .pill.gold { background: var(--gold-soft); color: var(--gold); }
+.stage-chip,
+.readiness-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-size: .72rem;
+  font-weight: 750;
+  line-height: 1.35;
+  vertical-align: middle;
+}
+.stage-chip { background: var(--card-2); color: var(--text-2); }
+.readiness-chip.right { background: var(--green-soft); color: var(--green); }
+.readiness-chip.slight { background: var(--gold-soft); color: var(--gold); }
+.readiness-chip.challenge { background: var(--red-soft); color: var(--red); }
+.readiness-chip.review { background: var(--blue-soft); color: var(--blue); }
+.reading-route { display: grid; gap: 10px; margin: 12px 0; }
+.reading-route div { display: grid; gap: 3px; }
+.reading-route span { color: var(--text-2); font-size: .9rem; }
+.reading-summary { margin-top: 14px; }
+.reading-summary p { color: var(--text-2); margin: 6px 0 10px; }
+.reading-summary textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card-2);
+  color: var(--text);
+  padding: 11px 12px;
+  font: inherit;
+}
 
 /* 进度条 */
 .progress-bar {

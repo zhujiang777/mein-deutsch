@@ -3,6 +3,8 @@ import { READINGS } from '../../data/readings.js';
 import { el, esc, audioBtn, icon, micBtn, renderQuiz, toast } from '../ui.js';
 import { isDone, markDone } from '../storage.js';
 import { enableGloss } from '../dict.js';
+import { getContentReadiness } from '../content-readiness.js';
+import { recordAnswer } from '../mastery.js';
 
 export function renderReading(host, id) {
   if (id) return renderText(host, id);
@@ -33,12 +35,18 @@ export function renderReading(host, id) {
 
 function renderText(host, id) {
   const r = READINGS.find(x => x.id === id);
-  if (!r) { location.hash = '#/reading'; return; }
+  if (!r) { location.hash = '#/readlisten'; return; }
 
-  host.appendChild(el(`<a class="back-link" href="#/reading">‹ 阅读列表</a>`));
+  host.appendChild(el(`<a class="back-link" href="#/readlisten">‹ 读·听</a>`));
   host.appendChild(el(`<h1 class="page-title de">${esc(r.title)}</h1>`));
-  host.appendChild(el(`<p class="page-sub">${esc(r.titleZh)} · <span class="pill ${r.mode === 'intensiv' ? '' : 'blue'}">${r.mode === 'intensiv' ? '精读' : '泛读'}</span> <span class="pill green">${r.level}</span></p>`));
+  const readiness = r.skillStage ? getContentReadiness(r) : null;
+  host.appendChild(el(`<p class="page-sub">${esc(r.titleZh)} · <span class="pill ${r.mode === 'intensiv' ? '' : 'blue'}">${r.mode === 'intensiv' ? '精读' : '泛读'}</span> <span class="pill green">${r.level}</span>
+    ${r.skillStage ? `<span class="stage-chip">${esc(r.skillStage)}</span> <span class="readiness-chip ${readiness.key}">${readiness.label}</span>` : ''}</p>`));
   if (r.intro) host.appendChild(el(`<div class="tip"><b>阅读提示</b> · ${esc(r.intro)}</div>`));
+  if (r.readingRoute) host.appendChild(el(`<div class="card reading-route">
+    <div><b>1 · 预测</b><span>${esc(r.readingRoute.prediction)}</span></div>
+    <div><b>2–4 · 定位与理解</b><span>${esc(r.readingRoute.focus)}</span></div>
+  </div>`));
 
   const card = el(`<div class="card"></div>`);
   const textWrap = el(`<div class="reading-text"></div>`);
@@ -120,7 +128,7 @@ function renderText(host, id) {
     renderQuiz(r.questions, quizCard, (correct, total) => {
       const reward = markDone('reading', id);
       toast(`理解题 ${correct}/${total} · 已读完${reward ? ` · +${reward.xpDelta} XP` : ''}`);
-    });
+    }, correct => recordAnswer(r.skills || [], correct));
     host.appendChild(quizCard);
   } else {
     const doneBtn = el(`<button class="btn block" style="margin-top:14px">${isDone('reading', id) ? `${icon('check')} 已读完` : '标记读完'}</button>`);
@@ -130,5 +138,12 @@ function renderText(host, id) {
       doneBtn.innerHTML = `${icon('check')} 已读完`;
     });
     host.appendChild(doneBtn);
+  }
+  if (r.readingRoute?.summaryPrompt) {
+    host.appendChild(el(`<div class="card reading-summary">
+      <b>5 · 概括</b>
+      <p>${esc(r.readingRoute.summaryPrompt)}</p>
+      <textarea rows="3" placeholder="用德语写下你的概括（仅保留在当前页面）"></textarea>
+    </div>`));
   }
 }

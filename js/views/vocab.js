@@ -4,7 +4,7 @@ import { el, esc, audioBtn, haptic, icon, micBtn, motionIn, setProgress, toast }
 import { speak, stopSpeak, germanVoices } from '../speech.js';
 import { buildQueue, rate, srsStats, markKnown } from '../srs.js';
 import { getWordbook, removeWordEntry, logActivity, loadSrs } from '../storage.js';
-import { renderExercise } from '../exercises.js?v=4';
+import { renderExercise } from '../exercises.js?v=5';
 import { conjugationRows, getVocabWord, normalizeWord } from '../word-model.js';
 
 const wordbookIds = () => Object.keys(getWordbook());
@@ -22,11 +22,13 @@ function wordHead(m, { big = true } = {}) {
     ${!m.art && m.pos ? `<span class="wc-pos wc-head-pos">${esc(m.pos)}</span>` : ''}`;
 }
 
-/* 例句出处：'lesson:<id>' → 课程课；其他非空字符串 → 阅读文章；null/缺省 → 不显示 */
+/* 例句出处：'lesson:<id>' → 课程课；'li-*' → 精听包；其他非空 → 阅读文章；null → 不显示 */
 function sourceLink(source) {
   if (!source) return '';
   if (source.startsWith('lesson:'))
     return `<a class="wc-source" href="#/lesson/${esc(source.slice(7))}">出自课程 ›</a>`;
+  if (source.startsWith('li-'))
+    return `<a class="wc-source" href="#/listening/${esc(source)}">出自精听 ›</a>`;
   return `<a class="wc-source" href="#/reading/${esc(source)}">出自课文 ›</a>`;
 }
 

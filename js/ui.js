@@ -112,7 +112,7 @@ export function audioBtn(source, { slow = false } = {}) {
 
 /* ---- 跟读练习组件：一次录音同时生成回放和 16k WAV；
    停止后立即给出录音对比，并异步请求真正的德语发音评测。 */
-export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
+export function speakPractice(host, targetText, { onScore, onRecorded, play } = {}) {
   const wrap = el(`<div class="speak-practice">
     <div class="sp-controls">
       <button class="sp-btn sp-listen">${icon('speaker')} 听标准</button>
@@ -127,7 +127,10 @@ export function speakPractice(host, targetText, { onScore, onRecorded } = {}) {
   const recogHost = wrap.querySelector('.sp-recog');
 
   controls.querySelector('.sp-listen').addEventListener('click', (e) => {
-    e.stopPropagation(); stopSpeak(); speak(targetText);
+    e.stopPropagation();
+    stopSpeak();
+    if (play) play({});
+    else speak(targetText);
   });
 
   // 云端评测以录音为输入；没有录音能力时只保留标准音。
@@ -426,7 +429,7 @@ export function videoCard(video, { onWatched } = {}) {
 }
 
 /* ---- 练习题渲染，全部答对/答完后回调 onFinish(correct, total) ---- */
-export function renderQuiz(exercises, host, onFinish) {
+export function renderQuiz(exercises, host, onFinish, onAnswer) {
   let answered = 0, correct = 0;
   const check = () => {
     if (answered === exercises.length) onFinish?.(correct, exercises.length);
@@ -448,11 +451,13 @@ export function renderQuiz(exercises, host, onFinish) {
           if (item.dataset.done) return;
           item.dataset.done = '1';
           answered++;
-          if (oi === ex.a) { correct++; btn.classList.add('correct'); }
+          const ok = oi === ex.a;
+          if (ok) { correct++; btn.classList.add('correct'); }
           else {
             btn.classList.add('wrong');
             opts.children[ex.a].classList.add('correct');
           }
+          onAnswer?.(ok, ex, idx);
           [...opts.children].forEach(b => b.disabled = true);
           if (ex.explain) explain.classList.add('show');
           check();
@@ -481,6 +486,7 @@ export function renderQuiz(exercises, host, onFinish) {
         else {
           explain.textContent = `正确答案：${ex.a[0]}${ex.explain ? '。' + ex.explain : ''}`;
         }
+        onAnswer?.(ok, ex, idx);
         explain.classList.add('show');
         check();
       };
