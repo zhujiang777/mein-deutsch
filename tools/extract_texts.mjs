@@ -4,6 +4,7 @@ import { PRON_LESSONS } from '../data/pronunciation.js';
 import { GRAMMAR_LESSONS } from '../data/grammar.js';
 import { VOCAB } from '../data/vocab.js';
 import { READINGS } from '../data/readings.js';
+import { LISTENING_PACKS } from '../data/listening.js';
 import { COURSE } from '../data/course.js';
 import { DICT_ENTRIES } from '../data/dict-core.js';
 
@@ -39,6 +40,11 @@ for (const r of READINGS) {
   for (const s of r.sentences || []) add(s.de);
   add((r.sentences || []).map(s => s.de).join(' '));
 }
+
+// 精听包：逐句进主音频库做兜底（查词弹窗、慢速单句、SRS 错句复现都走 speak()）。
+// 包本身的多音色 / 整段音频另由 tools/gen_listening_audio.py 生成，不进这里。
+for (const pack of LISTENING_PACKS)
+  for (const s of pack.sentences || []) add(s.de);
 
 // 课程路径：步骤里的示例句、听力文本、拼句答案、跟读句、正确答案反馈音
 for (const unit of COURSE)

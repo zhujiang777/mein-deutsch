@@ -1,13 +1,14 @@
 # Mein Deutsch 内容数据规范
 
-写给内容作者（含 AI agent）。目标：只改 `data/*.js`，就能安全地扩充课程、词汇、阅读。
+写给内容作者（含 AI agent）。目标：只改 `data/*.js`，就能安全地扩充课程、词汇、阅读、精听。
 **以代码实现为准**；本文所有字段都与 `js/exercises.js`、`js/views/lesson.js`、`js/views/vocab.js`、
 `js/views/reading.js`、`js/recur.js` 的实际读取一致。
 
 约定：
 - `?` 表示可选字段；无标记为必填。
-- 所有德语文本改动后，必须重跑音频管线（见文末「音频管线」），否则新句子会退回设备 TTS。
-- 不要手改 `data/audio-manifest.js`（自动生成）。
+- 所有德语文本改动后，必须重跑音频管线（见 §5），否则新句子会退回设备 TTS。
+- 不要手改自动生成的文件：`data/audio-manifest.js`、`data/listening-audio.js`、`data/dict-core.js`、`data/content-index.js`。
+- 引入外部语料（非原创）前先读 `docs/textbook-extraction-guide.md` 与 §4 的 `provenance` 规则。
 
 ---
 
@@ -293,7 +294,77 @@
 
 ---
 
-## 4. 音频管线（改德语文本后必做）
+## 4. 精听包 `data/listening.js`
+
+阅读是「看懂语境」，精听包是「把声音切成词」。与阅读的关键差别：**带授权字段**（要能内嵌外部
+真实语料）、**带说话人**（多音色对话）、**音频与时间戳是生成物**（在 `data/listening-audio.js`，勿手写）。
+
+```js
+{
+  id: 'li-b01',                    // 必须 li- 前缀：同时是路由、md.lessons.v1 的 key、SRS 命名空间的一段
+  title: 'Im Café', titleZh: '在咖啡馆', level: 'A1',
+  topic: 'gastronomie',            // 话题 slug，与 syllabus-ref.json 共用取值
+  func: ['bestellen'], funcZh: ['点单'],   // ? 交际功能
+  skills: ['listen-detail'],       // ? 喂 recordAnswer 的技能标签
+  intro: '?听前提示一句话',
+  provenance: { … },               // 必填，见下
+  audio: { mode: 'sentences' },    // 'clip'(整段+时间戳) | 'sentences'(逐句独立文件)
+  speakers: [                      // ? 多说话人；单音色包只写一个
+    { id: 'K', name: 'Kellner', voice: 'de-DE-ConradNeural', gender: 'm', accent: 'de-DE' },
+  ],
+  sentences: [
+    { de: 'Guten Tag! Was möchten Sie?', zh: '您好！您想要什么？',
+      sp: 'K',                     // ? 对应 speakers[].id
+      note: '?听力难点，对照阶段显示',
+      newLemmas: ['Zucker'],       // ? 超出 A1 词表的生词，未声明会被测试拦下
+      srcId: '…', srcAudio: '…' }, // ? A 轨逐句溯源（Tatoeba 是孤立句，同包各句来源可能不同）
+  ],
+  gist: { q: '这段对话发生在哪里？', options: ['…'], a: 0, explain: '?' },  // ? 盲听后大意题，计分
+  dictation: [1, 3, 5],            // ? 挑哪几句做听写，缺省全部
+  speakPractice: [1, 9],           // ? 跟读评分（与 readings.js 同名同义）
+  reproduce: [8],                  // ? 复述
+  vocabRefs: ['w016'],             // ? 同 readings.js，驱动复现推荐
+}
+```
+
+### provenance（硬门槛，`tests/listening-data.test.mjs` 强制校验）
+
+`kind` 三选一：`'corpus'`（外部语料内嵌）/ `'original'`（原创撰写）/ `'tts'`。
+
+- **`kind !== 'original'`** 必填：`license`（白名单内）、`licenseUrl`、`attribution`、
+  `originalUrl`、`retrievedAt`（`YYYY-MM-DD`）、`modified`（布尔）；`modified: true` 时还要 `modifiedNote`。
+  CC BY 系列的署名与「声明改动」是持续义务，靠人记必漏，所以做成测试门槛。
+- **`kind === 'original'`** 必填 `adaptedFrom.statement`（交代来源边界）。若 `adaptedFrom.work`
+  指向某本教材，则必须同时给出 `borrowed[]` **事实层**清单（话题/交际功能/词表/语法点/题型）。
+  ⚠️ 逐句改写受版权原文属衍生作品，不是安全出口——只拿清单，句子从零写。规则见
+  `docs/textbook-extraction-guide.md`。
+
+### 音频与时间戳（生成物）
+
+```bash
+node tools/extract_texts.mjs > /dev/null   # 语法自检
+python3 tools/gen_audio.py                 # 逐句 Katja 兜底进主 manifest
+python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/listening-audio.js
+```
+
+- 产物落 `audio/listening/`，索引落 `data/listening-audio.js`（`{ mode, key, file|files, seg?, dur?, voice? }`）。
+  **绝不写 `data/audio-manifest.js`**——那个文件由 `gen_audio.py` 全量重写，塞进去的条目下轮就没了。
+- `seg` 与 `sentences` **同序同长**，`[[start, end], …]` 单位秒，取自 edge-tts 的 WordBoundary 事件
+  （服务端真值）。TTS 按标点断句，所以只能按词对齐、不能用 SentenceBoundary。
+- 对不齐 / 多音色 / 合成失败 → **自动降级 `mode:'sentences'`**，宁可没有 AB 复读也不能错位。
+- 默认音色（`de-DE-KatjaNeural`）且主库已有的句子直接复用 `audio/<hash>.mp3`，零字节重复。
+- `key` 是输入指纹（模式+音色+全部句子），不变就跳过生成并沿用上一轮时间戳。
+- 每句德语同时进主 manifest 做兜底，保证查词弹窗、慢速单句、SRS 错句复现随时有音频。
+
+### 作者自检
+
+- 生词密度上限 12%（`newLemmas` 去重后 / 总词数）。超了就换词或拆包。
+- 覆盖率判定走 `tools/a1-coverage.mjs`，已处理缩合（`im→in`、`zur→zu`）与冠词/物主代词格变化，
+  不必为这些形式声明 `newLemmas`。
+
+---
+
+## 5. 音频管线（改德语文本后必做）
 
 - 播放逻辑（`js/speech.js`）：`speak(text)` 先查 `data/audio-manifest.js`，命中就放
   预生成的 `audio/<hash>.mp3`（真人级 de-DE 神经语音）；未命中回退设备德语 TTS（音质差、可能无声）。
@@ -308,7 +379,7 @@
   发音/语法课例句、词汇（带冠词形式 + 例句 + `phrases` + `forms`）、全局词典词头、阅读逐句 + 全文、
   课程步骤的 `example.de` / `audioText` / `answer` / `de`（speak·reproduce）/
   choice 正确项 / fill·translate 首个答案 / match 的 `de` /
-  **scene·observe·roleplay 的 `lines[].de`**。
+  **scene·observe·roleplay 的 `lines[].de`**、**精听包 `LISTENING_PACKS[].sentences[].de`**。
   新增题型若引入新的德语文本字段，需同步更新 `extract_texts.mjs` 再跑 `gen_audio.py`。
 - 自检：`node tools/extract_texts.mjs > /dev/null && echo OK` 应通过（数据文件语法正确）。
 
