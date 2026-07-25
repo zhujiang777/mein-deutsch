@@ -270,7 +270,22 @@
   titleZh: '你好，我是安娜',
   level: 'A1',
   mode: 'intensiv',               // 'intensiv'(精读) | 'extensiv'(泛读)
-  vocabRefs: ['w016','w017','w018'], // ? 文中确实出现的词的 vocab id，3-8 个，宁缺毋滥
+  skillStage: 'R1',               // 正式能力阶段 R1-R6
+  genre: 'form-and-profile',
+  topic: 'language-club-membership',
+  register: 'neutral-written',
+  grammarPrereqs: ['regular-verbs'],
+  recommendedAfter: 'u2l3',
+  targetLemmas: ['Name','Land','lernen'],
+  newLemmas: ['Mitglied','Muttersprache','Lernziel'], // 每份 3-6 个
+  knownWordTarget: 0.92,
+  designReferences: {
+    evidenceIds: ['repo-s1-u2l3','passwort-a1-progression','hueber-r-a-persons','dib-ch1-interviews'],
+    appliedConstraints: ['先扫描字段，再重组人物信息'],
+    originalityStatement: '人物、正文、题目和信息顺序均从空白页原创。'
+  },
+  provenance: { kind: 'original', source: 'original', license: 'proprietary', statement: '…' },
+  vocabRefs: ['w016','w017','w018'], // 文中确实出现的词，结合课程/SRS计算已知词比例
   intro: '?导读一句话',
   sentences: [
     { de: 'Hallo! Ich heiße Anna.', zh: '你好！我叫安娜。', note: '?heißen 叫……' },
@@ -303,11 +318,21 @@
 {
   id: 'li-b01',                    // 必须 li- 前缀：同时是路由、md.lessons.v1 的 key、SRS 命名空间的一段
   title: 'Im Café', titleZh: '在咖啡馆', level: 'A1',
+  skillStage: 'L1', genre: 'short-interview', register: 'neutral-spoken',
+  grammarPrereqs: ['regular-verbs'], recommendedAfter: 'u2l3',
+  targetLemmas: ['heißen','kommen'], newLemmas: ['…','…','…'],
+  knownWordTarget: 0.92,
+  designReferences: {
+    evidenceIds: ['repo-s1-u2l3','passwort-a1-progression','hueber-h-a-contact','dib-ch1-interviews'],
+    appliedConstraints: ['至少三位说话人','答案依赖说话人匹配'],
+    originalityStatement: '人物、台词、选项和信息顺序均从空白页原创。'
+  },
   topic: 'gastronomie',            // 话题 slug，与 syllabus-ref.json 共用取值
   func: ['bestellen'], funcZh: ['点单'],   // ? 交际功能
   skills: ['listen-detail'],       // ? 喂 recordAnswer 的技能标签
   intro: '?听前提示一句话',
   provenance: { … },               // 必填，见下
+  audioStatus: 'pending-tts',       // ? TTS 未生成时显式标记；生成并核验后改为 ready
   audio: { mode: 'sentences' },    // 'clip'(整段+时间戳) | 'sentences'(逐句独立文件)
   speakers: [                      // ? 多说话人；单音色包只写一个
     { id: 'K', name: 'Kellner', voice: 'de-DE-ConradNeural', gender: 'm', accent: 'de-DE' },
@@ -339,6 +364,9 @@
   ⚠️ 逐句改写受版权原文属衍生作品，不是安全出口——只拿清单，句子从零写。规则见
   `docs/textbook-extraction-guide.md`。
 
+`designReferences.evidenceIds` 必须能在 `data/syllabus-ref.json` 定位，并至少覆盖课程/主课进度、
+对应 Hueber 技能书和一个公开校准来源。页码、练习与音轨只写在证据矩阵中，内容文件不重复维护定位器。
+
 ### 音频与时间戳（生成物）
 
 ```bash
@@ -355,6 +383,8 @@ python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/list
 - 默认音色（`de-DE-KatjaNeural`）且主库已有的句子直接复用 `audio/<hash>.mp3`，零字节重复。
 - `key` 是输入指纹（模式+音色+全部句子），不变就跳过生成并沿用上一轮时间戳。
 - 每句德语同时进主 manifest 做兜底，保证查词弹窗、慢速单句、SRS 错句复现随时有音频。
+- 精听听写或复述首答错误写入 `l:<packId>:<sentenceIndex>`；普通课程仍使用 `m:`。
+  阅读理解题只回写 `skills`，不得把整句写入词汇 SRS。
 
 ### 作者自检
 
