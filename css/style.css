@@ -457,6 +457,32 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .pill.blue { background: var(--blue-soft); color: var(--blue); }
 .pill.red { background: var(--red-soft); color: var(--red); }
 .pill.gold { background: var(--gold-soft); color: var(--gold); }
+
+/* 可点的标签链（语法点 ↔ 课程/内容 的互跳），44px 触控高度 */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 14px;
+  border-radius: 99px;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.chip:active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.chip.is-weak { background: var(--red-soft); border-color: transparent; color: var(--red); }
+.chip.is-strong { background: var(--green-soft); border-color: transparent; color: var(--green); }
+.grammar-links { margin: 10px 0 4px; }
+.grammar-links-label {
+  align-self: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+}
 .stage-chip,
 .readiness-chip {
   display: inline-flex;

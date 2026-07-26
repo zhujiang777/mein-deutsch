@@ -18,7 +18,7 @@ const MAX_WORDS = 14;  // 太长了当例句读不动
 // 精读句最多但没有单独音频。差距刻意做得小，主要还是让覆盖率决定。
 const TIER = { lesson: 6, listening: 4, reading: 2 };
 
-function collectCandidates() {
+export function collectCandidates() {
   const out = [];
   const push = (de, zh, source, kind) => {
     if (!de || !zh) return;

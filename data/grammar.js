@@ -1,7 +1,7 @@
 // 体系化语法课：12 课，按 A1 大纲编排
 // sections: { h?, p?, tip?, table?{head,rows}, examples?[{de,zh}] }
 // exercises: { type:'choice', q, options, a(索引), explain } | { type:'fill', q, a:[答案], explain }
-export const GRAMMAR_LESSONS = [
+const RAW_LESSONS = [
   {
     id: 'g01',
     title: '第1课 · 人称代词与 sein',
@@ -676,3 +676,89 @@ export const GRAMMAR_LESSONS = [
     ],
   },
 ];
+
+/* ==========================================================================
+ * 语法课 ↔ 其余模块的接线表
+ *
+ * 全站早就有一套技能标签（course.js 每道题上的 skills，喂 md.skills.v1 掌握度），
+ * 但体系化语法课一直不在里面——练完 g08 情态动词，掌握度纹丝不动。
+ * 下表把 g## 挂到**已经存在**的标签上，于是：
+ *   · 语法课练习开始喂掌握度，语法课列表能显示真实进度
+ *   · 语法课 ↔ 微步课自动连通（共享标签即可，不需要再手写一张课程映射表）
+ *   · 精读精听靠 grammarPrereqs → g## → 标签，能查"这篇需要的语法你掌握了没"
+ *
+ * 硬约束：只能写 course.js 里真实出现过的标签。写错一个字（v2-word-order vs
+ * v2-order）掌握度就永远是 0，且不会报错——所以 tests/grammar-link.test.mjs
+ * 会逐个校验标签存在。
+ * ========================================================================== */
+const GRAMMAR_SKILLS = {
+  g01: ['sein-sg', 'sein-pl', 'pron-sg', 'sie-formal', 'du-vs-sie', 'du-sie'],
+  g02: ['verb-reg', 'haben-conj', 'kommen-wohnen'],
+  g03: ['noun-gender', 'def-article', 'indef-article', 'pronoun-replace'],
+  g04: ['plural'],
+  g05: ['v2-order', 'w-frage', 'w-frage-basic', 'frag-order'],
+  g06: ['akk-masc-only', 'akk-review', 'pronoun-akk', 'kein-basic'],
+  g07: ['vowel-change-ei', 'vowel-change-ae', 'wissen'],
+  g08: ['modal-koennen-wollen', 'modal-muessen-sollen', 'modal-duerfen', 'moechten', 'satzklammer', 'modal-bracket'],
+  g09: ['separable-verbs', 'separable-verb'],
+  g10: ['dativ-dem-der', 'pronoun-dativ', 'prep-dativ-zu', 'location-dativ', 'zu-dativ', 'gefallen-dat'],
+  g11: ['possessive-basic', 'possessive-agree', 'nicht-kein'],
+  g12: ['perfekt-intro', 'perfekt-haben', 'perfekt-sein', 'perfekt-narrate', 'war-hatte'],
+};
+
+/** 精读/精听的 grammarPrereqs 自由文本标签 → 讲这个点的语法课。 */
+export const PREREQ_TO_GRAMMAR = {
+  sein: ['g01'],
+  haben: ['g02'],
+  'regular-verbs': ['g02'],
+  'noun-gender': ['g03'],
+  'ein-eine': ['g03'],
+  plural: ['g04'],
+  'w-questions': ['g05'],
+  'v2-word-order': ['g05'],
+  accusative: ['g06'],
+  'kein-nicht': ['g06', 'g11'],
+  'separable-verbs': ['g09'],
+  dative: ['g10'],
+  'location-prepositions': ['g10'],
+  'modal-verbs': ['g08'],
+  'sentence-bracket': ['g08'],
+  'war-hatte': ['g12'],
+  'perfect-with-haben': ['g12'],
+  'perfect-with-sein': ['g12'],
+  // 时间表达（um/am、halb、序数日期）散在微步课 u8 里，12 课语法体系没有单独一课。
+  // 宁可留空也不硬塞进邻近的课——塞了以后"g## 掌握度"就不再代表它声称的东西。
+  time: [],
+};
+
+/** g01–g12 覆盖不到、但微步课里确实在教的语法点。留档，不假装已覆盖。 */
+export const GRAMMAR_GAPS = [
+  { skills: ['imperative-du'], zh: '命令式（u6）' },
+  { skills: ['comparative'], zh: '比较级与最高级（u13）' },
+  { skills: ['prep-time-an-um', 'time-informal', 'time-formal', 'ordinal-date'], zh: '时间表达与日期（u8）' },
+  { skills: ['es-impersonal'], zh: '无人称 es（u12）' },
+  { skills: ['sequence-adverbs'], zh: '顺序副词（u12）' },
+  { skills: ['reflexive-prep'], zh: '反身与介词搭配（u11）' },
+  { skills: ['zu-adj', 'pred-adj'], zh: '形容词作表语（u7）' },
+];
+
+export const GRAMMAR_LESSONS = RAW_LESSONS.map(lesson => ({
+  ...lesson,
+  skills: GRAMMAR_SKILLS[lesson.id] || [],
+}));
+
+/** 某个技能标签属于哪一课语法课（没有对应课则返回 null）。 */
+const SKILL_TO_GRAMMAR = new Map();
+for (const [id, skills] of Object.entries(GRAMMAR_SKILLS)) {
+  for (const skill of skills) SKILL_TO_GRAMMAR.set(skill, id);
+}
+export function grammarIdForSkill(skill) {
+  return SKILL_TO_GRAMMAR.get(skill) || null;
+}
+
+/** 一份内容的 grammarPrereqs → 去重后的语法课 id，按课序排列。 */
+export function grammarIdsForPrereqs(prereqs = []) {
+  const out = new Set();
+  for (const tag of prereqs) for (const id of PREREQ_TO_GRAMMAR[tag] || []) out.add(id);
+  return [...out].sort();
+}

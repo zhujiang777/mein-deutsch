@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 
 const css = readFileSync(new URL('../css/style.css', import.meta.url), 'utf8');
 const app = readFileSync(new URL('../js/app.js', import.meta.url), 'utf8');
@@ -117,4 +117,38 @@ test('listening player never leaves a frame loop running', () => {
   assert.match(listeningPlayer, /readyState < 1/);
   // stopSpeak() 只清 .onended，控制器必须用 addEventListener。
   assert.doesNotMatch(listeningPlayer, /\.onended\s*=/);
+});
+
+test('视图模块用到的 ui.js 帮手都 import 了', () => {
+  // js/views/grammar.js 用 icon() 却没 import，列表页每次渲染直接抛 ReferenceError，
+  // 而且静态检查和单测都发现不了——这类漏 import 必须由测试兜住。
+  const helpers = ['el', 'esc', 'icon', 'guideBear', 'haptic', 'motionIn', 'setProgress',
+    'rewardBurst', 'toast', 'audioBtn', 'speakPractice', 'micBtn', 'phraseRow',
+    'videoCard', 'renderQuiz'];
+  const files = [
+    ...readdirSync(new URL('../js/views/', import.meta.url)).map(name => `js/views/${name}`),
+    ...readdirSync(new URL('../js/', import.meta.url))
+      .filter(name => name.endsWith('.js')).map(name => `js/${name}`),
+  ];
+  for (const file of files) {
+    const source = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
+    const imported = new Set([
+      // 静态 import { … } from './ui.js'
+      ...[...source.matchAll(/import\s*\{([^}]*)\}\s*from\s*['"][^'"]*ui\.js['"]/g)],
+      // 动态 import('./ui.js').then(({ … }) => …)（speech.js 用这种，避免循环依赖）
+      ...[...source.matchAll(/import\(['"][^'"]*ui\.js['"]\)\.then\(\(\{([^}]*)\}/g)],
+    ].flatMap(hit => hit[1].split(',').map(name => name.trim().split(/\s+as\s+/).pop())));
+    for (const helper of helpers) {
+      if (!new RegExp(`\\b${helper}\\(`).test(source)) continue;
+      if (imported.has(helper)) continue;
+      if (new RegExp(`(function|const|let)\\s+${helper}\\b`).test(source)) continue;
+      assert.fail(`${file} 调用了 ${helper}() 但没有从 ui.js import`);
+    }
+  }
+});
+
+test('语法联动的样式有覆盖', () => {
+  for (const selector of ['.chip-row', '.chip {', '.chip.is-weak', '.grammar-links']) {
+    assert.ok(css.includes(selector), `缺少样式 ${selector}`);
+  }
 });

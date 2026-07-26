@@ -4,6 +4,7 @@ import { createPackPlayer, renderListenBar } from '../listening-player.js';
 import { runLessonShell } from '../lesson-shell.js';
 import { el, esc } from '../ui.js';
 import { getContentReadiness } from '../content-readiness.js';
+import { grammarChips } from '../grammar-links.js';
 import { addListenMiss } from '../mastery.js';
 
 export function buildListeningLesson(pack) {
@@ -83,6 +84,9 @@ export function renderListening(host, id) {
     </p>
     <p class="meta">${esc(pack.intro || '')}</p>
   </header>`));
+
+  const chips = grammarChips(pack);
+  if (chips) host.appendChild(chips);
 
   if (!lesson) {
     host.appendChild(el(`<div class="empty-hint">这份精听的原创音频尚未生成。</div>`));

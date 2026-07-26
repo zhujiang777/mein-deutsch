@@ -4,6 +4,7 @@ import { el, esc, audioBtn, icon, micBtn, renderQuiz, toast } from '../ui.js';
 import { isDone, markDone } from '../storage.js';
 import { enableGloss } from '../dict.js';
 import { getContentReadiness } from '../content-readiness.js';
+import { grammarChips } from '../grammar-links.js';
 import { recordAnswer } from '../mastery.js';
 
 export function renderReading(host, id) {
@@ -42,6 +43,8 @@ function renderText(host, id) {
   const readiness = r.skillStage ? getContentReadiness(r) : null;
   host.appendChild(el(`<p class="page-sub">${esc(r.titleZh)} · <span class="pill ${r.mode === 'intensiv' ? '' : 'blue'}">${r.mode === 'intensiv' ? '精读' : '泛读'}</span> <span class="pill green">${r.level}</span>
     ${r.skillStage ? `<span class="stage-chip">${esc(r.skillStage)}</span> <span class="readiness-chip ${readiness.key}">${readiness.label}</span>` : ''}</p>`));
+  const chips = grammarChips(r);
+  if (chips) host.appendChild(chips);
   if (r.intro) host.appendChild(el(`<div class="tip"><b>阅读提示</b> · ${esc(r.intro)}</div>`));
   if (r.readingRoute) host.appendChild(el(`<div class="card reading-route">
     <div><b>1 · 预测</b><span>${esc(r.readingRoute.prediction)}</span></div>

@@ -109,10 +109,11 @@ export function renderPath(host) {
       motionIn(unitEl, { y: 12, delay: Math.min(120, units.indexOf(unit) * 24), skipOnCoarse: true });
     });
 
-    // 旧版模块入口：内容迁移期间保留，各自挂在对应泳道下
+    // 语法课不再是"旧版"：12 课已经和微步课共用技能标签，掌握度互通，
+    // 且每课底部能跳到真实出现过它的课文与精读精听。
     if (active === 'grammar') {
-      pane.appendChild(el(`<div class="section-label">更多单元制作中 · 先用旧版课程</div>`));
-      pane.appendChild(el(`<a class="list-item" href="#/grammar"><span class="li-icon">${icon('route')}</span><div class="li-main"><div class="li-title">语法课（旧版）</div><div class="li-sub">12 课 A1 语法，迁移为微步课中</div></div><span class="li-arrow">${icon('arrow')}</span></a>`));
+      pane.appendChild(el(`<div class="section-label">系统讲解 · 查语法规则</div>`));
+      pane.appendChild(el(`<a class="list-item" href="#/grammar"><span class="li-icon">${icon('route')}</span><div class="li-main"><div class="li-title">体系化语法 12 课</div><div class="li-sub">规则表 + 练习 + 真实语境实例，掌握度与微步课互通</div></div><span class="li-arrow">${icon('arrow')}</span></a>`));
     }
     if (active === 'pron') {
       pane.appendChild(el(`<div class="section-label">新课覆盖前先用旧版对照</div>`));
