@@ -76,33 +76,18 @@ export function renderToday(host) {
     </div>
   </section>`);
   host.appendChild(hero);
-  // 主页第一屏就要回答"还差多远"：今日目标只是当天的量，全景图是离完整 A1 的距离。
-  host.appendChild(panoramaBanner());
 
-  // 今天这一份：先让用户知道今天是"什么"，再让他选花多少时间。
-  // 旧版只说"继续旅程"，点下去才知道要做什么——那是播放列表，不是一天的学习。
+  // 开始按钮必须在第一屏就能点到，所以"今天做什么"和"花多久"合成同一张卡：
+  // 读到的东西和要按的按钮在一起，不用为了先说明再滚一屏。
   const material = todayMaterial();
-  if (material) {
-    const pct = Math.round(material.readiness.knownRatio * 100);
-    host.appendChild(el(`<section class="today-material${material.ready ? '' : ' is-blocked'}">
-      <div class="tm-head">
-        <span class="eyebrow">${material.ready ? 'HEUTE · 今天这一份' : 'NOCH NICHT · 材料还太难'}</span>
-        <span class="pill ${material.ready ? (material.readiness.key === 'right' ? 'green' : 'gold') : 'red'}">${esc(material.ready ? material.readiness.label : '暂不推荐')}</span>
-      </div>
-      <h2 class="tm-title de">${esc(material.pack.title)}</h2>
-      <div class="tm-zh">${esc(material.pack.titleZh || '')}</div>
-      <p class="tm-why">${esc(material.reason)}</p>
-      ${material.ready ? `<div class="tm-stages">
-        <span>听</span><i></i><span>大意</span><i></i><span>听写</span><i></i><span>复听</span><i></i><span>复述</span>
-      </div>` : ''}
-      <div class="tm-meta">已认识 ${pct}% 的词 · ${material.pack.sentences.length} 句${material.ready ? '' : ' · 选 30 分钟也会跳过这一段'}</div>
-    </section>`));
-  }
-
+  const stageLine = material?.ready
+    ? `学一课 · 用《${esc(material.pack.titleZh || material.pack.title)}》· 记住它`
+    : '学一课 · 记住它';
   const launcher = el(`<section class="mission-launcher">
-    <div class="mission-head"><div><span>选择今天的节奏</span><b>${material?.ready ? '学一课 · 用一份 · 记住它' : '上课 · 记住它'}</b></div><span class="mission-count">${stats.due + mistakes + listenMisses} 项待复习</span></div>
+    <div class="mission-head"><div><span>今天的学习</span><b>${stageLine}</b></div><span class="mission-count">${stats.due + mistakes + listenMisses} 项待复习</span></div>
+    ${material ? `<p class="tm-why${material.ready ? '' : ' is-blocked'}">${esc(material.reason)}</p>` : ''}
     <div class="time-grid" role="group" aria-label="学习时长"></div>
-    <button class="btn block journey-start">继续旅程 ${icon('arrow')}</button>
+    <button class="btn block journey-start">开始今天的学习 ${icon('arrow')}</button>
   </section>`);
   const timeRow = launcher.querySelector('.time-grid');
   const startBtn = launcher.querySelector('.journey-start');
@@ -124,12 +109,14 @@ export function renderToday(host) {
       await startFlow(host, selectedMinutes);
     } catch (error) {
       startBtn.disabled = false;
-      startBtn.innerHTML = `继续旅程 ${icon('arrow')}`;
+      startBtn.innerHTML = `开始今天的学习 ${icon('arrow')}`;
       toast('内容加载失败，请检查网络后重试');
       console.error(error);
     }
   });
   host.appendChild(launcher);
+  // 横幅退到开始按钮之后：它回答"还差多远"，是看的东西，不该挡在动作前面。
+  host.appendChild(panoramaBanner());
 
   host.appendChild(el(`<div class="section-label">短途练习</div>`));
   const quick = el(`<div class="module-grid"></div>`);
