@@ -177,3 +177,29 @@ test('三栏导航自洽：路由的 tab、tabIndexes、tabbar 链接三者一�
   assert.match(app, /pattern: \/\^\\\/me\$\/, tab: 'today', load:/);
   assert.match(app, /back-link" href="#\/">‹ 今日/);
 });
+
+test('同一个模块在所有引用点的版本号必须一致', () => {
+  // 版本号不一致 = 浏览器里同时存在两份模块实例，各自持有独立的模块级状态
+  // （vocab.js 的 SRS 队列、listening.js 的播放器）。曾经只守着 exercises.js，
+  // 但这个坑对任何带 ?v= 的模块都成立，所以改成全仓扫描。
+  const files = [
+    ...readdirSync(new URL('../js/views/', import.meta.url)).map(name => `js/views/${name}`),
+    ...readdirSync(new URL('../js/', import.meta.url)).filter(name => name.endsWith('.js')).map(name => `js/${name}`),
+    'index.html',
+  ];
+  const seen = new Map(); // 模块名 → Map(版本 → [引用它的文件])
+  for (const file of files) {
+    const source = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
+    for (const hit of source.matchAll(/([\w./-]+\.(?:js|css))\?v=(\d+)/g)) {
+      const module = hit[1].replace(/^.*\//, '');
+      if (!seen.has(module)) seen.set(module, new Map());
+      const byVersion = seen.get(module);
+      if (!byVersion.has(hit[2])) byVersion.set(hit[2], []);
+      byVersion.get(hit[2]).push(file);
+    }
+  }
+  for (const [module, byVersion] of seen) {
+    assert.equal(byVersion.size, 1,
+      `${module} 被以多个版本引用：${[...byVersion].map(([v, files]) => `v${v}(${files.join(',')})`).join(' vs ')}`);
+  }
+});

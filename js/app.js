@@ -1,5 +1,5 @@
 // 应用入口 v4：五个主页面常驻缓存，深层页面按需加载
-import { renderToday, runDictationSet } from './views/today.js?v=13';
+import { renderToday, runDictationSet } from './views/today.js?v=14';
 import { renderLibrary } from './views/library.js?v=1';
 import { renderPanorama } from './views/panorama.js?v=2';
 import { getSettings, migrate } from './storage.js';
@@ -55,8 +55,8 @@ const routes = [
   // 仓库三栏各自是一条真实路由，现存的 ‹旅程 / ‹读·听 返回链一个都不用改。
   { pattern: /^\/(path|vocab|readlisten)$/, tab: 'library', root: true, render: (h, hit) => renderLibrary(h, hit[1]) },
   { pattern: /^\/lesson\/(.+)$/, tab: 'library', load: () => import('./views/lesson.js?v=10'), render: (m, h, hit) => m.renderLessonRoute(h, hit[1]) },
-  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'library', load: () => import('./views/vocab.js?v=11'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
-  { pattern: /^\/vocab\/(.+)$/, tab: 'library', load: () => import('./views/vocab.js?v=11'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
+  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'library', load: () => import('./views/vocab.js?v=12'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
+  { pattern: /^\/vocab\/(.+)$/, tab: 'library', load: () => import('./views/vocab.js?v=12'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
   { pattern: /^\/reading\/(.+)$/, tab: 'library', load: () => import('./views/reading.js?v=11'), render: (m, h, hit) => m.renderReading(h, hit[1]) },
   { pattern: /^\/listening\/(.+)$/, tab: 'library', load: () => import('./views/listening.js?v=2'), render: (m, h, hit) => m.renderListening(h, hit[1]) },
   { pattern: /^\/dictation$/, tab: 'library', render: async (_m, h) => {

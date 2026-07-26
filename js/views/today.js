@@ -1,21 +1,21 @@
-// 今日学习：一键串流 词卡复习 → 错题巩固 → 新微步课 → 今日视频 → 听写跟读
-import { el, esc, guideBear, icon, motionIn, videoCard, toast } from '../ui.js';
+// 今日学习：三段围绕同一份材料 —— 学（微步课）→ 用（精听五阶段）→ 记（本篇生词 + 到期复习）
+// 组装规则和材料挑选见 js/today-plan.js
+import { el, esc, icon, motionIn, toast } from '../ui.js';
 import { COURSE_CATALOG, VOCAB_IDS, nextCatalogLesson } from '../../data/content-index.js';
 import { srsStats } from '../srs.js';
 import {
   dueMistakes, dueListenMisses, rateMistake, mistakeRef, listenRef, recordAnswer
 } from '../mastery.js';
-import { allLessonStates, getVideoState, getDaily, getStreak, getWordbook, rewardSummary } from '../storage.js';
+import { allLessonStates, getDaily, getStreak, getWordbook, loadSrs, loadSkills, rewardSummary } from '../storage.js';
 import { stopSpeak } from '../speech.js';
 import { panoramaBanner } from '../panorama-banner.js';
+import { PLANS, STAGE_LABELS, pickMaterial, buildTodayPlan } from '../today-plan.js';
 
-/* 三档时长的队列配置 */
-const PLANS = {
-  5: { label: '5 分钟 · 只复习', maxDue: 20, maxNew: 0, quickForms: true, mistakes: 5, listenMisses: 2, lesson: false, video: false },
-  15: { label: '15 分钟 · 标准', maxDue: 20, maxNew: 10, mistakes: 5, listenMisses: 3, lesson: true, video: true },
-  30: { label: '30 分钟 · 充实', maxDue: 40, maxNew: 15, mistakes: 8, listenMisses: 5, lesson: true, video: true },
-};
+/* 三档时长的配置见 js/today-plan.js —— 那里也定义了"学/用/记"三段怎么组装 */
 const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB_IDS];
+const todayMaterial = () => pickMaterial({
+  lessonStates: allLessonStates(), srs: loadSrs(), skills: loadSkills(),
+});
 let todayRuntimePromise;
 
 function loadTodayRuntime() {
@@ -26,8 +26,9 @@ function loadTodayRuntime() {
       import('./lesson.js'),
       import('./vocab.js'),
       import('../exercises.js?v=5'),
-      import('./listening.js?v=1'),
-    ]).then(([course, readings, lessonView, vocabView, exercises, listeningView]) => ({
+      import('./listening.js?v=2'),
+      import('../lesson-shell.js'),
+    ]).then(([course, readings, lessonView, vocabView, exercises, listeningView, shell]) => ({
       COURSE: course.COURSE,
       READINGS: readings.READINGS,
       findLesson: course.findLesson,
@@ -36,6 +37,7 @@ function loadTodayRuntime() {
       runVocabSession: vocabView.runVocabSession,
       renderExercise: exercises.renderExercise,
       findListeningLesson: listeningView.findListeningLesson,
+      runLessonShell: shell.runLessonShell,
     }));
   }
   return todayRuntimePromise;
@@ -77,8 +79,28 @@ export function renderToday(host) {
   // 主页第一屏就要回答"还差多远"：今日目标只是当天的量，全景图是离完整 A1 的距离。
   host.appendChild(panoramaBanner());
 
+  // 今天这一份：先让用户知道今天是"什么"，再让他选花多少时间。
+  // 旧版只说"继续旅程"，点下去才知道要做什么——那是播放列表，不是一天的学习。
+  const material = todayMaterial();
+  if (material) {
+    const pct = Math.round(material.readiness.knownRatio * 100);
+    host.appendChild(el(`<section class="today-material${material.ready ? '' : ' is-blocked'}">
+      <div class="tm-head">
+        <span class="eyebrow">${material.ready ? 'HEUTE · 今天这一份' : 'NOCH NICHT · 材料还太难'}</span>
+        <span class="pill ${material.ready ? (material.readiness.key === 'right' ? 'green' : 'gold') : 'red'}">${esc(material.ready ? material.readiness.label : '暂不推荐')}</span>
+      </div>
+      <h2 class="tm-title de">${esc(material.pack.title)}</h2>
+      <div class="tm-zh">${esc(material.pack.titleZh || '')}</div>
+      <p class="tm-why">${esc(material.reason)}</p>
+      ${material.ready ? `<div class="tm-stages">
+        <span>听</span><i></i><span>大意</span><i></i><span>听写</span><i></i><span>复听</span><i></i><span>复述</span>
+      </div>` : ''}
+      <div class="tm-meta">已认识 ${pct}% 的词 · ${material.pack.sentences.length} 句${material.ready ? '' : ' · 选 30 分钟也会跳过这一段'}</div>
+    </section>`));
+  }
+
   const launcher = el(`<section class="mission-launcher">
-    <div class="mission-head"><div><span>选择今天的节奏</span><b>从下一站继续</b></div><span class="mission-count">${stats.due + mistakes + listenMisses} 项待复习</span></div>
+    <div class="mission-head"><div><span>选择今天的节奏</span><b>${material?.ready ? '学一课 · 用一份 · 记住它' : '上课 · 记住它'}</b></div><span class="mission-count">${stats.due + mistakes + listenMisses} 项待复习</span></div>
     <div class="time-grid" role="group" aria-label="学习时长"></div>
     <button class="btn block journey-start">继续旅程 ${icon('arrow')}</button>
   </section>`);
@@ -126,25 +148,18 @@ export function renderToday(host) {
 /* ---- 串流执行 ---- */
 async function startFlow(host, minutes) {
   const runtime = await loadTodayRuntime();
-  const plan = PLANS[minutes];
-  const segments = [];
-
   const stats = srsStats(vocabIds());
-  if (stats.due > 0 || (plan.maxNew > 0 && stats.fresh > 0)) {
-    segments.push({ kind: 'vocab', title: '词汇复习与新词' });
-  }
-  const mistakes = dueMistakes(plan.mistakes);
-  if (mistakes.length) segments.push({ kind: 'mistakes', title: '错题巩固', ids: mistakes });
-  const listenMisses = dueListenMisses(plan.listenMisses);
-  if (listenMisses.length) segments.push({ kind: 'listen-misses', title: '精听错句复现', ids: listenMisses });
-  const next = plan.lesson ? runtime.nextLesson(allLessonStates()) : null;
-  if (next) segments.push({ kind: 'lesson', title: `新课：${next.lesson.title}`, lessonId: next.lesson.id });
-  if (plan.video) {
-    const pending = pendingVideo();
-    if (pending) segments.push({ kind: 'video', title: '今日视频', video: pending });
-  }
+  const { segments } = buildTodayPlan(minutes, {
+    nextLesson: nextCatalogLesson(allLessonStates())?.lesson || null,
+    material: todayMaterial(),
+    counts: {
+      due: stats.due, fresh: stats.fresh,
+      mistakes: dueMistakes(99), listenMisses: dueListenMisses(99),
+    },
+  });
+
   if (!segments.length) {
-    toast('今天的任务都清空了 🎉 可以去读·听里泛听磨耳朵');
+    toast('今天的任务都清空了 🎉 可以去仓库里泛听磨耳朵');
     return;
   }
 
@@ -168,16 +183,25 @@ async function startFlow(host, minutes) {
       return;
     }
     const seg = segments[idx];
-    const header = el(`<div class="flow-header">第 ${idx + 1}/${segments.length} 段 · ${esc(seg.title)}</div>`);
+    const header = el(`<div class="flow-header">${esc(STAGE_LABELS[seg.stage] || '')} · ${esc(seg.title)}</div>`);
 
     if (seg.kind === 'vocab') {
       runtime.runVocabSession(host, {
-        maxDue: plan.maxDue, maxNew: plan.maxNew, quickForms: !!plan.quickForms,
+        maxDue: seg.maxDue, maxNew: seg.maxNew, quickForms: seg.quickForms,
+        priorityIds: seg.priorityIds,
         onDone: () => { idx++; run(); },
         onExit: () => { location.hash = '#/'; renderTodayFresh(host); },
       });
     } else if (seg.kind === 'lesson') {
       runtime.runLesson(host, seg.lessonId, {
+        onComplete: () => { idx++; run(); },
+        onExit: () => { renderTodayFresh(host); },
+      });
+    } else if (seg.kind === 'material') {
+      const lesson = runtime.findListeningLesson(seg.packId);
+      if (!lesson) { idx++; run(); return; }
+      host.appendChild(header);
+      runtime.runLessonShell(host, lesson, {
         onComplete: () => { idx++; run(); },
         onExit: () => { renderTodayFresh(host); },
       });
@@ -187,14 +211,6 @@ async function startFlow(host, minutes) {
     } else if (seg.kind === 'listen-misses') {
       host.appendChild(header);
       runListenMissDrill(host, seg.ids, () => { idx++; run(); }, runtime);
-    } else if (seg.kind === 'video') {
-      host.appendChild(header);
-      const wrap = el(`<div style="margin-top:10px"></div>`);
-      wrap.appendChild(videoCard(seg.video, { onWatched: () => toast('已记录 ✓') }));
-      host.appendChild(wrap);
-      const btn = el(`<button class="btn block" style="margin-top:14px">看完了，继续 ›</button>`);
-      btn.addEventListener('click', () => { idx++; run(); });
-      host.appendChild(btn);
     }
   };
   run();
@@ -251,13 +267,6 @@ function renderTodayFresh(host) {
   document.body.classList.remove('immersive');
   host.innerHTML = '';
   renderToday(host);
-}
-
-function pendingVideo() {
-  for (const unit of COURSE_CATALOG)
-    for (const v of unit.videos || [])
-      if (!getVideoState(v.yt).done) return v;
-  return null;
 }
 
 /* 错题巩固：从课程步骤引用还原题目 */

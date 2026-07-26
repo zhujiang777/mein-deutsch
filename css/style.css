@@ -1569,3 +1569,46 @@ textarea.io-area { min-height: 110px; resize: vertical; margin-top: 10px; }
   justify-content: center;
 }
 .status-chip.status-me:active { color: var(--accent); }
+
+/* ===== 今天这一份（主页）===== */
+/* 先回答"今天是什么"，再问"花多少时间"。旧版只有"继续旅程"，点下去才知道要做什么。 */
+.today-material {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px 16px 16px;
+  margin-bottom: 14px;
+}
+.tm-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.tm-title { font-size: 1.18rem; font-weight: 800; margin-top: 8px; line-height: 1.3; }
+.tm-zh { font-size: 0.82rem; color: var(--text-2); margin-top: 2px; }
+.tm-why {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 2px solid var(--accent);
+  color: var(--text);
+}
+.tm-stages {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.tm-stages span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-2);
+  background: var(--card-2);
+  border-radius: 99px;
+  padding: 3px 9px;
+}
+.tm-stages i { width: 8px; height: 1px; background: var(--line-strong); flex-shrink: 0; }
+.tm-meta { font-size: 0.72rem; color: var(--text-2); margin-top: 10px; }
+
+/* 材料还太难：如实显示"最贴合的一份也差多少"，而不是静默隐藏这一段 */
+.today-material.is-blocked { border-style: dashed; border-color: var(--line-strong); }
+.today-material.is-blocked .tm-title { color: var(--text-2); }
+.today-material.is-blocked .tm-why { border-left-color: var(--red); }

@@ -10,7 +10,7 @@
 // app.js 的根视图缓存、滚动位置恢复、返回键都自然正确，也不用动任何现存的返回链。
 import { el, icon } from '../ui.js';
 import { renderPath } from './path.js?v=12';
-import { renderVocab } from './vocab.js?v=11';
+import { renderVocab } from './vocab.js?v=12';
 import { renderReadListen } from './readlisten.js?v=11';
 
 const SECTIONS = [

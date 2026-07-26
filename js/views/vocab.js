@@ -198,9 +198,15 @@ function startSession(host) {
   });
 }
 
-export function runVocabSession(host, { onDone, onExit, maxNew, maxDue, quickForms = false } = {}) {
+export function runVocabSession(host, { onDone, onExit, maxNew, maxDue, quickForms = false, priorityIds = [] } = {}) {
   const q = buildQueue(allIds());
-  const fresh = q.fresh.slice(0, maxNew ?? q.fresh.length);
+  // 今天这份材料里的生词排到最前：刚在语境里遇到过，趁热记住的成本最低。
+  // sort 在现代 JS 里是稳定的，非优先词保持原有顺序。
+  const priority = new Set(priorityIds);
+  const ordered = priority.size
+    ? [...q.fresh].sort((a, b) => (priority.has(b) ? 1 : 0) - (priority.has(a) ? 1 : 0))
+    : q.fresh;
+  const fresh = ordered.slice(0, maxNew ?? ordered.length);
   const due = q.due.slice(0, maxDue ?? q.due.length);
 
   if (!fresh.length && !due.length) {
