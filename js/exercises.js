@@ -257,10 +257,14 @@ function renderTranslate(host, item, ctx) {
 
 /* ---------- speak：跟读（云端发音评测+录音对比；达标计正确，否则跳过不计，绝不计错） ---------- */
 function renderSpeak(host, item, ctx) {
+  // 发音课用 cue 给一行动作提示（"说'衣'的口型，只送气不出声"）。
+  // 讲解只在这一行里，成段的规则说明放课末的规则表，不挡在主路径上。
   host.appendChild(el(`<div class="ex-prompt">
-    <div class="ex-q">🎤 跟读这句</div>
+    <div class="ex-q">${esc(item.q || '🎤 跟读这句')}</div>
     <div class="ex-de de" style="font-size:1.3rem;font-weight:700;margin:10px 0 4px">${esc(item.de)}</div>
+    ${item.ipa ? `<div class="p-ipa">${esc(item.ipa)}</div>` : ''}
     <div class="meta">${esc(item.zh || '')}</div>
+    ${item.cue ? `<div class="speak-cue">${esc(item.cue)}</div>` : ''}
   </div>`));
   // done 按钮需先创建，供 onScore 达标时改文案
   const done = el(`<button class="btn block secondary" style="margin-top:12px">完成，继续 ›</button>`);

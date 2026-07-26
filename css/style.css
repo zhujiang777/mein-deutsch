@@ -1611,3 +1611,36 @@ textarea.io-area { min-height: 110px; resize: vertical; margin-top: 10px; }
 /* 材料还太难：如实显示"最贴合的一份也差多少"，而不是静默隐藏这一段 */
 .tm-why.is-blocked { border-left-color: var(--red); color: var(--text-2); }
 .mission-launcher .tm-why { margin: 10px 0 4px; }
+
+/* 发音卡上的一行动作提示：讲解只允许出现在这里，成段说明去课末规则表 */
+.speak-cue {
+  margin-top: 10px;
+  padding: 8px 11px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+/* 课末的规则表：默认折叠，是回头查的参考资料，不是学习路径 */
+.rule-details {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  overflow: hidden;
+}
+.rule-details > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 14px;
+  min-height: 44px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.rule-details > summary::-webkit-details-marker { display: none; }
+.rule-details[open] > summary { border-bottom: 1px solid var(--line); }
+.rule-details .gram-table-wrap { padding: 4px 14px 14px; }

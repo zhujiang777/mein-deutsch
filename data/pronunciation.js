@@ -1,513 +1,316 @@
-// 发音系统课：10 课，从字母到语调
-// item 格式: { de, ipa?, zh?, tip? } — 自动带 🔊/慢速/🎤 按钮
+// 拼读 6 格 —— 卡片流，不是文章。规格见 docs/learning-formats.md 第二节
+//
+// 旧版是 10 篇可滚动的讲解文章、0 道练习题，唯一交互是"标记本课完成"，学不下去。
+// 新版每格是一串卡片，一屏一个动作：听标准 → 一行动作提示 → 跟读评分 → 听辨确认。
+//
+// 三条硬约束：
+// 1. 讲解只允许一行 cue（动作指令，说"嘴怎么动"），成段说明降级到课末 rule 表，回头查用。
+// 2. 例词一律用真实 A1 词汇（vocabRefs 登记词卡 id），顺带积累词汇，不用无意义音节。
+// 3. 不做"错音诊断"——猜出来的诊断比没有诊断更糟。低分就报分数 + A/B 回放，不编原因。
+//
+// 排序按回报率（学完立刻能读出多少真词），不按字母表分类。
+
 export const PRON_LESSONS = [
   {
-    id: 'p01',
-    title: '第1课 · 字母表与拼读总则',
-    sub: '德语的好消息：见词能读',
-    sections: [
+    id: 'v1',
+    title: '第1天 · 元音长短',
+    sub: '德语元音不滑音，只有长短两种',
+    skills: ['vowel-length', 'spelling-rules'],
+    vocabRefs: ['w020', 'w047', 'w009', 'w017', 'w214', 'w029'],
+    rule: {
+      head: ['读长音', '读短音'],
+      rows: [
+        ['元音后只有 1 个辅音：Name, Tag', '元音后有 2 个以上辅音：kommen, Bett'],
+        ['元音后有 h（h 不发音，只表示拉长）：Jahr, Uhr', ''],
+        ['元音双写：Boot, Tee', ''],
+        ['ie 永远是长音 [iː]：vier, sieben', '非重读音节的 e 弱化成 [ə]：bitte, Name'],
+      ],
+    },
+    steps: [
       {
-        p: '先说一个好消息：德语和英语不同，拼写和发音的对应关系非常规律。学完这 10 课的规则，你看到任何生词基本都能正确读出来——这也是为什么德语词典一般不标音标。',
-      },
-      {
-        h: '德语字母表（26 + 4）',
-        p: '德语用 26 个拉丁字母，外加 3 个变元音 ä ö ü 和 1 个特殊字母 ß（读作 Eszett，相当于 ss）。先听每个字母的"名字"（就像英语字母歌里 A B C 的读法），字母名字在拼名字、报邮箱时会用到。',
-        items: [
-          { de: 'A, B, C, D, E, F, G', zh: '字母名：ah, beh, tseh, deh, eh, eff, geh', tip: 'C 读"tseh"，G 读"geh"（硬音）' },
-          { de: 'H, I, J, K, L, M, N', zh: '字母名：hah, ih, jott, kah, ell, emm, enn', tip: 'J 的名字是 "jott"' },
-          { de: 'O, P, Q, R, S, T', zh: '字母名：oh, peh, kuh, err, ess, teh' },
-          { de: 'U, V, W, X, Y, Z', zh: '字母名：uh, fau, weh, iks, ypsilon, tsett', tip: 'V 叫 "fau"，W 叫 "weh"，Z 叫 "tsett"——和英语完全不同！' },
-          { de: 'Ä, Ö, Ü, ß', zh: '变元音和 Eszett', tip: 'ß 只出现在词中/词尾，永远不在词首' },
+        type: 'observe',
+        intro: '德语元音是"纯"的——从头到尾一个音，不像英语的 a 会滑动。每个元音只有长、短两种读法，而拼写就能告诉你是哪种。',
+        lines: [
+          { de: 'Name', zh: '名字 —— a 后面只有一个辅音 → 长', hl: 'a' },
+          { de: 'kommen', zh: '来 —— o 后面两个辅音 → 短', hl: 'o' },
+          { de: 'Jahr', zh: '年 —— a 后面有 h → 长', hl: 'ah' },
         ],
+        q: '那么 bitte 里的 i 是长还是短？',
+        options: ['短 —— 后面是两个 t', '长 —— 因为它在词首'],
+        a: 0,
+        skills: ['vowel-length'],
       },
-      {
-        h: '三条拼读总则',
-        p: '① 德语单词基本"怎么写就怎么读"，几乎每个字母都要发音（不像英语有大量不发音字母）。\n② 名词首字母永远大写——看到句子中间的大写词，那就是名词。\n③ 重音通常落在第一个音节（详见第 10 课）。',
-        tip: '学习方法：每条示范先听 2 遍（可点"慢"），再点 🎤 跟读。先对比自己的录音；配置评分后再看音素准确、流利度和逐词反馈。',
-      },
-      {
-        h: '先试试跟读',
-        items: [
-          { de: 'Hallo!', ipa: '[haˈloː]', zh: '你好！' },
-          { de: 'Guten Tag!', ipa: '[ˌɡuːtn̩ ˈtaːk]', zh: '你好！（白天问候）' },
-          { de: 'Danke schön!', ipa: '[ˈdaŋkə ʃøːn]', zh: '非常感谢！' },
-        ],
-      },
+      { type: 'speak', q: '🎤 把 a 拖满', de: 'Name', zh: '名字', ipa: '[ˈnaːmə]',
+        cue: 'a 拖长两拍，像"啊——"；词尾的 e 几乎不出声', skills: ['vowel-length'] },
+      { type: 'speak', q: '🎤 短促收住', de: 'kommen', zh: '来', ipa: '[ˈkɔmən]',
+        cue: 'o 短促，说完立刻接 mm，不要拖', skills: ['vowel-length'] },
+      { type: 'speak', q: '🎤 h 不发音，只拉长', de: 'Jahr', zh: '年', ipa: '[jaːɐ̯]',
+        cue: '别去读那个 h——它只是"把 a 拉长"的记号', skills: ['spelling-rules'] },
+      { type: 'speak', q: '🎤 长 u', de: 'gut', zh: '好的', ipa: '[ɡuːt]',
+        cue: '嘴唇收圆往前噘，u 拖满再收尾', skills: ['vowel-length'] },
+      { type: 'listenChoice', audioText: 'Bett', options: ['Bett（床）', 'Beet（花坛）'], a: 0,
+        explain: 'Bett 的 e 短促，Beet 的 e 拖长。听不出区别，就一定读不出区别。', skills: ['vowel-length'] },
+      { type: 'listenChoice', audioText: 'Ofen', options: ['Ofen（烤箱）', 'offen（开着的）'], a: 0,
+        explain: '双写辅音 ff 是"前面的元音读短"的信号。', skills: ['vowel-length'] },
+      { type: 'speak', q: '🎤 今天的第一句德语', de: 'Wie ist Ihr Name?', zh: '您叫什么名字？',
+        cue: '慢一点，把 Name 的长 a 读满', skills: ['vowel-length'] },
     ],
   },
+
   {
-    id: 'p02',
-    title: '第2课 · 长元音与短元音',
-    sub: 'a e i o u 的两种读法',
-    sections: [
+    id: 'v2',
+    title: '第2天 · 双元音与英语陷阱',
+    sub: '长得像英语，读法完全不同',
+    skills: ['diphthong', 'final-devoicing'],
+    vocabRefs: ['w085', 'w436', 'w044', 'w238', 'w404'],
+    rule: {
+      head: ['字母', '读作', '例词'],
+      rows: [
+        ['ei / ai', '[ae]"艾"', 'Wein, heißen'],
+        ['ie', '长 [iː]（不是双元音）', 'vier, sieben'],
+        ['au', '[ao]', 'auch, Frau'],
+        ['eu / äu', '[ɔø]"奥伊"', 'Deutsch, Freund'],
+        ['w', '[v]（英语的 v）', 'Wein, wie'],
+        ['v', '[f]（本族词）', 'viel, Vater'],
+        ['z', '[ts]', 'Zeit, zwei'],
+        ['s + 元音', '[z]（浊音）', 'sagen, sieben'],
+        ['词尾 b / d / g', '清化成 p / t / k', 'und, Tag, halb'],
+      ],
+    },
+    steps: [
       {
-        p: '德语的 5 个元音 a e i o u 都有"长""短"两种读法，而且长短能区分词义，必须读准。判断规则很简单：',
-      },
-      {
-        h: '怎么判断长短？',
-        p: '读长音的三种情况：① 元音后面只跟 1 个辅音（如 Name）；② 元音后有 h（h 不发音，只表示拉长，如 fahren）；③ 元音双写（如 Boot），以及 ie 永远读长音 [iː]。\n读短音：元音后面跟 2 个或更多辅音（如 kommen、Bett）。',
-        tip: '长音要拉够长度（约短音的两倍），嘴型紧张；短音急促放松。这是中国学习者最容易忽略的一点。',
-      },
-      {
-        h: 'a：长 [aː] vs 短 [a]',
-        items: [
-          { de: 'Name', ipa: '[ˈnaːmə]', zh: '名字', tip: '长 a，嘴张大' },
-          { de: 'fahren', ipa: '[ˈfaːʁən]', zh: '行驶（ah = 长a）' },
-          { de: 'Mann', ipa: '[man]', zh: '男人', tip: '双 n → 短 a，干脆利落' },
+        type: 'observe',
+        intro: '这一天回报最高——它防的不是知识缺口，是你凭英语直觉一定会读错的地方。记一句话：ei 读字母 i 的音，ie 读字母 e 的音。',
+        lines: [
+          { de: 'Wein', zh: '葡萄酒 —— w 读英语的 v，ei 读"艾"', hl: 'W' },
+          { de: 'viel', zh: '很多 —— v 读 f，ie 读长 i', hl: 'v' },
+          { de: 'Zeit', zh: '时间 —— z 读 ts', hl: 'Z' },
         ],
+        q: '德语 wie（怎样）读起来最接近英语的哪个词？',
+        options: ['英语的 "vee"', '英语的 "wee"'],
+        a: 0,
+        skills: ['diphthong'],
       },
-      {
-        h: 'e：长 [eː] vs 短 [ɛ] vs 弱化 [ə]',
-        p: '注意：非重读音节（尤其词尾 -e、-en）里的 e 读成很轻的 [ə]，一带而过。',
-        items: [
-          { de: 'leben', ipa: '[ˈleːbn̩]', zh: '生活', tip: '第一个 e 长音（嘴角向两边咧），词尾 -en 弱化' },
-          { de: 'essen', ipa: '[ˈɛsn̩]', zh: '吃', tip: '双 s → 短 e，像"哎"但更短' },
-          { de: 'gehen', ipa: '[ˈɡeːən]', zh: '走（eh = 长e）' },
-        ],
-      },
-      {
-        h: 'i：长 [iː] vs 短 [ɪ]',
-        items: [
-          { de: 'Kino', ipa: '[ˈkiːno]', zh: '电影院', tip: '长 i' },
-          { de: 'bitte', ipa: '[ˈbɪtə]', zh: '请', tip: '双 t → 短 i，比"衣"松' },
-          { de: 'sieben', ipa: '[ˈziːbn̩]', zh: '七', tip: 'ie 永远读长 [iː]' },
-        ],
-      },
-      {
-        h: 'o：长 [oː] vs 短 [ɔ]',
-        items: [
-          { de: 'Brot', ipa: '[bʁoːt]', zh: '面包', tip: '长 o，嘴唇拢圆' },
-          { de: 'kommen', ipa: '[ˈkɔmən]', zh: '来', tip: '双 m → 短 o' },
-          { de: 'wohnen', ipa: '[ˈvoːnən]', zh: '居住（oh = 长o）' },
-        ],
-      },
-      {
-        h: 'u：长 [uː] vs 短 [ʊ]',
-        items: [
-          { de: 'gut', ipa: '[ɡuːt]', zh: '好', tip: '长 u，像"乌"拉长' },
-          { de: 'Mutter', ipa: '[ˈmʊtɐ]', zh: '妈妈', tip: '双 t → 短 u' },
-          { de: 'Uhr', ipa: '[uːɐ̯]', zh: '钟表（uh = 长u）' },
-        ],
-      },
-      {
-        h: '对比跟读',
-        items: [
-          { de: 'Stadt – Staat', zh: '城市（短a）– 国家（长a）', tip: '经典对比：长短不同，意思完全不同' },
-          { de: 'offen – Ofen', zh: '开着的（短o）– 烤箱（长o）' },
-        ],
-      },
+      { type: 'speak', q: '🎤 w 读成 v', de: 'Wein', zh: '葡萄酒', ipa: '[vaen]',
+        cue: '上齿轻咬下唇送气——就是英语 v 的动作，不是 w', skills: ['diphthong'] },
+      { type: 'speak', q: '🎤 v 读成 f', de: 'viel', zh: '很多', ipa: '[fiːl]',
+        cue: '同样咬下唇，但不振动声带：f 的音；ie 拖长', skills: ['diphthong'] },
+      { type: 'speak', q: '🎤 z 读成 ts', de: 'Zeit', zh: '时间', ipa: '[tsaet]',
+        cue: '先有个轻微的 t，再滑到 s——像中文"次"的开头', skills: ['diphthong'] },
+      { type: 'speak', q: '🎤 s 在元音前是浊的', de: 'sagen', zh: '说', ipa: '[ˈzaːɡn̩]',
+        cue: '像蜜蜂嗡嗡的 z，不是英语的 s', skills: ['diphthong'] },
+      { type: 'listenChoice', audioText: 'Wein', options: ['Wein（葡萄酒）', 'Wien（维也纳）'], a: 0,
+        explain: 'ei 读"艾"，ie 读长"衣"。这一对是德语最常见的拼读混淆。', skills: ['diphthong'] },
+      { type: 'listenChoice', audioText: 'vier', options: ['vier（四）', 'wir（我们）'], a: 0,
+        explain: 'v 是清的 [f]，w 是浊的 [v]。', skills: ['diphthong'] },
+      { type: 'speak', q: '🎤 词尾 d 要清化成 t', de: 'Guten Abend!', zh: '晚上好！',
+        cue: 'Abend 结尾读成 "-ent"，不是 "-end"', skills: ['final-devoicing'] },
     ],
   },
+
   {
-    id: 'p03',
-    title: '第3课 · 变元音 ä ö ü',
-    sub: '德语最有特色的三个音',
-    sections: [
+    id: 'v3',
+    title: '第3天 · sch 家族与 ch',
+    sub: '德语最有标志性的两个音',
+    skills: ['s-family', 'ch-sound'],
+    vocabRefs: ['w019', 'w024', 'w025', 'w006', 'w048', 'w026'],
+    rule: {
+      head: ['拼写', '读作', '例词'],
+      rows: [
+        ['sch', '[ʃ]（英语的 sh）', 'Deutsch, Sprache'],
+        ['词首 sp- / st-', '[ʃp] / [ʃt]', 'Sport, Stunde'],
+        ['词中 sp / st', '照常读 [sp] / [st]', 'Fenster, ist'],
+        ['ch 在 e i ä ö ü ei eu 及辅音后', '轻 ch [ç]', 'ich, sprechen, Milch'],
+        ['ch 在 a o u au 后', '重 ch [x]', 'Woche, auch, Buch'],
+        ['词尾 -ig', '读成 [ɪç]，像 -ich', 'richtig, zwanzig'],
+        ['tsch', '[tʃ]（像"吃"）', 'Tschüss, Deutschland'],
+      ],
+    },
+    steps: [
       {
-        p: '这三个带两点的元音叫"变元音"（Umlaut），是德语的招牌发音。它们同样分长短。掌握口型是关键：',
-      },
-      {
-        h: 'ä：嘴张开说"哎"',
-        p: '长 ä [ɛː] 类似"哎"拉长；短 ä [ɛ] 和短 e 完全一样。对中国人来说 ä 最简单。',
-        items: [
-          { de: 'Käse', ipa: '[ˈkɛːzə]', zh: '奶酪', tip: '长 ä' },
-          { de: 'Mädchen', ipa: '[ˈmɛːtçən]', zh: '女孩' },
-          { de: 'Männer', ipa: '[ˈmɛnɐ]', zh: '男人们', tip: '短 ä' },
+        type: 'observe',
+        intro: 'ch 有两种读法，规则完全由它前面的元音决定，不用记单词。前面是 a / o / u / au 就往喉咙后面走，其余一律往前。',
+        lines: [
+          { de: 'sprechen', zh: '说 —— e 后面 → 轻 ch', hl: 'ch' },
+          { de: 'Woche', zh: '星期 —— o 后面 → 重 ch', hl: 'ch' },
+          { de: 'Deutsch', zh: '德语 —— tsch 读成"吃"', hl: 'tsch' },
         ],
+        q: 'Buch（书）里的 ch 是哪一种？',
+        options: ['重 ch —— 前面是 u', '轻 ch —— 因为在词尾'],
+        a: 0,
+        skills: ['ch-sound'],
       },
-      {
-        h: 'ö：说"哎"的舌位 + "喔"的嘴型',
-        p: '诀窍：先发长 e [eː]（嘴角咧开），保持舌头不动，慢慢把嘴唇拢成圆形——出来的就是 ö。有点像普通话"约(yuē)"里去掉 y 的音，但嘴更圆。',
-        items: [
-          { de: 'schön', ipa: '[ʃøːn]', zh: '美的', tip: '长 ö' },
-          { de: 'hören', ipa: '[ˈhøːʁən]', zh: '听' },
-          { de: 'zwölf', ipa: '[tsvœlf]', zh: '十二', tip: '短 ö，更松' },
-          { de: 'können', ipa: '[ˈkœnən]', zh: '能够' },
-        ],
-      },
-      {
-        h: 'ü：就是拼音的 ü（"鱼"）',
-        p: '好消息：德语 ü 和普通话"鱼 yú"的韵母几乎一样！长 ü [yː] 拉长，短 ü [ʏ] 短促放松。',
-        items: [
-          { de: 'über', ipa: '[ˈyːbɐ]', zh: '在…上方', tip: '长 ü，=拼音 ü 拉长' },
-          { de: 'Tür', ipa: '[tyːɐ̯]', zh: '门' },
-          { de: 'fünf', ipa: '[fʏnf]', zh: '五', tip: '短 ü' },
-          { de: 'Glück', ipa: '[ɡlʏk]', zh: '幸福；运气' },
-        ],
-      },
-      {
-        h: '对比训练（重要！）',
-        p: '很多词只差一个变音符，意思完全不同：',
-        items: [
-          { de: 'schon – schön', zh: '已经 – 美的', tip: 'o 圆唇靠后，ö 圆唇靠前' },
-          { de: 'Bruder – Brüder', zh: '兄弟（单数）– 兄弟（复数）', tip: '复数常靠变元音区分！' },
-          { de: 'Mutter – Mütter', zh: '妈妈 – 妈妈们' },
-        ],
-      },
+      { type: 'speak', q: '🎤 轻 ch', de: 'sprechen', zh: '说', ipa: '[ˈʃpʁɛçn̩]',
+        cue: '摆出说"衣"的口型，然后只送气不出声，像小声说"嘻"', skills: ['ch-sound'] },
+      { type: 'speak', q: '🎤 重 ch', de: 'Woche', zh: '星期', ipa: '[ˈvɔxə]',
+        cue: '像清嗓子，气流在喉咙后部摩擦——比中文"喝"更用力', skills: ['ch-sound'] },
+      { type: 'speak', q: '🎤 词首 sp 读 shp', de: 'Sprache', zh: '语言', ipa: '[ˈʃpʁaːxə]',
+        cue: 'Sp- 开头一律读"什普"，不是英语的 sp', skills: ['s-family'] },
+      { type: 'speak', q: '🎤 tsch 像"吃"', de: 'Tschüss', zh: '再见（熟人之间）', ipa: '[tʃʏs]',
+        cue: '一口气发完 t-sch，中间不停顿', skills: ['s-family'] },
+      { type: 'listenChoice', audioText: 'Kirche', options: ['Kirche（教堂）', 'Kirsche（樱桃）'], a: 0,
+        explain: '轻 ch [ç] 靠前上方，sch [ʃ] 更宽更圆。这是德语最经典的一对。', skills: ['ch-sound'] },
+      { type: 'listenChoice', audioText: 'Deutsch', options: ['Deutsch（德语）', 'deutlich（清楚的）'], a: 0,
+        explain: 'tsch 是一个塞擦音，ch 单独出现时只是摩擦。', skills: ['s-family'] },
+      { type: 'speak', q: '🎤 一句话用上两种 ch', de: 'Ich spreche auch Deutsch.', zh: '我也说德语。',
+        cue: 'Ich 轻 ch，auch 重 ch——注意切换', skills: ['ch-sound'] },
     ],
   },
+
   {
-    id: 'p04',
-    title: '第4课 · 双元音 ei au eu ie',
-    sub: 'ei 读"艾"，eu 读"奥伊"',
-    sections: [
+    id: 'v4',
+    title: '第4天 · 变元音与 r',
+    sub: 'ä ö ü 有口诀；r 分基础档和进阶档',
+    skills: ['umlaut', 'r-sound'],
+    vocabRefs: ['w088', 'w108', 'w145', 'w092', 'w193', 'w079'],
+    rule: {
+      head: ['音', '怎么做', '例词'],
+      rows: [
+        ['ä', '就是"哎"，嘴张得比 e 大', 'Käse, Universität'],
+        ['ö', '摆"哎"的舌位 + 噘"喔"的嘴型', 'hören, schön'],
+        ['ü', '就是汉语拼音的 ü（"鱼"）', 'Tür, müde'],
+        ['r 基础档（达标线）', '词尾 -er / -r 读成轻轻的"呃" [ɐ]', 'Vater, Tür, wir'],
+        ['r 进阶档（挑战）', '元音前用小舌音 [ʁ]', 'Brötchen, rot'],
+        ['小舌音怎么找', '发 Woche 的重 ch，位置一样，然后让声带振动出声', ''],
+        ['底线', 'r 读不标准不影响别人听懂你，但卷舌一定是错的', ''],
+      ],
+    },
+    steps: [
       {
-        p: '两个元音连写常常合成一个"双元音"。德语只有三个真正的双元音，非常好记；另外 ie 不是双元音，它就是长 i。',
-      },
-      {
-        h: 'ei / ai → [ae]，像"艾"',
-        p: '注意！ei 读"艾"不读"诶"——这是初学者最常见的错误。记住 nein（不）读"nain"。',
-        items: [
-          { de: 'nein', ipa: '[naen]', zh: '不' },
-          { de: 'eins, zwei, drei', zh: '一、二、三', tip: '数数就能记住 ei 的读法' },
-          { de: 'Wein', ipa: '[vaen]', zh: '葡萄酒' },
-          { de: 'Mai', ipa: '[mae]', zh: '五月', tip: 'ai 同音' },
+        type: 'observe',
+        intro: 'ä ö ü 对中文母语者反而容易：ü 就是拼音的"鱼"。r 才是难点——但词尾的 r 根本不用卷，读成轻轻的"呃"就行，这已经覆盖德语里一半的 r。',
+        lines: [
+          { de: 'Käse', zh: '奶酪 —— ä 就是"哎"', hl: 'ä' },
+          { de: 'Tür', zh: '门 —— ü 就是拼音的"鱼"', hl: 'ü' },
+          { de: 'Vater', zh: '父亲 —— 词尾 -er 读"呃"，不卷舌', hl: 'er' },
         ],
+        q: 'Vater 的正确读法接近？',
+        options: ['"法特呃" —— 词尾轻轻带过', '"法特尔" —— 把 r 卷出来'],
+        a: 0,
+        skills: ['r-sound'],
       },
-      {
-        h: 'au → [ao]，像"傲"',
-        items: [
-          { de: 'Haus', ipa: '[haos]', zh: '房子' },
-          { de: 'Frau', ipa: '[fʁao]', zh: '女士；妻子' },
-          { de: 'kaufen', ipa: '[ˈkaofn̩]', zh: '买' },
-        ],
-      },
-      {
-        h: 'eu / äu → [ɔø]，像"奥伊"连读',
-        p: '快速把"哦"滑向"以"（圆唇）。Deutsch（德语）这个词本身就含这个音。',
-        items: [
-          { de: 'Deutsch', ipa: '[dɔøtʃ]', zh: '德语' },
-          { de: 'heute', ipa: '[ˈhɔøtə]', zh: '今天' },
-          { de: 'neun', ipa: '[nɔøn]', zh: '九' },
-          { de: 'Häuser', ipa: '[ˈhɔøzɐ]', zh: '房子（复数）', tip: 'äu 和 eu 同音' },
-        ],
-      },
-      {
-        h: 'ie → 长 [iː]（不是双元音）',
-        items: [
-          { de: 'Liebe', ipa: '[ˈliːbə]', zh: '爱' },
-          { de: 'vier', ipa: '[fiːɐ̯]', zh: '四' },
-          { de: 'Wie bitte?', zh: '请再说一遍？' },
-        ],
-      },
-      {
-        h: '易混对比',
-        items: [
-          { de: 'ein – nein – neun', zh: '一个 – 不 – 九', tip: 'ei 读"艾"，eu 读"奥伊"，别混！' },
-          { de: 'Wien – Wein', zh: '维也纳（长i）– 葡萄酒（"艾"）', tip: 'ie vs ei，写法容易看混' },
-        ],
-      },
+      { type: 'speak', q: '🎤 ä = 哎', de: 'Käse', zh: '奶酪', ipa: '[ˈkɛːzə]',
+        cue: '嘴角向两边咧开说"哎"，拖长；中间的 s 是浊的', skills: ['umlaut'] },
+      { type: 'speak', q: '🎤 ü = 鱼', de: 'Tür', zh: '门', ipa: '[tyːɐ̯]',
+        cue: '先说拼音"鱼"，嘴型别动；词尾 r 轻轻带出一个"呃"', skills: ['umlaut'] },
+      { type: 'speak', q: '🎤 ö：舌位说哎，嘴型说喔', de: 'hören', zh: '听', ipa: '[ˈhøːʁən]',
+        cue: '先说"哎"，保持舌头不动，把嘴唇噘圆——出来的就是 ö', skills: ['umlaut'] },
+      { type: 'speak', q: '🎤 基础档就够了', de: 'Vater', zh: '父亲', ipa: '[ˈfaːtɐ]',
+        cue: '舌尖全程贴着下齿背不许动。卷舌一定是错的', skills: ['r-sound'] },
+      { type: 'listenChoice', audioText: 'Küste', options: ['Küste（海岸）', 'Kiste（箱子）'], a: 0,
+        explain: 'ü 要噘嘴，i 是咧嘴。嘴型不同，音就不同。', skills: ['umlaut'] },
+      { type: 'listenChoice', audioText: 'schön', options: ['schön（美的）', 'schon（已经）'], a: 0,
+        explain: 'ö 噘圆嘴唇，o 也圆但舌位靠后。这两个词都极常用。', skills: ['umlaut'] },
+      { type: 'speak', q: '🎤 进阶挑战（读不好不影响别人听懂你）', de: 'Brötchen', zh: '小面包',
+        cue: '想找小舌音：先发 Woche 的重 ch，位置完全一样，然后让声带振动出声',
+        skills: ['r-sound'] },
     ],
   },
+
   {
-    id: 'p05',
-    title: '第5课 · s 家族：s ss ß sch sp st',
-    sub: '一个字母的五副面孔',
-    sections: [
+    id: 'v5',
+    title: '第5天 · 收尾辅音与硬起首',
+    sub: '扫清死角，顺便学会德语的"停顿感"',
+    skills: ['misc-consonants'],
+    vocabRefs: ['w257', 'w045', 'w010'],
+    rule: {
+      head: ['拼写', '读作', '例词'],
+      rows: [
+        ['词首 h', '送气', 'haben, hören'],
+        ['元音后的 h', '不发音，只表示拉长', 'Jahr, sehen'],
+        ['pf', 'p 和 f 快速连发，一个音', 'Apfel, Kopf'],
+        ['ng / nk', '[ŋ] / [ŋk]，鼻音不带 g', 'Zeitung, danke'],
+        ['tz / ts / ds', '都读 [ts]', 'jetzt, Platz, abends'],
+        ['-tion', '[tsi̯oːn]', 'Station, Information'],
+        ['x / chs', '[ks]', 'sechs'],
+        ['词尾 -el / -en', '弱化，e 几乎不出声', 'Onkel, sprechen'],
+        ['硬起首', '元音开头的词前面有个极短的停顿', 'am Abend, in Ordnung'],
+      ],
+    },
+    steps: [
       {
-        h: 's 在元音前 → 浊音 [z]（像蜜蜂嗡嗡）',
-        p: '这和英语相反！德语的 s 在元音前要振动声带，读 [z]。',
-        items: [
-          { de: 'Sonne', ipa: '[ˈzɔnə]', zh: '太阳', tip: '声带振动的 z' },
-          { de: 'lesen', ipa: '[ˈleːzn̩]', zh: '阅读' },
-          { de: 'Sie sind', zh: '您是', tip: '两个词的 s 都是浊音' },
+        type: 'observe',
+        intro: '这一天补齐剩下的拼写死角，外加一个让你"听起来像德国人"的东西：硬起首。德语每个以元音开头的词前面都有个极短的停顿，不像中文那样连读。',
+        lines: [
+          { de: 'Apfel', zh: '苹果 —— pf 是一个音，不是两个', hl: 'pf' },
+          { de: 'danke', zh: '谢谢 —— nk 鼻音，别读出 g', hl: 'nk' },
+          { de: 'am Abend', zh: '在晚上 —— 两个词之间要断开，不连读', hl: 'A' },
         ],
+        q: '"am Abend" 应该怎么读？',
+        options: ['am | Abend —— 中间有极短的停顿', '"amabend" —— 像英语那样连起来'],
+        a: 0,
+        skills: ['misc-consonants'],
       },
-      {
-        h: 'ss / ß → 清音 [s]',
-        p: 'ss 和 ß 发音相同，都是普通的 s 音。区别只在拼写：短元音后写 ss，长元音/双元音后写 ß。',
-        items: [
-          { de: 'essen', ipa: '[ˈɛsn̩]', zh: '吃', tip: '短 e + ss' },
-          { de: 'Straße', ipa: '[ˈʃtʁaːsə]', zh: '街道', tip: '长 a + ß' },
-          { de: 'heißen', ipa: '[ˈhaesn̩]', zh: '叫（名字）', tip: '双元音 + ß' },
-        ],
-      },
-      {
-        h: 'sch → [ʃ]，像"什"',
-        p: '嘴唇向前撅，比汉语"什"更用力。',
-        items: [
-          { de: 'Schule', ipa: '[ˈʃuːlə]', zh: '学校' },
-          { de: 'schön', ipa: '[ʃøːn]', zh: '美的' },
-          { de: 'Tisch', ipa: '[tɪʃ]', zh: '桌子' },
-        ],
-      },
-      {
-        h: '词首 sp- / st- → [ʃp] / [ʃt]',
-        p: '重要规则：sp 和 st 出现在词（或词干）开头时，s 要读成 sch！所以 Sport 读"什波特"，不读"斯波特"。',
-        items: [
-          { de: 'sprechen', ipa: '[ˈʃpʁɛçn̩]', zh: '说话', tip: 'schp-' },
-          { de: 'Sport', ipa: '[ʃpɔʁt]', zh: '体育' },
-          { de: 'Student', ipa: '[ʃtuˈdɛnt]', zh: '大学生', tip: 'scht-' },
-          { de: 'verstehen', ipa: '[fɛɐ̯ˈʃteːən]', zh: '理解', tip: '词干 stehen 开头，仍读 scht' },
-        ],
-      },
-      {
-        h: '综合跟读',
-        items: [
-          { de: 'Ich spreche ein bisschen Deutsch.', zh: '我会说一点德语。' },
-          { de: 'Die Straße ist schön.', zh: '这条街很美。' },
-        ],
-      },
+      { type: 'speak', q: '🎤 词首 h 要送气', de: 'haben', zh: '有', ipa: '[ˈhaːbn̩]',
+        cue: '像哈气一样把 h 送出来；词尾 -en 弱化，几乎只剩 n', skills: ['misc-consonants'] },
+      { type: 'speak', q: '🎤 pf 是一个音', de: 'Apfel', zh: '苹果', ipa: '[ˈap͡fl̩]',
+        cue: '双唇先闭上（p），松开的瞬间直接变成 f——不要读成"阿普费尔"', skills: ['misc-consonants'] },
+      { type: 'speak', q: '🎤 ng 不带 g', de: 'Zeitung', zh: '报纸', ipa: '[ˈtsaetʊŋ]',
+        cue: '结尾是鼻音，舌根抬起但不弹开，别读出一个 g', skills: ['misc-consonants'] },
+      { type: 'speak', q: '🎤 tz 读 ts', de: 'jetzt', zh: '现在', ipa: '[jɛtst]',
+        cue: 'j 读"耶"的开头；tzt 一口气收住', skills: ['misc-consonants'] },
+      { type: 'listenChoice', audioText: 'Entschuldigung',
+        options: ['Entschuldigung（对不起）', 'Endstation（终点站）'], a: 0,
+        explain: 'tsch 是塞擦音；st 出现在词中时照常读 [st]。', skills: ['misc-consonants'] },
+      { type: 'speak', q: '🎤 硬起首：两个词之间断开', de: 'am Abend', zh: '在晚上',
+        cue: '在 Abend 前面轻轻"卡"一下再出声，别连成一个词', skills: ['misc-consonants'] },
+      { type: 'speak', q: '🎤 一句话四个硬起首', de: 'Ich arbeite am Abend im Büro.', zh: '我晚上在办公室工作。',
+        cue: '每个元音开头的词前面都轻轻卡一下，别连读',
+        skills: ['misc-consonants'] },
     ],
   },
+
   {
-    id: 'p06',
-    title: '第6课 · ch 的两种读法与 -ig',
-    sub: '德语最难也最有味道的音',
-    sections: [
+    id: 'v6',
+    title: '第6天 · 重音、语调与拼名字',
+    sub: '让德语听起来像德语，并拿下口语考试第一题',
+    skills: ['word-stress', 'sentence-intonation', 'alphabet'],
+    vocabRefs: ['w176', 'w094', 'w010'],
+    rule: {
+      head: ['规则', '例词'],
+      rows: [
+        ['① 重音通常在第一个音节', 'Árbeit, Fréundin, Frǘhstück'],
+        ['② 可分前缀重读', 'áufstehen, éinkaufen'],
+        ['③ 不可分前缀不重读（be- ge- ver- er- ent-）', 'besúchen, verstéhen, Entschúldigung'],
+        ['④ 外来词重音常在后面', 'Universitä́t, Informatión, Restauránt'],
+        ['⑤ 陈述句句尾降调，是否问句句尾升调', 'Das ist gut. ↘ / Ist das gut? ↗'],
+        ['拼名字要用的字母名', 'A=ah, B=beh, C=tseh, E=eh, I=ih, J=jott, V=fau, W=weh, Y=ypsilon, Z=tsett'],
+      ],
+    },
+    steps: [
       {
-        p: 'ch 是德语的标志性发音，有两种读法，规则完全由前面的元音决定：',
-      },
-      {
-        h: '"轻 ch" [ç]：在 e i ä ö ü ei eu 及辅音后',
-        p: '发音方法：摆出说"衣"的口型，然后只送气不出声，气流从舌面和硬腭之间摩擦而出——像小声说"嘻"但没有声带振动。普通话"西"的声母接近这个音。',
-        items: [
-          { de: 'ich', ipa: '[ɪç]', zh: '我', tip: '最重要的一个词！不要读成"ish"或"ik"' },
-          { de: 'nicht', ipa: '[nɪçt]', zh: '不' },
-          { de: 'sprechen', ipa: '[ˈʃpʁɛçn̩]', zh: '说' },
-          { de: 'Milch', ipa: '[mɪlç]', zh: '牛奶', tip: '辅音 l 之后 → 轻ch' },
-          { de: 'München', ipa: '[ˈmʏnçn̩]', zh: '慕尼黑' },
+        type: 'observe',
+        intro: '德语重音绝大多数落在第一个音节——但外来词是例外，而且例外的那些词你天天要用。句尾语调决定了对方把你的话听成陈述还是提问。',
+        lines: [
+          { de: 'Frühstück', zh: '早餐 —— 重音在第一个音节', hl: 'Früh' },
+          { de: 'Universität', zh: '大学 —— 外来词，重音在最后', hl: 'tät' },
+          { de: 'Ist das Ihr Buch?', zh: '这是您的书吗？—— 句尾升调', hl: 'Buch' },
         ],
+        q: 'Entschuldigung（对不起）的重音在哪？',
+        options: ['-schul- —— ent- 是不可分前缀，不重读', 'Ent- —— 因为它在第一个音节'],
+        a: 0,
+        skills: ['word-stress'],
       },
-      {
-        h: '"重 ch" [x]：在 a o u au 后',
-        p: '像清嗓子时喉咙后部的摩擦音，接近汉语"喝 h"但摩擦更强。',
-        items: [
-          { de: 'Buch', ipa: '[buːx]', zh: '书' },
-          { de: 'auch', ipa: '[aox]', zh: '也' },
-          { de: 'Nacht', ipa: '[naxt]', zh: '夜晚' },
-          { de: 'kochen', ipa: '[ˈkɔxn̩]', zh: '做饭' },
-        ],
-      },
-      {
-        h: '词尾 -ig → [ɪç]（读得像 -ich）',
-        items: [
-          { de: 'zwanzig', ipa: '[ˈtsvantsɪç]', zh: '二十' },
-          { de: 'richtig', ipa: '[ˈʁɪçtɪç]', zh: '正确的' },
-          { de: 'billig', ipa: '[ˈbɪlɪç]', zh: '便宜的' },
-        ],
-      },
-      {
-        h: '特例：chs → [ks]；词首 Ch',
-        items: [
-          { de: 'sechs', ipa: '[zɛks]', zh: '六', tip: 'chs 读 ks，像 x' },
-          { de: 'China', zh: '中国', tip: '标准德语读 [ˈçiːna]（轻ch）' },
-        ],
-      },
-      {
-        h: '两种 ch 交替训练',
-        items: [
-          { de: 'ich – auch – nicht – Buch', zh: '我 – 也 – 不 – 书', tip: '轻-重-轻-重' },
-          { de: 'Ich koche auch nicht.', zh: '我也不做饭。' },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'p07',
-    title: '第7课 · w v z j qu 与英语的"假朋友"',
-    sub: '长得像英语，读法不一样',
-    sections: [
-      {
-        p: '这几个字母拼写和英语一样，读法却不同，是发音"事故高发区"：',
-      },
-      {
-        h: 'w → [v]（英语 v 的音）',
-        items: [
-          { de: 'Wasser', ipa: '[ˈvasɐ]', zh: '水', tip: '上齿轻咬下唇' },
-          { de: 'wir', ipa: '[viːɐ̯]', zh: '我们' },
-          { de: 'wie', ipa: '[viː]', zh: '如何' },
-        ],
-      },
-      {
-        h: 'v → 本族词读 [f]，外来词读 [v]',
-        items: [
-          { de: 'Vater', ipa: '[ˈfaːtɐ]', zh: '爸爸', tip: '读 f！' },
-          { de: 'viel', ipa: '[fiːl]', zh: '许多' },
-          { de: 'vier', ipa: '[fiːɐ̯]', zh: '四' },
-          { de: 'Vase', ipa: '[ˈvaːzə]', zh: '花瓶', tip: '外来词读 v' },
-        ],
-      },
-      {
-        h: 'z → [ts]，像"次"',
-        p: '德语 z 永远读 [ts]，干脆利落，绝不读英语的 [z]。',
-        items: [
-          { de: 'Zeit', ipa: '[tsaet]', zh: '时间' },
-          { de: 'zehn', ipa: '[tseːn]', zh: '十' },
-          { de: 'Zug', ipa: '[tsuːk]', zh: '火车' },
-        ],
-      },
-      {
-        h: 'j → [j]，像"耶"的开头',
-        items: [
-          { de: 'ja', ipa: '[jaː]', zh: '是的' },
-          { de: 'Januar', ipa: '[ˈjanuaːɐ̯]', zh: '一月' },
-          { de: 'Jahr', ipa: '[jaːɐ̯]', zh: '年' },
-        ],
-      },
-      {
-        h: 'qu → [kv]',
-        items: [
-          { de: 'Qualität', ipa: '[kvaliˈtɛːt]', zh: '质量', tip: 'k+v 连读' },
-          { de: 'bequem', ipa: '[bəˈkveːm]', zh: '舒适的' },
-        ],
-      },
-      {
-        h: '词尾清化：b d g → p t k',
-        p: '词尾（或音节尾）的 b d g 要读成对应的清音 p t k：Tag 读 [taːk]，und 读 [ʊnt]，halb 读 [halp]。',
-        items: [
-          { de: 'Tag', ipa: '[taːk]', zh: '天', tip: '词尾 g → k' },
-          { de: 'und', ipa: '[ʊnt]', zh: '和', tip: '词尾 d → t' },
-          { de: 'Abend', ipa: '[ˈaːbn̩t]', zh: '晚上' },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'p08',
-    title: '第8课 · r 的读法',
-    sub: '小舌音没那么可怕',
-    sections: [
-      {
-        p: '德语 r 有两种情况：辅音 r（要发摩擦音）和元音化的 r（几乎变成"啊"）。搞清楚什么时候用哪种，比死磕小舌颤音更重要。',
-      },
-      {
-        h: '辅音 r [ʁ]：在元音前',
-        p: '标准德语用"小舌摩擦音"：舌根后缩靠近小舌，让气流摩擦——很像轻轻漱口的声音，或者用喉咙发"喝"时加上声带振动。练习：含一小口水仰头漱口，记住那个位置。发不好也不用焦虑，用汉语"喝"的位置带出摩擦即可，德国人听得懂。',
-        items: [
-          { de: 'rot', ipa: '[ʁoːt]', zh: '红色' },
-          { de: 'Reise', ipa: '[ˈʁaezə]', zh: '旅行' },
-          { de: 'Brot', ipa: '[bʁoːt]', zh: '面包', tip: '辅音后的 r 也要发出来' },
-          { de: 'trinken', ipa: '[ˈtʁɪŋkn̩]', zh: '喝' },
-        ],
-      },
-      {
-        h: '元音化 r [ɐ]：词尾 -er 和长元音后',
-        p: '词尾的 -er 读成轻轻的"啊"[ɐ]（不发 r 音！）；长元音后的 r 也弱化成 [ɐ̯]。所以 Mutter 结尾是"塔-啊"合起来的感觉，绝不是英语的"ter"。',
-        items: [
-          { de: 'Mutter', ipa: '[ˈmʊtɐ]', zh: '妈妈', tip: '-er = 轻"啊"' },
-          { de: 'aber', ipa: '[ˈaːbɐ]', zh: '但是' },
-          { de: 'Uhr', ipa: '[uːɐ̯]', zh: '钟', tip: '长元音 + r → 弱化' },
-          { de: 'der, wir, nur', zh: '这个、我们、只', tip: '都是弱化 r' },
-        ],
-      },
-      {
-        h: '对比训练',
-        items: [
-          { de: 'Rose – Ohr', zh: '玫瑰（辅音r）– 耳朵（弱化r）' },
-          { de: 'fahren – fährt', zh: '开车（r 在元音前发音）– 他开车（r 弱化）' },
-          { de: 'Der Bruder trinkt Wasser.', zh: '哥哥在喝水。', tip: '一句话里两种 r 都有' },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'p09',
-    title: '第9课 · 其余辅音：h pf ng nk tsch -tion',
-    sub: '扫清最后的拼读死角',
-    sections: [
-      {
-        h: 'h：词首送气，元音后不发音',
-        p: '词首的 h 像汉语"哈"正常发音；但元音后的 h 完全不发音，只表示前面元音读长音。',
-        items: [
-          { de: 'Haus', ipa: '[haos]', zh: '房子', tip: '词首 h 发音' },
-          { de: 'gehen', ipa: '[ˈɡeːən]', zh: '走', tip: 'h 不发音，e 读长' },
-          { de: 'Wohnung', ipa: '[ˈvoːnʊŋ]', zh: '住房' },
-        ],
-      },
-      {
-        h: 'pf：p 和 f 快速连发',
-        items: [
-          { de: 'Apfel', ipa: '[ˈapfl̩]', zh: '苹果', tip: '先爆破 p 立刻滑到 f' },
-          { de: 'Pfund', ipa: '[pfʊnt]', zh: '磅' },
-        ],
-      },
-      {
-        h: 'ng [ŋ] / nk [ŋk]',
-        p: 'ng 像"唱歌"的后鼻音，g 不单独发音；nk 是后鼻音+k。',
-        items: [
-          { de: 'singen', ipa: '[ˈzɪŋən]', zh: '唱歌', tip: '没有 g 的爆破音！' },
-          { de: 'danke', ipa: '[ˈdaŋkə]', zh: '谢谢' },
-          { de: 'Hunger', ipa: '[ˈhʊŋɐ]', zh: '饥饿' },
-        ],
-      },
-      {
-        h: 'tsch [tʃ]：像"吃"',
-        items: [
-          { de: 'Deutschland', ipa: '[ˈdɔøtʃlant]', zh: '德国' },
-          { de: 'Tschüss!', ipa: '[tʃʏs]', zh: '再见！（口语）' },
-        ],
-      },
-      {
-        h: '外来词后缀 -tion [tsi̯oːn]',
-        p: '-tion 读"齐翁"，重音在 o 上。',
-        items: [
-          { de: 'Information', ipa: '[ɪnfɔʁmaˈtsi̯oːn]', zh: '信息' },
-          { de: 'Station', ipa: '[ʃtaˈtsi̯oːn]', zh: '车站' },
-        ],
-      },
-      {
-        h: 'x / ks / chs → [ks]，y → [y]',
-        items: [
-          { de: 'Taxi', ipa: '[ˈtaksi]', zh: '出租车' },
-          { de: 'sechs', ipa: '[zɛks]', zh: '六' },
-          { de: 'typisch', ipa: '[ˈtyːpɪʃ]', zh: '典型的', tip: 'y 读 ü' },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'p10',
-    title: '第10课 · 词重音与句子语调',
-    sub: '让你的德语"像德语"',
-    sections: [
-      {
-        p: '单个音都读对了，重音和语调不对，德国人还是会觉得"怪"。好在德语重音规则很清楚：',
-      },
-      {
-        h: '规则一：重音通常在第一个音节',
-        items: [
-          { de: 'ARbeiten', zh: '工作（重音在 AR）' },
-          { de: 'DEUTSCHland', zh: '德国' },
-          { de: 'MORgen', zh: '早晨' },
-        ],
-      },
-      {
-        h: '规则二：可分前缀重读，不可分前缀不重读',
-        p: '可分前缀（an- auf- ein- mit- aus-…）永远重读；不可分前缀（be- ge- er- ver- ent-…）永远不重读，重音落在词干上。这条规则以后学可分动词时非常有用。',
-        items: [
-          { de: 'ANfangen', zh: '开始（可分，重音在前缀）' },
-          { de: 'AUFstehen', zh: '起床' },
-          { de: 'verSTEhen', zh: '理解（不可分，重音在词干）' },
-          { de: 'beZAHlen', zh: '付款' },
-        ],
-      },
-      {
-        h: '规则三：外来词重音常靠后',
-        items: [
-          { de: 'Stu-DENT', zh: '大学生' },
-          { de: 'Universi-TÄT', zh: '大学' },
-          { de: 'Informati-ON', zh: '信息' },
-        ],
-      },
-      {
-        h: '句子语调',
-        p: '① 陈述句：句尾降调 ↘\n② 是非疑问句（能用 ja/nein 回答的）：句尾升调 ↗\n③ 特殊疑问句（W- 开头的）：句尾降调 ↘（和英语不同，别习惯性上扬！）',
-        items: [
-          { de: 'Ich lerne Deutsch.', zh: '我在学德语。（降调 ↘）' },
-          { de: 'Lernst du Deutsch?', zh: '你在学德语吗？（升调 ↗）' },
-          { de: 'Was lernst du?', zh: '你在学什么？（降调 ↘）' },
-        ],
-      },
-      {
-        h: '毕业跟读：把学到的都用上',
-        items: [
-          { de: 'Guten Morgen! Wie geht es Ihnen?', zh: '早上好！您好吗？' },
-          { de: 'Ich heiße Wang und komme aus China.', zh: '我姓王，来自中国。' },
-          { de: 'Ich spreche ein bisschen Deutsch, aber ich lerne jeden Tag.', zh: '我会说一点德语，但我每天都在学。' },
-        ],
-        tip: '恭喜完成发音课！以后遇到任何生词，都可以回来查这 10 课的规则。',
-      },
+      { type: 'speak', q: '🎤 重音在第一个音节', de: 'Frühstück', zh: '早餐', ipa: '[ˈfʁyːʃtʏk]',
+        cue: 'FRÜH 加重加长，stück 轻轻带过', skills: ['word-stress'] },
+      { type: 'speak', q: '🎤 外来词重音在后', de: 'Universität', zh: '大学', ipa: '[univɛʁziˈtɛːt]',
+        cue: '前面全部轻读，最后的 -TÄT 才是重音', skills: ['word-stress'] },
+      { type: 'speak', q: '🎤 前缀不重读', de: 'Entschuldigung', zh: '对不起', ipa: '[ɛntˈʃʊldɪɡʊŋ]',
+        cue: 'ent- 轻轻带过，重音砸在 SCHUL 上', skills: ['word-stress'] },
+      { type: 'listenChoice', audioText: 'Ist das gut?',
+        options: ['这是一个问句 —— 句尾升上去了', '这是一个陈述句 —— 句尾降下来了'], a: 0,
+        explain: '德语是否问句靠语调，句尾一定上扬。', skills: ['sentence-intonation'] },
+      { type: 'speak', q: '🎤 陈述句：句尾降下来', de: 'Ich komme aus China.', zh: '我来自中国。',
+        cue: '最后一个词降调收住，别上扬——上扬会被听成疑问', skills: ['sentence-intonation'] },
+      { type: 'speak', q: '🎤 口语考试第一题就考这个', de: 'Mein Name ist Zhu. Z-H-U.', zh: '我叫朱。Z-H-U。',
+        cue: 'Z 读"tsett"，H 读"hah"，U 读"uh"——把你自己的名字换进去练',
+        skills: ['alphabet'] },
+      { type: 'speak', q: '🎤 报号码（口语考试会考）', de: 'Meine Nummer ist null vier neun.', zh: '我的号码是 0 4 9。',
+        cue: '数字一个一个报，每个之间轻轻停顿', skills: ['alphabet'] },
     ],
   },
 ];
+
+export function findPronLesson(id) {
+  return PRON_LESSONS.find(lesson => lesson.id === id) || null;
+}

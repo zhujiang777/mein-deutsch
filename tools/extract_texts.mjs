@@ -12,9 +12,13 @@ const texts = new Set();
 const add = (t) => { if (t && t.trim()) texts.add(t.trim()); };
 
 // 发音课：示范条目
+// 拼读 6 格已改成卡片流（steps），不再是 sections/items 的文章结构。
 for (const lesson of PRON_LESSONS)
-  for (const sec of lesson.sections || [])
-    for (const item of sec.items || []) add(item.de);
+  for (const step of lesson.steps || []) {
+    add(step.de);        // speak 卡的例词/例句
+    add(step.audioText); // listenChoice 的听辨音
+    if (Array.isArray(step.lines)) step.lines.forEach(line => add(line.de)); // observe 示范行
+  }
 
 // 语法课：例句（练习题含空格，不生成）
 for (const lesson of GRAMMAR_LESSONS)

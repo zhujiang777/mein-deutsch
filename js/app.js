@@ -69,7 +69,7 @@ const routes = [
     } },
   { pattern: /^\/settings$/, tab: 'today', load: () => import('./views/settings.js?v=9'), render: (m, h) => m.renderSettings(h) },
   // 旧版模块（内容迁移期间保留）
-  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'library', load: () => import('./views/pronunciation.js?v=9'), render: (m, h, hit) => m.renderPron(h, hit[1]) },
+  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'library', load: () => import('./views/pronunciation.js?v=10'), render: (m, h, hit) => m.renderPron(h, hit[1]) },
   { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'library', load: () => import('./views/grammar.js?v=10'), render: (m, h, hit) => m.renderGrammar(h, hit[1]) },
 ];
 

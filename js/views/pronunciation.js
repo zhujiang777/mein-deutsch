@@ -1,57 +1,80 @@
-// 发音系统课：课程列表 + 课程详情（讲解 + 示范朗读 + 跟读）
-import { PRON_LESSONS } from '../../data/pronunciation.js';
-import { el, esc, icon, phraseRow, toast } from '../ui.js';
-import { isDone, markDone } from '../storage.js';
+// 拼读 6 格：列表 + 卡片流。规格见 docs/learning-formats.md 第二节
+//
+// 旧版是可滚动的讲解文章 + 一个"标记本课完成"按钮，没有一道题，学不下去。
+// 现在复用微步课外壳（进度条、一屏一个动作、答错重排队），讲解只剩每张卡上的一行 cue，
+// 成段的规则表降级成课末可展开的参考资料——参考资料写长没关系，主路径不能长。
+import { PRON_LESSONS, findPronLesson } from '../../data/pronunciation.js';
+import { runLessonShell } from '../lesson-shell.js';
+import { el, esc, icon } from '../ui.js';
+import { allLessonStates } from '../storage.js';
+import { lessonMastery } from '../mastery.js';
 
 export function renderPron(host, id) {
   if (id) return renderLesson(host, id);
 
-  host.appendChild(el(`<h1 class="page-title">发音系统课</h1>`));
-  host.appendChild(el(`<p class="page-sub">德语拼读非常规律，学完这 ${PRON_LESSONS.length} 课你就能“见词能读”。每个示范都支持正常朗读、慢速朗读和跟读检测。</p>`));
+  host.appendChild(el(`<header class="page-head">
+    <span class="eyebrow">AUSSPRACHE · 拼读地基</span>
+    <h1 class="page-title">六天学会见字读音</h1>
+    <p class="page-sub">德语拼写和读音的对应非常规律，学完这 6 天你能读出任何生词——这也是德语词典一般不标音标的原因。每天一条规则，一屏一个动作，例词都是 A1 真词，顺带把词也记住。</p>
+  </header>`));
 
-  PRON_LESSONS.forEach((lesson, i) => {
-    const done = isDone('pron', lesson.id);
+  // 完成状态必须读 lesson 状态：runLessonShell 写的是 setLessonState，
+  // 而旧版列表读的是 module/id 那套独立存储——两边不通，完成勾永远不会出现。
+  const states = allLessonStates();
+  PRON_LESSONS.forEach((lesson, index) => {
+    const done = !!states[lesson.id]?.done;
+    const mastery = lessonMastery(lesson);
+    const cards = lesson.steps.length;
     host.appendChild(el(`<a class="list-item" href="#/pron/${lesson.id}">
-      <span class="li-icon">${done ? icon('check') : `${i + 1}`}</span>
+      <span class="li-icon">${done ? icon('check') : `${index + 1}`}</span>
       <div class="li-main">
         <div class="li-title">${esc(lesson.title)}</div>
-        <div class="li-sub">${esc(lesson.sub)}</div>
+        <div class="li-sub">${esc(lesson.sub)} · ${cards} 张卡${mastery > 0 ? ` · 掌握度 ${mastery}%` : ''}</div>
       </div>
       <span class="li-arrow">${icon('arrow')}</span>
     </a>`));
   });
+
+  host.appendChild(el(`<div class="source-card">拼读 6 格同时是 A1 全景图最上面一行，练完会在<a href="#/panorama">全景图</a>上亮起。</div>`));
+}
+
+/** 规则表：成段讲解的归宿。默认折叠，是回头查的参考，不是学习路径。 */
+function ruleCard(lesson) {
+  if (!lesson.rule) return null;
+  const wrap = el(`<details class="rule-details">
+    <summary>${icon('book')} 这一天的规则表（随时回来查）</summary>
+  </details>`);
+  const table = el(`<table class="gram-table"></table>`);
+  table.appendChild(el(`<tr>${lesson.rule.head.map(head => `<th>${esc(head)}</th>`).join('')}</tr>`));
+  lesson.rule.rows.forEach(row =>
+    table.appendChild(el(`<tr>${row.map(cell => `<td>${esc(cell)}</td>`).join('')}</tr>`)));
+  const scroller = el(`<div class="gram-table-wrap"></div>`);
+  scroller.appendChild(table);
+  wrap.appendChild(scroller);
+  return wrap;
 }
 
 function renderLesson(host, id) {
-  const idx = PRON_LESSONS.findIndex(l => l.id === id);
-  const lesson = PRON_LESSONS[idx];
+  const lesson = findPronLesson(id);
   if (!lesson) { location.hash = '#/pron'; return; }
 
-  host.appendChild(el(`<a class="back-link" href="#/pron">‹ 发音课列表</a>`));
-  host.appendChild(el(`<h1 class="page-title">${esc(lesson.title)}</h1>`));
+  const index = PRON_LESSONS.findIndex(item => item.id === id);
+  const next = PRON_LESSONS[index + 1];
 
-  const body = el(`<div class="lesson-body"></div>`);
-  lesson.sections.forEach(sec => {
-    if (sec.h) body.appendChild(el(`<h2>${esc(sec.h)}</h2>`));
-    if (sec.p) sec.p.split('\n').forEach(t => body.appendChild(el(`<p>${esc(t)}</p>`)));
-    if (sec.items) {
-      const card = el(`<div class="card"></div>`);
-      sec.items.forEach(it => card.appendChild(phraseRow(it)));
-      body.appendChild(card);
-    }
-    if (sec.tip) body.appendChild(el(`<div class="tip"><b>提示</b> · ${esc(sec.tip)}</div>`));
+  runLessonShell(host, lesson, {
+    onExit: () => { location.hash = '#/pron'; },
+    onComplete: () => {
+      host.innerHTML = '';
+      host.appendChild(el(`<div class="lesson-done" style="margin-top:48px">
+        <div class="completion-seal">${icon('trophy')}</div>
+        <span class="eyebrow">AUSSPRACHE</span>
+        <h2>${esc(lesson.title)} 完成</h2>
+        <p class="meta">${esc(lesson.sub)}</p>
+      </div>`));
+      const rule = ruleCard(lesson);
+      if (rule) host.appendChild(rule);
+      host.appendChild(el(`<a class="btn block" style="margin-top:14px" href="${next ? `#/pron/${next.id}` : '#/panorama'}">${next ? `下一天：${esc(next.title)} ›` : '去全景图看看亮了几格 ›'}</a>`));
+      host.appendChild(el(`<a class="btn secondary block" style="margin-top:10px" href="#/pron">回到拼读列表</a>`));
+    },
   });
-  host.appendChild(body);
-
-  const doneBtn = el(`<button class="btn block" style="margin-top:16px">${isDone('pron', id) ? `${icon('check')} 已完成` : '标记本课完成'}</button>`);
-  doneBtn.addEventListener('click', () => {
-    const reward = markDone('pron', id);
-    toast(reward ? `已完成 · +${reward.xpDelta} XP` : '已经记录过这节课');
-    doneBtn.innerHTML = `${icon('check')} 已完成`;
-  });
-  host.appendChild(doneBtn);
-
-  if (idx < PRON_LESSONS.length - 1) {
-    host.appendChild(el(`<a class="btn secondary block" style="margin-top:10px" href="#/pron/${PRON_LESSONS[idx + 1].id}">下一课：${esc(PRON_LESSONS[idx + 1].title)} ›</a>`));
-  }
 }
