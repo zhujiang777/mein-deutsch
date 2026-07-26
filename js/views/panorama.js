@@ -61,7 +61,6 @@ export function renderPanorama(host) {
   const untouched = all.filter(entry => entry.strength === 0).length;
   const overall = Math.round(all.reduce((acc, entry) => acc + entry.strength, 0) / all.length);
 
-  host.appendChild(el(`<a class="back-link" href="#/path">‹ 旅程</a>`));
   host.appendChild(el(`<header class="page-head">
     <span class="eyebrow">ÜBERBLICK · A1 全景</span>
     <h1 class="page-title">离完整的 A1 还有多远</h1>

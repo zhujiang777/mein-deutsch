@@ -1,9 +1,7 @@
 // 应用入口 v4：五个主页面常驻缓存，深层页面按需加载
-import { renderToday, runDictationSet } from './views/today.js?v=12';
-import { renderPath } from './views/path.js?v=12';
-import { renderVocab } from './views/vocab.js?v=11';
-import { renderReadListen } from './views/readlisten.js?v=11';
-import { renderMe } from './views/me.js?v=9';
+import { renderToday, runDictationSet } from './views/today.js?v=13';
+import { renderLibrary } from './views/library.js?v=1';
+import { renderPanorama } from './views/panorama.js?v=2';
 import { getSettings, migrate } from './storage.js';
 import { initSync } from './sync.js';
 import { stopSpeak } from './speech.js';
@@ -19,9 +17,11 @@ applyTheme();
 
 const app = document.getElementById('app');
 const tabbar = document.getElementById('tabbar');
-const tabIndexes = { today: 0, path: 1, vocab: 2, readlisten: 3, me: 4 };
+// 三栏导航：今天（系统替你决定）/ 全景（我还差什么）/ 仓库（自己翻）。
+// "我的"不是学习目的地，收进今天页右上角的状态区。
+const tabIndexes = { today: 0, panorama: 1, library: 2 };
 const glossOptions = { sentenceSelector: '.rt-sent,.wc-sentence,.phrase-row,.ex-prompt,.step-p,p' };
-const rootPaths = new Set(['/', '/path', '/vocab', '/readlisten', '/me']);
+const rootPaths = new Set(['/', '/panorama', '/path', '/vocab', '/readlisten']);
 const rootViews = new Map();
 const rootScroll = new Map();
 let transientView = null;
@@ -51,24 +51,26 @@ app.addEventListener('click', event => {
 
 const routes = [
   { pattern: /^\/?$/, tab: 'today', root: true, render: (h) => renderToday(h) },
-  { pattern: /^\/path$/, tab: 'path', root: true, render: (h) => renderPath(h) },
-  { pattern: /^\/vocab$/, tab: 'vocab', root: true, render: (h) => renderVocab(h) },
-  { pattern: /^\/readlisten$/, tab: 'readlisten', root: true, render: (h) => renderReadListen(h) },
-  { pattern: /^\/me$/, tab: 'me', root: true, render: (h) => renderMe(h) },
-  { pattern: /^\/lesson\/(.+)$/, tab: 'path', load: () => import('./views/lesson.js?v=10'), render: (m, h, hit) => m.renderLessonRoute(h, hit[1]) },
-  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=11'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
-  { pattern: /^\/vocab\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=11'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
-  { pattern: /^\/reading\/(.+)$/, tab: 'readlisten', load: () => import('./views/reading.js?v=11'), render: (m, h, hit) => m.renderReading(h, hit[1]) },
-  { pattern: /^\/listening\/(.+)$/, tab: 'readlisten', load: () => import('./views/listening.js?v=2'), render: (m, h, hit) => m.renderListening(h, hit[1]) },
-  { pattern: /^\/dictation$/, tab: 'readlisten', render: async (_m, h) => {
+  { pattern: /^\/panorama$/, tab: 'panorama', root: true, render: (h) => renderPanorama(h) },
+  // 仓库三栏各自是一条真实路由，现存的 ‹旅程 / ‹读·听 返回链一个都不用改。
+  { pattern: /^\/(path|vocab|readlisten)$/, tab: 'library', root: true, render: (h, hit) => renderLibrary(h, hit[1]) },
+  { pattern: /^\/lesson\/(.+)$/, tab: 'library', load: () => import('./views/lesson.js?v=10'), render: (m, h, hit) => m.renderLessonRoute(h, hit[1]) },
+  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'library', load: () => import('./views/vocab.js?v=11'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
+  { pattern: /^\/vocab\/(.+)$/, tab: 'library', load: () => import('./views/vocab.js?v=11'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
+  { pattern: /^\/reading\/(.+)$/, tab: 'library', load: () => import('./views/reading.js?v=11'), render: (m, h, hit) => m.renderReading(h, hit[1]) },
+  { pattern: /^\/listening\/(.+)$/, tab: 'library', load: () => import('./views/listening.js?v=2'), render: (m, h, hit) => m.renderListening(h, hit[1]) },
+  { pattern: /^\/dictation$/, tab: 'library', render: async (_m, h) => {
       h.appendChild(el(`<a class="back-link" href="#/readlisten">‹ 读·听</a>`));
       await runDictationSet(h, 5, () => { location.hash = '#/readlisten'; });
     } },
-  { pattern: /^\/panorama$/, tab: 'path', load: () => import('./views/panorama.js?v=1'), render: (m, h) => m.renderPanorama(h) },
-  { pattern: /^\/settings$/, tab: 'me', load: () => import('./views/settings.js?v=9'), render: (m, h) => m.renderSettings(h) },
+  { pattern: /^\/me$/, tab: 'today', load: () => import('./views/me.js?v=10'), render: (m, h) => {
+      h.appendChild(el(`<a class="back-link" href="#/">‹ 今日</a>`));
+      return m.renderMe(h);
+    } },
+  { pattern: /^\/settings$/, tab: 'today', load: () => import('./views/settings.js?v=9'), render: (m, h) => m.renderSettings(h) },
   // 旧版模块（内容迁移期间保留）
-  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'path', load: () => import('./views/pronunciation.js?v=9'), render: (m, h, hit) => m.renderPron(h, hit[1]) },
-  { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'path', load: () => import('./views/grammar.js?v=10'), render: (m, h, hit) => m.renderGrammar(h, hit[1]) },
+  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'library', load: () => import('./views/pronunciation.js?v=9'), render: (m, h, hit) => m.renderPron(h, hit[1]) },
+  { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'library', load: () => import('./views/grammar.js?v=10'), render: (m, h, hit) => m.renderGrammar(h, hit[1]) },
 ];
 
 let activePath = '';
@@ -111,7 +113,7 @@ function routeMotion(view, direction) {
   });
 }
 
-function showRootView(path, selected, direction = 0) {
+function showRootView(path, selected, hit, direction = 0) {
   transientView?.remove();
   transientView = null;
   hideRootViews();
@@ -121,7 +123,7 @@ function showRootView(path, selected, direction = 0) {
     view = el(`<section class="route-view" data-route-view="${path}"></section>`);
     view.hidden = true;
     app.appendChild(view);
-    selected.render(view);
+    selected.render(view, hit);
     rootViews.set(path, view);
   }
   view.hidden = false;
@@ -184,7 +186,7 @@ async function route() {
     if (selected.root) {
       // 深层学习会改变进度；回到主导航时刷新一次，普通五栏切换始终复用 DOM。
       if (activePath && !rootPaths.has(activePath)) clearRootViews();
-      showRootView(path, selected, direction);
+      showRootView(path, selected, hit, direction);
     } else {
       await showDeepView(selected, hit, run);
     }

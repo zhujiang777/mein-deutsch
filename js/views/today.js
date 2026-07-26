@@ -58,6 +58,7 @@ export function renderToday(host) {
     <div class="status-cluster">
       <span class="status-chip flame">${icon('flame')}<b>${streak}</b></span>
       <span class="status-chip">${icon('star')}<b>${reward.totalXp}</b></span>
+      <a class="status-chip status-me" href="#/me" aria-label="我的：统计与设置">${icon('user')}</a>
     </div>
   </header>`);
   host.appendChild(top);

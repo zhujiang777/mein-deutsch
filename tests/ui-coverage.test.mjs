@@ -34,7 +34,10 @@ test('liquid glass stays on functional layers with accessible fallbacks', () => 
   assert.match(css, /@supports not \(\(-webkit-backdrop-filter/);
   assert.match(css, /--glass-blur: 32px/);
   assert.match(css, /body::before, body::after/);
-  assert.match(css, /#tabbar\[data-active="4"\]::before/);
+  // 三栏导航（今天/全景/仓库）：滑块只到 2，宽度是 1/3
+  assert.match(css, /#tabbar\[data-active="2"\]::before/);
+  assert.doesNotMatch(css, /#tabbar\[data-active="[34]"\]/);
+  assert.match(css, /width: calc\(\(100% - 16px\) \/ 3\)/);
 });
 
 test('read and listen render as separate accessible panels', () => {
@@ -62,7 +65,7 @@ test('vocabulary detail has a stable deep-link route', () => {
   assert.match(app, /\/vocab\\\/word\\\/\(\.\+\)/);
 });
 
-test('main navigation keeps five rendered views and avoids mobile GPU-heavy effects', () => {
+test('main navigation keeps three rendered views and avoids mobile GPU-heavy effects', () => {
   assert.doesNotMatch(app, /setTimeout\([\s\S]{0,180}120\)/);
   assert.match(app, /const rootViews = new Map\(\)/);
   assert.match(app, /rootViews\.get\(path\)/);
@@ -151,4 +154,26 @@ test('语法联动的样式有覆盖', () => {
   for (const selector of ['.chip-row', '.chip {', '.chip.is-weak', '.grammar-links']) {
     assert.ok(css.includes(selector), `缺少样式 ${selector}`);
   }
+});
+
+test('三栏导航自洽：路由的 tab、tabIndexes、tabbar 链接三者一一对上', () => {
+  // 深层路由的 tab 写错（比如还留着 'vocab'）不会报错，只会让底部高亮跳到错误的栏。
+  const declared = new Set([...app.matchAll(/tab: '([a-z]+)'/g)].map(hit => hit[1]));
+  const indexed = new Set([...app.match(/const tabIndexes = \{([^}]*)\}/)[1]
+    .matchAll(/([a-z]+):/g)].map(hit => hit[1]));
+  const inBar = new Set([...index.matchAll(/data-tab="([a-z]+)"/g)].map(hit => hit[1]));
+
+  assert.deepEqual([...indexed].sort(), ['library', 'panorama', 'today']);
+  assert.deepEqual([...inBar].sort(), [...indexed].sort(), 'tabbar 链接与 tabIndexes 不一致');
+  for (const tab of declared) {
+    assert.ok(indexed.has(tab), `路由声明了 tab: '${tab}'，但 tabIndexes 里没有它 → 高亮会落到"今天"`);
+  }
+  // 仓库三栏是三条真实根路由，现存的 ‹旅程 / ‹读·听 返回链依赖它们继续可达。
+  assert.match(app, /\/\(path\|vocab\|readlisten\)\$/);
+  for (const path of ['/', '/panorama', '/path', '/vocab', '/readlisten']) {
+    assert.ok(app.includes(`'${path}'`), `rootPaths 缺少 ${path}`);
+  }
+  // "我的"不再是主 tab，改为今天页右上角进入，因此必须是带返回链的深层视图。
+  assert.match(app, /pattern: \/\^\\\/me\$\/, tab: 'today', load:/);
+  assert.match(app, /back-link" href="#\/">‹ 今日/);
 });

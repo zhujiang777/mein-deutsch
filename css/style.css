@@ -305,7 +305,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   content: "";
   position: absolute;
   top: 6px; bottom: max(6px, env(safe-area-inset-bottom, 0px)); left: 8px;
-  width: calc((100% - 16px) / 5);
+  width: calc((100% - 16px) / 3);
   border: 1px solid rgba(255,255,255,.74);
   border-radius: 16px;
   background: linear-gradient(150deg, rgba(255,255,255,.68), rgba(255,255,255,.25) 58%, rgba(200,79,54,.1));
@@ -315,10 +315,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   will-change: transform;
   pointer-events: none;
 }
+/* 三栏导航：今天 / 全景 / 仓库 */
 #tabbar[data-active="1"]::before { transform: translate3d(100%,0,0); }
 #tabbar[data-active="2"]::before { transform: translate3d(200%,0,0); }
-#tabbar[data-active="3"]::before { transform: translate3d(300%,0,0); }
-#tabbar[data-active="4"]::before { transform: translate3d(400%,0,0); }
 #tabbar::after {
   content: "";
   position: absolute;
@@ -1556,3 +1555,17 @@ textarea.io-area { min-height: 110px; resize: vertical; margin-top: 10px; }
   .pano-grid { grid-template-columns: 1fr 1fr; }
   .pano-cell-sub { display: none; }
 }
+
+/* 仓库分区条：课程 / 词汇 / 读·听。复用 track-seg 的玻璃滑块，链接形态而非按钮。 */
+.library-seg { margin-bottom: 4px; }
+.library-seg .track-tab { text-decoration: none; }
+.library-pane { display: block; }
+
+/* 主页右上角的"我的"入口：设置和统计不是学习目的地，不该占一个主 tab */
+.status-chip.status-me {
+  text-decoration: none;
+  color: var(--text-2);
+  min-width: 34px;
+  justify-content: center;
+}
+.status-chip.status-me:active { color: var(--accent); }
