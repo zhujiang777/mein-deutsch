@@ -7,6 +7,7 @@ import {
 } from '../mastery.js';
 import { allLessonStates, getVideoState, getDaily, getStreak, getWordbook, rewardSummary } from '../storage.js';
 import { stopSpeak } from '../speech.js';
+import { panoramaBanner } from '../panorama-banner.js';
 
 /* 三档时长的队列配置 */
 const PLANS = {
@@ -72,6 +73,8 @@ export function renderToday(host) {
     </div>
   </section>`);
   host.appendChild(hero);
+  // 主页第一屏就要回答"还差多远"：今日目标只是当天的量，全景图是离完整 A1 的距离。
+  host.appendChild(panoramaBanner());
 
   const launcher = el(`<section class="mission-launcher">
     <div class="mission-head"><div><span>选择今天的节奏</span><b>从下一站继续</b></div><span class="mission-count">${stats.due + mistakes + listenMisses} 项待复习</span></div>

@@ -102,13 +102,16 @@ test('全景图视图与样式接线正确', () => {
   const view = readFileSync(new URL('../js/views/panorama.js', import.meta.url), 'utf8');
   const app = readFileSync(new URL('../js/app.js', import.meta.url), 'utf8');
   const css = readFileSync(new URL('../css/style.css', import.meta.url), 'utf8');
-  const path = readFileSync(new URL('../js/views/path.js', import.meta.url), 'utf8');
+  const banner = readFileSync(new URL('../js/panorama-banner.js', import.meta.url), 'utf8');
+  const today = readFileSync(new URL('../js/views/today.js', import.meta.url), 'utf8');
 
   assert.match(app, /\/panorama\$/, 'app.js 缺少 #/panorama 路由');
   assert.match(view, /export function renderPanorama/);
   // 100+ 个标签逐个读 localStorage 会拖慢首屏，必须传入已加载的 skills。
   assert.match(view, /skillStrength\(id, skills\)/);
-  assert.match(path, /href="#\/panorama"/, '旅程页缺少全景图入口');
+  assert.match(banner, /href="#\/panorama"/);
+  // 横幅必须在主页第一屏：打开就知道"还差多远"，不用先想去哪找。
+  assert.match(today, /panoramaBanner\(\)/);
   for (const selector of ['.pano-grid', '.pano-cell', '.pano-cell.is-gap', '.pano-banner', '.band-strong']) {
     assert.ok(css.includes(selector), `缺少样式 ${selector}`);
   }

@@ -1,6 +1,6 @@
 // 应用入口 v4：五个主页面常驻缓存，深层页面按需加载
-import { renderToday, runDictationSet } from './views/today.js?v=11';
-import { renderPath } from './views/path.js?v=11';
+import { renderToday, runDictationSet } from './views/today.js?v=12';
+import { renderPath } from './views/path.js?v=12';
 import { renderVocab } from './views/vocab.js?v=11';
 import { renderReadListen } from './views/readlisten.js?v=11';
 import { renderMe } from './views/me.js?v=9';
