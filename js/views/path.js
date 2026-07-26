@@ -1,8 +1,9 @@
 // 课程路径：三泳道（语法主线 / 发音入门 / 场景口语），各自顺序解锁 + 掌握度 + 视频门槛
 import { COURSE_CATALOG } from '../../data/content-index.js';
+import { PRON_CELLS, GRAMMAR_CELLS } from '../../data/panorama.js';
 import { el, esc, icon, motionIn, videoCard, toast } from '../ui.js';
-import { allLessonStates, setLessonState, getVideoState } from '../storage.js';
-import { lessonMastery } from '../mastery.js';
+import { allLessonStates, setLessonState, getVideoState, loadSkills } from '../storage.js';
+import { lessonMastery, skillStrength } from '../mastery.js';
 
 const TRACKS = [
   { id: 'grammar', label: '语法主线', icon: 'route' },
@@ -10,8 +11,28 @@ const TRACKS = [
   { id: 'scene', label: '场景口语', icon: 'mic' },
 ];
 
+/** 全景图入口横幅：课程进度回答"走了多远"，全景图回答"还差多远"——后者才是学下去的动力。 */
+function panoramaBanner() {
+  const skills = loadSkills();
+  const cells = [...PRON_CELLS, ...GRAMMAR_CELLS];
+  const strengths = cells.map(cell => cell.skills?.length
+    ? Math.round(cell.skills.reduce((acc, id) => acc + skillStrength(id, skills), 0) / cell.skills.length)
+    : 0);
+  const overall = Math.round(strengths.reduce((a, b) => a + b, 0) / strengths.length);
+  const untouched = strengths.filter(value => value === 0).length;
+  return el(`<a class="pano-banner" href="#/panorama">
+    <div class="pano-banner-ring" style="--pct:${overall}"><b>${overall}<i>%</i></b></div>
+    <div class="li-main">
+      <div class="li-title">A1 全景图</div>
+      <div class="li-sub">按 Goethe A1 考纲的 ${cells.length} 格拼读与语法 · 还有 ${untouched} 格没碰过</div>
+    </div>
+    <span class="li-arrow">${icon('arrow')}</span>
+  </a>`);
+}
+
 export function renderPath(host) {
   host.appendChild(el(`<header class="page-head path-head"><span class="eyebrow">STADTPLAN · 城市学习路线</span><h1 class="page-title">下一站，德语生活</h1><p class="page-sub">沿着三条线路前进。完成当前站，下一段路线就会亮起。</p></header>`));
+  host.appendChild(panoramaBanner());
 
   // 顶部分段切换：移动端单手可点，两条线互不干扰
   const seg = el(`<div class="track-seg"></div>`);

@@ -1440,3 +1440,119 @@ textarea.io-area { min-height: 110px; resize: vertical; margin-top: 10px; }
     scroll-behavior: auto !important;
   }
 }
+
+/* ===== A1 全景图（#/panorama）===== */
+/* 四档配色对齐 data/panorama.js 的 BANDS：稳了/要巩固/刚碰过/还没碰过 */
+.pano-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 4px 0 18px;
+}
+.pano-stat {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+}
+.pano-stat b { display: block; font-size: 1.5rem; font-weight: 800; color: var(--text); line-height: 1.1; }
+.pano-stat b i { font-size: 0.9rem; font-weight: 600; font-style: normal; color: var(--text-2); }
+.pano-stat span { font-size: 0.72rem; color: var(--text-2); }
+
+.pano-hint { font-size: 0.78rem; color: var(--text-2); margin: 2px 0 10px; line-height: 1.6; }
+.pano-group-label { font-size: 0.76rem; font-weight: 700; color: var(--text-2); margin: 14px 0 8px; }
+
+.pano-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.pano-cell {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 11px 12px 12px;
+  color: var(--text);
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+}
+/* 虚线 = 微步课里练过，但没有成体系的讲解课 */
+.pano-cell.is-gap { border-style: dashed; border-color: var(--line-strong); }
+.pano-cell:active { border-color: var(--accent); }
+.pano-cell-top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+.pano-id {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+.pano-pct { font-size: 0.8rem; font-weight: 700; }
+.pano-cell-title { font-size: 0.88rem; font-weight: 700; margin-top: 4px; line-height: 1.35; }
+.pano-cell-sub { font-size: 0.7rem; color: var(--text-2); margin-top: 3px; line-height: 1.5; }
+.pano-bar {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--line);
+  margin-top: 9px;
+  overflow: hidden;
+}
+.pano-bar i { display: block; height: 100%; border-radius: 99px; background: currentColor; }
+.pano-gap { font-size: 0.66rem; font-weight: 700; margin-top: 7px; color: var(--text-2); }
+
+.pano-cell.band-strong { color: var(--green); }
+.pano-cell.band-strong .pano-cell-title,
+.pano-cell.band-ok .pano-cell-title,
+.pano-cell.band-weak .pano-cell-title,
+.pano-cell.band-none .pano-cell-title { color: var(--text); }
+.pano-cell.band-ok { color: var(--gold); }
+.pano-cell.band-weak { color: var(--accent); }
+.pano-cell.band-none { color: var(--text-2); }
+.pano-cell.band-none .pano-bar i { background: transparent; }
+
+.pano-exam { cursor: default; }
+.pano-vocab { padding: 14px; }
+
+/* 旅程页顶部的全景图入口 */
+.pano-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: var(--text);
+}
+.pano-banner:active { border-color: var(--accent); }
+.pano-banner-ring {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--accent) calc(var(--pct) * 1%), var(--line) 0);
+}
+.pano-banner-ring b {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--card);
+  display: grid;
+  place-items: center;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+.pano-banner-ring b i { font-size: 0.6rem; font-style: normal; font-weight: 600; }
+
+@media (max-width: 380px) {
+  .pano-grid { grid-template-columns: 1fr 1fr; }
+  .pano-cell-sub { display: none; }
+}

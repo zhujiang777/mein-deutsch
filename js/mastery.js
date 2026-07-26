@@ -24,8 +24,9 @@ export function recordAnswer(skillIds = [], correct) {
 }
 
 // 读取时应用时间衰减（不写回，展示口径）：每 30 天不练衰减约 20%
-export function skillStrength(id) {
-  const k = loadSkills()[id];
+// 全景图一次要算 100+ 个标签，传入已加载的 skills 避免每个标签都读一次 localStorage。
+export function skillStrength(id, skills) {
+  const k = (skills || loadSkills())[id];
   if (!k) return 0;
   const idle = (Date.now() - k.last) / (30 * DAY);
   return Math.round(k.s * Math.pow(0.8, Math.max(0, idle)));
