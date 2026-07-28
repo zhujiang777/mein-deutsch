@@ -1020,6 +1020,27 @@ export const COURSE_CATALOG = [
         "stepCount": 24
       },
       {
+        "id": "u13l4",
+        "title": "并列连词：und oder aber denn",
+        "skills": [
+          "conj-coord",
+          "conj-denn"
+        ],
+        "vocabRefs": [
+          "w241",
+          "w242",
+          "w243",
+          "w245",
+          "w193",
+          "w081",
+          "w082",
+          "w104",
+          "w376",
+          "w106"
+        ],
+        "stepCount": 23
+      },
+      {
         "id": "u13l3",
         "title": "A1结业综合测验",
         "skills": [

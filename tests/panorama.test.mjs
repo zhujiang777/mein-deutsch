@@ -61,18 +61,19 @@ test('lessons / pronLessons 指向真实存在的课程', () => {
     assert.ok(pronIds.has(id), `${cell.id} 指向不存在的发音课 ${id}`)));
 });
 
-test('12 课语法体系全部落进格子，一课不漏', () => {
+test('语法讲解课全部落进格子，一课不漏', () => {
   const covered = new Set(GRAMMAR_CELLS.flatMap(cell => cell.lessons || []));
   GRAMMAR_LESSONS.forEach(lesson =>
     assert.ok(covered.has(lesson.id), `${lesson.id}《${lesson.title}》没有对应的全景图格子`));
 });
 
-test('6 个空白格如实标记为缺系统讲解', () => {
-  // 规格记录的缺口：A6 命令式 · D1 代词 · D2 介词 · D3 时间 · D4 man/es · E1 形容词 · E2 副词 · E3 连词
+test('缺系统讲解的格子如实标记，但没有一格是真空', () => {
+  // 这些格子在微步课里练得到，只是没有成体系的 g## 讲解课。主线照样走得过去。
   const gaps = GRAMMAR_CELLS.filter(cell => !(cell.lessons || []).length).map(cell => cell.id);
-  assert.deepEqual(gaps, ['A6', 'D1', 'D2', 'D3', 'D4', 'E1', 'E2', 'E3']);
-  // E3 并列连词至今没有任何技能标签——这一格是真空，不能假装它只是"没讲解"。
-  assert.equal(GRAMMAR_CELLS.find(cell => cell.id === 'E3').skills.length, 0);
+  assert.deepEqual(gaps, ['A6', 'D1', 'D2', 'D3', 'D4', 'E1', 'E2']);
+  // E3 并列连词原本连技能标签都没有，是真空。现在补了 u13l4 微步课 + g13 讲解课。
+  assert.ok(GRAMMAR_CELLS.every(cell => cell.skills.length),
+    '任何一格没有技能标签就等于永远 0%，主线也无从判断它走完没有');
 });
 
 test('词汇轴的三个数字与 Goethe 词表实时对得上', () => {

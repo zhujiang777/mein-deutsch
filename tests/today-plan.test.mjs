@@ -6,6 +6,12 @@ import {
   availableMaterials, pickMaterial, buildTodayPlan,
 } from '../js/today-plan.js';
 
+/** 主线给出的"今天这一格"。真值由 js/mainline.js 算，这里只关心排程怎么用它。 */
+const STEP = {
+  kind: 'lesson', cell: { id: 'C5', title: '否定 · 物主冠词', skills: ['nicht-kein'] },
+  lesson: { id: 'u7l1', title: '点单' }, grammarZh: '否定 · 物主冠词', index: 12, total: 26,
+};
+
 /** 学完前 n 个单元，并且这些课的词卡都复习过 */
 function progress(n) {
   const lessonStates = {}, srs = {};
@@ -39,7 +45,7 @@ test('未达门槛时不隐藏，而是如实说明差多少', () => {
   if (!picked.ready) {
     assert.match(picked.reason, /至少要 \d+%/);
     const { segments } = buildTodayPlan('full', {
-      nextLesson: { id: 'u7l1', title: '点单' }, material: picked,
+      nextStep: STEP, material: picked,
       counts: { due: 3, fresh: 5 },
     });
     assert.ok(!segments.some(segment => segment.kind === 'material'),
@@ -67,10 +73,10 @@ test('今日文章的选材是双输入：今天背的词会把材料往上顶',
 
 test('一条路的顺序固定：背词 → 学一格 → 今日文章', () => {
   const material = { ready: true, pack: { id: 'li-b01', title: 'Im Café' }, readiness: {} };
-  const nextLesson = { id: 'u7l1', title: '点单' };
+  
   const counts = { due: 4, fresh: 6, mistakes: ['m:a:1'], listenMisses: ['l:li-b01:2'] };
 
-  const { segments } = buildTodayPlan('full', { nextLesson, material, counts });
+  const { segments } = buildTodayPlan('full', { nextStep: STEP, material, counts });
   assert.deepEqual(segments.map(s => s.stage),
     ['words', 'words', 'words', 'learn', 'article']);
   assert.deepEqual(segments.map(s => s.kind),
@@ -98,16 +104,16 @@ test('AI 现写的那篇优先于库存；它挂了才退回库存', () => {
 test('只有两个出口：完整路线 / 只复习', () => {
   assert.deepEqual(Object.keys(ROUTES), ['full', 'review']);
   const material = { ready: true, pack: { id: 'li-b01', title: 'Im Café' }, readiness: {} };
-  const nextLesson = { id: 'u7l1', title: '点单' };
+  
   const counts = { due: 4, fresh: 6 };
 
-  const review = buildTodayPlan('review', { nextLesson, material, counts }).segments;
+  const review = buildTodayPlan('review', { nextStep: STEP, material, counts }).segments;
   assert.ok(!review.some(s => s.kind === 'lesson'), '只复习不上新课');
   assert.ok(!review.some(s => s.kind === 'material'), '只复习不给今日文章');
   assert.ok(review.some(s => s.kind === 'vocab'));
 
   // 时长选择器已经删掉——"减少选择"的第一步不该是一道选择题。
-  const unknown = buildTodayPlan('15', { nextLesson, material, counts }).segments;
+  const unknown = buildTodayPlan('15', { nextStep: STEP, material, counts }).segments;
   assert.ok(unknown.some(s => s.kind === 'material'), '未知路线要回落到完整路线');
 });
 
@@ -125,7 +131,7 @@ test('文章合格时，它的生词排进"背词"的最前面', () => {
 });
 
 test('全部清空时不产出任何段落', () => {
-  const { segments } = buildTodayPlan('review', { nextLesson: null, material: null, counts: { due: 0, fresh: 0 } });
+  const { segments } = buildTodayPlan('review', { nextStep: null, material: null, counts: { due: 0, fresh: 0 } });
   assert.equal(segments.length, 0);
 });
 

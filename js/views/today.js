@@ -4,7 +4,8 @@
 // 想少学的人走底部那一条旁路（只复习）。两个出口，不是六个入口。
 // 组装规则和今日文章的选材见 js/today-plan.js
 import { el, esc, icon, motionIn, toast } from '../ui.js';
-import { COURSE_CATALOG, VOCAB_IDS, nextCatalogLesson } from '../../data/content-index.js';
+import { VOCAB_IDS } from '../../data/content-index.js';
+import { nextMainlineStep } from '../mainline.js';
 import { srsStats, buildQueue } from '../srs.js';
 import {
   dueMistakes, dueListenMisses, rateMistake, mistakeRef, listenRef, recordAnswer
@@ -27,20 +28,23 @@ function todayWords() {
   return [...due.slice(0, ROUTES.full.maxDue), ...fresh.slice(0, ROUTES.full.maxNew)];
 }
 
+/** 今天走地图的哪一格。这是主线的唯一入口，首页和串流用的必须是同一个答案。 */
+const todayStep = () => nextMainlineStep(allLessonStates(), loadSkills());
+
 /**
  * 今日文章的选材种子是**双输入**：今天要背的词 + 今天这一格用到的词。
  * 这一条就是"这篇是给我今天写的"和"系统随便给了我一篇"的全部区别。
  */
-const todayMaterial = (nextLesson) => pickMaterial({
+const todayMaterial = (step) => pickMaterial({
   lessonStates: allLessonStates(), srs: loadSrs(), skills: loadSkills(),
-  todayWordIds: [...todayWords(), ...(nextLesson?.vocabRefs || [])],
+  todayWordIds: [...todayWords(), ...(step?.lesson?.vocabRefs || [])],
 });
 
 /**
  * 今天这一篇：先看缓存（每天一篇），没有就向 Worker 要一篇。
  * 任何失败都返回 null —— 调用方退回库存材料，绝不因为 AI 挂了打断学习。
  */
-async function ensureArticle(nextLesson, { force = false } = {}) {
+async function ensureArticle(step, { force = false } = {}) {
   const stamp = todayStamp();
   const cache = cachedArticle(stamp);
   const hit = value => ({ article: value.article, seedWords: value.seedWords || [], reason: null });
@@ -50,14 +54,16 @@ async function ensureArticle(nextLesson, { force = false } = {}) {
 
   const { VOCAB } = await import('../../data/vocab.js');
   const byId = new Map(VOCAB.map(word => [word.id, word.de]));
-  const seedWords = [...todayWords(), ...(nextLesson?.vocabRefs || [])]
+  const seedWords = [...todayWords(), ...(step?.lesson?.vocabRefs || [])]
     .map(id => byId.get(id)).filter(Boolean);
   const known = Object.keys(loadSrs()).map(id => byId.get(id)).filter(Boolean);
   if (seedWords.length < 2) return { article: null, reason: 'not-enough-words' };
 
   const result = await fetchArticle(buildArticleRequest({
     seedWords, knownWords: known,
-    grammarZh: nextLesson?.title || '',
+    // 地图给的是真正的语法点（「第四格 Akkusativ」），课表标题给的是「字母表与拼读总则」。
+    // 这一行就是第 4 步在第 3 步身上修的那个洞。
+    grammarZh: step?.grammarZh || '',
     variant: force ? (cache?.regens || 0) + 1 : 0,
   }), getCoachSecrets());
 
@@ -80,7 +86,8 @@ function loadTodayRuntime() {
       import('../exercises.js?v=5'),
       import('./listening.js?v=2'),
       import('../lesson-shell.js'),
-    ]).then(([course, readings, lessonView, vocabView, exercises, listeningView, shell]) => ({
+      import('../../data/pronunciation.js'),
+    ]).then(([course, readings, lessonView, vocabView, exercises, listeningView, shell, pron]) => ({
       COURSE: course.COURSE,
       READINGS: readings.READINGS,
       findLesson: course.findLesson,
@@ -90,6 +97,7 @@ function loadTodayRuntime() {
       renderExercise: exercises.renderExercise,
       findListeningLesson: listeningView.findListeningLesson,
       runLessonShell: shell.runLessonShell,
+      findPronLesson: pron.findPronLesson,
     }));
   }
   return todayRuntimePromise;
@@ -101,7 +109,7 @@ export function renderToday(host) {
   const listenMisses = dueListenMisses(99).length;
   const daily = getDaily();
   const streak = getStreak();
-  const next = nextCatalogLesson(allLessonStates());
+  const step = todayStep();
   const hour = new Date().getHours();
   const greet = hour < 11 ? 'Guten Morgen!' : hour < 18 ? 'Guten Tag!' : 'Guten Abend!';
   const reward = rewardSummary();
@@ -120,7 +128,7 @@ export function renderToday(host) {
   const hero = el(`<section class="journey-hero" style="--goal:${reward.dailyPct}">
     <div class="journey-copy">
       <span class="journey-kicker">第 ${reward.level} 级 · 每日德语目标</span>
-      <h1>${next ? esc(next.lesson.title) : '今天的路线已完成'}</h1>
+      <h1>${step ? esc(step.cell.title) : 'A1 地图已经走完'}</h1>
       <p>${remaining > 0 ? `再获得 ${remaining} XP，完成今日学习目标` : `今日目标已达成 · 已练习 ${daily.items} 项`}</p>
     </div>
     <div class="goal-orbit" aria-label="今日目标完成 ${reward.dailyPct}%">
@@ -131,7 +139,7 @@ export function renderToday(host) {
 
   // 主路径只有一个按钮。上面那三行是"今天会发生什么"的说明，不是可点的分支——
   // 一路走到底，中间不做任何选择。
-  const material = todayMaterial(next?.lesson);
+  const material = todayMaterial(step);
   const cached = cachedArticle();
   const wordCount = Math.min(stats.due, ROUTES.full.maxDue) + Math.min(stats.fresh, ROUTES.full.maxNew);
   // 今日文章优先显示 AI 现写的那篇；没有才退回库存，两条路都没有就如实说没有。
@@ -140,7 +148,10 @@ export function renderToday(host) {
     : { text: material?.ready ? (material.pack.titleZh || material.pack.title) : '今天还配不上一篇', on: !!material?.ready };
   const steps = [
     { label: STAGE_LABELS.words, text: `${wordCount} 个词${mistakes + listenMisses ? ` · ${mistakes + listenMisses} 道错题` : ''}`, on: wordCount + mistakes + listenMisses > 0 },
-    { label: STAGE_LABELS.learn, text: next ? next.lesson.title : '这条线已经走完', on: !!next },
+    // 走的是地图，所以这一行说的是"第几格"，不是"第几课"——26 格是能盯着走完的数字。
+    { label: STAGE_LABELS.learn,
+      text: step ? `第 ${step.index}/${step.total} 格 · ${step.cell.title}` : '26 格全部走完',
+      on: !!step },
     { label: STAGE_LABELS.article, ...articleLine },
   ];
   const launcher = el(`<section class="mission-launcher">
@@ -168,7 +179,7 @@ export function renderToday(host) {
   startBtn.addEventListener('click', start('full', startBtn, `开始今天的学习 ${icon('arrow')}`));
   bypassBtn.addEventListener('click', start('review', bypassBtn, '今天只想复习 ›'));
   host.appendChild(launcher);
-  wireArticle(launcher, next?.lesson, cached);
+  wireArticle(launcher, step, cached);
   // 横幅退到开始按钮之后：全景图是"还差多远"的进度表，是看的东西，不该挡在动作前面。
   host.appendChild(panoramaBanner());
 
@@ -187,7 +198,7 @@ export function renderToday(host) {
  * 今日文章的异步部分：首屏先画出来，文章在后台生成，回来了再把那一行换掉。
  * 生成要好几秒，不能让整个首页等它——学习入口必须立刻可点。
  */
-function wireArticle(launcher, nextLesson, cached) {
+function wireArticle(launcher, step, cached) {
   const row = launcher.querySelectorAll('.road-step')[2];
   const textNode = row?.querySelector('.road-text');
   if (!textNode) return;
@@ -200,7 +211,7 @@ function wireArticle(launcher, nextLesson, cached) {
     const btn = el(`<button class="article-regen" type="button">换一篇 ›</button>`);
     btn.addEventListener('click', async () => {
       btn.disabled = true; btn.textContent = '正在重写…';
-      const { article, reason } = await ensureArticle(nextLesson, { force: true });
+      const { article, reason } = await ensureArticle(step, { force: true });
       btn.remove();
       textNode.textContent = article
         ? `${article.titleZh} · 用你今天的词现写的`
@@ -215,7 +226,7 @@ function wireArticle(launcher, nextLesson, cached) {
 
   row.classList.remove('is-off');
   textNode.textContent = '正在用你今天的词写一篇…';
-  ensureArticle(nextLesson).then(({ article, reason }) => {
+  ensureArticle(step).then(({ article, reason }) => {
     if (article) {
       textNode.textContent = `${article.titleZh} · 用你今天的词现写的`;
       stockNote?.remove();
@@ -232,17 +243,17 @@ function wireArticle(launcher, nextLesson, cached) {
 async function startFlow(host, routeKey) {
   const runtime = await loadTodayRuntime();
   const stats = srsStats(vocabIds());
-  const nextLesson = nextCatalogLesson(allLessonStates())?.lesson || null;
+  const step = todayStep();
   // 开始时如果文章还没生成好，等它一下；失败就退回库存，不阻断。
   const ready = ROUTES[routeKey]?.article !== false
-    ? await ensureArticle(nextLesson).catch(() => ({ article: null }))
+    ? await ensureArticle(step).catch(() => ({ article: null }))
     : { article: null };
   const generated = ready.article
     ? { ...ready.article, seedWords: ready.seedWords || [] }
     : null;
   const { segments } = buildTodayPlan(routeKey, {
-    nextLesson,
-    material: todayMaterial(nextLesson),
+    nextStep: step,
+    material: todayMaterial(step),
     generated,
     counts: {
       due: stats.due, fresh: stats.fresh,
@@ -275,7 +286,8 @@ async function startFlow(host, routeKey) {
       return;
     }
     const seg = segments[idx];
-    const header = el(`<div class="flow-header">${esc(STAGE_LABELS[seg.stage] || '')} · ${esc(seg.title)}</div>`);
+    const cellTag = seg.cellTotal ? ` · 第 ${seg.cellIndex}/${seg.cellTotal} 格` : '';
+    const header = el(`<div class="flow-header">${esc(STAGE_LABELS[seg.stage] || '')}${cellTag} · ${esc(seg.title)}</div>`);
 
     if (seg.kind === 'vocab') {
       runtime.runVocabSession(host, {
@@ -289,14 +301,25 @@ async function startFlow(host, routeKey) {
         onComplete: () => { idx++; run(); },
         onExit: () => { renderTodayFresh(host); },
       });
+    } else if (seg.kind === 'pron') {
+      // 拼读那 6 格跑的是入门解码课。想一口气刷完的人照旧走 #/pron，
+      // 不想的人由主线每天推一关——两条路写的是同一份 lesson 状态，不会重复。
+      const lesson = runtime.findPronLesson(seg.lessonId);
+      if (!lesson) { idx++; run(); return; }
+      host.appendChild(header);
+      runtime.runLessonShell(host, lesson, {
+        onComplete: () => { idx++; run(); },
+        onExit: () => { renderTodayFresh(host); },
+      });
     } else if (seg.kind === 'generated') {
       // 生成的文章没有预生成音频，只能靠浏览器语音合成——界面上说清楚，
       // 别让人以为听到的是和课程一样的标准音。
       host.appendChild(header);
       host.appendChild(el(`<p class="article-note">这一篇是刚刚用你今天背的词写的，朗读用的是设备合成音。</p>`));
+      // 挂今天这一格的技能标签：读这一篇也要能推动那一格，否则文章练了掌握度不动。
       runtime.runLessonShell(host, articleToLesson(seg.article, {
         seedWords: seg.article.seedWords || [],
-        skills: nextLesson?.skills || ['reading'],
+        skills: step?.cell?.skills?.length ? step.cell.skills : ['reading'],
       }), {
         onComplete: () => { idx++; run(); },
         onExit: () => { renderTodayFresh(host); },

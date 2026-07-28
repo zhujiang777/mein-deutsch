@@ -675,6 +675,55 @@ const RAW_LESSONS = [
       { type: 'fill', q: 'Was hast du gestern ___?（machen）', a: ['gemacht'], explain: 'ge+mach+t。' },
     ],
   },
+  {
+    id: 'g13',
+    title: '第13课 · 并列连词',
+    sub: 'und oder aber denn also——A1 只有这一种连接方式',
+    sections: [
+      {
+        p: 'A1 到这里为止说的都是短句。要把两句话接成一句，德语 A1 只给你一套工具：并列连词。它们最大的好处是不改变任何一边的语序——接上去之后，两边还是原来的样子。',
+      },
+      {
+        h: '四个基本连词',
+        table: {
+          head: ['连词', '意思', '例句'],
+          rows: [
+            ['und', '和 / 然后', 'Ich gehe ins Kino und ich esse eine Pizza.'],
+            ['oder', '或者', 'Trinkst du Kaffee oder Tee?'],
+            ['aber', '但是', 'Ich möchte auch, aber ich habe keine Zeit.'],
+            ['denn', '因为', 'Ich bleibe zu Hause, denn ich bin müde.'],
+          ],
+        },
+        tip: 'aber 和 denn 前面要打逗号；und、oder 前面一般不打。',
+      },
+      {
+        h: 'denn 后面动词不动',
+        p: '这是最容易被英语和"以后会学到的 weil"带偏的一点。denn 只是把两个完整的句子接起来，它自己不占任何位置，所以后面照旧是「主语 + 动词」：',
+        examples: [
+          { de: 'Ich bin müde.', zh: '我累了。' },
+          { de: 'Ich bleibe zu Hause, denn ich bin müde.', zh: '我待在家，因为我累了。' },
+        ],
+        tip: '会把动词踢到句尾的是 weil（Ich bleibe zu Hause, weil ich müde bin），那是 A2 的内容。Goethe A1 考纲里没有任何从句，看到 weil/dass/wenn 都可以先放过。',
+      },
+      {
+        h: 'also 是唯一的例外',
+        p: 'also（所以）表示结果。它和上面四个不同：also 自己算句子的第一位，所以后面要「动词 + 主语」。',
+        examples: [
+          { de: 'Ich bin müde, also gehe ich nach Hause.', zh: '我累了，所以我回家。' },
+          { de: 'Es regnet, also bleiben wir hier.', zh: '下雨了，所以我们待在这儿。' },
+        ],
+        tip: '一句话记住：und/oder/aber/denn 后面「主语+动词」，also 后面「动词+主语」。',
+      },
+    ],
+    exercises: [
+      { type: 'choice', q: 'Ich bleibe zu Hause, ___ ich bin müde.（我待在家，因为我累了。）', options: ['denn', 'weil', 'aber', 'oder'], a: 0, explain: 'A1 的"因为"是 denn，后面语序不变。weil 是 A2。' },
+      { type: 'choice', q: '哪一句是对的？', options: ['Ich bleibe zu Hause, denn ich müde bin.', 'Ich bleibe zu Hause, denn ich bin müde.', 'Ich bleibe zu Hause, denn bin ich müde.'], a: 1, explain: 'denn 后面还是「主语+动词」：ich bin。' },
+      { type: 'choice', q: 'Ich bin müde, ___ gehe ich nach Hause.（所以）', options: ['denn', 'und', 'also', 'aber'], a: 2, explain: 'also = 所以，而且它后面动词要提前（gehe ich）。' },
+      { type: 'choice', q: 'Trinkst du Kaffee ___ Tee?（还是）', options: ['und', 'oder', 'aber', 'denn'], a: 1, explain: '二选一用 oder。' },
+      { type: 'fill', q: 'Ich möchte auch, ___ ich habe keine Zeit.（但是）', a: ['aber'], explain: 'aber 前面打逗号，后面语序不变。' },
+      { type: 'fill', q: 'Es regnet, ___ bleiben wir hier.（所以）', a: ['also'], explain: 'also 占第一位，所以是 bleiben wir 而不是 wir bleiben。' },
+    ],
+  },
 ];
 
 /* ==========================================================================
@@ -704,6 +753,7 @@ const GRAMMAR_SKILLS = {
   g10: ['dativ-dem-der', 'pronoun-dativ', 'prep-dativ-zu', 'location-dativ', 'zu-dativ', 'gefallen-dat'],
   g11: ['possessive-basic', 'possessive-agree', 'nicht-kein'],
   g12: ['perfekt-intro', 'perfekt-haben', 'perfekt-sein', 'perfekt-narrate', 'war-hatte'],
+  g13: ['conj-coord', 'conj-denn'],
 };
 
 /** 精读/精听的 grammarPrereqs 自由文本标签 → 讲这个点的语法课。 */

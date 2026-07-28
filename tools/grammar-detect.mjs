@@ -1,4 +1,4 @@
-// 句子 → 它实际演示了哪些语法点（g01–g12）。
+// 句子 → 它实际演示了哪些语法点（g01–g13）。
 //
 // 用途一：给 gen_grammar_index 挑"你在哪儿真见过这条语法"的实例句。
 // 用途二：审计工具判断正文有没有越过 grammarPrereqs（audit_a1_content.mjs）。
@@ -156,6 +156,22 @@ const RULES = [
       if (hasParticiple(list)) return 3;
       if (list.some(word => PAST_SEIN_HABEN.has(word))) return 2;
       return 0;
+    },
+  },
+  {
+    id: 'g13', label: '并列连词',
+    test: list => {
+      // 标点被分词器吃掉了，所以只能看位置：连词在句中、后面还剩得下一个完整分句，
+      // 才是"把两句接起来"。这样能把语气词 denn（Was ist denn los?）挡在外面。
+      const joins = word => {
+        const at = list.indexOf(word);
+        return at > 0 && at < list.length - 2;
+      };
+      if (joins('denn')) return 3;
+      if (joins('also')) return 2.5;
+      if (joins('aber')) return 2;
+      // und / oder 太常见了，"Käse und Äpfel" 只是并列名词，不演示句子连接。
+      return list.includes('und') || list.includes('oder') ? 0.8 : 0;
     },
   },
 ];

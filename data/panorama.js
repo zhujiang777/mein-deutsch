@@ -109,13 +109,26 @@ export const GRAMMAR_GROUPS = [
       { id: 'E2', title: '频率与地点副词', sub: 'immer oft nie · hier links rechts',
         skills: ['sequence-adverbs'], lessons: [] },
       // 考纲连词只有 und/oder/aber/denn/also/auch，全是并列；weil/dass/wenn 不在 A1。
-      { id: 'E3', title: '并列连词', sub: 'und oder aber denn also auch（A1 无从句）',
-        skills: [], lessons: [] },
+      { id: 'E3', title: '并列连词', sub: 'und oder aber denn also（A1 无从句）',
+        skills: ['conj-coord', 'conj-denn'], lessons: ['g13'] },
     ],
   },
 ];
 
 export const GRAMMAR_CELLS = GRAMMAR_GROUPS.flatMap(group => group.cells);
+
+/**
+ * 主线走格子的顺序。上面按主题分组是给人看的（"名词系统"放一起才找得到），
+ * 但学的顺序不能按主题走——B1 完成时排在 C1 名词的性前面，人会学不下去。
+ *
+ * 这个顺序不是另拍脑袋定的：它等于每一格名下第一节微步课在课表里的先后。
+ * 也就是说主线顺序 = 既有课表顺序，只是被重新切成 20 个有名字、有终点的格子。
+ * tests/mainline.test.mjs 会拿课表重算一遍，内容挪位置时这里会红。
+ */
+export const MAINLINE_ORDER = [
+  'A1', 'A2', 'D3', 'A3', 'C1', 'C5', 'C2', 'A6', 'E1', 'A5',
+  'E2', 'A4', 'C3', 'D1', 'C4', 'D2', 'B2', 'B1', 'D4', 'E3',
+];
 
 /* ---------- 二 词汇轴 ---------- */
 // 由 tools/wortliste.json（Goethe A1 官方词表 849 条）离线统计得出，

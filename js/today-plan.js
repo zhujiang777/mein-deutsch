@@ -105,7 +105,7 @@ function reasonFor({ pack, readiness, done, seedHits }) {
  * counts 由调用方从 SRS 读出：{ due, fresh, mistakes:[], listenMisses:[] }
  */
 export function buildTodayPlan(routeKey, {
-  nextLesson = null, material = null, generated = null, counts = {},
+  nextStep = null, material = null, generated = null, counts = {},
 } = {}) {
   const route = ROUTES[routeKey] || ROUTES.full;
   const segments = [];
@@ -124,9 +124,15 @@ export function buildTodayPlan(routeKey, {
   const listenMisses = (counts.listenMisses || []).slice(0, route.listenMisses);
   if (listenMisses.length) segments.push({ stage: 'words', kind: 'listen-misses', title: '错句复现', ids: listenMisses });
 
-  // ② 学一格 —— 一天的骨头
-  if (route.lesson && nextLesson) {
-    segments.push({ stage: 'learn', kind: 'lesson', lessonId: nextLesson.id, title: nextLesson.title });
+  // ② 学一格 —— 一天的骨头。哪一格由 js/mainline.js 定（全景图顺序），
+  // 这里只负责把它排进今天。标题用格子名而不是课名：学的人认的是"今天推进了哪一格"。
+  if (route.lesson && nextStep?.lesson) {
+    segments.push({
+      stage: 'learn', kind: nextStep.kind === 'pron' ? 'pron' : 'lesson',
+      lessonId: nextStep.lesson.id,
+      title: nextStep.cell?.title || nextStep.lesson.title,
+      cellIndex: nextStep.index, cellTotal: nextStep.total,
+    });
   }
 
   // ③ 今日文章 —— 前两段的汇合点。
