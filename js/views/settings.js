@@ -5,6 +5,7 @@ import { getSettings, setSetting, exportAll, importAll, resetAll } from '../stor
 import { pullMerge, pushNow, syncConfigured } from '../sync.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../secrets.js';
 import { assessmentConfigured, checkAssessmentConnection } from '../pronunciation-assessment.js';
+import { getCoachSecrets, setCoachSecrets, coachConfigured } from '../coach-secrets.js';
 
 export function renderSettings(host) {
   const s = getSettings();
@@ -149,6 +150,54 @@ export function renderSettings(host) {
     }
   });
   host.appendChild(assessmentCard);
+
+  /* 今日文章：和发音评分是两个独立 Worker，一个配错不影响另一个 */
+  const coach = getCoachSecrets();
+  const coachCard = el(`<div class="card"><h3>${icon('book')} 今日文章</h3>
+    <p class="meta">每天用你当天背的词和当天学的语法，现场写一篇短文。只上传这些词和语法点的名字，不上传录音、聊天记录或完整进度。没配置时今天这一段自动改用库里的现成材料，学习流程照常。</p>
+    <div class="assessment-config" style="margin-top:10px">
+      <label class="secret-label">Coach Worker 地址
+        <input type="url" class="quiz-fill-input coach-endpoint" autocomplete="off" placeholder="https://….workers.dev" value="${esc(coach.endpoint)}">
+      </label>
+      <label class="secret-label">个人访问码
+        <input type="password" class="quiz-fill-input coach-code" autocomplete="off" placeholder="仅保存在本机" value="${esc(coach.accessCode)}">
+      </label>
+      <button class="btn small coach-save">保存并测试连接</button>
+      <span class="coach-status meta">${coachConfigured() ? '已填写配置，尚未验证' : '未配置时今日文章走库存材料'}</span>
+    </div>
+  </div>`);
+  const coachSave = coachCard.querySelector('.coach-save');
+  const coachStatus = coachCard.querySelector('.coach-status');
+  coachSave.addEventListener('click', async () => {
+    const endpoint = coachCard.querySelector('.coach-endpoint').value;
+    const accessCode = coachCard.querySelector('.coach-code').value;
+    setCoachSecrets({ endpoint, accessCode });
+    if (!endpoint.trim() || !accessCode.trim()) {
+      coachStatus.textContent = '配置不完整，今日文章继续走库存材料';
+      toast('请填写 Worker 地址和个人访问码');
+      return;
+    }
+    coachSave.disabled = true;
+    coachStatus.textContent = '正在连接…';
+    try {
+      const saved = getCoachSecrets();
+      const res = await fetch(`${saved.endpoint}/v1/health`, {
+        headers: { 'Authorization': `Bearer ${saved.accessCode}` },
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body?.error?.message || `HTTP ${res.status}`);
+      coachStatus.textContent = body.configured
+        ? '连接正常，今日文章已开启'
+        : '连接正常，但 Worker 还没配模型（OPENAI_API_KEY）';
+      toast(body.configured ? '今日文章已开启' : 'Worker 还没配模型');
+    } catch (err) {
+      coachStatus.textContent = `⚠️ ${err.message || '连接失败'}`;
+      toast(`连接失败：${err.message || '请检查配置'}`, 4000);
+    } finally {
+      coachSave.disabled = false;
+    }
+  });
+  host.appendChild(coachCard);
 
   /* 学习偏好 */
   const prefCard = el(`<div class="card"><h3>${icon('settings')} 学习偏好</h3></div>`);

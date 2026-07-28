@@ -77,6 +77,24 @@ test('一条路的顺序固定：背词 → 学一格 → 今日文章', () => {
     ['vocab', 'mistakes', 'listen-misses', 'lesson', 'material']);
 });
 
+test('AI 现写的那篇优先于库存；它挂了才退回库存', () => {
+  const material = { ready: true, pack: { id: 'li-b01', title: 'Im Café' }, readiness: {} };
+  const generated = { titleZh: '在火车站', sentences: [], question: {} };
+  const counts = { due: 2, fresh: 2 };
+
+  const withAi = buildTodayPlan('full', { material, generated, counts }).segments;
+  assert.equal(withAi.find(s => s.stage === 'article').kind, 'generated');
+  // AI 那篇的词本来就是今天要背的词，不需要再"把这篇的生词提前"。
+  assert.deepEqual(withAi.find(s => s.kind === 'vocab').priorityIds, []);
+
+  const noAi = buildTodayPlan('full', { material, generated: null, counts }).segments;
+  assert.equal(noAi.find(s => s.stage === 'article').kind, 'material');
+
+  // 两条路都没有时这一段整个不出现，而不是拿一份读不懂的材料充数。
+  const neither = buildTodayPlan('full', { material: { ...material, ready: false }, counts }).segments;
+  assert.ok(!neither.some(s => s.stage === 'article'));
+});
+
 test('只有两个出口：完整路线 / 只复习', () => {
   assert.deepEqual(Object.keys(ROUTES), ['full', 'review']);
   const material = { ready: true, pack: { id: 'li-b01', title: 'Im Café' }, readiness: {} };

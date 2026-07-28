@@ -104,12 +104,15 @@ function reasonFor({ pack, readiness, done, seedHits }) {
  * 今天的执行段落。纯数据，不碰 DOM。
  * counts 由调用方从 SRS 读出：{ due, fresh, mistakes:[], listenMisses:[] }
  */
-export function buildTodayPlan(routeKey, { nextLesson = null, material = null, counts = {} } = {}) {
+export function buildTodayPlan(routeKey, {
+  nextLesson = null, material = null, generated = null, counts = {},
+} = {}) {
   const route = ROUTES[routeKey] || ROUTES.full;
   const segments = [];
 
   // ① 背词 —— 一天的燃料。错题和精听错句也归这一段：对学习者来说都是"复习旧的"。
-  const priorityIds = material?.ready ? contentVocabRefs(material.pack) : [];
+  // 用 AI 那篇时不需要"把这篇的生词提前"——那篇的词本来就是从今天要背的词里来的。
+  const priorityIds = !generated && material?.ready ? contentVocabRefs(material.pack) : [];
   if ((counts.due || 0) > 0 || (route.maxNew > 0 && (counts.fresh || 0) > 0)) {
     segments.push({
       stage: 'words', kind: 'vocab', title: '今天的词',
@@ -126,9 +129,15 @@ export function buildTodayPlan(routeKey, { nextLesson = null, material = null, c
     segments.push({ stage: 'learn', kind: 'lesson', lessonId: nextLesson.id, title: nextLesson.title });
   }
 
-  // ③ 今日文章 —— 前两段的汇合点
-  if (route.article && material?.ready) {
-    segments.push({ stage: 'article', kind: 'material', packId: material.pack.id, title: material.pack.title });
+  // ③ 今日文章 —— 前两段的汇合点。
+  // 优先用 AI 现生的那一篇（它一定用上了今天的词）；没生成出来才退回库存。
+  // 两条路都没有时这一段整个不出现，而不是给一份读不懂的材料充数。
+  if (route.article) {
+    if (generated) {
+      segments.push({ stage: 'article', kind: 'generated', title: generated.titleZh, article: generated });
+    } else if (material?.ready) {
+      segments.push({ stage: 'article', kind: 'material', packId: material.pack.id, title: material.pack.title });
+    }
   }
 
   return { route, segments };

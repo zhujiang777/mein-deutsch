@@ -13,6 +13,11 @@ import { allLessonStates, getDaily, getStreak, getWordbook, loadSrs, loadSkills,
 import { stopSpeak } from '../speech.js';
 import { panoramaBanner } from '../panorama-banner.js';
 import { ROUTES, STAGE_LABELS, pickMaterial, buildTodayPlan } from '../today-plan.js';
+import {
+  buildArticleRequest, fetchArticle, articleToLesson, reasonText,
+  cachedArticle, saveArticleCache, regensLeft, todayStamp,
+} from '../daily-article.js';
+import { getCoachSecrets, coachConfigured } from '../coach-secrets.js';
 
 const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB_IDS];
 
@@ -30,6 +35,39 @@ const todayMaterial = (nextLesson) => pickMaterial({
   lessonStates: allLessonStates(), srs: loadSrs(), skills: loadSkills(),
   todayWordIds: [...todayWords(), ...(nextLesson?.vocabRefs || [])],
 });
+
+/**
+ * 今天这一篇：先看缓存（每天一篇），没有就向 Worker 要一篇。
+ * 任何失败都返回 null —— 调用方退回库存材料，绝不因为 AI 挂了打断学习。
+ */
+async function ensureArticle(nextLesson, { force = false } = {}) {
+  const stamp = todayStamp();
+  const cache = cachedArticle(stamp);
+  const hit = value => ({ article: value.article, seedWords: value.seedWords || [], reason: null });
+  if (cache?.article && !force) return hit(cache);
+  if (force && regensLeft(stamp) <= 0) return cache?.article ? hit(cache) : { article: null, reason: 'regen-used-up' };
+  if (!coachConfigured()) return { article: null, reason: 'not-configured' };
+
+  const { VOCAB } = await import('../../data/vocab.js');
+  const byId = new Map(VOCAB.map(word => [word.id, word.de]));
+  const seedWords = [...todayWords(), ...(nextLesson?.vocabRefs || [])]
+    .map(id => byId.get(id)).filter(Boolean);
+  const known = Object.keys(loadSrs()).map(id => byId.get(id)).filter(Boolean);
+  if (seedWords.length < 2) return { article: null, reason: 'not-enough-words' };
+
+  const result = await fetchArticle(buildArticleRequest({
+    seedWords, knownWords: known,
+    grammarZh: nextLesson?.title || '',
+    variant: force ? (cache?.regens || 0) + 1 : 0,
+  }), getCoachSecrets());
+
+  if (result.article) {
+    saveArticleCache(result.article, {
+      stamp, regens: (cache?.regens || 0) + (force ? 1 : 0), audit: result.audit || null, seedWords,
+    });
+  }
+  return { article: result.article, seedWords, reason: result.reason || null };
+}
 let todayRuntimePromise;
 
 function loadTodayRuntime() {
@@ -94,17 +132,22 @@ export function renderToday(host) {
   // 主路径只有一个按钮。上面那三行是"今天会发生什么"的说明，不是可点的分支——
   // 一路走到底，中间不做任何选择。
   const material = todayMaterial(next?.lesson);
+  const cached = cachedArticle();
   const wordCount = Math.min(stats.due, ROUTES.full.maxDue) + Math.min(stats.fresh, ROUTES.full.maxNew);
+  // 今日文章优先显示 AI 现写的那篇；没有才退回库存，两条路都没有就如实说没有。
+  const articleLine = cached?.article
+    ? { text: `${cached.article.titleZh} · 用你今天的词现写的`, on: true }
+    : { text: material?.ready ? (material.pack.titleZh || material.pack.title) : '今天还配不上一篇', on: !!material?.ready };
   const steps = [
     { label: STAGE_LABELS.words, text: `${wordCount} 个词${mistakes + listenMisses ? ` · ${mistakes + listenMisses} 道错题` : ''}`, on: wordCount + mistakes + listenMisses > 0 },
     { label: STAGE_LABELS.learn, text: next ? next.lesson.title : '这条线已经走完', on: !!next },
-    { label: STAGE_LABELS.article, text: material?.ready ? (material.pack.titleZh || material.pack.title) : '今天还配不上一篇', on: !!material?.ready },
+    { label: STAGE_LABELS.article, ...articleLine },
   ];
   const launcher = el(`<section class="mission-launcher">
     <div class="mission-head"><div><span>今天的学习</span><b>约 25 分钟，一路走到底</b></div></div>
     <ol class="today-road">${steps.map(step => `<li class="road-step${step.on ? '' : ' is-off'}">
       <span class="road-stage">${esc(step.label)}</span><span class="road-text">${esc(step.text)}</span></li>`).join('')}</ol>
-    ${material ? `<p class="tm-why${material.ready ? '' : ' is-blocked'}">${esc(material.reason)}</p>` : ''}
+    ${material && !cached?.article ? `<p class="tm-why${material.ready ? '' : ' is-blocked'}">${esc(material.reason)}</p>` : ''}
     <button class="btn block journey-start">开始今天的学习 ${icon('arrow')}</button>
     <button class="today-bypass" type="button">今天只想复习 ›</button>
   </section>`);
@@ -125,6 +168,7 @@ export function renderToday(host) {
   startBtn.addEventListener('click', start('full', startBtn, `开始今天的学习 ${icon('arrow')}`));
   bypassBtn.addEventListener('click', start('review', bypassBtn, '今天只想复习 ›'));
   host.appendChild(launcher);
+  wireArticle(launcher, next?.lesson, cached);
   // 横幅退到开始按钮之后：全景图是"还差多远"的进度表，是看的东西，不该挡在动作前面。
   host.appendChild(panoramaBanner());
 
@@ -139,14 +183,67 @@ export function renderToday(host) {
     motionIn(node, { y: 12, delay: i * 32, skipOnCoarse: true }));
 }
 
+/**
+ * 今日文章的异步部分：首屏先画出来，文章在后台生成，回来了再把那一行换掉。
+ * 生成要好几秒，不能让整个首页等它——学习入口必须立刻可点。
+ */
+function wireArticle(launcher, nextLesson, cached) {
+  const row = launcher.querySelectorAll('.road-step')[2];
+  const textNode = row?.querySelector('.road-text');
+  if (!textNode) return;
+  // 库存那句"你只认识 X%"只在真的要用库存时才成立；换成 AI 那篇之后必须收走，
+  // 否则页面上会同时挂着一篇文章和一句"今天没有合适的文章"。
+  const stockNote = launcher.querySelector('.tm-why');
+
+  const addRegen = () => {
+    if (!regensLeft()) return;
+    const btn = el(`<button class="article-regen" type="button">换一篇 ›</button>`);
+    btn.addEventListener('click', async () => {
+      btn.disabled = true; btn.textContent = '正在重写…';
+      const { article, reason } = await ensureArticle(nextLesson, { force: true });
+      btn.remove();
+      textNode.textContent = article
+        ? `${article.titleZh} · 用你今天的词现写的`
+        : reasonText(reason);
+      if (article && regensLeft()) addRegen();
+    });
+    row.appendChild(btn);
+  };
+
+  if (cached?.article) { addRegen(); return; }
+  if (!coachConfigured()) return; // 没配置就安静地走库存那条路，不打扰
+
+  row.classList.remove('is-off');
+  textNode.textContent = '正在用你今天的词写一篇…';
+  ensureArticle(nextLesson).then(({ article, reason }) => {
+    if (article) {
+      textNode.textContent = `${article.titleZh} · 用你今天的词现写的`;
+      stockNote?.remove();
+      addRegen();
+    } else {
+      // 失败要说人话，并且说清楚"已经改用库里的材料"——不能让人以为功能坏了。
+      row.classList.add('is-off');
+      textNode.textContent = reasonText(reason);
+    }
+  });
+}
+
 /* ---- 串流执行 ---- */
 async function startFlow(host, routeKey) {
   const runtime = await loadTodayRuntime();
   const stats = srsStats(vocabIds());
   const nextLesson = nextCatalogLesson(allLessonStates())?.lesson || null;
+  // 开始时如果文章还没生成好，等它一下；失败就退回库存，不阻断。
+  const ready = ROUTES[routeKey]?.article !== false
+    ? await ensureArticle(nextLesson).catch(() => ({ article: null }))
+    : { article: null };
+  const generated = ready.article
+    ? { ...ready.article, seedWords: ready.seedWords || [] }
+    : null;
   const { segments } = buildTodayPlan(routeKey, {
     nextLesson,
     material: todayMaterial(nextLesson),
+    generated,
     counts: {
       due: stats.due, fresh: stats.fresh,
       mistakes: dueMistakes(99), listenMisses: dueListenMisses(99),
@@ -189,6 +286,18 @@ async function startFlow(host, routeKey) {
       });
     } else if (seg.kind === 'lesson') {
       runtime.runLesson(host, seg.lessonId, {
+        onComplete: () => { idx++; run(); },
+        onExit: () => { renderTodayFresh(host); },
+      });
+    } else if (seg.kind === 'generated') {
+      // 生成的文章没有预生成音频，只能靠浏览器语音合成——界面上说清楚，
+      // 别让人以为听到的是和课程一样的标准音。
+      host.appendChild(header);
+      host.appendChild(el(`<p class="article-note">这一篇是刚刚用你今天背的词写的，朗读用的是设备合成音。</p>`));
+      runtime.runLessonShell(host, articleToLesson(seg.article, {
+        seedWords: seg.article.seedWords || [],
+        skills: nextLesson?.skills || ['reading'],
+      }), {
         onComplete: () => { idx++; run(); },
         onExit: () => { renderTodayFresh(host); },
       });
