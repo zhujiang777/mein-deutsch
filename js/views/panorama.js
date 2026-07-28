@@ -74,7 +74,7 @@ export function renderPanorama(host) {
   </div>`));
 
   /* ---- 拼读 ---- */
-  const pronGrid = section(host, '拼读 · 6 格', '地基。不会拼读，听力和口语都无从谈起。');
+  const pronGrid = section(host, '拼读 · 6 关', '地基。不会拼读，听力和口语都无从谈起。');
   pron.forEach(({ cell, strength }) => {
     const target = cell.pronLessons?.[0];
     pronGrid.appendChild(cellNode(cell, strength, target ? `#/pron/${target}` : null, null));

@@ -13,14 +13,22 @@ export function renderPron(host, id) {
   if (id) return renderLesson(host, id);
 
   host.appendChild(el(`<header class="page-head">
-    <span class="eyebrow">AUSSPRACHE · 拼读地基</span>
-    <h1 class="page-title">六天学会见字读音</h1>
-    <p class="page-sub">德语拼写和读音的对应非常规律，学完这 6 天你能读出任何生词——这也是德语词典一般不标音标的原因。每天一条规则，一屏一个动作，例词都是 A1 真词，顺带把词也记住。</p>
+    <span class="eyebrow">AUSSPRACHE · 入门解码课</span>
+    <h1 class="page-title">一次通关，见词能读</h1>
+    <p class="page-sub">德语拼写和读音一一对应，规则总共不到 30 条——所以德语词典一般不标音标。六关约 40 分钟，走完你能读出任何生词、听到生词能拼出来。中途退出会记住进度。</p>
   </header>`));
 
   // 完成状态必须读 lesson 状态：runLessonShell 写的是 setLessonState，
   // 而旧版列表读的是 module/id 那套独立存储——两边不通，完成勾永远不会出现。
   const states = allLessonStates();
+
+  // 主路径只有一个动作：接着上次那一关往下走。下面的列表是地图，不是入口。
+  const doneCount = PRON_LESSONS.filter(lesson => states[lesson.id]?.done).length;
+  const nextLesson = PRON_LESSONS.find(lesson => !states[lesson.id]?.done);
+  host.appendChild(el(nextLesson
+    ? `<a class="btn block" style="margin-bottom:16px" href="#/pron/${nextLesson.id}">${doneCount ? `继续通关 · ${esc(nextLesson.title)}` : '开始通关 · 约 40 分钟'} ›</a>`
+    : `<a class="btn block" style="margin-bottom:16px" href="#/panorama">六关全部通关 ✓ 去全景图看看 ›</a>`));
+
   PRON_LESSONS.forEach((lesson, index) => {
     const done = !!states[lesson.id]?.done;
     const mastery = lessonMastery(lesson);
@@ -35,14 +43,14 @@ export function renderPron(host, id) {
     </a>`));
   });
 
-  host.appendChild(el(`<div class="source-card">拼读 6 格同时是 A1 全景图最上面一行，练完会在<a href="#/panorama">全景图</a>上亮起。</div>`));
+  host.appendChild(el(`<div class="source-card">这六关同时是 A1 全景图最上面一行，通关会在<a href="#/panorama">全景图</a>上亮起。</div>`));
 }
 
 /** 规则表：成段讲解的归宿。默认折叠，是回头查的参考，不是学习路径。 */
 function ruleCard(lesson) {
   if (!lesson.rule) return null;
   const wrap = el(`<details class="rule-details">
-    <summary>${icon('book')} 这一天的规则表（随时回来查）</summary>
+    <summary>${icon('book')} 这一关的规则表（随时回来查）</summary>
   </details>`);
   const table = el(`<table class="gram-table"></table>`);
   table.appendChild(el(`<tr>${lesson.rule.head.map(head => `<th>${esc(head)}</th>`).join('')}</tr>`));
@@ -73,8 +81,8 @@ function renderLesson(host, id) {
       </div>`));
       const rule = ruleCard(lesson);
       if (rule) host.appendChild(rule);
-      host.appendChild(el(`<a class="btn block" style="margin-top:14px" href="${next ? `#/pron/${next.id}` : '#/panorama'}">${next ? `下一天：${esc(next.title)} ›` : '去全景图看看亮了几格 ›'}</a>`));
-      host.appendChild(el(`<a class="btn secondary block" style="margin-top:10px" href="#/pron">回到拼读列表</a>`));
+      host.appendChild(el(`<a class="btn block" style="margin-top:14px" href="${next ? `#/pron/${next.id}` : '#/panorama'}">${next ? `下一关：${esc(next.title)} ›` : '六关通关，去全景图看看 ›'}</a>`));
+      host.appendChild(el(`<a class="btn secondary block" style="margin-top:10px" href="#/pron">回到关卡地图</a>`));
     },
   });
 }

@@ -17,6 +17,7 @@ for (const lesson of PRON_LESSONS)
   for (const step of lesson.steps || []) {
     add(step.de);        // speak 卡的例词/例句
     add(step.audioText); // listenChoice 的听辨音
+    add(step.answer);    // dictation 的听写音
     if (Array.isArray(step.lines)) step.lines.forEach(line => add(line.de)); // observe 示范行
   }
 

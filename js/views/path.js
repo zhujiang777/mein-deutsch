@@ -117,7 +117,7 @@ export function renderPath(host) {
     }
     if (active === 'pron') {
       pane.appendChild(el(`<div class="section-label">新课覆盖前先用旧版对照</div>`));
-      pane.appendChild(el(`<a class="list-item" href="#/pron"><span class="li-icon">${icon('speaker')}</span><div class="li-main"><div class="li-title">发音系统课（旧版）</div><div class="li-sub">10 课拼读规则，迁移为微步课中</div></div><span class="li-arrow">${icon('arrow')}</span></a>`));
+      pane.appendChild(el(`<a class="list-item" href="#/pron"><span class="li-icon">${icon('speaker')}</span><div class="li-main"><div class="li-title">入门解码课</div><div class="li-sub">六关约 40 分钟，走完见词能读</div></div><span class="li-arrow">${icon('arrow')}</span></a>`));
     }
   }
 

@@ -13,7 +13,7 @@ const exercisesSrc = readFileSync(new URL('../js/exercises.js', import.meta.url)
 const EXERCISE_TYPES = JSON.parse(
   exercisesSrc.match(/export const EXERCISE_TYPES = (\[[^\]]*\])/)[1].replace(/'/g, '"'));
 
-test('拼读 6 格，每格都是卡片流而不是文章', () => {
+test('六关，每关都是卡片流而不是文章', () => {
   assert.equal(PRON_LESSONS.length, 6);
   assert.deepEqual(PRON_LESSONS.map(lesson => lesson.id), ['v1', 'v2', 'v3', 'v4', 'v5', 'v6']);
   // 旧版 10 课 0 道练习题，唯一交互是"标记本课完成"——这是它学不下去的头号原因。
@@ -23,6 +23,40 @@ test('拼读 6 格，每格都是卡片流而不是文章', () => {
     const picks = lesson.steps.filter(step => step.type === 'listenChoice').length;
     assert.ok(speaks >= 4, `${lesson.id} 跟读卡不足：${speaks}`);
     assert.ok(picks >= 1, `${lesson.id} 缺听辨题——听不出区别就一定发不出区别`);
+  });
+});
+
+// 目标 ①：见词能读。规格见 docs/decoding-course.md
+test('每关必有生词挑战卡 —— 这是"见词能读"唯一诚实的验证', () => {
+  PRON_LESSONS.forEach(lesson => {
+    const blind = lesson.steps.filter(step => step.type === 'speak' && step.blind);
+    assert.ok(blind.length >= 1,
+      `${lesson.id} 缺 blind 生词挑战卡——能先听到答案的题，测不出你会不会读`);
+    blind.forEach(step => {
+      assert.ok(step.zh, `${step.de} 缺 zh：揭晓时要给意思`);
+      assert.ok(step.ipa, `${step.de} 缺 ipa：揭晓时要给读法`);
+    });
+  });
+});
+
+// 目标 ②：听词能写。德语拼写高度规则，音 → 字母这个方向可以练成。
+test('每关必有听写卡 —— 拼写是解码的另一半', () => {
+  PRON_LESSONS.forEach(lesson => {
+    const dict = lesson.steps.filter(step => step.type === 'dictation');
+    assert.ok(dict.length >= 1, `${lesson.id} 缺听写卡`);
+    dict.forEach(step => assert.ok(step.answer, `${lesson.id} 的听写卡缺 answer`));
+  });
+});
+
+// ⚠️ 上一版最大的失败：让零基础去判断"舌位不移动，声带连续振动两拍"。
+// 那考的不是耳朵，是能不能把声音翻译成发音学术语——没有人能这样判断。
+test('选择题不许考发音学术语，只许考声音本身', () => {
+  const JARGON = ['舌位', '声带', '摩擦', '塞擦', '闭塞', '唇齿', '软腭', '小舌', '气流', '音素'];
+  allSteps.filter(step => Array.isArray(step.options)).forEach(step => {
+    step.options.forEach(option => {
+      const hit = JARGON.find(word => option.includes(word));
+      assert.ok(!hit, `${step.q || step.audioText} 的选项里出现术语"${hit}"：${option}`);
+    });
   });
 });
 
@@ -64,6 +98,7 @@ test('所有德语文本都有预生成音频 —— 发音课不能靠浏览器
   allSteps.forEach(step => {
     if (step.de) texts.add(step.de);
     if (step.audioText) texts.add(step.audioText);
+    if (step.answer) texts.add(step.answer);
     (step.lines || []).forEach(line => texts.add(line.de));
   });
   const missing = [...texts].filter(text => !AUDIO_MANIFEST[text]);

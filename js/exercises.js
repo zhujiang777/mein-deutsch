@@ -259,13 +259,25 @@ function renderTranslate(host, item, ctx) {
 function renderSpeak(host, item, ctx) {
   // 发音课用 cue 给一行动作提示（"说'衣'的口型，只送气不出声"）。
   // 讲解只在这一行里，成段的规则说明放课末的规则表，不挡在主路径上。
+  //
+  // blind：生词挑战。不自动播标准音，意思和音标先藏起来，点"我读完了"才揭晓。
+  // 这是"见词能读"唯一诚实的验证方式——能先听到答案的题，测不出你会不会读。
+  const blind = !!item.blind;
   host.appendChild(el(`<div class="ex-prompt">
     <div class="ex-q">${esc(item.q || '🎤 跟读这句')}</div>
     <div class="ex-de de" style="font-size:1.3rem;font-weight:700;margin:10px 0 4px">${esc(item.de)}</div>
-    ${item.ipa ? `<div class="p-ipa">${esc(item.ipa)}</div>` : ''}
-    <div class="meta">${esc(item.zh || '')}</div>
+    <div class="speak-reveal"${blind ? ' hidden' : ''}>
+      ${item.ipa ? `<div class="p-ipa">${esc(item.ipa)}</div>` : ''}
+      <div class="meta">${esc(item.zh || '')}</div>
+    </div>
     ${item.cue ? `<div class="speak-cue">${esc(item.cue)}</div>` : ''}
   </div>`));
+  if (blind) {
+    const reveal = host.querySelector('.speak-reveal');
+    const btn = el(`<button class="btn block secondary" style="margin-top:10px">我读完了，揭晓答案 ›</button>`);
+    btn.addEventListener('click', () => { reveal.hidden = false; btn.remove(); speak(item.de); });
+    host.appendChild(btn);
+  }
   // done 按钮需先创建，供 onScore 达标时改文案
   const done = el(`<button class="btn block secondary" style="margin-top:12px">完成，继续 ›</button>`);
   let best = null;
@@ -285,7 +297,7 @@ function renderSpeak(host, item, ctx) {
     ctx.onSubmit(best != null && best >= SPEAK_PASS ? true : null, item.de);
   });
   host.appendChild(done);
-  setTimeout(() => speak(item.de), 250);
+  if (!blind) setTimeout(() => speak(item.de), 250);
 }
 
 /* ---------- dictation：默认打字，可切词块 ---------- */
@@ -294,7 +306,7 @@ function renderDictation(host, item, ctx) {
 
   const answer = item.answer || item.audioText;
   const head = el(`<div class="ex-prompt">
-    <div class="ex-q">听音频，打出你听到的句子</div>
+    <div class="ex-q">${esc(item.q || '听音频，打出你听到的句子')}</div>
     <div class="ex-audio-row"></div>
   </div>`);
   const row = head.querySelector('.ex-audio-row');
