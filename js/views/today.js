@@ -1,20 +1,34 @@
-// 今日学习：三段围绕同一份材料 —— 学（微步课）→ 用（精听五阶段）→ 记（本篇生词 + 到期复习）
-// 组装规则和材料挑选见 js/today-plan.js
+// 今天走一条路：背词 → 学一格 → 今日文章。产品形态见 docs/product-shape.md
+//
+// 主路径上只有一个动作。时长选择被删掉了——"减少选择"的第一步不该是一道选择题；
+// 想少学的人走底部那一条旁路（只复习）。两个出口，不是六个入口。
+// 组装规则和今日文章的选材见 js/today-plan.js
 import { el, esc, icon, motionIn, toast } from '../ui.js';
 import { COURSE_CATALOG, VOCAB_IDS, nextCatalogLesson } from '../../data/content-index.js';
-import { srsStats } from '../srs.js';
+import { srsStats, buildQueue } from '../srs.js';
 import {
   dueMistakes, dueListenMisses, rateMistake, mistakeRef, listenRef, recordAnswer
 } from '../mastery.js';
 import { allLessonStates, getDaily, getStreak, getWordbook, loadSrs, loadSkills, rewardSummary } from '../storage.js';
 import { stopSpeak } from '../speech.js';
 import { panoramaBanner } from '../panorama-banner.js';
-import { PLANS, STAGE_LABELS, pickMaterial, buildTodayPlan } from '../today-plan.js';
+import { ROUTES, STAGE_LABELS, pickMaterial, buildTodayPlan } from '../today-plan.js';
 
-/* 三档时长的配置见 js/today-plan.js —— 那里也定义了"学/用/记"三段怎么组装 */
 const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB_IDS];
-const todayMaterial = () => pickMaterial({
+
+/** 今天真的会背到的词：到期的 + 今天放进来的新词。 */
+function todayWords() {
+  const { due, fresh } = buildQueue(vocabIds());
+  return [...due.slice(0, ROUTES.full.maxDue), ...fresh.slice(0, ROUTES.full.maxNew)];
+}
+
+/**
+ * 今日文章的选材种子是**双输入**：今天要背的词 + 今天这一格用到的词。
+ * 这一条就是"这篇是给我今天写的"和"系统随便给了我一篇"的全部区别。
+ */
+const todayMaterial = (nextLesson) => pickMaterial({
   lessonStates: allLessonStates(), srs: loadSrs(), skills: loadSkills(),
+  todayWordIds: [...todayWords(), ...(nextLesson?.vocabRefs || [])],
 });
 let todayRuntimePromise;
 
@@ -77,68 +91,62 @@ export function renderToday(host) {
   </section>`);
   host.appendChild(hero);
 
-  // 开始按钮必须在第一屏就能点到，所以"今天做什么"和"花多久"合成同一张卡：
-  // 读到的东西和要按的按钮在一起，不用为了先说明再滚一屏。
-  const material = todayMaterial();
-  const stageLine = material?.ready
-    ? `学一课 · 用《${esc(material.pack.titleZh || material.pack.title)}》· 记住它`
-    : '学一课 · 记住它';
+  // 主路径只有一个按钮。上面那三行是"今天会发生什么"的说明，不是可点的分支——
+  // 一路走到底，中间不做任何选择。
+  const material = todayMaterial(next?.lesson);
+  const wordCount = Math.min(stats.due, ROUTES.full.maxDue) + Math.min(stats.fresh, ROUTES.full.maxNew);
+  const steps = [
+    { label: STAGE_LABELS.words, text: `${wordCount} 个词${mistakes + listenMisses ? ` · ${mistakes + listenMisses} 道错题` : ''}`, on: wordCount + mistakes + listenMisses > 0 },
+    { label: STAGE_LABELS.learn, text: next ? next.lesson.title : '这条线已经走完', on: !!next },
+    { label: STAGE_LABELS.article, text: material?.ready ? (material.pack.titleZh || material.pack.title) : '今天还配不上一篇', on: !!material?.ready },
+  ];
   const launcher = el(`<section class="mission-launcher">
-    <div class="mission-head"><div><span>今天的学习</span><b>${stageLine}</b></div><span class="mission-count">${stats.due + mistakes + listenMisses} 项待复习</span></div>
+    <div class="mission-head"><div><span>今天的学习</span><b>约 25 分钟，一路走到底</b></div></div>
+    <ol class="today-road">${steps.map(step => `<li class="road-step${step.on ? '' : ' is-off'}">
+      <span class="road-stage">${esc(step.label)}</span><span class="road-text">${esc(step.text)}</span></li>`).join('')}</ol>
     ${material ? `<p class="tm-why${material.ready ? '' : ' is-blocked'}">${esc(material.reason)}</p>` : ''}
-    <div class="time-grid" role="group" aria-label="学习时长"></div>
     <button class="btn block journey-start">开始今天的学习 ${icon('arrow')}</button>
+    <button class="today-bypass" type="button">今天只想复习 ›</button>
   </section>`);
-  const timeRow = launcher.querySelector('.time-grid');
-  const startBtn = launcher.querySelector('.journey-start');
-  let selectedMinutes = 15;
-  Object.entries(PLANS).forEach(([min, plan]) => {
-    const value = parseInt(min, 10);
-    const b = el(`<button class="time-card${value === selectedMinutes ? ' active' : ''}" aria-pressed="${value === selectedMinutes}"><b>${min}</b><span>分钟 · ${plan.label.split('·')[1].trim()}</span></button>`);
-    b.addEventListener('click', () => {
-      selectedMinutes = value;
-      [...timeRow.children].forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
-      b.classList.add('active'); b.setAttribute('aria-pressed', 'true');
-    });
-    timeRow.appendChild(b);
-  });
-  startBtn.addEventListener('click', async () => {
-    startBtn.disabled = true;
-    startBtn.textContent = '正在准备今日路线…';
+  const start = (routeKey, btn, label) => async () => {
+    btn.disabled = true;
+    btn.textContent = '正在准备今日路线…';
     try {
-      await startFlow(host, selectedMinutes);
+      await startFlow(host, routeKey);
     } catch (error) {
-      startBtn.disabled = false;
-      startBtn.innerHTML = `开始今天的学习 ${icon('arrow')}`;
+      btn.disabled = false;
+      btn.innerHTML = label;
       toast('内容加载失败，请检查网络后重试');
       console.error(error);
     }
-  });
+  };
+  const startBtn = launcher.querySelector('.journey-start');
+  const bypassBtn = launcher.querySelector('.today-bypass');
+  startBtn.addEventListener('click', start('full', startBtn, `开始今天的学习 ${icon('arrow')}`));
+  bypassBtn.addEventListener('click', start('review', bypassBtn, '今天只想复习 ›'));
   host.appendChild(launcher);
-  // 横幅退到开始按钮之后：它回答"还差多远"，是看的东西，不该挡在动作前面。
+  // 横幅退到开始按钮之后：全景图是"还差多远"的进度表，是看的东西，不该挡在动作前面。
   host.appendChild(panoramaBanner());
 
-  host.appendChild(el(`<div class="section-label">短途练习</div>`));
+  // 主页只留一个旁路入口：想多背词的时候进去加练。其余一切在仓库里，不占主路径。
   const quick = el(`<div class="module-grid"></div>`);
-  [
-    { href: '#/vocab/study', icon: 'cards', title: '词汇站', sub: `${stats.due} 到期 · ${Math.min(stats.fresh, 10)} 新` },
-    { href: '#/path', icon: 'route', title: '城市路线', sub: next ? `下一站 · ${next.lesson.title}` : '全部完成' },
-    { href: '#/readlisten', icon: 'book', title: '书店与电台', sub: '阅读 · 听力 · 听写' },
-  ].forEach(m => quick.appendChild(el(`<a class="module-card" href="${m.href}">
-    <div class="m-icon">${icon(m.icon)}</div><div class="m-title">${m.title}</div><div class="m-sub">${m.sub}</div><span class="m-arrow">${icon('arrow')}</span>
-  </a>`)));
+  quick.appendChild(el(`<a class="module-card" href="#/vocab/study">
+    <div class="m-icon">${icon('cards')}</div><div class="m-title">背单词 · 加练</div>
+    <div class="m-sub">${stats.due} 到期 · ${stats.learned} 已学</div><span class="m-arrow">${icon('arrow')}</span>
+  </a>`));
   host.appendChild(quick);
   [...host.querySelectorAll('.journey-hero,.mission-launcher,.module-card')].forEach((node, i) =>
     motionIn(node, { y: 12, delay: i * 32, skipOnCoarse: true }));
 }
 
 /* ---- 串流执行 ---- */
-async function startFlow(host, minutes) {
+async function startFlow(host, routeKey) {
   const runtime = await loadTodayRuntime();
   const stats = srsStats(vocabIds());
-  const { segments } = buildTodayPlan(minutes, {
-    nextLesson: nextCatalogLesson(allLessonStates())?.lesson || null,
-    material: todayMaterial(),
+  const nextLesson = nextCatalogLesson(allLessonStates())?.lesson || null;
+  const { segments } = buildTodayPlan(routeKey, {
+    nextLesson,
+    material: todayMaterial(nextLesson),
     counts: {
       due: stats.due, fresh: stats.fresh,
       mistakes: dueMistakes(99), listenMisses: dueListenMisses(99),
@@ -146,7 +154,7 @@ async function startFlow(host, minutes) {
   });
 
   if (!segments.length) {
-    toast('今天的任务都清空了 🎉 可以去仓库里泛听磨耳朵');
+    toast('今天的任务都清空了 🎉 明天再来');
     return;
   }
 

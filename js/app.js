@@ -17,9 +17,11 @@ applyTheme();
 
 const app = document.getElementById('app');
 const tabbar = document.getElementById('tabbar');
-// 三栏导航：今天（系统替你决定）/ 全景（我还差什么）/ 仓库（自己翻）。
-// "我的"不是学习目的地，收进今天页右上角的状态区。
-const tabIndexes = { today: 0, panorama: 1, library: 2 };
+// 两栏导航：今天（一条路，系统替你决定）/ 仓库（想自己翻才进来）。
+// 全景图从 tab 降级成今天页上的横幅——它是"我还差什么"的进度表，不是学习入口，
+// 和"学"平级会让人以为那里也要做点什么（见 docs/product-shape.md）。
+// "我的"同理，收进今天页右上角的状态区。
+const tabIndexes = { today: 0, panorama: 0, library: 1 };
 const glossOptions = { sentenceSelector: '.rt-sent,.wc-sentence,.phrase-row,.ex-prompt,.step-p,p' };
 const rootPaths = new Set(['/', '/panorama', '/path', '/vocab', '/readlisten']);
 const rootViews = new Map();

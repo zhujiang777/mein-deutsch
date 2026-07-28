@@ -1,16 +1,18 @@
-// 今天学什么：一节课 + 一份材料 + 一次复习
+// 今天走一条路：背词 → 学一格 → 今日文章。产品形态见 docs/product-shape.md
 //
-// 旧版今日是个**播放列表**：词卡 → 错题 → 微步课 → 视频 → 听写，五个不相干的东西排成队。
-// 它是其他几个 tab 的混合视图，所以用户感觉不到自己在学"一件事"。
+// 上一版是"学一课 → 用一份 → 记住它"，方向对，但有两个问题：
+//   1. 打开先让你选 5/15/30 分钟——"减少选择"的第一步却是一个选择题。
+//   2. "用"那一份是纯按可理解度挑的，跟你今天背的词、今天学的语法没有关系，
+//      所以它读起来像"系统随便给了我一篇"，而不是"这是给我今天写的"。
 //
-// 新版是三段，围绕同一份材料：
-//   学 —— 下一节微步课（教）
-//   用 —— 一份精听材料的完整五阶段（听→大意→听写→复听→复述）
-//   记 —— 这份材料的生词排在最前，再接上今天到期的复习
+// 新版：
+//   背词    —— SRS 到期 + 新词 + 错题，一次清干净（一天的燃料）
+//   学一格  —— 全景图的下一格（一天的骨头）
+//   今日文章 —— 前两段的汇合点：材料要同时装下"今天背的词"和"今天学的东西"
 //
-// 材料不是随机挑的：先要求"能听懂"（前置课已完成、需要的语法都到位），
-// 再在这些里挑已知词比例最贴近 92% 的那一份。练薄弱语法交给"记"之后的语法卡，
-// 不靠给你一份听不懂的材料来实现——那只会让人放弃。
+// 今日文章现在从库存里挑最贴合的一份（第 2 步，先不接 AI）。
+// 第 3 步会把这个位置换成现场生成——**选材信号不变**，只是供给从"库里最接近的"
+// 变成"照着这些词现写一篇"。库存这条路同时是 AI 挂了之后的回退路径。
 import { LISTENING_PACKS } from '../data/listening.js';
 import { LISTENING_AUDIO } from '../data/listening-audio.js';
 import { contentVocabRefs } from '../data/content-index.js';
@@ -20,30 +22,42 @@ import { classifyReadiness } from './content-readiness.js';
 // 高于 98% 就没有新东西可学。
 export const TARGET_KNOWN_RATIO = 0.92;
 
-// 低于这条线不给材料，今天只上课 + 复习。
-// 零基础用户的已知词是 0%，硬塞一份精听包就是听两分钟噪音然后卸载——
-// 这正是"破冰期"要拦住的情况（见 docs/a1-panorama.md 第四节）。
+// 低于这条线不给材料，今天只背词 + 上课。
+// 零基础用户的已知词是 0%，硬塞一份精听包就是听两分钟噪音然后卸载。
+//
+// ⚠️ 这条线正是 AI 要解开的那堵墙：人工内容永远配不上一个具体学习者的词表，
+// 再写 200 份也总有人的词表和它们错开。生成式材料是唯一解（第 3 步）。
 export const MIN_KNOWN_RATIO = 0.6;
 
-export const PLANS = {
-  5: { label: '5 分钟 · 只复习', maxDue: 20, maxNew: 0, quickForms: true, mistakes: 5, listenMisses: 2, lesson: false, material: false },
-  15: { label: '15 分钟 · 标准', maxDue: 20, maxNew: 10, mistakes: 5, listenMisses: 3, lesson: true, material: false },
-  30: { label: '30 分钟 · 充实', maxDue: 40, maxNew: 15, mistakes: 8, listenMisses: 5, lesson: true, material: true },
+// 两个出口，不是六个入口。主路径只有 full，review 是"今天不想学新的"的旁路。
+export const ROUTES = {
+  full: {
+    label: '完整路线 · 约 25 分钟',
+    maxDue: 20, maxNew: 10, mistakes: 5, listenMisses: 3,
+    lesson: true, article: true,
+  },
+  review: {
+    label: '今天只想复习 · 约 10 分钟',
+    maxDue: 30, maxNew: 0, mistakes: 8, listenMisses: 5,
+    lesson: false, article: false, quickForms: true,
+  },
 };
 
-export const STAGE_LABELS = { learn: '学', use: '用', remember: '记' };
+export const STAGE_LABELS = { words: '背词', learn: '学一格', article: '今日文章' };
 
-/** 有原创音频的精听包才能进主线：没音频的点进去只有一句"音频尚未生成"。 */
+/** 有原创音频的材料才能进主线：没音频的点进去只有一句"音频尚未生成"。 */
 export function availableMaterials(audio = LISTENING_AUDIO) {
   return LISTENING_PACKS.filter(pack => audio[pack.id]);
 }
 
 /**
- * 挑今天这一份。state 显式传入，方便测试。
- * 返回 { pack, readiness, reason, score }，没有可用材料时返回 null。
+ * 挑今天这一篇。state 显式传入，方便测试。
+ * todayWordIds = 今天要背的词 + 今天这一格用到的词 —— 这就是"双输入"里的词那一路。
+ * 返回 { pack, readiness, reason, score, seedHits }，没有可用材料时返回 null。
  */
 export function pickMaterial(state = {}, materials = availableMaterials()) {
-  const { lessonStates = {}, srs = {}, skills = {} } = state;
+  const { lessonStates = {}, srs = {}, skills = {}, todayWordIds = [] } = state;
+  const seeds = new Set(todayWordIds);
   const scored = materials.map(pack => {
     const readiness = classifyReadiness(pack, { lessonStates, srs, skills });
     const done = !!lessonStates[pack.id]?.done;
@@ -52,14 +66,16 @@ export function pickMaterial(state = {}, materials = availableMaterials()) {
     if (!done) score += 100;
     if (readiness.grammarReady) score += 40;
     if (!readiness.grammarGaps.length) score += 30;
-    return { pack, readiness, done, score };
+    // 今天背的词出现得越多越好，但封顶——不能为了凑词去推一份听不懂的材料。
+    const seedHits = contentVocabRefs(pack).filter(id => seeds.has(id)).length;
+    score += Math.min(seedHits, 6) * 25;
+    return { pack, readiness, done, seedHits, score };
   }).sort((a, b) => b.score - a.score);
 
   const best = scored[0];
   if (!best) return null;
   // 达不到下限时**不隐藏**，而是带 ready:false 返回：主页照样把这份和差多少显示出来。
-  // 静默藏掉会让"今天没有材料"看起来像功能坏了，而真实原因是内容的课程词复用率不够——
-  // 那是内容供给问题（见备忘录：课程词复用率 10/12 不达标），不能靠调阈值掩盖。
+  // 静默藏掉会让"今天没有文章"看起来像功能坏了，而真实原因是库存配不上你的词表。
   const ready = best.readiness.knownRatio >= MIN_KNOWN_RATIO;
   return { ...best, ready, reason: ready ? reasonFor(best) : shortfallFor(best) };
 }
@@ -67,15 +83,17 @@ export function pickMaterial(state = {}, materials = availableMaterials()) {
 function shortfallFor({ readiness }) {
   const pct = Math.round(readiness.knownRatio * 100);
   const floor = Math.round(MIN_KNOWN_RATIO * 100);
-  return `现有材料里最贴合的一份，你也只认识 ${pct}% 的词（至少要 ${floor}%）。`
-    + '今天先上课攒词汇量——听不懂的材料练不出听力。';
+  return `库里最贴合的一篇，你也只认识 ${pct}% 的词（至少要 ${floor}%）。`
+    + '今天先背词 + 上课攒词汇量——读不懂的材料练不出东西。';
 }
 
-function reasonFor({ pack, readiness, done }) {
+function reasonFor({ pack, readiness, done, seedHits }) {
   const pct = Math.round(readiness.knownRatio * 100);
-  if (done) return '再听一遍：上次做过，现在词汇量更大，能听出更多细节';
+  // 双输入命中优先说：这句话是"这篇是给我今天写的"唯一的证据。
+  if (seedHits >= 2) return `这篇里有 ${seedHits} 个词正是你今天背的，趁热见一次`;
+  if (done) return '再读一遍：上次做过，现在词汇量更大，能读出更多细节';
   if (readiness.grammarGaps.length) {
-    return `这份用得到「${readiness.grammarGaps[0].title}」，练之前先花两分钟补一下`;
+    return `这篇用得到「${readiness.grammarGaps[0].title}」，读之前先花两分钟补一下`;
   }
   if (readiness.key === 'right') return `你已经认识其中 ${pct}% 的词，剩下的正好能连蒙带猜`;
   if (readiness.key === 'review') return `词你都学过（${pct}%），这次专门练"从声音里听出来"`;
@@ -86,29 +104,32 @@ function reasonFor({ pack, readiness, done }) {
  * 今天的执行段落。纯数据，不碰 DOM。
  * counts 由调用方从 SRS 读出：{ due, fresh, mistakes:[], listenMisses:[] }
  */
-export function buildTodayPlan(minutes, { nextLesson = null, material = null, counts = {} } = {}) {
-  const plan = PLANS[minutes] || PLANS[15];
+export function buildTodayPlan(routeKey, { nextLesson = null, material = null, counts = {} } = {}) {
+  const route = ROUTES[routeKey] || ROUTES.full;
   const segments = [];
 
-  if (plan.lesson && nextLesson) {
-    segments.push({ stage: 'learn', kind: 'lesson', lessonId: nextLesson.id, title: nextLesson.title });
-  }
-  if (plan.material && material?.ready) {
-    segments.push({ stage: 'use', kind: 'material', packId: material.pack.id, title: material.pack.title });
-  }
-  // 记：这份材料的生词排最前，再接今天到期的复习。三者都归到同一段名下，
-  // 因为对学习者来说它们是一件事——把今天遇到的东西留住。
+  // ① 背词 —— 一天的燃料。错题和精听错句也归这一段：对学习者来说都是"复习旧的"。
   const priorityIds = material?.ready ? contentVocabRefs(material.pack) : [];
-  if ((counts.due || 0) > 0 || (plan.maxNew > 0 && (counts.fresh || 0) > 0)) {
+  if ((counts.due || 0) > 0 || (route.maxNew > 0 && (counts.fresh || 0) > 0)) {
     segments.push({
-      stage: 'remember', kind: 'vocab', title: material?.ready ? `${material.pack.title} 的生词与复习` : '词汇复习与新词',
-      priorityIds, maxDue: plan.maxDue, maxNew: plan.maxNew, quickForms: !!plan.quickForms,
+      stage: 'words', kind: 'vocab', title: '今天的词',
+      priorityIds, maxDue: route.maxDue, maxNew: route.maxNew, quickForms: !!route.quickForms,
     });
   }
-  const mistakes = (counts.mistakes || []).slice(0, plan.mistakes);
-  if (mistakes.length) segments.push({ stage: 'remember', kind: 'mistakes', title: '错题巩固', ids: mistakes });
-  const listenMisses = (counts.listenMisses || []).slice(0, plan.listenMisses);
-  if (listenMisses.length) segments.push({ stage: 'remember', kind: 'listen-misses', title: '精听错句复现', ids: listenMisses });
+  const mistakes = (counts.mistakes || []).slice(0, route.mistakes);
+  if (mistakes.length) segments.push({ stage: 'words', kind: 'mistakes', title: '错题巩固', ids: mistakes });
+  const listenMisses = (counts.listenMisses || []).slice(0, route.listenMisses);
+  if (listenMisses.length) segments.push({ stage: 'words', kind: 'listen-misses', title: '错句复现', ids: listenMisses });
 
-  return { plan, segments };
+  // ② 学一格 —— 一天的骨头
+  if (route.lesson && nextLesson) {
+    segments.push({ stage: 'learn', kind: 'lesson', lessonId: nextLesson.id, title: nextLesson.title });
+  }
+
+  // ③ 今日文章 —— 前两段的汇合点
+  if (route.article && material?.ready) {
+    segments.push({ stage: 'article', kind: 'material', packId: material.pack.id, title: material.pack.title });
+  }
+
+  return { route, segments };
 }

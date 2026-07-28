@@ -35,9 +35,10 @@ test('liquid glass stays on functional layers with accessible fallbacks', () => 
   assert.match(css, /--glass-blur: 32px/);
   assert.match(css, /body::before, body::after/);
   // 三栏导航（今天/全景/仓库）：滑块只到 2，宽度是 1/3
-  assert.match(css, /#tabbar\[data-active="2"\]::before/);
-  assert.doesNotMatch(css, /#tabbar\[data-active="[34]"\]/);
-  assert.match(css, /width: calc\(\(100% - 16px\) \/ 3\)/);
+  assert.match(css, /#tabbar\[data-active="1"\]::before/);
+  // 两栏导航：全景已从 tab 降级成今天页横幅，第三格的位移规则必须一起删掉。
+  assert.doesNotMatch(css, /#tabbar\[data-active="[234]"\]/);
+  assert.match(css, /width: calc\(\(100% - 16px\) \/ 2\)/);
 });
 
 test('read and listen render as separate accessible panels', () => {
@@ -156,15 +157,18 @@ test('语法联动的样式有覆盖', () => {
   }
 });
 
-test('三栏导航自洽：路由的 tab、tabIndexes、tabbar 链接三者一一对上', () => {
+test('两栏导航自洽：路由的 tab、tabIndexes、tabbar 链接三者对得上', () => {
   // 深层路由的 tab 写错（比如还留着 'vocab'）不会报错，只会让底部高亮跳到错误的栏。
   const declared = new Set([...app.matchAll(/tab: '([a-z]+)'/g)].map(hit => hit[1]));
   const indexed = new Set([...app.match(/const tabIndexes = \{([^}]*)\}/)[1]
     .matchAll(/([a-z]+):/g)].map(hit => hit[1]));
   const inBar = new Set([...index.matchAll(/data-tab="([a-z]+)"/g)].map(hit => hit[1]));
 
+  // 全景图不再是 tab：它是"我还差什么"的进度表，不是学习入口（docs/product-shape.md）。
+  // tabIndexes 仍要认得 panorama，否则进全景时底部高亮会失效——它复用"今天"那一格。
   assert.deepEqual([...indexed].sort(), ['library', 'panorama', 'today']);
-  assert.deepEqual([...inBar].sort(), [...indexed].sort(), 'tabbar 链接与 tabIndexes 不一致');
+  assert.deepEqual([...inBar].sort(), ['library', 'today'], 'tabbar 只应剩今天和仓库两条链接');
+  assert.match(app, /panorama: 0/, '全景路由要高亮回"今天"那一格');
   for (const tab of declared) {
     assert.ok(indexed.has(tab), `路由声明了 tab: '${tab}'，但 tabIndexes 里没有它 → 高亮会落到"今天"`);
   }
