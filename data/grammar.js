@@ -1,4 +1,4 @@
-// 体系化语法课：12 课，按 A1 大纲编排
+// 体系化语法课：20 课，按 A1 大纲编排
 // sections: { h?, p?, tip?, table?{head,rows}, examples?[{de,zh}] }
 // exercises: { type:'choice', q, options, a(索引), explain } | { type:'fill', q, a:[答案], explain }
 const RAW_LESSONS = [
@@ -495,7 +495,8 @@ const RAW_LESSONS = [
   },
   {
     id: 'g10',
-    title: '第10课 · 第三格 Dativ 与常用介词',
+    // 介词的横向对照搬到了第19课，这一课专心讲"第三格长什么样"。
+    title: '第10课 · 第三格 Dativ',
     sub: 'dem / der / dem / den +n',
     sections: [
       {
@@ -724,6 +725,411 @@ const RAW_LESSONS = [
       { type: 'fill', q: 'Es regnet, ___ bleiben wir hier.（所以）', a: ['also'], explain: 'also 占第一位，所以是 bleiben wir 而不是 wir bleiben。' },
     ],
   },
+  {
+    id: 'g14',
+    title: '第14课 · 数字 · 钟点 · 日期',
+    sub: '约时间、报电话、听懂车站广播，全靠这一课',
+    sections: [
+      {
+        p: '数字是 A1 里唯一每天都要用、而且一错就误事的东西：约几点见面、报电话号码、听站台广播。德语数字有两个坑——两位数倒着念，报时围着整点说。',
+      },
+      {
+        h: '0–12 与整十',
+        table: {
+          head: ['数', '德语', '数', '德语'],
+          rows: [
+            ['0 / 1', 'null / eins', '20', 'zwanzig'],
+            ['2 / 3', 'zwei / drei', '30', 'dreißig'],
+            ['4 / 5', 'vier / fünf', '40', 'vierzig'],
+            ['6 / 7', 'sechs / sieben', '50', 'fünfzig'],
+            ['8 / 9', 'acht / neun', '60', 'sechzig'],
+            ['10 / 11 / 12', 'zehn / elf / zwölf', '100', 'hundert'],
+          ],
+        },
+        tip: '13–19 都是「个位 + zehn」：dreizehn, vierzehn……只有 16 sechzehn 和 17 siebzehn 掉了字母，要单独记。',
+      },
+      {
+        h: '两位数倒着念',
+        p: '21 不是「二十一」，而是「一和二十」：ein + und + zwanzig，连成一个词写。',
+        examples: [
+          { de: 'Ich bin einundzwanzig Jahre alt.', zh: '我二十一岁。' },
+          { de: 'Das Buch kostet siebenundvierzig Euro.', zh: '这本书四十七欧。' },
+        ],
+        tip: '德国人报电话号码常两位两位地念，所以「倒着念」必须练到不用想。',
+      },
+      {
+        h: '几点了：口语围着整点说',
+        table: {
+          head: ['时间', '口语', '正式（24 小时制）'],
+          rows: [
+            ['8:15', 'Viertel nach acht', 'acht Uhr fünfzehn'],
+            ['8:30', 'halb neun', 'acht Uhr dreißig'],
+            ['8:45', 'Viertel vor neun', 'acht Uhr fünfundvierzig'],
+            ['14:30', 'halb drei', 'vierzehn Uhr dreißig'],
+          ],
+        },
+        tip: 'halb neun 是 8:30 不是 9:30——halb X 的意思是「还有半小时到 X 点」。车站、机场、广播一律用正式说法，数字依次读出。',
+      },
+      {
+        h: '哪一天用 am，几点用 um',
+        examples: [
+          { de: 'Hast du am Montag Zeit?', zh: '你星期一有空吗？' },
+          { de: 'Wir kommen am Montag um achtzehn Uhr.', zh: '我们星期一十八点来。' },
+          { de: 'Ich habe am dritten Mai Geburtstag.', zh: '我五月三号生日。' },
+        ],
+        tip: '说「天」用 an（几乎都缩合成 am），说「钟点」用 um。日期要用序数词，跟 am 连用时词尾是 -en；1/3/7/8 的词干是特例：ersten, dritten, siebten, achten。',
+      },
+    ],
+    exercises: [
+      { type: 'choice', q: 'halb neun 是几点？', options: ['8:30', '9:30', '8:45', '9:15'], a: 0, explain: 'halb X = 还有半小时到 X 点，所以 halb neun 是 8:30。' },
+      { type: 'choice', q: '47 怎么念？', options: ['vierundsiebzig', 'siebenundvierzig', 'vierzigsieben', 'siebzigvier'], a: 1, explain: '个位在前：sieben + und + vierzig。' },
+      { type: 'choice', q: 'Der Zug fährt ___ acht Uhr.（八点开）', options: ['am', 'um', 'an', 'in'], a: 1, explain: '钟点用 um。' },
+      { type: 'choice', q: '___ Montag habe ich Zeit.（星期一）', options: ['Um', 'Am', 'In', 'Von'], a: 1, explain: '星期几属于「天」，用 an → am。' },
+      { type: 'fill', q: 'Es ist ___ neun.（8:30）', a: ['halb'], explain: 'halb 指向下一个整点。' },
+      { type: 'fill', q: 'Ich bin ___ Jahre alt.（21 岁）', a: ['einundzwanzig'], explain: '个位在前，连写成一个词。' },
+    ],
+  },
+  {
+    id: 'g15',
+    title: '第15课 · 命令式',
+    sub: 'Sie / du / ihr 三种形式——问路、请求、指示都用它',
+    sections: [
+      {
+        p: '命令式不只用来「命令」。问路得到的回答、店员的指示、说明书上的每一句，全是命令式。先把 Sie 形式练熟：它对陌生人永远不会失礼。',
+      },
+      {
+        h: 'Sie 形式：原形 + Sie（最常用）',
+        p: '动词原形放句首，紧跟着 Sie。形状和 Sie 的陈述句一模一样，只是动词被提到了最前面。',
+        examples: [
+          { de: 'Gehen Sie hier geradeaus und dann links.', zh: '您这里一直走，然后左转。' },
+          { de: 'Nehmen Sie bitte Platz.', zh: '请您坐。' },
+          { de: 'Warten Sie bitte einen Moment.', zh: '请您稍等一下。' },
+        ],
+        tip: '加一个 bitte，语气立刻从「指令」变成「请求」。位置很自由，句中句尾都行。',
+      },
+      {
+        h: 'du 形式：拿 du 的变位去掉 -st',
+        table: {
+          head: ['原形', 'du 形式', '命令式'],
+          rows: [
+            ['kommen', 'du kommst', 'Komm!'],
+            ['warten', 'du wartest', 'Warte!'],
+            ['essen', 'du isst', 'Iss!'],
+            ['nehmen', 'du nimmst', 'Nimm!'],
+            ['fahren', 'du fährst', 'Fahr!'],
+            ['sein', 'du bist', 'Sei!'],
+          ],
+        },
+        tip: '换音动词有个分岔：e→i / e→ie 的换音**保留**（Iss! Nimm! Lies! Sprich!），但 a→ä 的换音**不保留**（Fahr! Schlaf!）。sein 是特例：Sei! / Seien Sie!',
+      },
+      {
+        h: 'ihr 形式：把 ihr 去掉就行',
+        examples: [
+          { de: 'Kommt bitte um acht!', zh: '你们八点来！' },
+          { de: 'Nehmt eure Bücher mit!', zh: '你们把书带上！' },
+        ],
+        tip: '三种里 ihr 形最省事：ihr kommt → Kommt!，动词一个字母都不改。',
+      },
+    ],
+    exercises: [
+      { type: 'choice', q: '问路时对方要说「您一直走」，是哪一句？', options: ['Gehen Sie geradeaus.', 'Gehst du geradeaus.', 'Geht geradeaus Sie.'], a: 0, explain: 'Sie 命令式 = 原形 + Sie，动词在句首。' },
+      { type: 'choice', q: '对朋友说「吃吧！」', options: ['Ess!', 'Iss!', 'Isst!', 'Esse!'], a: 1, explain: 'du isst → 去掉 -st = Iss!，e→i 换音保留。' },
+      { type: 'choice', q: '对朋友说「开车吧！」', options: ['Fähr!', 'Fährst!', 'Fahr!'], a: 2, explain: 'a→ä 的换音在命令式里不保留，用回 a。' },
+      { type: 'choice', q: '对陌生人最得体的说法是？', options: ['Warten!', 'Warte!', 'Warten Sie bitte einen Moment.'], a: 2, explain: '对陌生人用 Sie 形式，再加 bitte。' },
+      { type: 'fill', q: '___ Sie bitte Platz.（请您坐，nehmen）', a: ['Nehmen', 'nehmen'], explain: '原形 nehmen 放句首 + Sie。' },
+      { type: 'fill', q: '___ bitte pünktlich!（你要准时，sein）', a: ['Sei', 'sei'], explain: 'sein 的 du 命令式是特例 Sei!。' },
+    ],
+  },
+  {
+    id: 'g16',
+    title: '第16课 · 形容词作表语 · 比较',
+    sub: 'A1 的形容词不变格；gut→besser，gern→lieber',
+    sections: [
+      {
+        p: 'A1 的形容词有个大好消息：只要它跟在 sein 后面，就永远是原形，不管名词是什么性、是单数还是复数。（放在名词前面才要变词尾，那是 A2 的事。）',
+      },
+      {
+        h: 'sein + 形容词：一个字母都不改',
+        table: {
+          head: ['句子', '中文'],
+          rows: [
+            ['Der Kaffee ist heiß.', '咖啡很烫。'],
+            ['Die Lampe ist schön.', '这盏灯很好看。'],
+            ['Das Zimmer ist groß.', '这房间很大。'],
+            ['Die Bücher sind teuer.', '这些书很贵。'],
+          ],
+        },
+        tip: '对比着记：ein schöner Tisch 里的 schön 要变词尾，Der Tisch ist schön. 里不用。A1 只考后一种。',
+      },
+      {
+        h: '程度：sehr 和 zu',
+        examples: [
+          { de: 'Du bist sehr nett.', zh: '你人很好。' },
+          { de: 'Der Kaffee ist zu heiß.', zh: '咖啡太烫了。' },
+          { de: 'Sie ist schön, aber sie ist zu teuer.', zh: '它很好看，但太贵了。' },
+        ],
+        tip: 'sehr = 很（中性评价），zu = 太……了（几乎都在抱怨）。两个都不变格。',
+      },
+      {
+        h: '比较：形容词 + -er + als',
+        table: {
+          head: ['原级', '比较级', '例句'],
+          rows: [
+            ['alt', 'älter', 'Er ist älter als ich.'],
+            ['groß', 'größer', 'Er ist größer als ich.'],
+            ['teuer', 'teurer', 'Der Computer ist teurer als das Buch.'],
+            ['gut', 'besser', 'Er kocht besser als ich.'],
+            ['gern', 'lieber', 'Ich koche lieber.'],
+            ['viel', 'mehr', 'Ich mag Bücher mehr als Computer.'],
+          ],
+        },
+        tip: 'als = 「比」。短单词常顺手带上变元音（alt→älter, groß→größer, jung→jünger）。gut / gern / viel 三个完全不规则，直接背。',
+      },
+      {
+        h: '最高级：认识就够了',
+        p: 'A1 不要求你主动造最高级，但菜单和广告上到处是它：am besten（最好）、am liebsten（最喜欢）、am größten（最大）。',
+        examples: [
+          { de: 'Ich trinke am liebsten Kaffee.', zh: '我最喜欢喝咖啡。' },
+        ],
+      },
+    ],
+    exercises: [
+      { type: 'choice', q: 'Die Bücher sind ___.（这些书很贵）', options: ['teure', 'teuren', 'teuer', 'teurer'], a: 2, explain: 'sein 后面的形容词永远是原形，复数也不变。' },
+      { type: 'choice', q: 'Der Kaffee ist ___ heiß.（太烫了）', options: ['sehr', 'zu', 'viel', 'mehr'], a: 1, explain: 'zu = 太……了，带负面语气。' },
+      { type: 'choice', q: 'Er ist älter ___ ich.', options: ['als', 'wie', 'denn', 'so'], a: 0, explain: '比较用 als。' },
+      { type: 'choice', q: 'gut 的比较级是？', options: ['guter', 'gutter', 'besser', 'mehr'], a: 2, explain: 'gut → besser，完全不规则。' },
+      { type: 'fill', q: 'Ich koche gern, aber ich esse ___.（更喜欢）', a: ['lieber'], explain: 'gern → lieber。' },
+      { type: 'fill', q: 'Der Computer ist ___ als das Buch.（更贵，teuer）', a: ['teurer'], explain: 'teuer → teurer，中间的 e 掉了。' },
+    ],
+  },
+  {
+    id: 'g17',
+    title: '第17课 · 频率与地点副词',
+    sub: 'immer oft nie · zuerst dann danach · links rechts geradeaus',
+    sections: [
+      {
+        p: '这些小词不影响对错，却决定别人听不听得懂你在说什么时候、在说哪儿。它们都不变形，学起来只有两件事：意思，和放在句子的哪个位置。',
+      },
+      {
+        h: '多常做：从 100% 到 0%',
+        table: {
+          head: ['副词', '大概频率', '例句'],
+          rows: [
+            ['immer', '总是', 'Ich stehe immer um sieben auf.'],
+            ['oft', '经常', 'Wir lernen oft zusammen.'],
+            ['manchmal', '有时', 'Manchmal koche ich zu Hause.'],
+            ['selten', '很少', 'Ich trinke selten Bier.'],
+            ['nie', '从不', 'Er kommt nie zu spät.'],
+          ],
+        },
+        tip: '默认位置在变位动词后面。要强调时可以提到句首，但句首之后动词必须紧跟着——动词永远第二位：Manchmal koche ich…（不是 Manchmal ich koche…）。',
+      },
+      {
+        h: '按顺序讲事情：zuerst · dann · danach',
+        examples: [
+          { de: 'Zuerst stehe ich auf, dann trinke ich Kaffee.', zh: '我先起床，然后喝咖啡。' },
+          { de: 'Danach gehe ich zur Arbeit.', zh: '之后我去上班。' },
+        ],
+        tip: '这三个词最常放句首，于是每次都触发倒装：zuerst stehe ich，不是 zuerst ich stehe。讲一天的日程时它们是主干。',
+      },
+      {
+        h: '在哪儿 · 往哪走',
+        table: {
+          head: ['词', '意思', '常见场合'],
+          rows: [
+            ['hier / dort', '这儿 / 那儿', 'Die Uhr ist dort links.'],
+            ['links / rechts', '左 / 右', 'Gehen Sie dann links.'],
+            ['geradeaus', '一直往前', 'Gehen Sie hier geradeaus.'],
+            ['oben / unten', '上面 / 下面', 'Das Bad ist oben.'],
+          ],
+        },
+        tip: '问路听到的答案基本就是这几个词加命令式，练熟这一组，问路就不会站在原地不敢动。',
+      },
+    ],
+    exercises: [
+      { type: 'choice', q: '「我从不喝咖啡」', options: ['Ich nie trinke Kaffee.', 'Ich trinke nie Kaffee.', 'Nie ich trinke Kaffee.'], a: 1, explain: '频率副词放在变位动词后面。' },
+      { type: 'choice', q: 'Manchmal ___ ich zu Hause.', options: ['ich koche', 'koche', 'kochen', 'kocht'], a: 1, explain: '句首被 Manchmal 占了，动词必须第二位：Manchmal koche ich…' },
+      { type: 'choice', q: '哪个表示「经常」？', options: ['nie', 'selten', 'oft', 'immer'], a: 2, explain: 'oft = 经常，比 immer 少、比 selten 多。' },
+      { type: 'choice', q: '问路时听到「一直往前走」，关键词是？', options: ['links', 'rechts', 'geradeaus', 'oben'], a: 2, explain: 'geradeaus = 一直往前。' },
+      { type: 'fill', q: '___ stehe ich auf, dann trinke ich Kaffee.（先）', a: ['Zuerst', 'zuerst'], explain: 'zuerst 放句首，后面立刻是动词。' },
+      { type: 'fill', q: 'Ich stehe ___ um sieben auf.（总是）', a: ['immer'], explain: 'immer 放在变位动词 stehe 后面。' },
+    ],
+  },
+  {
+    id: 'g18',
+    title: '第18课 · 人称代词的三种格',
+    sub: '代词也要变格：ich → mich → mir',
+    sections: [
+      {
+        p: '「我」在德语里有三个样子：ich（我做事）、mich（事情落在我身上）、mir（东西给我）。这一课之前，代词的三种格散在 sein、第四格、第三格三课里，从来没有一处把它们摆在一起——现在摆在一起。',
+      },
+      {
+        h: '一张总表，背下来一劳永逸',
+        table: {
+          head: ['第一格（谁做）', '第四格（对谁做）', '第三格（给谁）'],
+          rows: [
+            ['ich 我', 'mich', 'mir'],
+            ['du 你', 'dich', 'dir'],
+            ['er 他', 'ihn', 'ihm'],
+            ['sie 她', 'sie', 'ihr'],
+            ['es 它', 'es', 'ihm'],
+            ['wir 我们', 'uns', 'uns'],
+            ['ihr 你们', 'euch', 'euch'],
+            ['sie 他们', 'sie', 'ihnen'],
+            ['Sie 您', 'Sie', 'Ihnen'],
+          ],
+        },
+        tip: '真正要背的只有左边三行：ich/du/er 这一列变化最大。wir / ihr 的两个格长得一样，sie/Sie 只在第三格才变。',
+      },
+      {
+        h: '什么时候用哪个',
+        p: '被动作直接作用的那个东西 → 第四格；接受东西、受益的那个人 → 第三格。',
+        examples: [
+          { de: 'Wo ist Tom? Siehst du ihn?', zh: '汤姆在哪？你看见他了吗？' },
+          { de: 'Kannst du mich morgen anrufen?', zh: '你明天能给我打电话吗？' },
+          { de: 'Kannst du mir helfen?', zh: '你能帮我一下吗？' },
+        ],
+        tip: 'helfen、danken、gefallen 这几个动词只带第三格，跟中文的直觉正好相反：帮「我」是 mir 不是 mich。这是必须硬记的一小撮。',
+      },
+      {
+        h: '代词替名词，要跟着名词的性走',
+        p: '德语的「它」不是一个词。桌子是阳性，所以桌子是 er；灯是阴性，所以灯是 sie。',
+        examples: [
+          { de: 'Wo ist der Tisch? Er ist dort.', zh: '桌子在哪？它在那儿。' },
+          { de: 'Die Uhr ist neu. Sie ist auch teuer.', zh: '这块表是新的。它也很贵。' },
+        ],
+        tip: '所以名词的性不是背着玩的——性错了，后面整段话的代词就全错。',
+      },
+      {
+        h: '反身：动作绕回自己',
+        p: '有些动词固定带一个「自己」，A1 见得最多的是 sich freuen（高兴）和 sich interessieren für（对……感兴趣）。',
+        examples: [
+          { de: 'Ich interessiere mich für Musik.', zh: '我对音乐感兴趣。' },
+          { de: 'Wir freuen uns auf das Wochenende.', zh: '我们很期待周末。' },
+        ],
+      },
+    ],
+    exercises: [
+      { type: 'choice', q: 'Wo ist Tom? Siehst du ___?', options: ['er', 'ihn', 'ihm', 'sein'], a: 1, explain: '「看见他」他是被看的对象 → 第四格 ihn。' },
+      { type: 'choice', q: 'Kannst du ___ helfen?（帮我）', options: ['mich', 'mir', 'ich', 'mein'], a: 1, explain: 'helfen 只带第三格，所以是 mir。' },
+      { type: 'choice', q: 'Wo ist die Uhr? ___ ist dort.', options: ['Er', 'Es', 'Sie', 'Ihr'], a: 2, explain: 'die Uhr 是阴性，代词用 sie。' },
+      { type: 'choice', q: 'Kannst du ___ morgen anrufen?（给我打电话）', options: ['mir', 'mich', 'ich', 'mein'], a: 1, explain: 'anrufen 带第四格：打给我 = mich。和 helfen 正好相反，两个一起记。' },
+      { type: 'fill', q: 'Ich interessiere ___ für Musik.', a: ['mich'], explain: 'sich interessieren 是反身动词，ich 对应 mich。' },
+      { type: 'fill', q: 'Der Film gefällt ___ sehr.（我很喜欢这部电影）', a: ['mir'], explain: 'gefallen 只带第三格：这电影让「我」喜欢。' },
+    ],
+  },
+  {
+    id: 'g19',
+    title: '第19课 · 介词',
+    sub: '第三格介词 · 在哪儿 vs 往哪走 · 缩合形式',
+    sections: [
+      {
+        p: '介词是 A1 里最容易「每个词都认识、连起来说不出」的地方。原因是它决定后面名词用哪个格。好消息：A1 要求的绝大多数介词，后面固定用第三格。',
+      },
+      {
+        h: '固定第三格的七个介词',
+        table: {
+          head: ['介词', '意思', '例句'],
+          rows: [
+            ['aus', '来自 / 出自', 'Ich komme aus China.'],
+            ['bei', '在……那儿', 'Ich wohne bei meiner Familie.'],
+            ['mit', '和 / 用', 'Zahlen Sie mit Karte?'],
+            ['nach', '往（城市国家）/ 之后', 'Wir fahren nach Berlin.'],
+            ['seit', '自从', 'Ich lerne seit einem Jahr Deutsch.'],
+            ['von', '从 / 属于', 'Das ist der Schlüssel von Anna.'],
+            ['zu', '去（人或场所）', 'Ich gehe zum Arzt.'],
+          ],
+        },
+        tip: '背成一串顺口的：aus – bei – mit – nach – seit – von – zu。它们后面永远第三格，没有例外。',
+      },
+      {
+        h: '缩合：说话时几乎都会合起来',
+        table: {
+          head: ['原形', '缩合', '例子'],
+          rows: [
+            ['zu dem', 'zum', 'zum Bahnhof'],
+            ['zu der', 'zur', 'zur Universität'],
+            ['in dem', 'im', 'im Zimmer'],
+            ['an dem', 'am', 'am Montag'],
+            ['bei dem', 'beim', 'beim Arzt'],
+            ['von dem', 'vom', 'vom Bahnhof'],
+          ],
+        },
+        tip: '不缩合语法上也不算错，但听力里德国人 100% 缩合。听不出 zum / zur，就会漏掉半句话。',
+      },
+      {
+        h: '在哪儿（wo）用第三格',
+        examples: [
+          { de: 'Die Uhr ist auf dem Tisch.', zh: '表在桌子上。' },
+          { de: 'Sie lernt im Zimmer.', zh: '她在房间里学习。' },
+          { de: 'Der Supermarkt ist neben der Bank.', zh: '超市在银行旁边。' },
+        ],
+        tip: 'in / an / auf / neben / vor / hinter / unter / über 这一组是「两面派」：回答 wo（在哪儿）用第三格，回答 wohin（往哪儿）用第四格。A1 主要考 wo。',
+      },
+      {
+        h: 'zu 还是 nach？',
+        p: '这是中国学习者最常出错的一对：去城市、国家用 nach；去人、去具体场所用 zu。',
+        examples: [
+          { de: 'Wir fahren nach Berlin.', zh: '我们去柏林。' },
+          { de: 'Ich gehe zum Bahnhof.', zh: '我去火车站。' },
+          { de: 'Ich gehe nach Hause.', zh: '我回家。' },
+        ],
+        tip: 'nach Hause（回家）和 zu Hause（在家）是固定搭配，一起背。',
+      },
+    ],
+    exercises: [
+      { type: 'choice', q: 'Ich komme ___ China.', options: ['von', 'aus', 'zu', 'nach'], a: 1, explain: '来自某个国家用 aus。' },
+      { type: 'choice', q: 'Wir fahren ___ Berlin.', options: ['zu', 'nach', 'in', 'bei'], a: 1, explain: '去城市用 nach。' },
+      { type: 'choice', q: 'Ich gehe ___ Arzt.（去看医生）', options: ['nach dem', 'zum', 'zur', 'im'], a: 1, explain: 'der Arzt 是阳性 → zu dem = zum。' },
+      { type: 'choice', q: 'Die Uhr ist auf ___ Tisch.', options: ['der', 'den', 'dem', 'das'], a: 2, explain: '回答「在哪儿」用第三格：dem Tisch。' },
+      { type: 'fill', q: 'Ich fahre ___ Universität.（去大学，die Universität）', a: ['zur'], explain: '阴性 → zu der = zur。' },
+      { type: 'fill', q: 'Zahlen Sie ___ Karte?（用卡付）', a: ['mit'], explain: 'mit = 用，后面永远第三格。' },
+    ],
+  },
+  {
+    id: 'g20',
+    title: '第20课 · man · es gibt · 虚位 es',
+    sub: '不说是谁做的，怎么说',
+    sections: [
+      {
+        p: '德语有一小撮句子没有真正的主语——「有一家超市」「下雨了」「八点了」。中文这些句子干脆不要主语，德语必须摆一个词在那儿占位。占位的就是 es 和 man。',
+      },
+      {
+        h: 'es gibt + 第四格 = 「有」',
+        p: 'es gibt 是一个整体，不管后面是一个还是一堆，永远是 es gibt。后面的名词一律用第四格。',
+        examples: [
+          { de: 'Es gibt einen Supermarkt hier.', zh: '这儿有一家超市。' },
+          { de: 'Gibt es hier ein Restaurant?', zh: '这儿有餐馆吗？' },
+        ],
+        tip: '别用 haben 说「某地有什么」。「这儿有一家超市」不是 Hier hat einen Supermarkt，德语必须 Es gibt。',
+      },
+      {
+        h: 'man = 泛指的「人们 / 大家 / 你」',
+        p: 'man 不是「男人」（那是 der Mann，两个 n）。它指不特定的任何人，动词按第三人称单数变位。',
+        examples: [
+          { de: 'Was kann man am Sonntag in der Stadt machen?', zh: '周日在城里可以做什么？' },
+          { de: 'Nach dem Film kann man im Garten zusammen essen.', zh: '看完电影可以在花园里一起吃饭。' },
+        ],
+        tip: '规则、告示、说明书几乎句句是 man：Hier darf man nicht rauchen.（这里不许抽烟。）看到 man 就想成中文里省略掉的那个「你/大家」。',
+      },
+      {
+        h: '天气和时间：es 只是占位',
+        examples: [
+          { de: 'Es regnet.', zh: '下雨了。' },
+          { de: 'Es ist schon spät. Es ist halb elf.', zh: '已经很晚了。十点半了。' },
+        ],
+        tip: '这里的 es 不指任何东西，但一个字也不能省——德语句子必须有主语。',
+      },
+    ],
+    exercises: [
+      { type: 'choice', q: '「这儿有一家超市。」', options: ['Hier hat einen Supermarkt.', 'Es gibt einen Supermarkt hier.', 'Hier ist einen Supermarkt.'], a: 1, explain: '「某地有什么」用 es gibt，不用 haben。' },
+      { type: 'choice', q: 'Es gibt ___ Restaurant hier.', options: ['ein', 'einen', 'einem', 'eines'], a: 0, explain: 'es gibt 后面用第四格；das Restaurant 是中性，第四格还是 ein。' },
+      { type: 'choice', q: 'Was kann ___ am Sonntag machen?', options: ['man', 'Mann', 'men', 'jemand'], a: 0, explain: 'man = 泛指的人，一个 n，小写。' },
+      { type: 'choice', q: 'man 后面的动词用哪种变位？', options: ['像 ich', '像 du', '像 er/sie/es', '像 wir'], a: 2, explain: 'man 按第三人称单数走：man kann, man macht。' },
+      { type: 'fill', q: '___ regnet.（下雨了）', a: ['Es', 'es'], explain: '天气句用虚位 es，不能省。' },
+      { type: 'fill', q: '___ gibt hier ein Restaurant?（这儿有餐馆吗？）', a: ['Gibt', 'gibt'], explain: '疑问句把 gibt 提到最前：Gibt es…？' },
+    ],
+  },
 ];
 
 /* ==========================================================================
@@ -743,17 +1149,29 @@ const RAW_LESSONS = [
 const GRAMMAR_SKILLS = {
   g01: ['sein-sg', 'sein-pl', 'pron-sg', 'sie-formal', 'du-vs-sie', 'du-sie'],
   g02: ['verb-reg', 'haben-conj', 'kommen-wohnen'],
-  g03: ['noun-gender', 'def-article', 'indef-article', 'pronoun-replace'],
+  g03: ['noun-gender', 'def-article', 'indef-article'],
   g04: ['plural'],
   g05: ['v2-order', 'w-frage', 'w-frage-basic', 'frag-order'],
-  g06: ['akk-masc-only', 'akk-review', 'pronoun-akk', 'kein-basic'],
+  g06: ['akk-masc-only', 'akk-review', 'kein-basic'],
   g07: ['vowel-change-ei', 'vowel-change-ae', 'wissen'],
   g08: ['modal-koennen-wollen', 'modal-muessen-sollen', 'modal-duerfen', 'moechten', 'satzklammer', 'modal-bracket'],
   g09: ['separable-verbs', 'separable-verb'],
-  g10: ['dativ-dem-der', 'pronoun-dativ', 'prep-dativ-zu', 'location-dativ', 'zu-dativ', 'gefallen-dat'],
+  g10: ['dativ-dem-der', 'gefallen-dat'],
   g11: ['possessive-basic', 'possessive-agree', 'nicht-kein'],
   g12: ['perfekt-intro', 'perfekt-haben', 'perfekt-sein', 'perfekt-narrate', 'war-hatte'],
   g13: ['conj-coord', 'conj-denn'],
+  // g14–g20 补齐全景图上原本"缺系统讲解"的七格。
+  // 其中 g18 / g19 是横向汇总课：代词的三个格原本散在 g03 / g06 / g10，
+  // 介词原本挂在 g10 名下。标签跟着讲解课搬家，一个标签只能归一课，
+  // 否则同一次答题会被两课同时计入掌握度（tests/grammar-link.test.mjs 会拦）。
+  g14: ['numbers-1-20', 'numbers-tens', 'numbers-compound', 'numbers-large',
+    'prep-time-an-um', 'time-formal', 'time-informal', 'ordinal-date'],
+  g15: ['imperative-du'],
+  g16: ['pred-adj', 'zu-adj', 'comparative'],
+  g17: ['sequence-adverbs'],
+  g18: ['pronoun-replace', 'pronoun-akk', 'pronoun-dativ', 'reflexive-prep'],
+  g19: ['prep-dativ-zu', 'zu-dativ', 'location-dativ'],
+  g20: ['es-impersonal'],
 };
 
 /** 精读/精听的 grammarPrereqs 自由文本标签 → 讲这个点的语法课。 */
@@ -770,27 +1188,20 @@ export const PREREQ_TO_GRAMMAR = {
   'kein-nicht': ['g06', 'g11'],
   'separable-verbs': ['g09'],
   dative: ['g10'],
-  'location-prepositions': ['g10'],
+  // 地点介词要求第三格，所以两课都算前置：g10 讲格，g19 讲介词本身。
+  'location-prepositions': ['g10', 'g19'],
   'modal-verbs': ['g08'],
   'sentence-bracket': ['g08'],
   'war-hatte': ['g12'],
   'perfect-with-haben': ['g12'],
   'perfect-with-sein': ['g12'],
-  // 时间表达（um/am、halb、序数日期）散在微步课 u8 里，12 课语法体系没有单独一课。
-  // 宁可留空也不硬塞进邻近的课——塞了以后"g## 掌握度"就不再代表它声称的东西。
-  time: [],
+  // 时间表达（um/am、halb、序数日期）原来没有对应的讲解课，只能登记为空。
+  // g14 补上之后它有了真正的去处。
+  time: ['g14'],
 };
 
-/** g01–g12 覆盖不到、但微步课里确实在教的语法点。留档，不假装已覆盖。 */
-export const GRAMMAR_GAPS = [
-  { skills: ['imperative-du'], zh: '命令式（u6）' },
-  { skills: ['comparative'], zh: '比较级与最高级（u13）' },
-  { skills: ['prep-time-an-um', 'time-informal', 'time-formal', 'ordinal-date'], zh: '时间表达与日期（u8）' },
-  { skills: ['es-impersonal'], zh: '无人称 es（u12）' },
-  { skills: ['sequence-adverbs'], zh: '顺序副词（u12）' },
-  { skills: ['reflexive-prep'], zh: '反身与介词搭配（u11）' },
-  { skills: ['zu-adj', 'pred-adj'], zh: '形容词作表语（u7）' },
-];
+// 曾经有一张 GRAMMAR_GAPS 表，记录"微步课在教、但 12 课语法体系没讲"的语法点。
+// g14–g20 补齐之后这张表全空了，删掉——留着一张永远为空的表比没有更容易误导。
 
 export const GRAMMAR_LESSONS = RAW_LESSONS.map(lesson => ({
   ...lesson,

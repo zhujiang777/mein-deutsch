@@ -36,9 +36,8 @@ test('一节课只属于一格，否则同一节课会让两格一起前进', ()
   assert.equal(owner.get('u11l4'), 'D1');
   // 结业综合测验横跨 11 格，进任何一格都会让那格提前"走完"，所以谁都不属于。
   assert.equal(owner.has('u13l3'), false);
-  // 场景课是应用，旧的 u0 发音微步课已被解码课取代 —— 都不占主线。
+  // 场景课是应用，不教新格子，所以不占主线。
   assert.equal(owner.has('sa-l1'), false);
-  assert.equal(owner.has('u0l1'), false);
 });
 
 test('主线顺序不和既有课表打架：格子按各自第一节课的先后排', () => {

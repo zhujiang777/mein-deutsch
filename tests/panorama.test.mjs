@@ -9,7 +9,7 @@ import {
 } from '../data/panorama.js';
 import { PRON_LESSONS } from '../data/pronunciation.js';
 
-/** course.js 里真实用过的技能标签 */
+/** 课程里真实用过的技能标签。拼读那 12 个标签只活在解码课里，所以两处都要收。 */
 function courseSkills() {
   const found = new Set();
   const walk = node => {
@@ -18,6 +18,7 @@ function courseSkills() {
     Object.values(node).forEach(walk);
   };
   COURSE.forEach(walk);
+  PRON_LESSONS.forEach(walk);
   return found;
 }
 
@@ -67,11 +68,11 @@ test('语法讲解课全部落进格子，一课不漏', () => {
     assert.ok(covered.has(lesson.id), `${lesson.id}《${lesson.title}》没有对应的全景图格子`));
 });
 
-test('缺系统讲解的格子如实标记，但没有一格是真空', () => {
-  // 这些格子在微步课里练得到，只是没有成体系的 g## 讲解课。主线照样走得过去。
+test('语法轴 20 格全部有系统讲解，一格不留白', () => {
+  // 曾经有 7 格只在微步课里零散练过、没有成体系的讲解课（A6 D1 D2 D3 D4 E1 E2），
+  // g14–g20 把它们补齐了。以后新增格子必须同时带讲解课，这条会拦住"先占位再说"。
   const gaps = GRAMMAR_CELLS.filter(cell => !(cell.lessons || []).length).map(cell => cell.id);
-  assert.deepEqual(gaps, ['A6', 'D1', 'D2', 'D3', 'D4', 'E1', 'E2']);
-  // E3 并列连词原本连技能标签都没有，是真空。现在补了 u13l4 微步课 + g13 讲解课。
+  assert.deepEqual(gaps, [], `这些格子还没有讲解课：${gaps.join(',')}`);
   assert.ok(GRAMMAR_CELLS.every(cell => cell.skills.length),
     '任何一格没有技能标签就等于永远 0%，主线也无从判断它走完没有');
 });

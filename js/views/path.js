@@ -1,4 +1,5 @@
-// 课程路径：三泳道（语法主线 / 发音入门 / 场景口语），各自顺序解锁 + 掌握度 + 视频门槛
+// 课程路径：三泳道（语法主线 / 拼读解码 / 场景口语），各自顺序解锁 + 掌握度 + 视频门槛
+// 拼读那条道没有微步课单元——旧的 u0 八节已删，整条道就是入门解码课六关。
 import { COURSE_CATALOG } from '../../data/content-index.js';
 import { el, esc, icon, motionIn, videoCard, toast } from '../ui.js';
 import { allLessonStates, setLessonState, getVideoState } from '../storage.js';
@@ -6,7 +7,7 @@ import { lessonMastery } from '../mastery.js';
 
 const TRACKS = [
   { id: 'grammar', label: '语法主线', icon: 'route' },
-  { id: 'pron', label: '发音入门', icon: 'speaker' },
+  { id: 'pron', label: '拼读解码', icon: 'speaker' },
   { id: 'scene', label: '场景口语', icon: 'mic' },
 ];
 
@@ -38,7 +39,8 @@ export function renderPath(host) {
     pane.innerHTML = '';
     const states = allLessonStates();
     const units = COURSE_CATALOG.filter(u => (u.track || 'grammar') === active);
-    if (!units.length) {
+    // 拼读道没有微步课单元，整条道就是下面那张解码课卡片，不该显示"制作中"。
+    if (!units.length && active !== 'pron') {
       pane.appendChild(el(`<div class="empty-hint">这条线的课程还在制作中。</div>`));
       return;
     }
@@ -113,10 +115,10 @@ export function renderPath(host) {
     // 且每课底部能跳到真实出现过它的课文与精读精听。
     if (active === 'grammar') {
       pane.appendChild(el(`<div class="section-label">系统讲解 · 查语法规则</div>`));
-      pane.appendChild(el(`<a class="list-item" href="#/grammar"><span class="li-icon">${icon('route')}</span><div class="li-main"><div class="li-title">体系化语法 12 课</div><div class="li-sub">规则表 + 练习 + 真实语境实例，掌握度与微步课互通</div></div><span class="li-arrow">${icon('arrow')}</span></a>`));
+      pane.appendChild(el(`<a class="list-item" href="#/grammar"><span class="li-icon">${icon('route')}</span><div class="li-main"><div class="li-title">体系化语法 20 课</div><div class="li-sub">规则表 + 练习 + 真实语境实例，掌握度与微步课互通</div></div><span class="li-arrow">${icon('arrow')}</span></a>`));
     }
     if (active === 'pron') {
-      pane.appendChild(el(`<div class="section-label">新课覆盖前先用旧版对照</div>`));
+      pane.appendChild(el(`<div class="section-label">拼读只有这一门课</div>`));
       pane.appendChild(el(`<a class="list-item" href="#/pron"><span class="li-icon">${icon('speaker')}</span><div class="li-main"><div class="li-title">入门解码课</div><div class="li-sub">六关约 40 分钟，走完见词能读</div></div><span class="li-arrow">${icon('arrow')}</span></a>`));
     }
   }

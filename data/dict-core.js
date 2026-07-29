@@ -144,9 +144,9 @@ export const DICT_ENTRIES = {
   ],
   "also": [
     {
-      "pos": "konj.",
+      "pos": "adv.",
       "art": null,
-      "zh": "所以；那么"
+      "zh": "所以；那么（后面动词提前）"
     }
   ],
   "alt": [
@@ -1215,7 +1215,7 @@ export const DICT_ENTRIES = {
     {
       "pos": "konj.",
       "art": null,
-      "zh": "因为；究竟（疑问）"
+      "zh": "因为（并列连词，语序不变）"
     }
   ],
   "der": [
@@ -11996,7 +11996,7 @@ export const DICT_POS = {
     "pron."
   ],
   "also": [
-    "konj."
+    "adv."
   ],
   "alt": [
     "adj."

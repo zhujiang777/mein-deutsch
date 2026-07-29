@@ -1,96 +1,6 @@
 // 此文件由 scripts/gen_content_index.mjs 自动生成，请勿手改。
 export const COURSE_CATALOG = [
   {
-    "id": "u0",
-    "title": "第0单元 · 发音入门",
-    "icon": "🔤",
-    "track": "pron",
-    "intro": "德语发音规律性强：学完这8课的规则，看到任何生词基本都能读对。",
-    "nicosWeg": {
-      "name": "Nicos Weg A1 · 0.4 Von A bis Z",
-      "url": "https://learngerman.dw.com/zh/von-a-bis-z/l-49572682"
-    },
-    "videos": [],
-    "lessons": [
-      {
-        "id": "u0l1",
-        "title": "字母表与拼读总则",
-        "skills": [
-          "alphabet",
-          "spelling-rules"
-        ],
-        "vocabRefs": [],
-        "stepCount": 17
-      },
-      {
-        "id": "u0l2",
-        "title": "长元音与短元音",
-        "skills": [
-          "vowel-length"
-        ],
-        "vocabRefs": [],
-        "stepCount": 15
-      },
-      {
-        "id": "u0l3",
-        "title": "变元音 ä ö ü",
-        "skills": [
-          "umlaut"
-        ],
-        "vocabRefs": [],
-        "stepCount": 17
-      },
-      {
-        "id": "u0l4",
-        "title": "双元音 ei au eu ie",
-        "skills": [
-          "diphthong"
-        ],
-        "vocabRefs": [],
-        "stepCount": 17
-      },
-      {
-        "id": "u0l5",
-        "title": "s 家族与 ch",
-        "skills": [
-          "s-family",
-          "ch-sound"
-        ],
-        "vocabRefs": [],
-        "stepCount": 20
-      },
-      {
-        "id": "u0l6",
-        "title": "r 与词尾",
-        "skills": [
-          "r-sound",
-          "final-devoicing"
-        ],
-        "vocabRefs": [],
-        "stepCount": 18
-      },
-      {
-        "id": "u0l7",
-        "title": "其余辅音",
-        "skills": [
-          "misc-consonants"
-        ],
-        "vocabRefs": [],
-        "stepCount": 20
-      },
-      {
-        "id": "u0l8",
-        "title": "词重音与句子语音",
-        "skills": [
-          "word-stress",
-          "sentence-intonation"
-        ],
-        "vocabRefs": [],
-        "stepCount": 20
-      }
-    ]
-  },
-  {
     "id": "u1",
     "title": "第1单元 · Hallo! 我是谁",
     "icon": "👋",
@@ -1036,7 +946,9 @@ export const COURSE_CATALOG = [
           "w082",
           "w104",
           "w376",
-          "w106"
+          "w106",
+          "w441",
+          "w442"
         ],
         "stepCount": 23
       },
@@ -2030,7 +1942,9 @@ export const VOCAB_IDS = [
   "w437",
   "w438",
   "w439",
-  "w440"
+  "w440",
+  "w441",
+  "w442"
 ];
 
 // 精读/精听正文里实际出现的词（自动标注，见 tools/auto-vocab-refs.mjs）。

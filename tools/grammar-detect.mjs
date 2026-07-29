@@ -1,4 +1,4 @@
-// 句子 → 它实际演示了哪些语法点（g01–g13）。
+// 句子 → 它实际演示了哪些语法点（g01–g20）。
 //
 // 用途一：给 gen_grammar_index 挑"你在哪儿真见过这条语法"的实例句。
 // 用途二：审计工具判断正文有没有越过 grammarPrereqs（audit_a1_content.mjs）。
@@ -62,6 +62,33 @@ const POSSESSIVE = new Set([
 // 所以 ihr 一律不认。宁可 g11 少一个物主冠词变体，也不能往索引里塞错例句。
 const PAST_SEIN_HABEN = new Set(['war', 'warst', 'waren', 'wart', 'hatte', 'hattest', 'hatten', 'hattet']);
 const INFINITIVE = /(?:[a-zäöüß]{2,}(?:en|ern|eln))$/;
+
+/* ---- g14–g20 用的词表 ---- */
+const NUMBER_WORD = new Set([
+  'null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun',
+  'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn',
+  'achtzehn', 'neunzehn', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig',
+  'siebzig', 'achtzig', 'neunzig', 'hundert', 'tausend',
+]);
+// einundzwanzig / siebenundvierzig 这类合写的两位数
+const COMPOUND_NUMBER = /^[a-zäöüß]+und(zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig)$/;
+const WEEKDAY = new Set(['montag', 'dienstag', 'mittwoch', 'donnerstag', 'freitag', 'samstag', 'sonntag']);
+const ORDINAL_DATE = /\b(ersten|zweiten|dritten|vierten|fünften|sechsten|siebten|achten|neunten|zehnten|elften|zwölften|\d{1,2}\.)\s+(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)/;
+// Sie 命令式和 Sie 的是非疑问句长得一模一样（Gehen Sie …），只有标点分得开，
+// 所以这条规则必须看原文而不是分词结果。
+const SIE_IMPERATIVE = /^(Bitte,?\s+)?[A-ZÄÖÜ][a-zäöüß]+e?n\s+Sie\b/;
+const COMPARATIVE = new Set([
+  'besser', 'lieber', 'älter', 'jünger', 'größer', 'kleiner', 'teurer', 'billiger',
+  'schneller', 'langsamer', 'länger', 'kürzer', 'schöner', 'wärmer', 'kälter', 'höher',
+]);
+const PRED_DEGREE = new Set(['sehr', 'zu']);
+const FREQ_ADVERB = new Set(['immer', 'oft', 'manchmal', 'selten', 'nie', 'meistens']);
+const SEQ_ADVERB = new Set(['zuerst', 'dann', 'danach', 'später']);
+const PLACE_ADVERB = new Set(['links', 'rechts', 'geradeaus', 'oben', 'unten', 'vorne', 'hinten']);
+// 非主格人称代词。sie/es/Sie 主宾同形，看不出格，一律不认。
+const OBJECT_PRONOUN = new Set(['mich', 'dich', 'ihn', 'uns', 'euch', 'mir', 'dir', 'ihm', 'ihnen']);
+const CONTRACTION = new Set(['zum', 'zur', 'im', 'am', 'beim', 'vom', 'ins', 'ans']);
+const FIXED_DATIV_PREP = new Set(['aus', 'bei', 'mit', 'nach', 'seit', 'von', 'zu']);
 
 /** 句尾（去掉标点后）最后一个词。 */
 const lastWord = list => list[list.length - 1] || '';
@@ -174,6 +201,95 @@ const RULES = [
       return list.includes('und') || list.includes('oder') ? 0.8 : 0;
     },
   },
+  {
+    id: 'g14', label: '数字 · 钟点 · 日期',
+    test: (list, raw, text) => {
+      // "Ja, das ist eine Uhr." 里的 Uhr 是钟表这件东西，不是钟点。
+      // 只有前面挂着数字（um acht Uhr / vierzehn Uhr）才算报时。
+      const clock = list.some((word, index) => word === 'uhr'
+        && (NUMBER_WORD.has(list[index - 1]) || COMPOUND_NUMBER.test(list[index - 1] || '') || /^\d+$/.test(list[index - 1] || '')));
+      if (clock) return 3;
+      if (list.includes('halb') || list.includes('viertel')) return 2.6;
+      if (ORDINAL_DATE.test(text)) return 2.4;
+      if (list.some((word, index) => word === 'am' && WEEKDAY.has(list[index + 1] || ''))) return 2.2;
+      if (list.some(word => COMPOUND_NUMBER.test(word))) return 2;
+      return list.some(word => NUMBER_WORD.has(word)) ? 1 : 0;
+    },
+  },
+  {
+    id: 'g15', label: '命令式',
+    test: (list, raw, text) => {
+      const trimmed = String(text).trim();
+      // 问号一出现就不是命令（Möchten Sie auch etwas essen?）。
+      if (/\?/.test(trimmed)) return 0;
+      if (SIE_IMPERATIVE.test(trimmed)) return 3;
+      // du / ihr 命令式：动词打头、句尾感叹号。名词也可能大写打头，
+      // 所以要求首词不是已知的变位动词形式，且句子确实以 ! 收尾。
+      if (/!/.test(trimmed) && /^[A-ZÄÖÜ][a-zäöüß]{1,}\b/.test(trimmed)) {
+        const first = list[0];
+        if (SEIN.has(first) || HABEN.has(first) || MODALS.has(first) || W_WORDS.has(first)) return 0;
+        if (first === 'sei' || first === 'seid') return 3;
+        // 只认课程里真的教过的那批换音命令式，避免把 "Hallo!" "Danke!" 算进来。
+        if (['komm', 'kommt', 'iss', 'esst', 'nimm', 'nehmt', 'lies', 'sprich', 'fahr', 'geh', 'warte', 'schlaf'].includes(first)) return 3;
+      }
+      return 0;
+    },
+  },
+  {
+    id: 'g16', label: '表语形容词 · 比较',
+    test: (list, raw) => {
+      const hasAls = list.includes('als');
+      if (list.some(word => COMPARATIVE.has(word))) return hasAls ? 3.5 : 2;
+      if (list.includes('mehr') && hasAls) return 3;
+      if (list[0] === 'am' && (list[1] === 'liebsten' || list[1] === 'besten')) return 2.4;
+      // sein + sehr/zu + 形容词：这一课的另一半（形容词作表语不变格）。
+      // 后面必须是小写词才是形容词——"zu Hause"（在家）里的 zu 是介词，不是"太"。
+      const degree = list.some((word, index) => PRED_DEGREE.has(word)
+        && /^[a-zäöüß]/.test(raw[index + 1] || ''));
+      if (degree && list.some(word => SEIN.has(word))) return 1.5;
+      return 0;
+    },
+  },
+  {
+    id: 'g17', label: '频率与地点副词',
+    test: list => {
+      if (list.some(word => FREQ_ADVERB.has(word))) return 2.2;
+      if (list.some(word => PLACE_ADVERB.has(word))) return 2;
+      // zuerst/dann/danach 放句首才是"讲顺序"，句中的 dann 常常只是语气词。
+      if (SEQ_ADVERB.has(list[0])) return 2;
+      return 0;
+    },
+  },
+  {
+    id: 'g18', label: '人称代词的三种格',
+    test: list => {
+      const hits = list.filter(word => OBJECT_PRONOUN.has(word)).length;
+      if (!hits) return 0;
+      return hits > 1 ? 2.6 : 2;
+    },
+  },
+  {
+    id: 'g19', label: '介词',
+    test: list => {
+      const contraction = list.some(word => CONTRACTION.has(word));
+      // 介词 + 第三格冠词（auf dem Tisch / neben der Bank）是这一课最典型的样子
+      const withDative = list.some((word, index) => FIXED_DATIV_PREP.has(word)
+        || (DAT_PREP.has(word) && DAT_PRONOUN.has(list[index + 1] || '')));
+      if (contraction && withDative) return 2.4;
+      if (contraction) return 2;
+      return withDative ? 1.5 : 0;
+    },
+  },
+  {
+    id: 'g20', label: 'man · es gibt · 虚位 es',
+    test: (list, raw, text) => {
+      if (/\bes gibt\b|\bgibt es\b/i.test(text)) return 3;
+      if (list.includes('man')) return 2.6;
+      // 天气与时间的虚位 es：es regnet / es ist halb elf
+      if (list[0] === 'es' && (list[1] === 'regnet' || list[1] === 'schneit')) return 2.4;
+      return 0;
+    },
+  },
 ];
 
 /** 这句话演示了哪些语法点 → [{ id, label, weight }]，按 weight 降序。 */
@@ -182,7 +298,7 @@ export function detectGrammar(text) {
   const list = raw.map(word => word.toLowerCase());
   if (!list.length) return [];
   return RULES
-    .map(rule => ({ id: rule.id, label: rule.label, weight: rule.test(list, raw) }))
+    .map(rule => ({ id: rule.id, label: rule.label, weight: rule.test(list, raw, String(text)) }))
     .filter(hit => hit.weight > 0)
     .sort((a, b) => b.weight - a.weight);
 }

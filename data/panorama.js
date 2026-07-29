@@ -66,7 +66,7 @@ export const GRAMMAR_GROUPS = [
       { id: 'A4', title: '情态动词 · 句框',
         skills: ['modal-koennen-wollen', 'modal-muessen-sollen', 'modal-duerfen', 'moechten', 'satzklammer', 'modal-bracket'], lessons: ['g08'] },
       { id: 'A5', title: '可分动词', skills: ['separable-verbs', 'separable-verb'], lessons: ['g09'] },
-      { id: 'A6', title: '命令式', sub: 'Sie / du / ihr 三种形式', skills: ['imperative-du'], lessons: [] },
+      { id: 'A6', title: '命令式', sub: 'Sie / du / ihr 三种形式', skills: ['imperative-du'], lessons: ['g15'] },
     ],
   },
   {
@@ -90,24 +90,24 @@ export const GRAMMAR_GROUPS = [
   {
     label: '小词',
     cells: [
-      // 人称代词一/四/三格散在 g01 / g06 / g10 三课，从来没有一处集中讲"代词也要变格"。
+      // 人称代词一/四/三格原本散在 g01 / g06 / g10 三课，g18 把三个格摆到了一张表上。
       { id: 'D1', title: '人称代词三格 · 反身',
-        skills: ['pron-sg', 'pronoun-replace', 'pronoun-akk', 'pronoun-dativ', 'sie-formal', 'du-vs-sie', 'du-sie', 'reflexive-prep'], lessons: [] },
-      { id: 'D2', title: '介词', sub: '第四格 / 第三格 / 地点，缺横向对照',
-        skills: ['prep-dativ-zu', 'zu-dativ', 'location-dativ'], lessons: [] },
+        skills: ['pron-sg', 'pronoun-replace', 'pronoun-akk', 'pronoun-dativ', 'sie-formal', 'du-vs-sie', 'du-sie', 'reflexive-prep'], lessons: ['g18'] },
+      { id: 'D2', title: '介词', sub: '第三格介词 · 在哪儿 vs 往哪走 · 缩合',
+        skills: ['prep-dativ-zu', 'zu-dativ', 'location-dativ'], lessons: ['g19'] },
       { id: 'D3', title: '数字 · 钟点 · 日期',
         skills: ['numbers-1-20', 'numbers-tens', 'numbers-compound', 'numbers-large',
-          'prep-time-an-um', 'time-formal', 'time-informal', 'ordinal-date'], lessons: [] },
-      { id: 'D4', title: 'man · es gibt · 不定代词', skills: ['es-impersonal'], lessons: [] },
+          'prep-time-an-um', 'time-formal', 'time-informal', 'ordinal-date'], lessons: ['g14'] },
+      { id: 'D4', title: 'man · es gibt · 不定代词', skills: ['es-impersonal'], lessons: ['g20'] },
     ],
   },
   {
     label: '描述与连接',
     cells: [
       { id: 'E1', title: '表语形容词 · 比较', sub: 'A1 不要求词尾变化；gut/besser, gern/lieber',
-        skills: ['pred-adj', 'zu-adj', 'comparative'], lessons: [] },
+        skills: ['pred-adj', 'zu-adj', 'comparative'], lessons: ['g16'] },
       { id: 'E2', title: '频率与地点副词', sub: 'immer oft nie · hier links rechts',
-        skills: ['sequence-adverbs'], lessons: [] },
+        skills: ['sequence-adverbs'], lessons: ['g17'] },
       // 考纲连词只有 und/oder/aber/denn/also/auch，全是并列；weil/dass/wenn 不在 A1。
       { id: 'E3', title: '并列连词', sub: 'und oder aber denn also（A1 无从句）',
         skills: ['conj-coord', 'conj-denn'], lessons: ['g13'] },
@@ -137,7 +137,7 @@ export const MAINLINE_ORDER = [
 export const VOCAB_AXIS = {
   goetheContentWords: 694, // 考纲实词总数
   appCovered: 310,         // 应用已收录且命中考纲的实词
-  appTotal: 440,           // data/vocab.js 词条总数
+  appTotal: 442,           // data/vocab.js 词条总数
   // 14 个主题的分解还做不了：wortliste.json 没有主题标签。
   // 这不只是为了画进度环——主线挑今天用哪份材料，靠的就是"这个主题下我还差多少词"。
   themesPending: true,
