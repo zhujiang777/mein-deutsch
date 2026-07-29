@@ -1,13 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { auditArticle, requiredSeedHits, ARTICLE_LIMITS } from '../coach-worker/src/a1-guard.js';
-import { validateArticleRequest, normalizeArticle } from '../coach-worker/src/schema.js';
+import { auditArticle, auditQuiz, requiredSeedHits, ARTICLE_LIMITS } from '../coach-worker/src/a1-guard.js';
+import { validateArticleRequest, normalizeArticle, normalizeQuiz } from '../coach-worker/src/schema.js';
 import { buildMessages, generateArticle } from '../coach-worker/src/index.js';
 import {
-  buildArticleRequest, fetchArticle, articleToLesson, pickSpeakIndex, todayStamp, reasonText,
+  buildArticleRequest, fetchArticle, articleToLesson, quizToTask,
+  pickSpeakIndex, todayStamp, reasonText,
 } from '../js/daily-article.js';
 
 const SEEDS = ['Bahnhof', 'fahren', 'Karte', 'kaufen'];
+
+const QUIZ = [
+  { de: 'Er ist am Bahnhof.', zh: '他在火车站。', answer: 0, explainZh: '文中说 Ich bin am Bahnhof。' },
+  { de: 'Die Karte ist teuer.', zh: '这张票很贵。', answer: 1, explainZh: '文中没说票贵。' },
+];
 
 const GOOD = {
   sceneZh: '在火车站',
@@ -19,6 +25,7 @@ const GOOD = {
     { de: 'Ich fahre nach Berlin.', zh: '我去柏林。' },
   ],
   question: { zh: '他在哪儿？', options: ['在火车站', '在超市'], answer: 0 },
+  quiz: QUIZ,
 };
 
 /* ---------- 进出口 Schema ---------- */
@@ -100,6 +107,50 @@ test('句数和句长有上限', () => {
     .flags.includes('too-few-sentences'));
 });
 
+/* ---------- 每日小测 ---------- */
+
+test('小测按白名单重建；不合格只作废题，文章仍然成立', () => {
+  assert.equal(normalizeQuiz(QUIZ).length, 2);
+  assert.deepEqual(normalizeQuiz([QUIZ[0]]), [], '必须恰好两道');
+  assert.deepEqual(normalizeQuiz([{ ...QUIZ[0], extra: 1 }, QUIZ[1]]), [], '多一个字段就整份丢掉');
+  assert.deepEqual(normalizeQuiz([{ ...QUIZ[0], answer: 2 }, QUIZ[1]]), [], 'answer 只能是 0/1');
+  // 关键：题烂了文章还在。文章是主线的一环，不能被附带的两道题拖下水。
+  const article = normalizeArticle({ ...GOOD, quiz: [{ de: 'x' }] });
+  assert.ok(article, '题不合格不能让整篇作废');
+  assert.deepEqual(article.quiz, []);
+});
+
+test('小测的三条硬规则：一真一假 · 说的是这篇 · 不超纲', () => {
+  assert.equal(auditQuiz(QUIZ, GOOD, { seedWords: SEEDS }).ok, true);
+
+  // 同真同假时蒙一个方向就能全对，题就白出了
+  const same = auditQuiz([QUIZ[0], { ...QUIZ[1], answer: 0 }], GOOD, { seedWords: SEEDS });
+  assert.ok(same.flags.includes('quiz-same-answer'));
+
+  // 陈述和文章没有交集 —— 它没在谈这篇文章，无从判定
+  const loose = auditQuiz([{ ...QUIZ[0], de: 'Das Wetter ist gut.' }, QUIZ[1]], GOOD, { seedWords: SEEDS });
+  assert.ok(loose.flags.includes('quiz-not-anchored'));
+
+  // 超纲词和 A1 红线语法，用的是和文章同一条闸
+  const banned = auditQuiz([{ ...QUIZ[0], de: 'Er ist am Bahnhof, weil er fahrt.' }, QUIZ[1]],
+    GOOD, { seedWords: SEEDS });
+  assert.ok(banned.flags.includes('quiz-subordinate-clause'));
+});
+
+test('小测拼成 Goethe 阅读第一部分那种题：德语陈述 + Richtig/Falsch', () => {
+  const task = quizToTask(GOOD, { skills: ['g-wo'] });
+  assert.equal(task.cellId, 'L1', '形状对齐官方 Lesen Teil 1');
+  assert.equal(task.items.length, 2);
+  assert.deepEqual(task.items[0].options, ['Richtig', 'Falsch']);
+  // 题干字段必须是 prompt——renderChoice 读的是 prompt，写成 q 题干就是空白
+  assert.equal(task.items[0].prompt, QUIZ[0].de);
+  assert.equal(task.items[0].a, 0);
+  assert.ok(task.items.every(item => item.skills.includes('g-wo')));
+  assert.ok(task.items.every(item => item.explain), '每道题都要讲为什么，否则做了等于没做');
+  // 没题就没有小测，不硬凑
+  assert.equal(quizToTask({ ...GOOD, quiz: [] }), null);
+});
+
 /* ---------- Worker 行为 ---------- */
 
 test('没配模型时直接放弃，不假装成功', async () => {
@@ -119,6 +170,8 @@ test('提示词里写死了必须用上的词和必须练的语法', () => {
   assert.match(system, /Bahnhof/);
   assert.match(system, /用 wo 提问/);
   assert.match(system, /从句/, 'A1 红线要写进提示词，不能只靠出口闸门');
+  assert.match(system, /quiz/, '小测的题也得在提示词里要，不能指望模型自己想起来');
+  assert.match(system, /一真一假/);
 });
 
 /* ---------- 客户端 ---------- */

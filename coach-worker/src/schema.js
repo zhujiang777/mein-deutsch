@@ -41,9 +41,32 @@ export function validateArticleRequest(value) {
   };
 }
 
-/** 按白名单重建模型输出。多一个键、少一个必填键，整份作废。 */
+/**
+ * 每日小测：2 道德语判断对错，形状对齐 Goethe Lesen Teil 1。
+ * answer 0 = Richtig，1 = Falsch，和 options ['Richtig','Falsch'] 的下标一致。
+ *
+ * 单独一个函数、单独作废：题不合格只丢题，不丢文章 —— 文章是主线的一环，
+ * 不能因为附带的两道题写砸了就让今天没得读。
+ */
+export function normalizeQuiz(value) {
+  const allowedKeys = new Set(['de', 'zh', 'answer', 'explainZh']);
+  if (!Array.isArray(value) || value.length !== 2) return [];
+  const items = value.map(item => {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) return null;
+    if (Object.keys(item).some(key => !allowedKeys.has(key))) return null;
+    const de = cleanText(item.de, 120);
+    const zh = cleanText(item.zh, 120);
+    const explainZh = cleanText(item.explainZh, 120);
+    if (!de || !zh || !explainZh) return null;
+    if (!Number.isInteger(item.answer) || item.answer < 0 || item.answer > 1) return null;
+    return { de, zh, answer: item.answer, explainZh };
+  });
+  return items.every(Boolean) ? items : [];
+}
+
+/** 按白名单重建模型输出。多一个键、少一个必填键，整份作废（quiz 除外，见 normalizeQuiz）。 */
 export function normalizeArticle(value) {
-  const allowedTop = new Set(['sceneZh', 'titleDe', 'titleZh', 'sentences', 'question']);
+  const allowedTop = new Set(['sceneZh', 'titleDe', 'titleZh', 'sentences', 'question', 'quiz']);
   const allowedQuestion = new Set(['zh', 'options', 'answer']);
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
   if (Object.keys(value).some(key => !allowedTop.has(key))) return null;
@@ -69,5 +92,9 @@ export function normalizeArticle(value) {
   if (!zh || options.length !== 2) return null;
   if (!Number.isInteger(question.answer) || question.answer < 0 || question.answer > 1) return null;
 
-  return { sceneZh, titleDe, titleZh, sentences, question: { zh, options, answer: question.answer } };
+  return {
+    sceneZh, titleDe, titleZh, sentences,
+    question: { zh, options, answer: question.answer },
+    quiz: normalizeQuiz(value.quiz),
+  };
 }

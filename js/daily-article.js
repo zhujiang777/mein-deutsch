@@ -11,12 +11,13 @@
 //    学习流程不能因为 AI 挂了而中断。
 // 3. 生成的文章没有预生成音频，只能用浏览器语音合成朗读；界面上要说明这一点，
 //    不能让人以为听到的是和课程一样的标准音。
-import { auditArticle } from '../coach-worker/src/a1-guard.js';
+import { auditArticle, auditQuiz } from '../coach-worker/src/a1-guard.js';
 import { normalizeArticle } from '../coach-worker/src/schema.js';
 
 export const ARTICLE_CACHE_KEY = 'md.article.today.v1';
 export const REGEN_LIMIT = 1;
 export const ARTICLE_LESSON_ID = 'daily-article';
+export const QUIZ_TASK_ID = 'daily-quiz';
 
 /** 本地日期，不是 UTC —— 跨时区时"今天"应该跟着人走。 */
 export function todayStamp(now = new Date()) {
@@ -103,6 +104,31 @@ export function articleToLesson(article, { seedWords = [], skills = ['reading'] 
   };
 }
 
+/**
+ * 每日小测：把文章附带的两道判断对错拼成 exam-shell 认识的题组。
+ * 形状对齐 Goethe Lesen Teil 1（短文 + 德语陈述判断对错），所以选项固定
+ * ['Richtig', 'Falsch']，answer 0 = Richtig —— 和官方答题卡一个方向。
+ * 没有题（AI 没出 / 没过闸 / 走的是库存材料）时返回 null，今天就没有小测。
+ */
+export function quizToTask(article, { skills = ['reading'] } = {}) {
+  const quiz = Array.isArray(article?.quiz) ? article.quiz : [];
+  if (!quiz.length) return null;
+  return {
+    id: QUIZ_TASK_ID,
+    cellId: 'L1',
+    titleZh: '今天这篇，判断对错',
+    subZh: '和 Goethe A1 阅读第一部分同一种题',
+    items: quiz.map(item => ({
+      type: 'choice',
+      prompt: item.de,
+      options: ['Richtig', 'Falsch'],
+      a: item.answer,
+      explain: `${item.zh}　—— ${item.explainZh}`,
+      skills,
+    })),
+  };
+}
+
 /* ---------- 缓存：每天一篇，只能重生成一次 ---------- */
 
 export function loadArticleCache() {
@@ -169,7 +195,14 @@ export async function fetchArticle(request, secrets, fetchImpl = fetch) {
   });
   if (!audit.ok) return { article: null, reason: `local-a1-${audit.flags[0]}` };
 
-  return { article, audit, source: payload.source || 'model' };
+  // 小测同样再审一遍，同样只退题不退文章：不合格就把 quiz 清空，
+  // 今天没有小测，但今日文章照常进学习流程。
+  const quizAudit = auditQuiz(article.quiz, article, {
+    knownWords: request.knownWords, seedWords: request.seedWords,
+  });
+  if (!quizAudit.ok) article.quiz = [];
+
+  return { article, audit, quizAudit, source: payload.source || 'model' };
 }
 
 /** 说人话的失败原因——出问题时用户该知道是"没配置"还是"写出来不合格"。 */

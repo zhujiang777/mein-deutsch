@@ -130,6 +130,26 @@ test('文章合格时，它的生词排进"背词"的最前面', () => {
   assert.deepEqual(without.priorityIds, []);
 });
 
+test('每日小测跟着今日文章走，不新开一段', () => {
+  const generated = { titleZh: '在火车站', sentences: [], question: {} };
+  const quizTask = { id: 'daily-quiz', cellId: 'L1', titleZh: '今天这篇，判断对错', items: [{}, {}] };
+  const counts = { due: 2, fresh: 2 };
+
+  const withQuiz = buildTodayPlan('full', { generated, quizTask, counts }).segments;
+  assert.deepEqual(withQuiz.map(s => s.kind), ['vocab', 'generated', 'quiz']);
+  // 仍属 article 段：首页那条路是三行，形态锚不能因为多了两道题就变四行。
+  assert.equal(withQuiz.at(-1).stage, 'article');
+
+  // AI 没出题 / 没过闸 / 走的是库存材料 —— 整段不出现，不硬凑
+  assert.ok(!buildTodayPlan('full', { generated, quizTask: null, counts }).segments
+    .some(s => s.kind === 'quiz'));
+  assert.ok(!buildTodayPlan('full', { generated, quizTask: { ...quizTask, items: [] }, counts }).segments
+    .some(s => s.kind === 'quiz'));
+  // 只复习那条旁路不出考试题
+  assert.ok(!buildTodayPlan('review', { generated, quizTask, counts }).segments
+    .some(s => s.kind === 'quiz'));
+});
+
 test('全部清空时不产出任何段落', () => {
   const { segments } = buildTodayPlan('review', { nextStep: null, material: null, counts: { due: 0, fresh: 0 } });
   assert.equal(segments.length, 0);

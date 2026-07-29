@@ -82,15 +82,21 @@ export function requiredSeedHits(seedWords) {
   return Math.max(2, Math.ceil(count / 2));
 }
 
+/** 今天这一篇里"允许出现"的词：A1 词表 + 学习者已知词 + 今天的种子词。 */
+export function allowedWords({ knownWords = [], seedWords = [] } = {}) {
+  const allowed = new Set(A1_WORDS);
+  knownWords.slice(0, 400).forEach(word => addWords(allowed, word));
+  seedWords.slice(0, 40).forEach(word => addWords(allowed, word));
+  return allowed;
+}
+
 export function auditArticle(article, { knownWords = [], seedWords = [] } = {}) {
   const flags = [];
   const sentences = Array.isArray(article?.sentences) ? article.sentences : [];
   if (sentences.length < ARTICLE_LIMITS.minSentences) flags.push('too-few-sentences');
   if (sentences.length > ARTICLE_LIMITS.maxSentences) flags.push('too-many-sentences');
 
-  const allowed = new Set(A1_WORDS);
-  knownWords.slice(0, 400).forEach(word => addWords(allowed, word));
-  seedWords.slice(0, 40).forEach(word => addWords(allowed, word));
+  const allowed = allowedWords({ knownWords, seedWords });
 
   const used = new Set();
   const unknown = new Set();
@@ -131,4 +137,58 @@ export function auditArticle(article, { knownWords = [], seedWords = [] } = {}) 
     seedHits,
     seedNeed: need,
   };
+}
+
+/* ---------- 每日小测的闸门 ---------- */
+
+export const QUIZ_LIMITS = {
+  count: 2,                 // 官方 Lesen Teil 1 是 5 道；每日小测只取 2 道，控制在 1 分钟内
+  maxWords: 12,             // 和文章句子同一条线
+  // 陈述里至少要有这么多个实词（≥4 个字母）在文章里出现过。
+  // 只要 1 个不是随便定的：真考试的陈述是**改写**，Falsch 那道尤其如此
+  // （文章说"我买票"，陈述说"票很贵"），常常只共享一个名词。
+  // 定成 2 会把合格的改写题一并判死。这道闸能拦的是"在说完全不相干的事"，
+  // 至于"能不能判定"，机械规则本来就担保不了，别假装能。
+  minAnchorWords: 1,
+  minAnchorLength: 4,       // 实词门槛：ist/der/am 这类虚词不算锚
+};
+
+/**
+ * 小测的三条硬规则，全部机械可判：
+ *   1. 一真一假 —— 两道同真或同假时，蒙一个方向就能全对，题就白出了
+ *   2. 可判定 —— 陈述里至少 2 个词在文章正文里出现过，否则它没在谈这篇文章
+ *   3. 不超纲 —— 词表、句长、A1 红线语法与文章同一条闸
+ *
+ * 不合格只丢题不丢文章：文章是主线的一环，不能因为附带的两道题写砸了就让今天没得读。
+ */
+export function auditQuiz(quiz, article, { knownWords = [], seedWords = [] } = {}) {
+  const flags = [];
+  const items = Array.isArray(quiz) ? quiz : [];
+  if (items.length !== QUIZ_LIMITS.count) return { ok: false, flags: ['quiz-wrong-count'] };
+
+  // 一真一假
+  if (items[0].answer === items[1].answer) flags.push('quiz-same-answer');
+
+  const articleWords = new Set();
+  for (const sentence of Array.isArray(article?.sentences) ? article.sentences : []) {
+    addWords(articleWords, sentence?.de);
+  }
+  const allowed = allowedWords({ knownWords, seedWords });
+
+  for (const item of items) {
+    const de = String(item?.de || '');
+    if (/[<>]|https?:\/\/|```/u.test(de)) flags.push('quiz-unsafe-markup');
+    const words = (de.match(/[a-zäöüß]+/giu) || []).map(word => word.toLocaleLowerCase('de-DE'));
+    if (!words.length) flags.push('quiz-empty');
+    if (words.length > QUIZ_LIMITS.maxWords) flags.push('quiz-too-long');
+    // 锚：实词，且允许词形变化（Karte → Karten、kaufe → kauft）
+    const anchors = words.filter(word => word.length >= QUIZ_LIMITS.minAnchorLength
+      && [...articleWords].some(other => other.startsWith(word.slice(0, 4))
+        || word.startsWith(other.slice(0, 4))));
+    if (anchors.length < QUIZ_LIMITS.minAnchorWords) flags.push('quiz-not-anchored');
+    if (words.some(word => !allowed.has(word))) flags.push('quiz-new-words');
+    BANNED_GRAMMAR.forEach(rule => { if (rule.re.test(de)) flags.push(`quiz-${rule.code}`); });
+  }
+
+  return { ok: flags.length === 0, flags: [...new Set(flags)] };
 }

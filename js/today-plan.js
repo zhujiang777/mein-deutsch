@@ -34,12 +34,12 @@ export const ROUTES = {
   full: {
     label: '完整路线 · 约 25 分钟',
     maxDue: 20, maxNew: 10, mistakes: 5, listenMisses: 3,
-    lesson: true, article: true,
+    lesson: true, article: true, quiz: true,
   },
   review: {
     label: '今天只想复习 · 约 10 分钟',
     maxDue: 30, maxNew: 0, mistakes: 8, listenMisses: 5,
-    lesson: false, article: false, quickForms: true,
+    lesson: false, article: false, quickForms: true, quiz: false,
   },
 };
 
@@ -105,7 +105,7 @@ function reasonFor({ pack, readiness, done, seedHits }) {
  * counts 由调用方从 SRS 读出：{ due, fresh, mistakes:[], listenMisses:[] }
  */
 export function buildTodayPlan(routeKey, {
-  nextStep = null, material = null, generated = null, counts = {},
+  nextStep = null, material = null, generated = null, counts = {}, quizTask = null,
 } = {}) {
   const route = ROUTES[routeKey] || ROUTES.full;
   const segments = [];
@@ -144,6 +144,14 @@ export function buildTodayPlan(routeKey, {
     } else if (material?.ready) {
       segments.push({ stage: 'article', kind: 'material', packId: material.pack.id, title: material.pack.title });
     }
+  }
+
+  // ④ 每日小测 —— 读完立刻用考试的方式验一遍，2 道判断对错约 1 分钟。
+  // 题是今日文章顺手生成的，所以它跟着文章走，不新开一个 stage：
+  // 首页那条路仍然是三行，形态锚不动。没题（AI 挂了 / 没过闸 / 走的是库存材料）
+  // 就整段不出现，不硬凑。
+  if (route.quiz && quizTask?.items?.length) {
+    segments.push({ stage: 'article', kind: 'quiz', title: quizTask.titleZh, task: quizTask });
   }
 
   return { route, segments };

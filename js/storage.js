@@ -2,7 +2,7 @@
 // 全部存 localStorage；条目带 lastModified 供 Gist 同步合并（新者胜）
 const KEYS = {
   progress: 'md.progress.v1',   // v1 遗留：完成标记（迁移用）
-  srs: 'md.srs.v1',             // 词卡 + 错题池调度（w=词卡, d=生词本, m=课程错题, l=精听错句）
+  srs: 'md.srs.v1',             // 词卡 + 错题池调度（w=词卡, d=生词本, m=课程错题, l=精听错句, x=考试错题）
   settings: 'md.settings.v1',
   skills: 'md.skills.v1',       // 技能掌握度 { skillId: {s, seen, ok, last} }
   lessons: 'md.lessons.v1',     // 课程状态 { lessonId: {step, done, score, t} }
@@ -10,6 +10,9 @@ const KEYS = {
   daily: 'md.daily.v1',         // 每日日志 { 'YYYY-MM-DD': {items, ok, lessons, minutes} }
   rewards: 'md.rewards.v1',     // XP / 等级 / 首次完成奖励 / 成就
   wordbook: 'md.wordbook.v1',   // 全局查词加入的自定义词条（d:lemma 命名空间）
+  // 题型熟练度单独一个 store，不并进 skills：题型熟练度不是语言强度，
+  // 混进 md.skills.v1 会让全景图语法轴的百分比被听力题稀释。
+  exam: 'md.exam.v1',           // { cells: { L1:{s,seen,ok,last} }, tasks: {...}, mocks: [] }
   meta: 'md.meta.v1',           // { schemaVersion, lastSync }
 };
 
@@ -126,6 +129,10 @@ export function removeWordEntry(id) {
 /* ---- 技能掌握度 ---- */
 export function loadSkills() { return load(KEYS.skills, {}); }
 export function saveSkills(s) { save(KEYS.skills, s); }
+
+/* ---- 题型熟练度（应试板块） ---- */
+export function loadExam() { return load(KEYS.exam, { cells: {}, tasks: {}, mocks: [] }); }
+export function saveExam(value) { save(KEYS.exam, value); }
 
 /* ---- 课程状态 ---- */
 export function getLessonState(id) {

@@ -1277,6 +1277,12 @@ body.immersive #app { max-width: 760px; padding-top: 12px; padding-bottom: 18px;
 .ex-audio-big { display: inline-flex; align-items: center; gap: 8px; }
 .ex-audio-big .audio-btn { width: 68px; height: 68px; font-size: 1.6rem; margin: 12px 6px; }
 .ex-audio-row { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
+/* 听力考题的播放次数提示：考试第二部分只播一遍，这一行是它唯一的告知处 */
+.ex-plays { margin-top: 8px; font-size: .8rem; color: var(--muted); }
+/* 考试题组的抬头。沿用 lesson-shell 的版式，只多一条题型说明 */
+.exam-head { text-align: center; padding: 4px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.exam-head-title { font-size: 1.05rem; font-weight: 650; margin-top: 4px; }
+.exam-head-sub { font-size: .82rem; color: var(--muted); margin-top: 4px; }
 .ex-options,.wc-options { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 .ex-opt,.wc-opt,.quiz-opt {
   min-height: 50px; padding: 12px 15px; text-align: center; font-size: 1rem;

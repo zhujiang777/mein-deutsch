@@ -6,6 +6,7 @@ import { pullMerge, pushNow, syncConfigured } from '../sync.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../secrets.js';
 import { assessmentConfigured, checkAssessmentConnection } from '../pronunciation-assessment.js';
 import { getCoachSecrets, setCoachSecrets, coachConfigured } from '../coach-secrets.js';
+import { EXAM_MODES, examMode } from '../exam.js';
 
 export function renderSettings(host) {
   const s = getSettings();
@@ -230,6 +231,20 @@ export function renderSettings(host) {
   newSel.addEventListener('change', () => setSetting('newPerDay', parseInt(newSel.value, 10)));
   newRow.appendChild(newSel);
   prefCard.appendChild(newRow);
+
+  // 考试题：读完今日文章顺手做两道判断对错（约 1 分钟），走完每 5 格来一次阶段测验。
+  // 到期的考试错题不受这个开关影响——错了的题该复现还是要复现。
+  const examRow = el(`<div class="settings-row"><label>考试题（Goethe A1 题型）</label></div>`);
+  const examSel = el(`<select>
+    <option value="all">${esc(EXAM_MODES.all.label)}</option>
+    <option value="stage">${esc(EXAM_MODES.stage.label)}</option>
+    <option value="off">${esc(EXAM_MODES.off.label)}</option>
+  </select>`);
+  examSel.value = examMode(s);
+  examSel.addEventListener('change', () => setSetting('examMode', examSel.value));
+  examRow.appendChild(examSel);
+  prefCard.appendChild(examRow);
+  prefCard.appendChild(el(`<p class="meta">全开：每天读完今日文章顺手做 2 道判断对错（约 1 分钟），每走完 5 格来一次阶段测验。到期的考试错题不受此开关影响。</p>`));
   host.appendChild(prefCard);
 
   /* 数据同步 */

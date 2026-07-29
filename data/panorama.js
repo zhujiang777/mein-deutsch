@@ -145,36 +145,56 @@ export const VOCAB_AXIS = {
 
 /* ---------- 三 题型轴（11 格） ---------- */
 // Goethe-Zertifikat A1 Start Deutsch 1 的真实题型。这条轴回答"应试目的"，也暴露产品缺口。
+//
+// 口径已按官方模考平台 bfu.goethe.de/a1_sd1/ 逐模块核实（2026-07）。
+// 之前有三处是错的，改内容前请先看这三条，别照着旧描述出题：
+//   · H1 短对话不是判断对错，是三选一；
+//   · 公共广播不是三选一，是判断对错，而且**只播一遍**（全场唯一一处）；
+//   · L2 不是"从多条里找匹配的那条"，是"两个来源二选一（a 还是 b）"。
+// H2/H3 的内容也按官方 Teil 顺序对调过：Teil 2 是广播，Teil 3 才是电话留言。
+//
+// teil = 官方顺序；count/points = 官方题量与分值；plays = 听力播放次数。
+// 笔试 65 分钟（听 20 + 读 25 + 写 20），口试 15 分钟单独一场。
 // status: ready 有完整题型 / partial 有素材但没题型 / none 完全没有
 export const EXAM_GROUPS = [
   {
-    label: '听 Hören', cells: [
-      { id: 'H1', title: '日常短对话', sub: '判断对错', status: 'partial', note: '精听有素材，无考试题型' },
-      { id: 'H2', title: '电话留言', sub: '三选一', status: 'none' },
-      { id: 'H3', title: '公共广播', sub: '车站·商场·校园', status: 'none' },
+    label: '听 Hören · 20 分钟', cells: [
+      { id: 'H1', title: '日常短对话', sub: '三选一 a/b/c · 播两遍', teil: 1, count: 6, points: 6, plays: 2,
+        status: 'partial', note: '精听有素材，无考试题型' },
+      { id: 'H2', title: '公共广播 Durchsagen', sub: '判断对错 · 只播一遍', teil: 2, count: 4, points: 4, plays: 1,
+        status: 'none', note: '全场唯一只播一遍的部分' },
+      { id: 'H3', title: '电话留言 · 语音信箱', sub: '三选一 a/b/c · 播两遍', teil: 3, count: 5, points: 5, plays: 2,
+        status: 'none' },
     ],
   },
   {
-    label: '读 Lesen', cells: [
-      { id: 'L1', title: '短文 · 邮件', sub: '判断对错', status: 'partial', note: '精读有素材，无题型' },
-      { id: 'L2', title: '小广告', sub: '找匹配的那一条', status: 'none' },
-      { id: 'L3', title: '告示牌 · 通知', sub: 'Aushang', status: 'none' },
+    label: '读 Lesen · 25 分钟', cells: [
+      { id: 'L1', title: '短信 · 邮件 · 通知', sub: '判断对错', teil: 1, count: 5, points: 5,
+        status: 'partial', note: '精读有素材，无题型' },
+      { id: 'L2', title: '两个来源二选一', sub: '看需求，选 a 还是 b', teil: 2, count: 5, points: 5, status: 'none' },
+      { id: 'L3', title: '告示牌 Aushang', sub: '判断对错', teil: 3, count: 5, points: 5, status: 'none' },
     ],
   },
   {
-    label: '写 Schreiben', cells: [
-      { id: 'S1', title: '填表格', sub: 'Formular：姓名·地址·生日', status: 'none', note: '成本极低，考试稳拿分' },
-      { id: 'S2', title: '短信息', sub: '约 30 词：约时间·请假·道歉', status: 'none' },
+    label: '写 Schreiben · 20 分钟', cells: [
+      { id: 'S1', title: '填表格 Formular', sub: '5 个空：姓名·地址·生日·人数', teil: 1, count: 5, points: 5,
+        status: 'none', note: '成本极低，考试稳拿分' },
+      { id: 'S2', title: '短信息', sub: '约 30 词 · 3 个要点 + 称呼与结尾', teil: 2, count: 1, points: 10,
+        status: 'none' },
     ],
   },
   {
-    label: '说 Sprechen', cells: [
-      { id: 'P1', title: '自我介绍', sub: '＋拼写名字＋报电话号码', status: 'partial', note: '只有跟读评分，不能说自己的信息' },
-      { id: 'P2', title: '关键词卡提问', sub: '看卡片提问并回答', status: 'none' },
-      { id: 'P3', title: '请求与回应', sub: '看图提出请求', status: 'none' },
+    label: '说 Sprechen · 15 分钟', cells: [
+      { id: 'P1', title: '自我介绍', sub: '7 个关键词 ＋拼写名字 ＋报号码', teil: 1,
+        status: 'partial', note: '只有跟读评分，不能说自己的信息' },
+      { id: 'P2', title: '关键词卡提问', sub: '主题卡 + 关键词卡，提问并回答', teil: 2, status: 'none' },
+      { id: 'P3', title: '请求与回应', sub: '看图卡提出请求并回应', teil: 3, status: 'none' },
     ],
   },
 ];
+
+/** 笔试各部分时长（分钟）。口试 15 分钟是单独一场，不叠在笔试里。 */
+export const EXAM_TIMING = { hoeren: 20, lesen: 25, schreiben: 20, sprechen: 15 };
 
 export const EXAM_CELLS = EXAM_GROUPS.flatMap(group => group.cells);
 

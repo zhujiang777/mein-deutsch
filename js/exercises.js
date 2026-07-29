@@ -70,8 +70,28 @@ function renderChoice(host, item, ctx, { audioPrompt = false } = {}) {
     const play = audioBtn(item.audioText);
     play.classList.add('big');
     head.querySelector('.ex-audio-big').appendChild(play);
-    head.appendChild(audioBtn(item.audioText, { slow: true }));
-    setTimeout(() => speak(item.audioText), 250);
+    const slow = audioBtn(item.audioText, { slow: true });
+    head.appendChild(slow);
+    // 考试题才传 plays：Goethe A1 听力第一、三部分播两遍，第二部分只播一遍。
+    // 平时练习不传，播放次数不限——练习和考试的规则本来就不一样。
+    if (Number.isInteger(item.plays) && item.plays > 0) {
+      const note = el(`<div class="ex-plays"></div>`);
+      head.appendChild(note);
+      let used = 0;
+      const tick = () => {
+        used += 1;
+        const left = item.plays - used;
+        note.textContent = left > 0
+          ? `考试规则：还能再听 ${left} 遍`
+          : `考试规则：${item.plays} 遍已用完`;
+        if (left <= 0) { play.disabled = true; slow.disabled = true; }
+      };
+      play.addEventListener('click', tick);
+      slow.addEventListener('click', tick);
+      setTimeout(() => { speak(item.audioText); tick(); }, 250);
+    } else {
+      setTimeout(() => speak(item.audioText), 250);
+    }
   } else {
     head.appendChild(el(`<div class="ex-q">${esc(item.prompt)}</div>`));
     if (item.audioText) head.appendChild(audioBtn(item.audioText));

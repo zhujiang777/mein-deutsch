@@ -15,9 +15,10 @@ import { stopSpeak } from '../speech.js';
 import { panoramaBanner } from '../panorama-banner.js';
 import { ROUTES, STAGE_LABELS, pickMaterial, buildTodayPlan } from '../today-plan.js';
 import {
-  buildArticleRequest, fetchArticle, articleToLesson, reasonText,
+  buildArticleRequest, fetchArticle, articleToLesson, reasonText, quizToTask,
   cachedArticle, saveArticleCache, regensLeft, todayStamp,
 } from '../daily-article.js';
+import { dailyQuizOn } from '../exam.js';
 import { getCoachSecrets, coachConfigured } from '../coach-secrets.js';
 
 const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB_IDS];
@@ -87,7 +88,9 @@ function loadTodayRuntime() {
       import('./listening.js?v=2'),
       import('../lesson-shell.js'),
       import('../../data/pronunciation.js'),
-    ]).then(([course, readings, lessonView, vocabView, exercises, listeningView, shell, pron]) => ({
+      import('../exam-shell.js'),
+    ]).then(([course, readings, lessonView, vocabView, exercises, listeningView, shell, pron, examShell]) => ({
+      runExamShell: examShell.runExamShell,
       COURSE: course.COURSE,
       READINGS: readings.READINGS,
       findLesson: course.findLesson,
@@ -251,10 +254,16 @@ async function startFlow(host, routeKey) {
   const generated = ready.article
     ? { ...ready.article, seedWords: ready.seedWords || [] }
     : null;
+  // 每日小测的题是文章顺手带来的：没生成出来、没过闸、或今天走的是库存材料，
+  // 就没有小测。开关关掉时同样没有。
+  const quizTask = generated && dailyQuizOn()
+    ? quizToTask(generated, { skills: step?.cell?.skills?.length ? step.cell.skills : ['reading'] })
+    : null;
   const { segments } = buildTodayPlan(routeKey, {
     nextStep: step,
     material: todayMaterial(step),
     generated,
+    quizTask,
     counts: {
       due: stats.due, fresh: stats.fresh,
       mistakes: dueMistakes(99), listenMisses: dueListenMisses(99),
@@ -329,6 +338,13 @@ async function startFlow(host, routeKey) {
       if (!lesson) { idx++; run(); return; }
       host.appendChild(header);
       runtime.runLessonShell(host, lesson, {
+        onComplete: () => { idx++; run(); },
+        onExit: () => { renderTodayFresh(host); },
+      });
+    } else if (seg.kind === 'quiz') {
+      // 每日小测：刚读完的那篇，立刻用 Goethe 阅读第一部分的方式验一遍。
+      host.appendChild(header);
+      runtime.runExamShell(host, seg.task, {
         onComplete: () => { idx++; run(); },
         onExit: () => { renderTodayFresh(host); },
       });

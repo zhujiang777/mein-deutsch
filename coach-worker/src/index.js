@@ -4,7 +4,7 @@
 // 它不编排学习、不判断掌握度、不解锁课程——那些用确定性规则做，更可控也更便宜。
 //
 // 和 Azure 发音评测 Worker（worker/）保持完全独立：两种风险、两套密钥，不混在一起。
-import { auditArticle, requiredSeedHits } from './a1-guard.js';
+import { auditArticle, auditQuiz, requiredSeedHits } from './a1-guard.js';
 import { validateArticleRequest, normalizeArticle } from './schema.js';
 
 const DEFAULT_ORIGIN = 'https://zhujiang777.github.io';
@@ -84,7 +84,13 @@ export function buildMessages(summary) {
     '只用 Goethe A1 范围：不许有从句（weil/dass/wenn 都不行）、不许第二格介词、不许被动、不许过去时。',
     '除给定的词外，最多再引入 3 个新词。',
     '再出一道中文理解题，两个选项，answer 是正确选项的下标。',
-    'JSON 结构：{sceneZh,titleDe,titleZh,sentences:[{de,zh}],question:{zh,options:[a,b],answer}}',
+    // 每日小测：形状对齐 Goethe Lesen Teil 1（短文 + 德语陈述判断对错），
+    // 所以陈述必须是德语、必须能从文里直接判定、必须一真一假。
+    'quiz 再出两道德语判断对错题：de 是一句德语陈述，zh 是它的中文，'
+      + 'answer 0 表示陈述正确、1 表示错误，explainZh 用中文说明依据。',
+    '两道 quiz 必须一真一假；陈述只能用文章里出现过的词，每句不超过 12 个词。',
+    'JSON 结构：{sceneZh,titleDe,titleZh,sentences:[{de,zh}],question:{zh,options:[a,b],answer},'
+      + 'quiz:[{de,zh,answer,explainZh},{de,zh,answer,explainZh}]}',
   ].filter(Boolean).join('\n');
 
   return [
@@ -164,7 +170,15 @@ export async function generateArticle(summary, env) {
     const audit = auditArticle(article, {
       knownWords: summary.knownWords, seedWords: summary.seedWords,
     });
-    if (audit.ok) return { schemaVersion: 1, source: 'model', article, audit };
+    if (audit.ok) {
+      // 只退题不退文章：小测过不了闸就把 quiz 清空，今天没有小测，
+      // 但文章照常给。文章是主线的一环，不能被附带的两道题拖下水。
+      const quizAudit = auditQuiz(article.quiz, article, {
+        knownWords: summary.knownWords, seedWords: summary.seedWords,
+      });
+      if (!quizAudit.ok) article.quiz = [];
+      return { schemaVersion: 1, source: 'model', article, audit, quizAudit };
+    }
     lastAudit = audit;
     lastError = `a1-${audit.flags[0]}`;
   }

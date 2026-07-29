@@ -109,3 +109,33 @@ export function listenRef(id) {
   const [, packId, sentenceIndex] = String(id).split(':');
   return { packId, sentenceIndex: parseInt(sentenceIndex, 10) };
 }
+
+/* ---- 考试错题池：x:<taskId>:<itemIndex> ----
+ * 单独一个命名空间，和 m: / l: 并列。考试错题的复现价值在于"同一个题型再来一遍"，
+ * 所以它回到考试那一段，不并进背词段的错题巩固。
+ * 调度直接复用 rateMistake —— 1/3/7 天毕业出池的曲线对考试题同样合适。
+ */
+export function addExamMiss(taskId, itemIndex) {
+  if (!taskId || !Number.isInteger(itemIndex) || itemIndex < 0) return;
+  const id = `x:${taskId}:${itemIndex}`;
+  const all = loadSrs();
+  const c = all[id] || { ivl: 0, ease: 2.3, reps: 0, lapses: 0, state: 'learn' };
+  c.lapses += 1;
+  c.due = Date.now() + DAY;
+  all[id] = c;
+  saveSrs(all);
+}
+
+export function dueExamMisses(limit = 10) {
+  const all = loadSrs();
+  const now = Date.now();
+  return Object.keys(all)
+    .filter(id => id.startsWith('x:') && all[id].due <= now && all[id].state !== 'done')
+    .sort((a, b) => all[a].due - all[b].due)
+    .slice(0, limit);
+}
+
+export function examRef(id) {
+  const [, taskId, itemIndex] = String(id).split(':');
+  return { taskId, itemIndex: parseInt(itemIndex, 10) };
+}

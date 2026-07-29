@@ -23,7 +23,8 @@ export function buildListeningLesson(pack) {
     },
     {
       type: 'choice',
-      q: pack.gist.q,
+      // renderChoice 读的是 prompt，写成 q 会让题干整个渲染不出来（曾经就是这样）
+      prompt: pack.gist.q,
       options: pack.gist.options,
       a: pack.gist.a,
       explain: pack.gist.explain,
