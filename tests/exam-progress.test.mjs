@@ -63,14 +63,17 @@ test('阶段测验：挑没做过的、和刚学的重合最多的，且一次�
   assert.equal(new Set(picked.map(task => task.cellId)).size, picked.length,
     '同一个题型不该在一场阶段测验里出现两次——阶段测验是横着串，不是竖着刷');
 
-  // 刚走过的格子用到 numbers-tens，挂着这个标签的那组就该被顶上来
-  const withRecent = pickStageExam(26, { skills: ALL_STRONG, recentSkills: ['numbers-tens'] });
-  assert.ok(withRecent.some(task => task.id === 'x-l3-03'),
-    '标签重合最多的那组必须被挑中，这才叫"把刚学过的串起来"');
+  // 只有一组挂着 renting 这个标签，刚走过的格子用到它，那一组就该被顶到第一位
+  const only = EXAM_TASKS.filter(task => [...(task.skills || []),
+    ...task.items.flatMap(item => item.skills || [])].includes('renting'));
+  assert.equal(only.length, 1, '这条测试依赖 renting 是独一份的标签');
+  const withRecent = pickStageExam(26, { skills: ALL_STRONG, recentSkills: ['renting'], max: 1 });
+  assert.equal(withRecent[0].id, only[0].id,
+    '标签重合最多的那组必须排第一，这才叫"把刚学过的串起来"');
 
   // 做过的往后排
   recordExamTask(withRecent[0].id, { correct: 5, total: 5 });
-  const again = pickStageExam(26, { skills: ALL_STRONG, recentSkills: ['numbers-tens'] });
+  const again = pickStageExam(26, { skills: ALL_STRONG, recentSkills: ['renting'], max: 1 });
   assert.notEqual(again[0].id, withRecent[0].id, '做过的组要让位给没做过的');
 });
 

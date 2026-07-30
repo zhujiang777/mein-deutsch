@@ -162,9 +162,9 @@ export const EXAM_GROUPS = [
       { id: 'H1', title: '日常短对话', sub: '三选一 a/b/c · 播两遍', teil: 1, count: 6, points: 6, plays: 2,
         status: 'ready' },
       { id: 'H2', title: '公共广播 Durchsagen', sub: '判断对错 · 只播一遍', teil: 2, count: 4, points: 4, plays: 1,
-        status: 'none', note: '全场唯一只播一遍的部分' },
+        status: 'ready', note: '全场唯一只播一遍的部分' },
       { id: 'H3', title: '电话留言 · 语音信箱', sub: '三选一 a/b/c · 播两遍', teil: 3, count: 5, points: 5, plays: 2,
-        status: 'none' },
+        status: 'ready' },
     ],
   },
   {
