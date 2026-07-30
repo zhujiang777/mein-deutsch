@@ -9,7 +9,7 @@
 //   答对答错喂 recordAnswer → md.skills.v1（推动全景图语法轴，联动是双向的）
 //   题型自己的强度 → md.exam.v1（不污染 skills，否则语法轴百分比会被听力题稀释）
 import { loadExam, saveExam, getSettings } from './storage.js';
-import { EXAM_TASKS } from '../data/exam.js';
+import { EXAM_TASKS, examPart } from '../data/exam.js';
 import { skillStrength } from './mastery.js';
 import { GRAMMAR_FLOOR } from './content-readiness.js';
 
@@ -98,6 +98,71 @@ export function pickStageExam(cellsDone = 0, {
     if (picked.length >= max) break;
   }
   return picked;
+}
+
+/* ---------- 毕业模考 ---------- */
+
+/** 笔试的八格，按官方顺序（听 → 读 → 写）。口试 15 分钟是单独一场，不叠进来。 */
+export const MOCK_CELLS = ['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'S1', 'S2'];
+
+/** 官方及格线：60%。这是唯一一条硬线，别的都是我们自己的口径。 */
+export const PASS_RATIO = 0.6;
+
+/**
+ * 模考解锁：地图走到第 22 格，**且**笔试八格每一格都练到 60。
+ * 两条与，缺一不解锁 —— 没练过的题型混进模考，出来的分数说明不了任何事。
+ * 返回 { ok, cellsLeft, weakCells }，界面把它写成"还差什么"，不是一个灰按钮。
+ */
+export function mockUnlock(cellsDone = 0, state = loadExam()) {
+  const weakCells = MOCK_CELLS.filter(id => examStrength(id, state) < MOCK_UNLOCK_STRENGTH);
+  const cellsLeft = Math.max(0, MOCK_UNLOCK_CELL - cellsDone);
+  return { ok: !cellsLeft && !weakCells.length, cellsLeft, weakCells };
+}
+
+/**
+ * 把题库串成一整套笔试。**模考不是另一套数据**，是同一批题组的另一种取用方式：
+ * 每格挑一组，优先挑没做过的（做过的等于在背答案，那就不叫模考了）。
+ */
+export function buildMockExam({ state = loadExam(), tasks = EXAM_TASKS } = {}) {
+  const doneMap = state.tasks || {};
+  return MOCK_CELLS.map(cellId => tasks
+    .filter(task => task.cellId === cellId)
+    .sort((a, b) => ((doneMap[a.id]?.done || 0) - (doneMap[b.id]?.done || 0))
+      || a.id.localeCompare(b.id))[0])
+    .filter(Boolean);
+}
+
+/**
+ * 按原始题目分算得分率。
+ *
+ * ⚠️ 官方把四个模块换算成总分的权重我们没有公开依据，所以**不假装能给官方分**：
+ * 这里只给「你答对的分 / 这套题的满分」和 60% 这条线。它能回答"现在去考能不能过"，
+ * 但它不是官方成绩单。
+ */
+export function scoreMock(results = []) {
+  const parts = results.map(row => {
+    const part = examPart(row.cellId) || {};
+    const points = part.points || row.total || 0;
+    return {
+      cellId: row.cellId,
+      correct: row.correct, total: row.total, points,
+      earned: row.total ? Math.round(row.correct / row.total * points) : 0,
+    };
+  });
+  const earned = parts.reduce((sum, row) => sum + row.earned, 0);
+  const points = parts.reduce((sum, row) => sum + row.points, 0);
+  const ratio = points ? earned / points : 0;
+  return { parts, earned, points, ratio: Math.round(ratio * 100) / 100, pass: ratio >= PASS_RATIO };
+}
+
+/** 一次模考记一笔，存进 md.exam.v1 的 mocks（导出 / 同步跟着走）。 */
+export function recordMock(summary, state = loadExam()) {
+  const mocks = [...(state.mocks || []), {
+    at: Date.now(), earned: summary.earned, points: summary.points, pass: summary.pass,
+  }].slice(-10);
+  const next = { ...state, mocks };
+  saveExam(next);
+  return next;
 }
 
 /* ---------- 题型熟练度 ---------- */

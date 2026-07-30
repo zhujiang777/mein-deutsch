@@ -121,8 +121,13 @@ test('每组考题的形状：id / 题量 / 选项 / 讲解 / 出处', () => {
     assert.ok(cellIds.has(task.cellId), `${task.id} 指向不存在的题型格 ${task.cellId}`);
 
     const part = examPart(task.cellId);
-    assert.equal(task.items.length, part.count,
-      `${task.id} 有 ${task.items.length} 道题，官方 ${task.cellId} 是 ${part.count} 道——按官方题量出，不要随手写几道`);
+    // 官方给了题量的格子必须一题不差；口语三格官方没有固定题量，只要求别是空的。
+    if (part.count) {
+      assert.equal(task.items.length, part.count,
+        `${task.id} 有 ${task.items.length} 道题，官方 ${task.cellId} 是 ${part.count} 道——按官方题量出，不要随手写几道`);
+    } else {
+      assert.ok(task.items.length, `${task.id} 一道题都没有`);
+    }
 
     for (const item of task.items) {
       assert.ok(item.explain, `${task.id} 有题没有 explain——考试题不讲为什么等于没做`);
@@ -135,7 +140,12 @@ test('每组考题的形状：id / 题量 / 选项 / 讲解 / 出处', () => {
           assert.deepEqual(item.options, ['Richtig', 'Falsch']);
         }
       }
-      assert.ok(!('q' in item), `${task.id} 用了 q 字段——renderChoice 读的是 prompt，写成 q 题干就是空白`);
+      // 两套字段名并存：renderChoice 读 prompt，renderSpeak 读 q。写错那一格就是空白。
+      if (item.type !== 'speak') {
+        assert.ok(!('q' in item), `${task.id} 用了 q 字段——renderChoice 读的是 prompt，写成 q 题干就是空白`);
+      } else {
+        assert.ok(item.q && item.de, `${task.id} 的口语题缺 q（提示语）或 de（参考文本）`);
+      }
     }
 
     const source = task.source || {};

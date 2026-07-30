@@ -121,12 +121,12 @@ test('全景图视图与样式接线正确', () => {
 
 test('题型轴如实反映哪些做出来了、哪些还没有', () => {
   const byId = new Map(EXAM_CELLS.map(cell => [cell.id, cell]));
-  // 还没做的：第 5e–5f 步逐个点亮，每点亮一个就从这个数组里移走。
+  // 11 格全部点亮了。题库真有题由 tests/exam-data.test.mjs 的双向锁把关，
+  // 这里只锁住状态本身，免得哪天题库被删空、这一栏却还写着"已具备"。
+  EXAM_CELLS.forEach(cell =>
+    assert.equal(cell.status, 'ready', `${cell.id} 标错了状态`));
+  // P2 / P3 是降级实现（选 + 说，不是自己想一句），必须在格子上写明，不能装作做全了
   ['P2', 'P3'].forEach(id =>
-    assert.equal(byId.get(id).status, 'none', `${id} 目前并没有实现，不能标成已具备`));
-  // 已经点亮的：题库真有题由 tests/exam-data.test.mjs 的双向锁把关，这里只锁住状态本身，
-  // 免得哪天题库被删空、这一栏却还写着"已具备"。
-  ['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'S1', 'S2', 'P1'].forEach(id =>
-    assert.equal(byId.get(id).status, 'ready', `${id} 已经有整套题库，不该还标成没有`));
+    assert.match(byId.get(id).note || '', /降级/, `${id} 是降级实现，格子上必须说明`));
   assert.ok(EXAM_CELLS.every(cell => ['ready', 'partial', 'none'].includes(cell.status)));
 });

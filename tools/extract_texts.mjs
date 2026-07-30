@@ -70,6 +70,9 @@ for (const unit of COURSE)
 // 应试题库：只有听力题的 audioText 要发音。
 // 阅读材料（邮件、告示牌）在真考试里本来就没有声音，不生成，也就不会白占音频体积。
 for (const task of EXAM_TASKS)
-  for (const item of task.items || []) add(item.audioText);
+  for (const item of task.items || []) {
+    add(item.audioText);
+    add(item.de); // 口语题的"听标准"读的是 item.de
+  }
 
 process.stdout.write(JSON.stringify([...texts], null, 0));

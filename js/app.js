@@ -73,7 +73,9 @@ const routes = [
   // 旧版模块（内容迁移期间保留）
   { pattern: /^\/pron(?:\/(.+))?$/, tab: 'library', load: () => import('./views/pronunciation.js?v=10'), render: (m, h, hit) => m.renderPron(h, hit[1]) },
   { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'library', load: () => import('./views/grammar.js?v=10'), render: (m, h, hit) => m.renderGrammar(h, hit[1]) },
-  // 题型加练：只从全景图题型轴进得来，首页永远看不到（首页只有一条路）。
+  // 题型加练与毕业模考：只从全景图题型轴进得来，首页永远看不到（首页只有一条路）。
+  // mock 这条要排在通用规则前面，否则会被当成一个格子 id。
+  { pattern: /^\/exam\/mock$/, tab: 'panorama', load: () => import('./views/exam-mock.js?v=1'), render: (m, h) => m.renderExamMock(h) },
   { pattern: /^\/exam\/(.+)$/, tab: 'panorama', load: () => import('./views/exam.js?v=1'), render: (m, h, hit) => m.renderExam(h, hit[1]) },
 ];
 

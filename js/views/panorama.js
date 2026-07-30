@@ -6,8 +6,9 @@ import {
 import { VOCAB_IDS } from '../../data/content-index.js';
 import { el, esc, toast } from '../ui.js';
 import { skillStrength } from '../mastery.js';
-import { loadSkills, getWordbook, loadExam } from '../storage.js';
-import { examStrength, examSeen } from '../exam.js';
+import { loadSkills, getWordbook, loadExam, allLessonStates } from '../storage.js';
+import { examStrength, examSeen, mockUnlock } from '../exam.js';
+import { mainlineProgress } from '../mainline.js';
 import { srsStats } from '../srs.js';
 
 const EXAM_STATUS = {
@@ -143,6 +144,21 @@ export function renderPanorama(host) {
     });
     host.appendChild(grid);
   });
+
+  // 毕业模考的入口只在这里。它不上首页——首页永远只有一条路。
+  // 没解锁时不给灰按钮，而是写清楚还差什么，把它变成一个能追的目标。
+  const gate = mockUnlock(mainlineProgress(allLessonStates(), skills).done, exam);
+  host.appendChild(el(gate.ok
+    ? `<a class="card mock-entry is-open" href="#/exam/mock">
+        <b>毕业模考 · 笔试整套 65 分钟</b>
+        <span>逐题不给对错，交卷后统一批改。只回答一个问题：现在去考能不能过。</span>
+      </a>`
+    : `<div class="card mock-entry">
+        <b>毕业模考 · 还没解锁</b>
+        <span>${gate.cellsLeft ? `主线还差 ${gate.cellsLeft} 格` : ''}${
+          gate.cellsLeft && gate.weakCells.length ? ' · ' : ''}${
+          gate.weakCells.length ? `还有 ${gate.weakCells.length} 个题型没练到 60` : ''}</span>
+      </div>`));
 
   // 不在这里调 motionIn：app.js 的深层路由已经对整个 route-view 做过入场动画，再来一次会叠。
   host.appendChild(el(`<div class="source-card">格子定义与依据见 <code>docs/a1-panorama.md</code>，权威词表为 Goethe A1 官方 Wortliste。</div>`));

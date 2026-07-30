@@ -752,6 +752,110 @@ export const EXAM_TASKS = [
   },
 ];
 
+/* ---------- P2 / P3 · 口语 · 「选 + 说」两步 ---------- */
+// ⚠️ 这两格是**降级实现**，界面上也这么说：
+// 真考试 P2 是看着关键词自己想一句问句，P3 是看着图卡自己提一个请求。
+// 我们做不到判「你自己想的那句对不对」（Azure 只能朗读评测），所以拆成两步：
+//   1. 从三个候选里选出**像样的那一句**（练的是"什么样的句子是对的"）
+//   2. 把它朗读出来（练的是"说得出口"）
+// 这比不做强，但它不等于真考试的那一步 —— 每组的 subZh 里都写着这句话。
+//
+// 三个候选里的两个错项不是乱写的：一个是词序错（德语最常见的中式错误），
+// 一个是时态 / 语气不对。选错时的讲解就点这一处。
+function p2Item(thema, wort, options, a, explain) {
+  const card = { layout: 'sign', title: `Thema: ${thema}`, de: wort.de, zh: wort.zh };
+  return [
+    { type: 'choice', stimulus: card, options, a, explain,
+      prompt: `Bilden Sie eine Frage mit „${wort.de}".`, skills: ['w-frage'] },
+    { type: 'speak', stimulus: card, de: options[a], q: '现在把这句问出来',
+      zh: wort.zh, skills: ['v2-order'],
+      explain: '问句的语调要往上走。选对了不等于说得出口，这一步才是考场上真正做的事。' },
+  ];
+}
+
+const P2_P3 = [
+  {
+    id: 'x-p2-01', cellId: 'P2',
+    titleZh: '主题「购物」· 用关键词提问',
+    subZh: '真考试是自己想一句 · 这里先练「什么样的问句是对的」，再说出来',
+    source: { kind: 'inline' },
+    prereq: { afterCell: 14, skills: ['w-frage'] },
+    skills: ['w-frage', 'v2-order'],
+    items: [
+      ...p2Item('Einkaufen', { de: 'Brot', zh: '面包' },
+        ['Wo kann ich hier Brot kaufen?', 'Ich habe Brot gekauft gestern.', 'Brot du kaufst?'], 0,
+        'W-问句的词序是「疑问词 + 动词 + 主语」。b 是陈述句而且词序错，c 缺动词位置。'),
+      ...p2Item('Einkaufen', { de: 'Preis', zh: '价格' },
+        ['Was kostet der Preis von das Brot?', 'Wie ist der Preis?', 'Preis wie viel?'], 1,
+        'a 把 kosten 和 Preis 叠在一起说了两遍，而且 von das 是错的第三格。问价钱最短的说法就是 Wie ist der Preis? 或 Was kostet das?'),
+      ...p2Item('Einkaufen', { de: 'bezahlen', zh: '付款' },
+        ['Bezahlen Sie mit Karte gestern?', 'Wie viel bezahlen?', 'Kann ich mit Karte bezahlen?'], 2,
+        'a 的 gestern 和现在时对不上；b 没有主语和情态动词。请求许可用 Kann ich …?，动词甩到句末。'),
+    ],
+  },
+  {
+    id: 'x-p2-02', cellId: 'P2',
+    titleZh: '主题「业余时间」· 用关键词提问',
+    subZh: '真考试是自己想一句 · 这里先练「什么样的问句是对的」，再说出来',
+    source: { kind: 'inline' },
+    prereq: { afterCell: 18, skills: ['frag-order'] },
+    skills: ['frag-order', 'w-frage'],
+    items: [
+      ...p2Item('Freizeit', { de: 'Hobby', zh: '爱好' },
+        ['Was ist dein Hobby?', 'Du Hobby was?', 'Hobby hast du gern?'], 0,
+        '疑问词永远排第一，动词第二。b c 都是把中文语序直接搬过来。'),
+      ...p2Item('Freizeit', { de: 'Wochenende', zh: '周末' },
+        ['Wochenende machst du?', 'Was machst du am Wochenende?', 'Am Wochenende du gehst wohin?'], 1,
+        '时间状语放句中或句首都行，但只要它在句首，动词就必须紧跟其后（c 的 du 插在了中间）。'),
+      ...p2Item('Freizeit', { de: 'Sport', zh: '运动' },
+        ['Sport du magst?', 'Machst gern du Sport?', 'Machst du gern Sport?'], 2,
+        '是非问句是「动词 + 主语 + 其他」。gern 要排在主语后面，不能挤到主语前。'),
+    ],
+  },
+  {
+    id: 'x-p3-01', cellId: 'P3',
+    titleZh: '看卡片提一个请求 · 第一组',
+    subZh: '真考试给的是图卡 · 我们用文字卡代替，选出得体的请求句再说出来',
+    source: { kind: 'inline' },
+    prereq: { afterCell: 16, skills: ['polite-request'] },
+    skills: ['polite-request', 'modal-koennen-wollen'],
+    items: [
+      ...p2Item('Bildkarte', { de: '🕐  eine Uhr', zh: '你想知道现在几点' },
+        ['Können Sie mir bitte die Uhrzeit sagen?', 'Uhrzeit Sie sagen mir?', 'Ich will Uhrzeit.'], 0,
+        '对陌生人用 Können Sie … bitte …?。c 的 Ich will 在德语里非常不客气。'),
+      ...p2Item('Bildkarte', { de: '🧂  das Salz', zh: '在饭桌上，你够不到盐' },
+        ['Gib Salz.', 'Kannst du mir bitte das Salz geben?', 'Salz du gibst mir?'], 1,
+        'a 是命令式而且没有 bitte，对朋友也太硬。请求用 Kannst du mir bitte …?，Salz 是第四格。'),
+      ...p2Item('Bildkarte', { de: '🪟  das Fenster', zh: '房间里很闷' },
+        ['Fenster bitte auf!', 'Machen Sie Fenster?', 'Können Sie bitte das Fenster aufmachen?'], 2,
+        'aufmachen 是可分动词，用在 können 后面时整个动词回到句末：… aufmachen。'),
+    ],
+  },
+  {
+    id: 'x-p3-02', cellId: 'P3',
+    titleZh: '看卡片提一个请求 · 第二组',
+    subZh: '真考试给的是图卡 · 我们用文字卡代替，选出得体的请求句再说出来',
+    source: { kind: 'inline' },
+    prereq: { afterCell: 20, skills: ['polite-order'] },
+    skills: ['polite-order', 'modal-duerfen'],
+    items: [
+      ...p2Item('Bildkarte', { de: '📱  ein Handy', zh: '你的手机没电了，想借一个打电话' },
+        ['Darf ich bitte Ihr Handy benutzen?', 'Handy ich benutze?', 'Geben Sie Handy mir.'], 0,
+        '借别人的东西用 Darf ich …?（请求许可），比 Kann ich 更礼貌一点。'),
+      ...p2Item('Bildkarte', { de: '🚕  ein Taxi', zh: '你在酒店，想叫一辆出租车' },
+        ['Taxi rufen Sie?', 'Können Sie mir bitte ein Taxi rufen?', 'Ich will Taxi jetzt.'], 1,
+        '「替我做某事」要把 mir 放进来：Können Sie **mir** bitte … rufen?'),
+      ...p2Item('Bildkarte', { de: '✍️  ein Stift', zh: '你要填表，但没带笔' },
+        ['Stift bitte du gibst?', 'Ich brauche Stift geben.', 'Hast du bitte einen Stift für mich?'], 2,
+        '问对方有没有某物用 Hast du …?，einen Stift 是第四格阳性。'),
+    ],
+  },
+];
+
+// 单独定义再并进去，是因为上面那两格每道题都是「选 + 说」一对，
+// 用 p2Item() 生成比手写两遍安全。并进同一个数组，取用方式和别的题型完全一样。
+EXAM_TASKS.push(...P2_P3);
+
 /**
  * 题是用学习者自己的信息现拼的格子，所以这里没有预写的题组。
  * 目前只有 P1 自我介绍：Azure 只能做朗读评测（必须先有参考文本），

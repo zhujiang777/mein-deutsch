@@ -10,11 +10,12 @@ globalThis.localStorage = {
 };
 globalThis.window = { dispatchEvent() {} };
 
+const examModule = await import('../js/exam.js');
 const {
   EXAM_MODES, STAGE_EVERY, examMode, dailyQuizOn, stageExamDue,
   recordExamAnswer, recordExamTask, examStrength, examSeen,
   examTaskReady, pickStageExam,
-} = await import('../js/exam.js');
+} = examModule;
 const { EXAM_TASKS } = await import('../data/exam.js');
 const { addExamMiss, dueExamMisses, examRef } = await import('../js/mastery.js');
 const { loadExam } = await import('../js/storage.js');
@@ -82,6 +83,69 @@ test('刚起步时挑得出题，但只挑门槛最低的那几组', () => {
   const early = pickStageExam(5, { skills: ALL_STRONG, recentSkills: [] });
   assert.ok(early.length, '走完 5 格就该有得考，否则第一次阶段测验是空的');
   early.forEach(task => assert.ok(task.prereq.afterCell <= 5, `${task.id} 的门槛超过 5 格`));
+});
+
+/* ---------- 毕业模考 ---------- */
+
+test('模考两条与：地图走到 22 格 + 笔试八格都练到 60', () => {
+  values.clear();
+  const { MOCK_CELLS, MOCK_UNLOCK_CELL, mockUnlock } = examModule;
+  assert.deepEqual(MOCK_CELLS, ['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'S1', 'S2'],
+    '模考只考笔试八格，口试是单独一场');
+
+  let gate = mockUnlock(0);
+  assert.equal(gate.ok, false);
+  assert.equal(gate.cellsLeft, MOCK_UNLOCK_CELL);
+  assert.equal(gate.weakCells.length, 8, '一格都没练过时，八格全是弱项');
+
+  // 把八格全练到 60 以上：答对 5 次约到 67
+  MOCK_CELLS.forEach(id => { for (let i = 0; i < 5; i++) recordExamAnswer(id, true); });
+  gate = mockUnlock(MOCK_UNLOCK_CELL);
+  assert.deepEqual(gate.weakCells, []);
+  assert.equal(gate.ok, true);
+
+  // 少走一格就不解锁 —— 两条是与，不是或
+  assert.equal(mockUnlock(MOCK_UNLOCK_CELL - 1).ok, false);
+});
+
+test('模考是同一批题的另一种取用方式，每格挑一组，优先没做过的', () => {
+  values.clear();
+  const { MOCK_CELLS, buildMockExam } = examModule;
+  const first = buildMockExam();
+  assert.deepEqual(first.map(task => task.cellId), MOCK_CELLS, '按官方顺序每格一组');
+
+  recordExamTask(first[0].id, { correct: 6, total: 6 });
+  const second = buildMockExam();
+  assert.notEqual(second[0].id, first[0].id,
+    '做过的那组要让位——同一套题考第二遍就是在背答案');
+});
+
+test('模考算的是得分率，60% 是唯一一条硬线，不假装能给官方分', () => {
+  const { scoreMock, PASS_RATIO, recordMock } = examModule;
+  assert.equal(PASS_RATIO, 0.6);
+  values.clear();
+
+  // 全对：45 分满分（6+4+5+5+5+5+5+10）
+  const perfect = scoreMock([
+    { cellId: 'H1', correct: 6, total: 6 }, { cellId: 'H2', correct: 4, total: 4 },
+    { cellId: 'H3', correct: 5, total: 5 }, { cellId: 'L1', correct: 5, total: 5 },
+    { cellId: 'L2', correct: 5, total: 5 }, { cellId: 'L3', correct: 5, total: 5 },
+    { cellId: 'S1', correct: 5, total: 5 }, { cellId: 'S2', correct: 1, total: 1 },
+  ]);
+  assert.equal(perfect.points, 45);
+  assert.equal(perfect.earned, 45);
+  assert.equal(perfect.pass, true);
+
+  // 一半：正好卡在及格线下
+  const half = scoreMock([{ cellId: 'H1', correct: 3, total: 6 }]);
+  assert.equal(half.earned, 3);
+  assert.equal(half.points, 6);
+  assert.equal(half.pass, false, '50% 不到 60%');
+
+  recordMock(perfect);
+  const mocks = JSON.parse(values.get('md.exam.v1')).mocks;
+  assert.equal(mocks.length, 1);
+  assert.equal(mocks[0].pass, true);
 });
 
 test('题型熟练度和语言掌握度分开存，公式与 skillStrength 同一条口径', () => {

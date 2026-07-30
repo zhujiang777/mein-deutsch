@@ -1347,6 +1347,19 @@ body.immersive #app { max-width: 760px; padding-top: 12px; padding-bottom: 18px;
 .speak-cards span { display: inline-flex; gap: 5px; align-items: baseline; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: .78rem; }
 .speak-cards b { font-weight: 650; }
 .speak-exclude { font-size: .78rem; color: var(--muted); margin-top: 10px; }
+
+/* 毕业模考 */
+.mock-entry { display: grid; gap: 6px; margin-top: 18px; }
+.mock-entry b { font-size: .98rem; }
+.mock-entry span { font-size: .82rem; color: var(--muted); }
+.mock-entry.is-open { border-color: var(--accent, var(--line)); }
+.mock-gate { display: grid; gap: 10px; }
+.mock-gate ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: .88rem; }
+.mock-brief { display: grid; gap: 6px; margin-bottom: 14px; }
+.mock-timer { position: sticky; top: 0; z-index: 5; padding: 8px 12px; margin-bottom: 10px; border-radius: 10px; text-align: center; font-variant-numeric: tabular-nums; font-size: .85rem; background: var(--card); border: 1px solid var(--line); }
+.mock-timer.is-over { color: var(--muted); }
+.mock-result { text-align: center; padding: 18px 0 10px; }
+.mock-result h2 { font-size: 1.6rem; margin: 8px 0 6px; }
 .ex-options,.wc-options { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 .ex-opt,.wc-opt,.quiz-opt {
   min-height: 50px; padding: 12px 15px; text-align: center; font-size: 1rem;
