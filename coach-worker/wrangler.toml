@@ -4,6 +4,13 @@ compatibility_date = "2026-07-28"
 
 [vars]
 ALLOWED_ORIGINS = "https://zhujiang777.github.io,http://localhost:8420"
-OPENAI_BASE_URL = "https://api.openai.com/v1"
-OPENAI_MODEL = "gpt-4.1-mini"
+# 通义千问的 OpenAI 兼容端点。换任何一家 OpenAI 兼容供应商都只改这两行。
+#
+# ⚠️ 通义的 JSON 模式有一条别家没有的硬性要求：system 或 user 消息里
+# **必须出现 "JSON" 这个词**（不区分大小写），否则直接报错。
+# src/index.js 的系统提示第一句就是「只返回 JSON」—— 改那段提示词时别把它删了，
+# 删掉的话今日文章会全线报错，而不是悄悄降级。
+OPENAI_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+OPENAI_MODEL = "qwen3.7-max"
+# max 档比 flash 慢。要是今日文章经常退回库存材料，先怀疑这里超时，再怀疑模型质量。
 REQUEST_TIMEOUT_MS = "12000"

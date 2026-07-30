@@ -47,3 +47,10 @@ npx wrangler deploy
 
 `OPENAI_BASE_URL` / `OPENAI_MODEL` 在 `wrangler.toml` 里改，任何 OpenAI 兼容供应商都行。
 部署后把 Worker 地址和访问码填进 App 的「设置 → 今日文章」。
+
+当前配的是**通义千问 `qwen3.7-max`**。选 max 档不是为了省钱——一天只调一次，
+哪一档都是每月几毛——是为了**过闸率**：flash 档在德语冠词性别和变格上翻车更多，
+而那恰好是闸门会拦下来的。
+
+⚠️ **通义的 JSON 模式要求提示词里出现 "JSON" 这个词**（system 或 user 皆可，不区分大小写），
+否则直接报错。`src/index.js` 的系统提示已经满足；改那段提示词时别把这个词删了。
