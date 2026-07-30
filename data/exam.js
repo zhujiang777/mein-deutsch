@@ -270,6 +270,113 @@ export const EXAM_TASKS = [
     ],
   },
 
+  /* ---------- L2 · 两个来源，选 a 还是 b ---------- */
+  // 官方 Lesen Teil 2：给一个处境，配两条广告，判断哪一条能满足它。
+  // 这类题考的不是读懂全文，是**扫读找那一条对不上的信息** —— 所以每对广告里
+  // 一定有一条在某个具体的点上（时间 / 年龄 / 价钱 / 星期）不合，讲解就点那一处。
+  {
+    id: 'x-l2-01',
+    cellId: 'L2',
+    titleZh: '五个处境，各在两条广告里选一条',
+    subZh: 'Goethe A1 阅读第二部分 · 5 题 5 分 · 只有一条合你的需求',
+    source: { kind: 'inline' },
+    prereq: { afterCell: 10, skills: ['prep-time-an-um'] },
+    skills: ['prep-time-an-um'],
+    items: [
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 0,
+        prompt: 'Sie suchen ein Zimmer für ein Semester in Leipzig.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Zimmer in Leipzig, 18 m²\n320 € warm · nur für Studenten\nfrei ab 1. Oktober', zh: 'a｜莱比锡房间 18 平米，含暖气 320 欧，仅限学生，10 月 1 日起可入住' },
+          { layout: 'sign', title: 'b', de: 'Schönes Hotelzimmer in Leipzig\n65 € pro Nacht\nmit Frühstück', zh: 'b｜莱比锡酒店房间，每晚 65 欧，含早餐' },
+        ],
+        explain: '一个学期要住的是长租房，不是按晚算的酒店。看到 pro Nacht 就该排除。',
+        skills: ['renting'] },
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 1,
+        prompt: 'Sie möchten am Sonntag Brot kaufen.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Bäckerei Klein\nMo–Sa 6–18 Uhr\nSonntag geschlossen', zh: 'a｜Klein 面包房，周一至周六 6–18 点，周日休息' },
+          { layout: 'sign', title: 'b', de: 'Bäckerei am Markt\ntäglich 7–12 Uhr\nauch am Sonntag', zh: 'b｜集市面包房，每天 7–12 点，周日也开' },
+        ],
+        explain: 'Mo–Sa 已经把周日排除了；auch am Sonntag 是 b 那条唯一要看的信息。',
+        skills: ['prep-time-an-um'] },
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 0,
+        prompt: 'Ihr Sohn ist acht Jahre alt. Er möchte schwimmen lernen.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Schwimmkurs für Kinder\nvon 6 bis 10 Jahren\nSamstag 10 Uhr', zh: 'a｜儿童游泳班，6–10 岁，周六 10 点' },
+          { layout: 'sign', title: 'b', de: 'Schwimmkurs für Erwachsene\nDi und Do 19 Uhr', zh: 'b｜成人游泳班，周二、周四 19 点' },
+        ],
+        explain: '八岁落在 6 bis 10 里。Kinder / Erwachsene 是这对广告的分水岭。',
+        skills: ['numbers-1-20'] },
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 1,
+        prompt: 'Sie arbeiten bis 17 Uhr und suchen einen Deutschkurs.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Deutschkurs A1\nMo–Fr 9–12 Uhr', zh: 'a｜A1 德语班，周一至周五 9–12 点' },
+          { layout: 'sign', title: 'b', de: 'Deutschkurs A1\nMo und Mi 18–20 Uhr', zh: 'b｜A1 德语班，周一、周三 18–20 点' },
+        ],
+        explain: '上到 17 点，只有 18 点以后的课上得了。这类题的钥匙永远是那个时间点。',
+        skills: ['kurs-anmeldung'] },
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 0,
+        prompt: 'Sie möchten mit dem Fahrrad zur Arbeit fahren. Sie haben wenig Geld.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Fahrrad zu verkaufen\n60 Euro · fährt gut', zh: 'a｜自行车出售，60 欧，车况好' },
+          { layout: 'sign', title: 'b', de: 'Neues E-Bike\nnur 1200 Euro', zh: 'b｜全新电动自行车，仅 1200 欧' },
+        ],
+        explain: 'wenig Geld 是需求里的关键词，1200 欧对不上。nur 这个字在广告里不代表便宜。',
+        skills: ['numbers-large'] },
+    ],
+  },
+  {
+    id: 'x-l2-02',
+    cellId: 'L2',
+    titleZh: '再来五个处境，各在两条广告里选一条',
+    subZh: 'Goethe A1 阅读第二部分 · 5 题 5 分 · 只有一条合你的需求',
+    source: { kind: 'inline' },
+    prereq: { afterCell: 15, skills: ['modal-koennen-wollen'] },
+    skills: ['modal-koennen-wollen'],
+    items: [
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 1,
+        prompt: 'Sie haben Zahnschmerzen. Heute ist Freitag und Sie brauchen sofort einen Termin.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Zahnarzt Dr. Berg\nMo–Do 9–17 Uhr\nnur mit Termin', zh: 'a｜Berg 牙医，周一至周四 9–17 点，需预约' },
+          { layout: 'sign', title: 'b', de: 'Zahnarzt Dr. Mai\nFr 8–14 Uhr\nauch ohne Termin', zh: 'b｜Mai 牙医，周五 8–14 点，无需预约' },
+        ],
+        explain: '需求里有两个条件：今天是周五、马上要看。a 两条都不满足。',
+        skills: ['appointment'] },
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 0,
+        prompt: 'Sie holen eine Freundin vom Bahnhof ab und suchen einen Parkplatz.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Parkhaus am Bahnhof\nerste Stunde frei', zh: 'a｜火车站停车楼，第一小时免费' },
+          { layout: 'sign', title: 'b', de: 'Parkplatz am Stadion\nnur bei Fußballspielen', zh: 'b｜体育场停车场，仅比赛日开放' },
+        ],
+        explain: 'nur bei … 是广告里最常见的限制条件，读到 nur 就要停一下。',
+        skills: ['separable-verbs'] },
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 1,
+        prompt: 'Sie möchten Deutsch sprechen üben. Grammatik lernen Sie schon im Kurs.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Grammatikkurs\nalle Regeln von A bis Z', zh: 'a｜语法班，从头到尾讲规则' },
+          { layout: 'sign', title: 'b', de: 'Sprechtreff\njeden Mittwoch 18 Uhr\neinfach kommen und reden', zh: 'b｜口语角，每周三 18 点，来了就说' },
+        ],
+        explain: '需求句的后半句「语法我已经在学了」就是用来排除 a 的。',
+        skills: ['modal-koennen-wollen'] },
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 1,
+        prompt: 'Sie suchen am Samstagabend einen Tisch für acht Personen.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Café Sonne\n20 Plätze\nnur bis 18 Uhr geöffnet', zh: 'a｜太阳咖啡馆，20 个座位，仅营业至 18 点' },
+          { layout: 'sign', title: 'b', de: 'Restaurant Anna\ngroße Gruppen willkommen\ntäglich bis 23 Uhr', zh: 'b｜Anna 餐厅，欢迎大团体，每天营业至 23 点' },
+        ],
+        explain: 'a 的座位数够，但 18 点就关门，晚上去不了。位子够 ≠ 时间对得上。',
+        skills: ['reservation'] },
+      { type: 'choice', options: ['Anzeige a', 'Anzeige b'], a: 0,
+        prompt: 'Ihr Handy ist kaputt. Sie brauchen es morgen wieder.',
+        stimulus: [
+          { layout: 'sign', title: 'a', de: 'Handy-Service\nReparatur in 24 Stunden', zh: 'a｜手机维修，24 小时内修好' },
+          { layout: 'sign', title: 'b', de: 'Handy-Shop\nneue Handys ab 199 Euro', zh: 'b｜手机店，新机 199 欧起' },
+        ],
+        explain: '要的是「修好原来那台」，不是买新的。Reparatur 这个词就是答案。',
+        skills: ['repair-report'] },
+    ],
+  },
+
   /* ---------- S1 · 填表格 Formular ---------- */
   {
     id: 'x-s1-01',
@@ -331,6 +438,63 @@ export const EXAM_TASKS = [
       { type: 'fill', prompt: 'Geburtsdatum:', hint: 'TT.MM.JJJJ', a: ['03.02.1994', '3.2.1994', '3. Februar 1994', '03.02.94'],
         explain: '3. Februar 1994 → 03.02.1994。二月是 02。', skills: ['ordinal-date'] },
     ],
+  },
+
+  /* ---------- S2 · 短信写作 · 离线自评 ---------- */
+  // 全场唯一一道机器判不了的题。这一版是自评：写完看范文，对着三条标准自己打勾。
+  // 三条标准就是官方的给分维度（要点写全 / 有称呼与结尾 / 语言在 A1 范围内）。
+  // 接 AI 批改是它的下一版，不是它的前提 —— 写作不该变成「联网才能练」。
+  {
+    id: 'x-s2-01',
+    cellId: 'S2',
+    titleZh: '给老师写一条请假短信',
+    subZh: 'Goethe A1 写作第二部分 · 约 30 词 10 分 · 写完看范文自评',
+    source: { kind: 'inline' },
+    prereq: { afterCell: 12, skills: ['nicht-kein'] },
+    skills: ['nicht-kein', 'symptoms'],
+    items: [{
+      type: 'write',
+      minWords: 25,
+      prompt: 'Sie sind krank und können nicht zum Deutschkurs kommen. Schreiben Sie eine Nachricht an Ihre Lehrerin, Frau Berg.',
+      points: [
+        { de: 'Warum schreiben Sie?', zh: '你为什么写这条消息？' },
+        { de: 'Wie lange sind Sie krank?', zh: '你要病多久？' },
+        { de: 'Was machen Sie mit den Hausaufgaben?', zh: '作业怎么办？' },
+      ],
+      model: {
+        de: 'Liebe Frau Berg,\nich bin krank und kann heute nicht zum Kurs kommen. Ich habe Fieber.\n'
+          + 'Ich bleibe drei Tage zu Hause. Meine Freundin bringt mir die Hausaufgaben.\n'
+          + 'Am Montag bin ich wieder da.\nViele Grüße\nLi',
+        zh: '亲爱的 Berg 老师：\n我生病了，今天不能来上课。我发烧。\n我要在家待三天。我朋友会把作业带给我。\n周一我就回来了。\n此致\nLi',
+      },
+      explain: '三个要点各一到两句就够。真考试扣分最多的不是语法，是漏掉某个要点、或者忘了写称呼和结尾。',
+    }],
+  },
+  {
+    id: 'x-s2-02',
+    cellId: 'S2',
+    titleZh: '约朋友周六去看电影',
+    subZh: 'Goethe A1 写作第二部分 · 约 30 词 10 分 · 写完看范文自评',
+    source: { kind: 'inline' },
+    prereq: { afterCell: 18, skills: ['prep-time-an-um'] },
+    skills: ['prep-time-an-um', 'verabredung'],
+    items: [{
+      type: 'write',
+      minWords: 25,
+      prompt: 'Sie möchten am Samstag mit Ihrem Freund Tom ins Kino gehen. Schreiben Sie ihm eine Nachricht.',
+      points: [
+        { de: 'Wann und wo treffen Sie sich?', zh: '什么时候、在哪儿见？' },
+        { de: 'Welcher Film?', zh: '看哪部电影？' },
+        { de: 'Was soll Tom mitbringen?', zh: 'Tom 要带什么？' },
+      ],
+      model: {
+        de: 'Hallo Tom,\nam Samstag läuft ein guter Film im Kino Palast. Er beginnt um acht Uhr.\n'
+          + 'Wir treffen uns um halb acht vor dem Kino. Bitte bring Geld für die Karte mit.\n'
+          + 'Bis Samstag!\nAnna',
+        zh: '你好 Tom：\n周六 Palast 影院有一部好电影。八点开场。\n我们七点半在影院门口见。请带上买票的钱。\n周六见！\nAnna',
+      },
+      explain: '给朋友写用 Hallo + Bis bald 就行，不用 Liebe Frau …。三个要点里「带什么」最容易漏。',
+    }],
   },
 
   /* ---------- H1 · 日常短对话 · 三选一 · 播两遍 ---------- */

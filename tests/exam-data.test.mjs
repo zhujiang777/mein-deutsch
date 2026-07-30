@@ -10,6 +10,9 @@ import { EXAM_PARTS, EXAM_TASKS, examPart, tasksForCell } from '../data/exam.js'
 import { READINGS } from '../data/readings.js';
 import { LISTENING_PACKS } from '../data/listening.js';
 
+/** 一道题的材料：一块（告示牌）或并排两块（L2 的 a / b）。和 exam-shell 同一条口径。 */
+const itemDocs = stimulus => Array.isArray(stimulus) ? stimulus : stimulus ? [stimulus] : [];
+
 /* ---------- 官方口径 ---------- */
 
 // 这张表是从官方模考平台 bfu.goethe.de/a1_sd1/ 抄下来的（2026-07 核实）。
@@ -73,6 +76,37 @@ test('文档里的题型表和数据对得上，且写明了核实来源', () =>
 });
 
 /* ---------- 题库门禁（第 5b 步开始填） ---------- */
+
+test('L2 的每道题都摆两个来源，答案只能指向其中一个', () => {
+  for (const task of EXAM_TASKS.filter(item => item.cellId === 'L2')) {
+    for (const item of task.items) {
+      assert.equal(itemDocs(item.stimulus).length, 2,
+        `${task.id} 的题少了一个来源 —— 二选一题只给一条广告就没得选了`);
+      assert.deepEqual(item.options, ['Anzeige a', 'Anzeige b'],
+        `${task.id} 的选项要和真考试的答题卡一致（a / b）`);
+    }
+    // 五道题不能全选 a 或全选 b
+    const picks = new Set(task.items.map(item => item.a));
+    assert.equal(picks.size, 2, `${task.id} 的答案全在同一边`);
+  }
+});
+
+test('S2 写作题：有三个要点、有范文、有字数要求 —— 少一样这题就没法自评', () => {
+  const tasks = EXAM_TASKS.filter(item => item.cellId === 'S2');
+  assert.ok(tasks.length, 'S2 应该有题');
+  for (const task of tasks) {
+    assert.equal(task.items.length, 1, 'S2 官方就是一道题');
+    const item = task.items[0];
+    assert.equal(item.type, 'write');
+    assert.equal(item.points?.length, 3, '官方固定三个要点');
+    item.points.forEach(point => assert.ok(point.de && point.zh));
+    assert.ok(item.model?.de && item.model?.zh, '没有范文就没法自评');
+    assert.ok(item.minWords >= 20, '真考试要约 30 词，门槛不能定得太松');
+    // 范文自己得守 A1 红线，否则学的人照着抄就超纲了
+    assert.ok(!/\b(weil|dass|wenn|obwohl)\b/i.test(item.model.de),
+      `${task.id} 的范文用了 A1 没有的从句`);
+  }
+});
 
 test('每组考题的形状：id / 题量 / 选项 / 讲解 / 出处', () => {
   const ids = new Set();
@@ -148,8 +182,10 @@ test('每组题都写了前置门槛 —— 没门槛就会在什么都没学时
     assert.ok(Number.isInteger(task.prereq.afterCell) && task.prereq.afterCell > 0,
       `${task.id} 的 afterCell 必须是正整数`);
     assert.ok(task.titleZh && task.subZh, `${task.id} 缺中文标题或副标题`);
-    // 材料要么整组共用一份，要么每题自带一块；两样都没有的判断题没法判
-    const blocks = [...(task.stimulus || []), ...task.items.map(item => item.stimulus).filter(Boolean)];
+    // 材料要么整组共用一份，要么每题自带（L2 的两个来源就是并排两块）
+    const blocks = [...(task.stimulus || []),
+      ...task.items.flatMap(item => Array.isArray(item.stimulus) ? item.stimulus
+        : item.stimulus ? [item.stimulus] : [])];
     blocks.forEach(block => assert.ok(block.de && block.zh, `${task.id} 的材料缺德语或中文`));
   }
 });

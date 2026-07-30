@@ -129,6 +129,7 @@ export function renderPanorama(host) {
           <div class="pano-cell-title">${esc(cell.title)}</div>
           ${cell.sub ? `<div class="pano-cell-sub">${esc(cell.sub)}</div>` : ''}
           <div class="pano-cell-sub">${record ? `练过 ${record} 道 · ${esc(band.label)}` : '还没练过 · 点开加练'}</div>
+          ${cell.note ? `<div class="pano-gap">${esc(cell.note)}</div>` : ''}
         </a>`));
         return;
       }

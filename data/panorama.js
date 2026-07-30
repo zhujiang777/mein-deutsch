@@ -171,7 +171,7 @@ export const EXAM_GROUPS = [
     label: '读 Lesen · 25 分钟', cells: [
       { id: 'L1', title: '短信 · 邮件 · 通知', sub: '判断对错', teil: 1, count: 5, points: 5,
         status: 'ready' },
-      { id: 'L2', title: '两个来源二选一', sub: '看需求，选 a 还是 b', teil: 2, count: 5, points: 5, status: 'none' },
+      { id: 'L2', title: '两个来源二选一', sub: '看需求，选 a 还是 b', teil: 2, count: 5, points: 5, status: 'ready' },
       { id: 'L3', title: '告示牌 Aushang', sub: '判断对错', teil: 3, count: 5, points: 5, status: 'ready' },
     ],
   },
@@ -180,7 +180,7 @@ export const EXAM_GROUPS = [
       { id: 'S1', title: '填表格 Formular', sub: '5 个空：姓名·地址·生日·职业', teil: 1, count: 5, points: 5,
         status: 'ready' },
       { id: 'S2', title: '短信息', sub: '约 30 词 · 3 个要点 + 称呼与结尾', teil: 2, count: 1, points: 10,
-        status: 'none' },
+        status: 'ready', note: '写完看范文自评；AI 批改是下一版' },
     ],
   },
   {

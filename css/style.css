@@ -1307,6 +1307,28 @@ body.immersive #app { max-width: 760px; padding-top: 12px; padding-bottom: 18px;
 .exam-task-meta { font-size: .78rem; color: var(--muted); margin-top: 8px; }
 .exam-task-go { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); opacity: .5; }
 .exam-task.is-locked { opacity: .55; cursor: default; }
+
+/* L2：两个来源并排。窄屏堆成两行，但仍然一眼能看出是"a 还是 b"。 */
+.exam-doc-pair { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; margin-bottom: 16px; }
+.exam-doc-pair .exam-doc { margin-bottom: 0; }
+/* 这里的标题就是选项字母 a / b，必须和下面按钮上的字面一致，不能被大写掉 */
+.exam-doc-pair .exam-doc-title { text-transform: none; font-size: .9rem; font-weight: 700; }
+@media (max-width: 560px) { .exam-doc-pair { grid-template-columns: 1fr; } }
+
+/* S2 短信写作 · 离线自评 */
+.write-points { list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 8px; }
+.write-points li { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); }
+.write-points b { font-weight: 600; }
+.write-points span { font-size: .8rem; color: var(--muted); }
+.write-pad { display: grid; gap: 10px; }
+.write-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: inherit; font: inherit; line-height: 1.6; resize: vertical; }
+.write-count { font-size: .8rem; color: var(--muted); text-align: right; }
+.write-review { display: grid; gap: 14px; margin-top: 16px; }
+.write-check { display: grid; gap: 10px; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); }
+.write-check-head { font-size: .82rem; color: var(--muted); }
+.write-check label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.write-check-words { font-size: .82rem; color: var(--muted); }
+.write-check-words.is-ok { color: var(--ok, inherit); }
 .ex-options,.wc-options { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 .ex-opt,.wc-opt,.quiz-opt {
   min-height: 50px; padding: 12px 15px; text-align: center; font-size: 1rem;
