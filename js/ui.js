@@ -191,7 +191,10 @@ export function speakPractice(host, targetText, { onScore, onRecorded, play } = 
       <div class="score-line"><b>${score} 分</b> ${pass ? '已达到本次练习线' : '再听标准音练一次'}</div>
       <div class="pa-note">评分用于练习参考；德语暂不提供英语专属的韵律分。</div>
     </div>`;
-    onScore?.(score);
+    // 第二个参数是完整评测结果。口语题型 P1 要靠 result.words 把专有名词
+    // （自己的名字、中文城市名）从平均分里剔除——Azure 按德语音素判，
+    // 这些词天生会被判错，算进总分等于凭空扣分。老调用方忽略第二个参数即可。
+    onScore?.(score, result);
   }
 
   function renderAssessmentError(err) {

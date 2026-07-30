@@ -222,7 +222,11 @@ export function runExamShell(host, task, { onExit, onComplete, feedback = 'immed
     // 按题计 XP，不传 lessons —— 这不是"完成一节课"。
     const reward = logActivity({ items: total, ok: correctCount });
     const after = examStrength(task.cellId);
-    const wrong = total - correctCount;
+    // 口语题没录音就走"跳过"（correct === null）。跳过不是答错：它没进错题池，
+    // 也没扣题型强度，结算屏就不能说"错了 N 道"。
+    const graded = answered.filter(entry => entry.correct !== null).length;
+    const wrong = graded - correctCount;
+    const skipped = total - graded;
     cleanup();
     stage.innerHTML = '';
     bottom.innerHTML = '';
@@ -231,13 +235,15 @@ export function runExamShell(host, task, { onExit, onComplete, feedback = 'immed
       <span class="eyebrow">PRÜFUNGSFORMAT</span>
       <h2>${esc(task.titleZh || '考试题')}</h2>
       <div class="completion-stats">
-        <div><b>${correctCount}<i>/${total}</i></b><span>答对</span></div>
+        <div><b>${correctCount}<i>/${graded || total}</i></b><span>答对</span></div>
         <div><b>+${reward.xpDelta}</b><span>获得 XP</span></div>
         <div><b>${before} → ${after}</b><span>这个题型的强度</span></div>
       </div>
       <p class="meta">${wrong ? `错的 ${wrong} 道明天会再出现一次。`
+        : !graded ? '这一组没有录音，所以没有分。口语题只有开口才算练过。'
         : after >= 70 ? '这个题型你已经稳了，继续保持。'
-        : '全对。这个题型的强度要多练几组才上得来，一次全对还说明不了什么。'}</p>
+        : '全对。这个题型的强度要多练几组才上得来，一次全对还说明不了什么。'}
+        ${skipped && graded ? `另有 ${skipped} 道跳过了，跳过不算错，也不算练过。` : ''}</p>
     </div>`));
     const btn = el(`<button class="btn block">继续</button>`);
     btn.addEventListener('click', () => onComplete?.({ correct: correctCount, total }));

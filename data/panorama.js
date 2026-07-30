@@ -186,7 +186,7 @@ export const EXAM_GROUPS = [
   {
     label: '说 Sprechen · 15 分钟', cells: [
       { id: 'P1', title: '自我介绍', sub: '7 个关键词 ＋拼写名字 ＋报号码', teil: 1,
-        status: 'partial', note: '只有跟读评分，不能说自己的信息' },
+        status: 'ready', note: '题用你自己的档案现拼 · 专名不计分' },
       { id: 'P2', title: '关键词卡提问', sub: '主题卡 + 关键词卡，提问并回答', teil: 2, status: 'none' },
       { id: 'P3', title: '请求与回应', sub: '看图卡提出请求并回应', teil: 3, status: 'none' },
     ],

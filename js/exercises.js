@@ -297,6 +297,8 @@ function renderSpeak(host, item, ctx) {
   const blind = !!item.blind;
   host.appendChild(el(`<div class="ex-prompt">
     <div class="ex-q">${esc(item.q || '🎤 跟读这句')}</div>
+    ${item.cards?.length ? `<div class="speak-cards">${item.cards
+      .map(card => `<span><b>${esc(card.de)}</b>${esc(card.zh || '')}</span>`).join('')}</div>` : ''}
     <div class="ex-de de" style="font-size:1.3rem;font-weight:700;margin:10px 0 4px">${esc(item.de)}</div>
     <div class="speak-reveal"${blind ? ' hidden' : ''}>
       ${item.ipa ? `<div class="p-ipa">${esc(item.ipa)}</div>` : ''}
@@ -314,14 +316,30 @@ function renderSpeak(host, item, ctx) {
   const done = el(`<button class="btn block secondary" style="margin-top:12px">完成，继续 ›</button>`);
   let best = null;
   const practiceHost = el(`<div style="margin-top:8px"></div>`);
+  // 专名不计分：自我介绍里必然出现自己的名字和中文城市名，Azure 按德语音素判，
+  // 这些词天生判错。算进总分等于因为"你叫这个名字"扣你的分。
+  const excluded = new Set((item.excludeWords || [])
+    .map(word => String(word).toLocaleLowerCase('de-DE')));
+  const adjust = (score, result) => {
+    if (!excluded.size || !result?.words?.length) return score;
+    const kept = result.words.filter(entry =>
+      !excluded.has(entry.word.toLocaleLowerCase('de-DE')) && entry.accuracy != null);
+    if (!kept.length) return score;
+    return Math.round(kept.reduce((sum, entry) => sum + entry.accuracy, 0) / kept.length);
+  };
+
   speakPractice(practiceHost, item.de, {
-    onScore: (score) => {
+    onScore: (score, result) => {
       if (host.dataset.done) return;
-      best = Math.max(best ?? 0, score); // 多次重录取最高，过线不回收
+      best = Math.max(best ?? 0, adjust(score, result)); // 多次重录取最高，过线不回收
       if (best >= SPEAK_PASS) { done.textContent = '✓ 继续 ›'; done.classList.remove('secondary'); }
     },
   });
   host.appendChild(practiceHost);
+  if (excluded.size) {
+    host.appendChild(el(`<p class="speak-exclude">这些词不计分：${
+      esc((item.excludeWords || []).join('、'))} —— 它们是专有名词，机器按德语发音判会误判。</p>`));
+  }
   done.addEventListener('click', () => {
     if (host.dataset.done) return;
     host.dataset.done = '1';

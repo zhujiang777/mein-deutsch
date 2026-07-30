@@ -752,6 +752,14 @@ export const EXAM_TASKS = [
   },
 ];
 
+/**
+ * 题是用学习者自己的信息现拼的格子，所以这里没有预写的题组。
+ * 目前只有 P1 自我介绍：Azure 只能做朗读评测（必须先有参考文本），
+ * 而真考试 P1 说的本来就是你自己的信息 —— 生成器在 js/exam-p1.js。
+ * 全景图那一栏的诚实性由 tests/exam-p1.test.mjs 对着生成器验，不是免检。
+ */
+export const DYNAMIC_CELLS = new Set(['P1']);
+
 const TASK_BY_ID = new Map(EXAM_TASKS.map(task => [task.id, task]));
 export function findExamTask(id) {
   return TASK_BY_ID.get(id) || null;

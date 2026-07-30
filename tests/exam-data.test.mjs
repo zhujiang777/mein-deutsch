@@ -6,7 +6,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { EXAM_CELLS } from '../data/panorama.js';
-import { EXAM_PARTS, EXAM_TASKS, examPart, tasksForCell } from '../data/exam.js';
+import { EXAM_PARTS, EXAM_TASKS, examPart, tasksForCell, DYNAMIC_CELLS } from '../data/exam.js';
 import { READINGS } from '../data/readings.js';
 import { LISTENING_PACKS } from '../data/listening.js';
 
@@ -196,6 +196,8 @@ test('题型格的 status 与题库互相对得上', () => {
   for (const cell of EXAM_CELLS) {
     const tasks = tasksForCell(cell.id);
     if (cell.status === 'ready') {
+      // 动态格子（P1）的题是用学习者档案现拼的，形状由 tests/exam-p1.test.mjs 守
+      if (DYNAMIC_CELLS.has(cell.id)) { assert.equal(tasks.length, 0); continue; }
       assert.ok(tasks.length, `${cell.id} 标成已具备，却一组题都没有`);
     } else if (cell.status === 'none') {
       assert.equal(tasks.length, 0, `${cell.id} 标成完全没有，却已经有 ${tasks.length} 组题`);

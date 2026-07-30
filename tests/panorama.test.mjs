@@ -126,7 +126,7 @@ test('题型轴如实反映哪些做出来了、哪些还没有', () => {
     assert.equal(byId.get(id).status, 'none', `${id} 目前并没有实现，不能标成已具备`));
   // 已经点亮的：题库真有题由 tests/exam-data.test.mjs 的双向锁把关，这里只锁住状态本身，
   // 免得哪天题库被删空、这一栏却还写着"已具备"。
-  ['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'S1', 'S2'].forEach(id =>
+  ['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'S1', 'S2', 'P1'].forEach(id =>
     assert.equal(byId.get(id).status, 'ready', `${id} 已经有整套题库，不该还标成没有`));
   assert.ok(EXAM_CELLS.every(cell => ['ready', 'partial', 'none'].includes(cell.status)));
 });

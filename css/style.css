@@ -1329,6 +1329,24 @@ body.immersive #app { max-width: 760px; padding-top: 12px; padding-bottom: 18px;
 .write-check label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
 .write-check-words { font-size: .82rem; color: var(--muted); }
 .write-check-words.is-ok { color: var(--ok, inherit); }
+
+/* P1 自我介绍：先填自己的档案，题目用它现拼 */
+.p1-form { display: grid; gap: 14px; }
+.p1-form-head b { font-size: 1rem; }
+.p1-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 560px) { .p1-grid { grid-template-columns: 1fr; } }
+.p1-grid label { display: grid; gap: 4px; }
+.p1-grid span { font-size: .8rem; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.p1-grid i { font-style: normal; opacity: .6; font-size: .72rem; letter-spacing: .04em; }
+.p1-grid input { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg, transparent); color: inherit; font: inherit; }
+.p1-privacy { font-size: .78rem; color: var(--muted); }
+.p1-preview { display: grid; gap: 12px; margin-top: 16px; }
+
+/* 口语题：关键词卡 + 专名不计分的说明 */
+.speak-cards { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0 2px; }
+.speak-cards span { display: inline-flex; gap: 5px; align-items: baseline; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: .78rem; }
+.speak-cards b { font-weight: 650; }
+.speak-exclude { font-size: .78rem; color: var(--muted); margin-top: 10px; }
 .ex-options,.wc-options { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 .ex-opt,.wc-opt,.quiz-opt {
   min-height: 50px; padding: 12px 15px; text-align: center; font-size: 1rem;
