@@ -13,7 +13,9 @@ globalThis.window = { dispatchEvent() {} };
 const {
   EXAM_MODES, STAGE_EVERY, examMode, dailyQuizOn, stageExamDue,
   recordExamAnswer, recordExamTask, examStrength, examSeen,
+  examTaskReady, pickStageExam,
 } = await import('../js/exam.js');
+const { EXAM_TASKS } = await import('../data/exam.js');
 const { addExamMiss, dueExamMisses, examRef } = await import('../js/mastery.js');
 const { loadExam } = await import('../js/storage.js');
 
@@ -37,6 +39,46 @@ test('阶段测验每走完 5 格来一次，关掉就不来', () => {
   assert.equal(stageExamDue(5, { examMode: 'off' }), false);
   // 只做阶段测验这一档，阶段测验照来
   assert.equal(stageExamDue(5, { examMode: 'stage' }), true);
+});
+
+/* ---------- 阶段测验挑题 ---------- */
+
+// 满分技能表：让所有 prereq.skills 都过 40 这条线，好把变量留给 afterCell 和标签重合
+const ALL_STRONG = Object.fromEntries(
+  EXAM_TASKS.flatMap(task => task.prereq.skills || [])
+    .map(tag => [tag, { s: 100, last: Date.now() }]));
+
+test('前置门槛：主线没走到就不出，语法没练到 40 也不出', () => {
+  const task = EXAM_TASKS.find(item => item.prereq.skills?.length);
+  const need = task.prereq.afterCell;
+  assert.equal(examTaskReady(task, need - 1, ALL_STRONG), false, '主线还没走到就不该出这组');
+  assert.equal(examTaskReady(task, need, ALL_STRONG), true);
+  assert.equal(examTaskReady(task, need, {}), false, '语法点没练到 40 就不出——考全不会的题只会得到"我不行"');
+});
+
+test('阶段测验：挑没做过的、和刚学的重合最多的，且一次不给同题型两组', () => {
+  values.clear();
+  const picked = pickStageExam(26, { skills: ALL_STRONG, recentSkills: [] });
+  assert.ok(picked.length >= 2 && picked.length <= 3, '一次 2–3 组');
+  assert.equal(new Set(picked.map(task => task.cellId)).size, picked.length,
+    '同一个题型不该在一场阶段测验里出现两次——阶段测验是横着串，不是竖着刷');
+
+  // 刚走过的格子用到 numbers-tens，挂着这个标签的那组就该被顶上来
+  const withRecent = pickStageExam(26, { skills: ALL_STRONG, recentSkills: ['numbers-tens'] });
+  assert.ok(withRecent.some(task => task.id === 'x-l3-03'),
+    '标签重合最多的那组必须被挑中，这才叫"把刚学过的串起来"');
+
+  // 做过的往后排
+  recordExamTask(withRecent[0].id, { correct: 5, total: 5 });
+  const again = pickStageExam(26, { skills: ALL_STRONG, recentSkills: ['numbers-tens'] });
+  assert.notEqual(again[0].id, withRecent[0].id, '做过的组要让位给没做过的');
+});
+
+test('刚起步时挑得出题，但只挑门槛最低的那几组', () => {
+  values.clear();
+  const early = pickStageExam(5, { skills: ALL_STRONG, recentSkills: [] });
+  assert.ok(early.length, '走完 5 格就该有得考，否则第一次阶段测验是空的');
+  early.forEach(task => assert.ok(task.prereq.afterCell <= 5, `${task.id} 的门槛超过 5 格`));
 });
 
 test('题型熟练度和语言掌握度分开存，公式与 skillStrength 同一条口径', () => {

@@ -19,6 +19,19 @@ import { recordExamAnswer, recordExamTask, examStrength } from './exam.js';
 import { logActivity, rewardSummary } from './storage.js';
 
 /**
+ * 一块考试材料（邮件 / 通知 / 告示牌 / 表格说明）。
+ * 中文默认收起：真考试没有译文，先自己读一遍才有意义；读不动再展开，
+ * 不是把翻译摆在旁边让人顺着看。
+ */
+function docBlock({ layout = 'mail', title = '', de = '', zh = '' } = {}) {
+  return el(`<div class="exam-doc exam-doc-${esc(layout)}">
+    ${title ? `<div class="exam-doc-title">${esc(title)}</div>` : ''}
+    <div class="exam-doc-body de">${esc(de)}</div>
+    ${zh ? `<details class="exam-doc-zh"><summary>看中文</summary><div>${esc(zh)}</div></details>` : ''}
+  </div>`);
+}
+
+/**
  * 跑一组考试题。
  * runExamShell(host, task, { onExit, onComplete({correct,total}), feedback })
  *
@@ -77,6 +90,11 @@ export function runExamShell(host, task, { onExit, onComplete, feedback = 'immed
         ${task.subZh ? `<div class="exam-head-sub">${esc(task.subZh)}</div>` : ''}
       </div>`));
     }
+
+    // 材料：整组共用的（一封信）每道题都重铺一次，真考试里那张纸也一直在眼前；
+    // 每题自带的（一块告示牌）只跟着自己那道题走。
+    (task.stimulus || []).forEach(block => stage.appendChild(docBlock(block)));
+    if (item.stimulus) stage.appendChild(docBlock(item.stimulus));
 
     renderExercise(stage, item, {
       onSubmit: (correct, correctText) => {

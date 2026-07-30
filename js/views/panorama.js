@@ -6,7 +6,8 @@ import {
 import { VOCAB_IDS } from '../../data/content-index.js';
 import { el, esc, toast } from '../ui.js';
 import { skillStrength } from '../mastery.js';
-import { loadSkills, getWordbook } from '../storage.js';
+import { loadSkills, getWordbook, loadExam } from '../storage.js';
+import { examStrength, examSeen } from '../exam.js';
 import { srsStats } from '../srs.js';
 
 const EXAM_STATUS = {
@@ -111,11 +112,26 @@ export function renderPanorama(host) {
 
   /* ---- 题型 ---- */
   host.appendChild(el(`<div class="section-label">考试题型 · 11 格</div>`));
-  host.appendChild(el(`<p class="pano-hint">Goethe A1 的真实题型。这一栏不算掌握度，只回答"我们有没有这个东西"。</p>`));
+  host.appendChild(el(`<p class="pano-hint">Goethe A1 的真实题型。已经有题库的格子显示你的熟练度，点开可以单独加练；灰的那些是我们还没做出来的，如实标着。</p>`));
+  const exam = loadExam();
   EXAM_GROUPS.forEach(group => {
     host.appendChild(el(`<div class="pano-group-label">${esc(group.label)}</div>`));
     const grid = el(`<div class="pano-grid"></div>`);
     group.cells.forEach(cell => {
+      // 已有题库的格子：显示你练到哪了，并且整格可点进去加练。
+      // 还没做出来的格子维持灰格 —— 这一栏是体检报告，报告造假比缺项严重。
+      if (cell.status === 'ready') {
+        const strength = examStrength(cell.id, exam);
+        const record = examSeen(cell.id, exam);
+        const band = bandOf(strength);
+        grid.appendChild(el(`<a class="pano-cell pano-exam band-${band.key}" href="#/exam/${esc(cell.id)}">
+          <div class="pano-cell-top"><span class="pano-id">${esc(cell.id)}</span><span class="pano-pct">${strength}%</span></div>
+          <div class="pano-cell-title">${esc(cell.title)}</div>
+          ${cell.sub ? `<div class="pano-cell-sub">${esc(cell.sub)}</div>` : ''}
+          <div class="pano-cell-sub">${record ? `练过 ${record} 道 · ${esc(band.label)}` : '还没练过 · 点开加练'}</div>
+        </a>`));
+        return;
+      }
       const status = EXAM_STATUS[cell.status] || EXAM_STATUS.none;
       grid.appendChild(el(`<div class="pano-cell pano-exam band-${status.key}">
         <div class="pano-cell-top"><span class="pano-id">${esc(cell.id)}</span><span class="pano-pct">${esc(status.label)}</span></div>

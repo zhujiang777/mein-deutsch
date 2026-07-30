@@ -119,9 +119,14 @@ test('全景图视图与样式接线正确', () => {
   }
 });
 
-test('题型轴如实反映"写"和"口语自由表达"是空的', () => {
+test('题型轴如实反映哪些做出来了、哪些还没有', () => {
   const byId = new Map(EXAM_CELLS.map(cell => [cell.id, cell]));
-  ['S1', 'S2', 'P2', 'P3', 'H2', 'H3', 'L2', 'L3'].forEach(id =>
+  // 还没做的：第 5c–5f 步逐个点亮，每点亮一个就从这个数组里移走。
+  ['S2', 'P2', 'P3', 'H2', 'H3', 'L2'].forEach(id =>
     assert.equal(byId.get(id).status, 'none', `${id} 目前并没有实现，不能标成已具备`));
+  // 已经点亮的：题库真有题由 tests/exam-data.test.mjs 的双向锁把关，这里只锁住状态本身，
+  // 免得哪天题库被删空、这一栏却还写着"已具备"。
+  ['H1', 'L1', 'L3', 'S1'].forEach(id =>
+    assert.equal(byId.get(id).status, 'ready', `${id} 已经有整套题库，不该还标成没有`));
   assert.ok(EXAM_CELLS.every(cell => ['ready', 'partial', 'none'].includes(cell.status)));
 });

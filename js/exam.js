@@ -9,6 +9,9 @@
 //   答对答错喂 recordAnswer → md.skills.v1（推动全景图语法轴，联动是双向的）
 //   题型自己的强度 → md.exam.v1（不污染 skills，否则语法轴百分比会被听力题稀释）
 import { loadExam, saveExam, getSettings } from './storage.js';
+import { EXAM_TASKS } from '../data/exam.js';
+import { skillStrength } from './mastery.js';
+import { GRAMMAR_FLOOR } from './content-readiness.js';
 
 /** 强度公式和衰减完全抄 js/mastery.js —— 三条轴共用 bandOf() 的四档配色，口径必须一致。 */
 const DAY = 86400000;
@@ -40,6 +43,61 @@ export function dailyQuizOn(settings = getSettings()) {
 export function stageExamDue(cellsDone = 0, settings = getSettings()) {
   if (!EXAM_MODES[examMode(settings)].stage) return false;
   return cellsDone > 0 && cellsDone % STAGE_EVERY === 0;
+}
+
+/* ---------- 阶段测验挑题 ---------- */
+
+/**
+ * 这组题现在能不能出。两条与，缺一不出：
+ *   afterCell —— 主线至少要走到这一格（材料里的场景才见过）
+ *   skills    —— 这些语法点得练到 40（和 content-readiness 的 GRAMMAR_FLOOR 同一条线，
+ *                不发明第二条门槛）
+ * 门槛过不去时宁可不出：一场考完全不会的题，学的人只会得到"我不行"这个结论。
+ */
+export function examTaskReady(task, cellsDone = 0, skills = {}) {
+  const pre = task?.prereq || {};
+  if ((pre.afterCell || 0) > cellsDone) return false;
+  return (pre.skills || []).every(tag => skillStrength(tag, skills) >= GRAMMAR_FLOOR);
+}
+
+/**
+ * 阶段测验挑哪几组。**确定性规则，不用 AI。**
+ *
+ * recentSkills = 刚走过那 5 格的全部技能标签。挑标签重合最多的组，
+ * 这就是用户要的"把全景图里学过的东西串联起来"——不用手写一张阶段↔题目的映射表，
+ * 加一组新题它自己就会被排进合适的阶段。
+ *
+ * 三条排序，按重要性：没做过的优先 → 和刚学的重合多的优先 → id 兜底（结果稳定可测）。
+ * 一次不给同一个题型两组：阶段测验要横着串，不是竖着刷同一种题。
+ */
+export function pickStageExam(cellsDone = 0, {
+  skills = {}, recentSkills = [], max = 3, state = loadExam(), tasks = EXAM_TASKS,
+} = {}) {
+  const recent = new Set(recentSkills);
+  const doneMap = state.tasks || {};
+  const scored = tasks
+    .filter(task => examTaskReady(task, cellsDone, skills))
+    .map(task => {
+      const tags = new Set([...(task.skills || []),
+        ...(task.items || []).flatMap(item => item.skills || [])]);
+      return {
+        task,
+        overlap: [...tags].filter(tag => recent.has(tag)).length,
+        done: doneMap[task.id]?.done || 0,
+      };
+    })
+    .sort((a, b) => (a.done - b.done) || (b.overlap - a.overlap)
+      || a.task.id.localeCompare(b.task.id));
+
+  const picked = [];
+  const usedCells = new Set();
+  for (const row of scored) {
+    if (usedCells.has(row.task.cellId)) continue;
+    usedCells.add(row.task.cellId);
+    picked.push(row.task);
+    if (picked.length >= max) break;
+  }
+  return picked;
 }
 
 /* ---------- 题型熟练度 ---------- */

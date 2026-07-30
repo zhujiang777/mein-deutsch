@@ -150,6 +150,25 @@ test('每日小测跟着今日文章走，不新开一段', () => {
     .some(s => s.kind === 'quiz'));
 });
 
+test('阶段测验归"学一格"，不新开第四段', () => {
+  const stageExam = [{ id: 'x-l3-01', cellId: 'L3', titleZh: '五块牌子', items: [{}] }];
+  const counts = { due: 2, fresh: 2 };
+
+  const segments = buildTodayPlan('full', { nextStep: STEP, stageExam, counts }).segments;
+  const exam = segments.find(s => s.kind === 'stage-exam');
+  assert.ok(exam, '走完 5 格的那天要排进阶段测验');
+  assert.equal(exam.stage, 'learn', '它是"刚学完这一格，顺手把这 5 格串起来考一遍"，不是第四段');
+  // 顺序：先学那一格，再考
+  assert.ok(segments.indexOf(segments.find(s => s.kind === 'lesson')) < segments.indexOf(exam));
+
+  // 不该考的日子由 stageExamDue 判定，这里只保证空数组不产生段落
+  assert.ok(!buildTodayPlan('full', { nextStep: STEP, stageExam: [], counts }).segments
+    .some(s => s.kind === 'stage-exam'));
+  // 只复习那条旁路不考试
+  assert.ok(!buildTodayPlan('review', { nextStep: STEP, stageExam, counts }).segments
+    .some(s => s.kind === 'stage-exam'));
+});
+
 test('全部清空时不产出任何段落', () => {
   const { segments } = buildTodayPlan('review', { nextStep: null, material: null, counts: { due: 0, fresh: 0 } });
   assert.equal(segments.length, 0);

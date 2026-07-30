@@ -7,6 +7,7 @@ import { READINGS } from '../data/readings.js';
 import { LISTENING_PACKS } from '../data/listening.js';
 import { COURSE } from '../data/course.js';
 import { DICT_ENTRIES } from '../data/dict-core.js';
+import { EXAM_TASKS } from '../data/exam.js';
 
 const texts = new Set();
 const add = (t) => { if (t && t.trim()) texts.add(t.trim()); };
@@ -65,5 +66,10 @@ for (const unit of COURSE)
       // scene / observe / roleplay：逐句德语进音频清单
       if (Array.isArray(step.lines)) step.lines.forEach(l => add(l.de));
     }
+
+// 应试题库：只有听力题的 audioText 要发音。
+// 阅读材料（邮件、告示牌）在真考试里本来就没有声音，不生成，也就不会白占音频体积。
+for (const task of EXAM_TASKS)
+  for (const item of task.items || []) add(item.audioText);
 
 process.stdout.write(JSON.stringify([...texts], null, 0));

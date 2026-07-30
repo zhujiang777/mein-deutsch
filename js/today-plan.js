@@ -34,12 +34,12 @@ export const ROUTES = {
   full: {
     label: '完整路线 · 约 25 分钟',
     maxDue: 20, maxNew: 10, mistakes: 5, listenMisses: 3,
-    lesson: true, article: true, quiz: true,
+    lesson: true, article: true, quiz: true, stageExam: true,
   },
   review: {
     label: '今天只想复习 · 约 10 分钟',
     maxDue: 30, maxNew: 0, mistakes: 8, listenMisses: 5,
-    lesson: false, article: false, quickForms: true, quiz: false,
+    lesson: false, article: false, quickForms: true, quiz: false, stageExam: false,
   },
 };
 
@@ -105,7 +105,8 @@ function reasonFor({ pack, readiness, done, seedHits }) {
  * counts 由调用方从 SRS 读出：{ due, fresh, mistakes:[], listenMisses:[] }
  */
 export function buildTodayPlan(routeKey, {
-  nextStep = null, material = null, generated = null, counts = {}, quizTask = null,
+  nextStep = null, material = null, generated = null, counts = {},
+  quizTask = null, stageExam = [],
 } = {}) {
   const route = ROUTES[routeKey] || ROUTES.full;
   const segments = [];
@@ -133,6 +134,15 @@ export function buildTodayPlan(routeKey, {
       title: nextStep.cell?.title || nextStep.lesson.title,
       cellIndex: nextStep.index, cellTotal: nextStep.total,
     });
+  }
+
+  // ②b 阶段测验 —— 每走完 5 格的那天多这一段。
+  // 它归"学一格"而不是自成一段：这一天的意思是"刚学完第 N 格，顺手把这 5 格串起来考一遍"，
+  // 首页那条路仍然是三行。材料是没见过的新题（每日小测考刚见过的，两层刻意不同）。
+  if (route.stageExam) {
+    stageExam.forEach(task => segments.push({
+      stage: 'learn', kind: 'stage-exam', title: task.titleZh, task,
+    }));
   }
 
   // ③ 今日文章 —— 前两段的汇合点。

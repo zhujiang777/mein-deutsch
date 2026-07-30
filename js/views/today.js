@@ -5,7 +5,7 @@
 // 组装规则和今日文章的选材见 js/today-plan.js
 import { el, esc, icon, motionIn, toast } from '../ui.js';
 import { VOCAB_IDS } from '../../data/content-index.js';
-import { nextMainlineStep } from '../mainline.js';
+import { nextMainlineStep, recentCellSkills } from '../mainline.js';
 import { srsStats, buildQueue } from '../srs.js';
 import {
   dueMistakes, dueListenMisses, rateMistake, mistakeRef, listenRef, recordAnswer
@@ -18,7 +18,7 @@ import {
   buildArticleRequest, fetchArticle, articleToLesson, reasonText, quizToTask,
   cachedArticle, saveArticleCache, regensLeft, todayStamp,
 } from '../daily-article.js';
-import { dailyQuizOn } from '../exam.js';
+import { dailyQuizOn, stageExamDue, pickStageExam, STAGE_EVERY } from '../exam.js';
 import { getCoachSecrets, coachConfigured } from '../coach-secrets.js';
 
 const vocabIds = () => [...Object.keys(getWordbook()), ...VOCAB_IDS];
@@ -153,7 +153,9 @@ export function renderToday(host) {
     { label: STAGE_LABELS.words, text: `${wordCount} 个词${mistakes + listenMisses ? ` · ${mistakes + listenMisses} 道错题` : ''}`, on: wordCount + mistakes + listenMisses > 0 },
     // 走的是地图，所以这一行说的是"第几格"，不是"第几课"——26 格是能盯着走完的数字。
     { label: STAGE_LABELS.learn,
-      text: step ? `第 ${step.index}/${step.total} 格 · ${step.cell.title}` : '26 格全部走完',
+      // 阶段测验的日子在这一行加一句，不新开第四行：路永远是三行（形态锚）。
+      text: (step ? `第 ${step.index}/${step.total} 格 · ${step.cell.title}` : '26 格全部走完')
+        + (stageExamDue(step ? step.index - 1 : 26) ? ' ＋ 阶段测验' : ''),
       on: !!step },
     { label: STAGE_LABELS.article, ...articleLine },
   ];
@@ -259,11 +261,19 @@ async function startFlow(host, routeKey) {
   const quizTask = generated && dailyQuizOn()
     ? quizToTask(generated, { skills: step?.cell?.skills?.length ? step.cell.skills : ['reading'] })
     : null;
+  // 阶段测验：走完第 5、10、15、20、25 格的那天来一次，考的是刚走过那 5 格。
+  const cellsDone = step ? step.index - 1 : (step?.total || 26);
+  const skills = loadSkills();
+  const stageExam = stageExamDue(cellsDone)
+    ? pickStageExam(cellsDone, { skills, recentSkills: recentCellSkills(cellsDone, STAGE_EVERY) })
+    : [];
+
   const { segments } = buildTodayPlan(routeKey, {
     nextStep: step,
     material: todayMaterial(step),
     generated,
     quizTask,
+    stageExam,
     counts: {
       due: stats.due, fresh: stats.fresh,
       mistakes: dueMistakes(99), listenMisses: dueListenMisses(99),
@@ -341,8 +351,9 @@ async function startFlow(host, routeKey) {
         onComplete: () => { idx++; run(); },
         onExit: () => { renderTodayFresh(host); },
       });
-    } else if (seg.kind === 'quiz') {
-      // 每日小测：刚读完的那篇，立刻用 Goethe 阅读第一部分的方式验一遍。
+    } else if (seg.kind === 'quiz' || seg.kind === 'stage-exam') {
+      // quiz = 每日小测（刚读完那篇，立刻验一遍）
+      // stage-exam = 阶段测验（走完 5 格，用没见过的新材料把这 5 格串起来）
       host.appendChild(header);
       runtime.runExamShell(host, seg.task, {
         onComplete: () => { idx++; run(); },

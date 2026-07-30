@@ -7,7 +7,7 @@ const MILESTONES = ['u2l3', 'u5l3', 'u8l4', 'u9l3', 'u11l4', 'u12l4'];
 
 // 低于这个掌握度就提示"先去补这一课"。定在 40 而不是更高：语法是接受性优先的，
 // 看得懂不等于会用，读之前不必先练到熟。
-const GRAMMAR_FLOOR = 40;
+export const GRAMMAR_FLOOR = 40;
 const GRAMMAR_BY_ID = new Map(GRAMMAR_LESSONS.map(lesson => [lesson.id, lesson]));
 
 /** 一条语法的掌握度 = 它名下所有技能标签强度的平均值（和 lessonMastery 同口径）。 */

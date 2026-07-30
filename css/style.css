@@ -1283,6 +1283,30 @@ body.immersive #app { max-width: 760px; padding-top: 12px; padding-bottom: 18px;
 .exam-head { text-align: center; padding: 4px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
 .exam-head-title { font-size: 1.05rem; font-weight: 650; margin-top: 4px; }
 .exam-head-sub { font-size: .82rem; color: var(--muted); margin-top: 4px; }
+
+/* 考试材料：一封信 / 一块告示牌。看起来要像"贴在墙上的那张纸"，不像 App 的卡片。 */
+.exam-doc { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; background: var(--card); }
+.exam-doc-title { font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.exam-doc-body { white-space: pre-line; line-height: 1.65; }
+.exam-doc-sign { text-align: center; border-width: 2px; border-style: dashed; }
+.exam-doc-sign .exam-doc-body { font-size: 1.1rem; font-weight: 600; letter-spacing: .01em; }
+.exam-doc-zh { margin-top: 10px; font-size: .85rem; color: var(--muted); }
+.exam-doc-zh summary { cursor: pointer; font-size: .8rem; }
+.exam-doc-zh > div { margin-top: 6px; white-space: pre-line; }
+
+/* 题型加练页 #/exam/<格子id> */
+.exam-hero { padding: 6px 0 18px; }
+.exam-hero h1 { font-size: 1.35rem; margin: 6px 0 4px; }
+.exam-hero-strength { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); }
+.exam-hero-strength b { font-size: 1.5rem; }
+.exam-hero-strength span { font-size: .82rem; color: var(--muted); }
+.exam-list { display: grid; gap: 10px; }
+.exam-task { position: relative; text-align: left; width: 100%; padding: 14px 42px 14px 16px; cursor: pointer; }
+.exam-task-title { font-weight: 600; }
+.exam-task-sub { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+.exam-task-meta { font-size: .78rem; color: var(--muted); margin-top: 8px; }
+.exam-task-go { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); opacity: .5; }
+.exam-task.is-locked { opacity: .55; cursor: default; }
 .ex-options,.wc-options { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 .ex-opt,.wc-opt,.quiz-opt {
   min-height: 50px; padding: 12px 15px; text-align: center; font-size: 1rem;

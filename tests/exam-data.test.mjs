@@ -117,6 +117,43 @@ test('每组考题的形状：id / 题量 / 选项 / 讲解 / 出处', () => {
   }
 });
 
+test('听力题的每段录音都已经生成 —— 忘了跑 gen_audio.py 会在这里变红灯', async () => {
+  const { AUDIO_MANIFEST } = await import('../data/audio-manifest.js');
+  for (const task of EXAM_TASKS) {
+    for (const item of task.items) {
+      if (!item.audioText) continue;
+      assert.ok(AUDIO_MANIFEST[item.audioText.trim()],
+        `${task.id} 的这段录音还没生成：${item.audioText}\n跑一次 python3 tools/gen_audio.py`);
+      // 听力题必须限播放次数，否则学的人会一直重放到听懂为止，练不出考场里那一遍的能力
+      assert.ok(Number.isInteger(item.plays) && item.plays > 0,
+        `${task.id} 的听力题没写 plays（官方 ${task.cellId} 是 ${examPart(task.cellId).plays} 遍）`);
+      assert.equal(item.plays, examPart(task.cellId).plays, `${task.id} 的播放次数和官方不一致`);
+    }
+  }
+});
+
+test('判断对错的组不能全真或全假 —— 蒙一个方向就全对的题等于没出', () => {
+  for (const task of EXAM_TASKS) {
+    const rf = task.items.filter(item => item.options?.length === 2 && item.options[0] === 'Richtig');
+    if (rf.length < 3) continue;
+    const richtig = rf.filter(item => item.a === 0).length;
+    assert.ok(richtig > 0 && richtig < rf.length,
+      `${task.id} 的 ${rf.length} 道判断题答案全一样`);
+  }
+});
+
+test('每组题都写了前置门槛 —— 没门槛就会在什么都没学时被推出来', () => {
+  for (const task of EXAM_TASKS) {
+    assert.ok(task.prereq, `${task.id} 没有 prereq`);
+    assert.ok(Number.isInteger(task.prereq.afterCell) && task.prereq.afterCell > 0,
+      `${task.id} 的 afterCell 必须是正整数`);
+    assert.ok(task.titleZh && task.subZh, `${task.id} 缺中文标题或副标题`);
+    // 材料要么整组共用一份，要么每题自带一块；两样都没有的判断题没法判
+    const blocks = [...(task.stimulus || []), ...task.items.map(item => item.stimulus).filter(Boolean)];
+    blocks.forEach(block => assert.ok(block.de && block.zh, `${task.id} 的材料缺德语或中文`));
+  }
+});
+
 // 双向诚实锁：说了"已具备"就必须真有题，说了"完全没有"就必须真的一组都没有。
 // 全景图那一栏是产品的体检报告，报告造假比缺项严重得多。
 test('题型格的 status 与题库互相对得上', () => {

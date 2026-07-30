@@ -59,6 +59,16 @@ export const MAINLINE_CELLS = [
   ...ORDERED_CELLS.map(cell => ({ cell, kind: 'lesson', lessons: HOME.get(cell.id) })),
 ];
 
+/**
+ * 刚走过的那几格用到的技能标签。阶段测验靠它来"串联刚学过的东西"：
+ * 谁的标签和这批重合最多，就先考谁（js/exam.js 的 pickStageExam）。
+ */
+export function recentCellSkills(cellsDone = 0, span = 5) {
+  return MAINLINE_CELLS
+    .slice(Math.max(0, cellsDone - span), cellsDone)
+    .flatMap(entry => entry.cell.skills || []);
+}
+
 export function cellStrength(cell, skills = {}) {
   if (!cell.skills?.length) return 0;
   const sum = cell.skills.reduce((acc, id) => acc + skillStrength(id, skills), 0);
