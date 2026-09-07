@@ -1,6 +1,6 @@
 // 语音播放：预生成音频优先（真人级德语 MP3），设备 TTS 仅作德语语音回退。
 // 跟读评分已移至 pronunciation-assessment.js，不再依赖浏览器 SpeechRecognition。
-import { getSettings } from './storage.js';
+import { getSettings } from './storage.js?v=4';
 import { SLOW_RATE, RATE_STEPS } from './audio-timing.js';
 
 // 速率档位定义在 audio-timing.js（纯模块，可单测），这里转出去方便调用方就近取用。
@@ -32,8 +32,16 @@ export function preloadSpeechAssets() {
 function playFile(file, { slow = false, onend } = {}) {
   const node = acquirePlayer(file);
   node.playbackRate = slow ? SLOW_RATE : 1;
-  if (onend) node.onended = onend;
-  node.play().catch(() => onend?.());
+  let settled = false;
+  const finish = failed => {
+    if (settled) return;
+    settled = true;
+    if (failed) import('./ui.js').then(({ toast }) => toast('音频暂不可用，可以查看文字继续。'));
+    onend?.();
+  };
+  node.onended = () => finish(false);
+  node.onerror = () => finish(true);
+  node.play().catch(() => finish(true));
 }
 
 /**

@@ -6,7 +6,7 @@ import { el, esc, audioBtn, haptic, icon, motionIn, rewardBurst, setProgress } f
 import { speak, stopSpeak } from './speech.js';
 import { renderExercise } from './exercises.js?v=5';
 import { recordAnswer, addMistake } from './mastery.js';
-import { getLessonState, setLessonState, logActivity, rewardSummary } from './storage.js';
+import { getLessonState, setLessonState, logActivity, rewardSummary } from './storage.js?v=4';
 
 const EXERCISE_TYPES = new Set(['choice', 'listenChoice', 'assemble', 'dictation', 'fill', 'match', 'translate', 'speak', 'scene', 'observe', 'reproduce', 'roleplay', 'listenFull', 'listenReview']);
 // 展示/角色步：走 renderExercise 但不计分、不弹反馈条，onSubmit 后直接进下一步

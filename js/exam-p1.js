@@ -12,7 +12,7 @@
 //      （renderSpeak 的 excludeWords）
 //   2. 拼名字要用**德语字母名**（Zhu → Zett Ha U），不是英文字母名
 //   3. 报号码要**逐位念德语数字**，不是把 0176 当成"一百七十六"
-import { getSettings, setSetting } from './storage.js';
+import { getSettings, setSetting } from './storage.js?v=4';
 
 /** 表单字段。label 是中文提示，example 是德语示例——填的内容必须是德语。 */
 export const P1_FIELDS = [

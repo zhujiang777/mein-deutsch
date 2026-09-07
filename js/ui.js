@@ -143,6 +143,8 @@ export function speakPractice(host, targetText, { onScore, onRecorded, play } = 
   const recordBtn = el(`<button class="sp-btn sp-record">${icon('mic')} 录我的</button>`);
   controls.appendChild(recordBtn);
 
+  let disposed = false;
+  let recordedAudio = null;
   let recorderCtl = null;
   let phase = 'idle'; // idle | recording | stopping | judging | judged
   let myUrl = null;
@@ -213,6 +215,7 @@ export function speakPractice(host, targetText, { onScore, onRecorded, play } = 
 
   async function requestAssessment(e) {
     e?.stopPropagation?.();
+    if (disposed) return;
     if (!assessmentBlob) {
       renderAssessmentError({ code: 'audio-unavailable', message: '本设备未能生成评分音频' });
       return;
@@ -252,7 +255,8 @@ export function speakPractice(host, targetText, { onScore, onRecorded, play } = 
     std.addEventListener('click', (e) => { e.stopPropagation(); stopSpeak(); speak(targetText); });
     compare.appendChild(std);
     if (url) {
-      const audio = new Audio(url);
+      recordedAudio?.pause();
+      const audio = recordedAudio = new Audio(url);
       const mine = el(`<button class="sp-cmp mine"><span class="sp-cmp-icon">▶</span><span>我的录音</span></button>`);
       mine.addEventListener('click', (e) => {
         e.stopPropagation(); stopSpeak(); audio.currentTime = 0; audio.play().catch(() => {});
@@ -262,6 +266,8 @@ export function speakPractice(host, targetText, { onScore, onRecorded, play } = 
   }
 
   async function startRec() {
+    if (disposed) return;
+    recordedAudio?.pause();
     status.textContent = '';
     compare.innerHTML = '';
     recogHost.innerHTML = '';
@@ -273,7 +279,9 @@ export function speakPractice(host, targetText, { onScore, onRecorded, play } = 
     phase = 'recording';
     recordBtn.disabled = true; // 等待 stream 就绪，防重复点击
     try {
-      recorderCtl = await startRecording({ onLimit: () => stopRec() });
+      const controller = await startRecording({ onLimit: () => stopRec() });
+      if (disposed) { controller.cancel(); return; }
+      recorderCtl = controller;
     } catch (err) {
       recordBtn.disabled = false;
       phase = 'idle';
@@ -295,6 +303,7 @@ export function speakPractice(host, targetText, { onScore, onRecorded, play } = 
     status.textContent = '正在准备录音…';
     const res = recorderCtl ? await recorderCtl.stop() : null;
     recorderCtl = null;
+    if (disposed) { if (res?.url) URL.revokeObjectURL(res.url); return; }
     recordBtn.disabled = false;
     recordBtn.textContent = '🔁 重录';
     status.textContent = '';
@@ -309,6 +318,17 @@ export function speakPractice(host, targetText, { onScore, onRecorded, play } = 
     if (recordBtn.classList.contains('recording')) stopRec();
     else startRec();
   });
+
+  wrap.dispose = () => {
+    disposed = true;
+    assessmentRun++;
+    recorderCtl?.cancel();
+    recorderCtl = null;
+    recordedAudio?.pause();
+    if (myUrl) URL.revokeObjectURL(myUrl);
+    myUrl = null;
+    assessmentBlob = null;
+  };
 
   host.appendChild(wrap);
   return wrap;
@@ -352,7 +372,7 @@ export function phraseRow({ de, ipa, zh, tip, mic = true, slowBtn = true }) {
 
 /* ---- YouTube 视频组件：懒加载 facade + IFrame API 进度追踪 ----
    videoId 记录观看状态；播放 ≥80% 自动记已看，手动"我看完了"兜底 */
-import { getVideoState, setVideoState } from './storage.js';
+import { getVideoState, setVideoState } from './storage.js?v=4';
 
 let ytApiPromise = null;
 function loadYtApi() {

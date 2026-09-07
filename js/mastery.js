@@ -1,6 +1,6 @@
 // 技能掌握度 + 错题池
 // 技能强度 0-100：答对渐进上升，答错显著下降，随时间轻微衰减
-import { loadSkills, saveSkills, loadSrs, saveSrs } from './storage.js';
+import { loadSkills, saveSkills, loadSrs, saveSrs } from './storage.js?v=4';
 
 const DAY = 86400000;
 

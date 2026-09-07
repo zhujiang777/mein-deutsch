@@ -1,6 +1,6 @@
 // 复现引擎：把"最近学的词"和"到期复习的词"与阅读文章的 vocabRefs 做重叠，
 // 推荐能让新学词汇在真实语境里再次出现的文章。
-import { loadSrs } from './storage.js';
+import { loadSrs } from './storage.js?v=4';
 
 const DAY = 86400000;
 

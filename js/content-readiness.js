@@ -1,7 +1,7 @@
 import { COURSE_CATALOG, contentVocabRefs, contentWordTotal } from '../data/content-index.js';
 import { contentGrammarNeeds } from '../data/grammar-index.js';
 import { GRAMMAR_LESSONS } from '../data/grammar.js';
-import { allLessonStates, loadSrs, loadSkills } from './storage.js';
+import { allLessonStates, loadSrs, loadSkills } from './storage.js?v=4';
 
 const MILESTONES = ['u2l3', 'u5l3', 'u8l4', 'u9l3', 'u11l4', 'u12l4'];
 

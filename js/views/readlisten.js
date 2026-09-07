@@ -1,7 +1,7 @@
 import { READINGS } from '../../data/readings.js';
 import { LISTENING_PACKS } from '../../data/listening.js';
 import { el, esc, icon, motionIn } from '../ui.js';
-import { getLessonState, isDone } from '../storage.js';
+import { getLessonState, isDone } from '../storage.js?v=4';
 import { scoreText } from '../recur.js';
 import { getContentReadiness } from '../content-readiness.js';
 import { contentVocabRefs } from '../../data/content-index.js';

@@ -13,6 +13,8 @@ const KEYS = {
   // 题型熟练度单独一个 store，不并进 skills：题型熟练度不是语言强度，
   // 混进 md.skills.v1 会让全景图语法轴的百分比被听力题稀释。
   exam: 'md.exam.v1',           // { cells: { L1:{s,seen,ok,last} }, tasks: {...}, mocks: [] }
+  integrated: 'md.integrated.v1', // 综合课版本、断点、练习证据、复习及试学日志
+  wordLearning: 'md.word-learning.v1', // 每日新增额度及分项词汇证据
   meta: 'md.meta.v1',           // { schemaVersion, lastSync }
 };
 
@@ -42,6 +44,7 @@ function touchMeta() {
 
 /* ---- v1 → v2 迁移 ---- */
 export function migrate() {
+  const returning = ['srs','lessons','daily','settings'].some(name => localStorage.getItem(KEYS[name]));
   const m = load(KEYS.meta, {});
   const version = m.schemaVersion || 1;
   if (version < 2) {
@@ -75,6 +78,12 @@ export function migrate() {
     }));
     m.schemaVersion = 3;
   }
+  if (version < 4) {
+    const settings = load(KEYS.settings, {});
+    if (returning && settings.newPerDay == null) settings.newPerDay = 10;
+    if (returning) localStorage.setItem(KEYS.settings, JSON.stringify(settings));
+    m.schemaVersion = 4;
+  }
   localStorage.setItem(KEYS.meta, JSON.stringify(m));
 }
 
@@ -82,7 +91,7 @@ export function migrate() {
 const DEFAULT_SETTINGS = {
   voiceURI: '',
   rate: 1,
-  newPerDay: 10,       // 每日新词
+  newPerDay: 5,       // 每日新词
   gistToken: '',       // Gist 同步令牌
   gistId: '',          // 进度存储的 gist id（首次推送时创建）
   theme: 'system',     // system | light | dark
@@ -277,7 +286,11 @@ export function exportAll() {
 export function importAll(json) {
   const data = JSON.parse(json);
   for (const [name, key] of Object.entries(KEYS)) {
-    if (data[name] && name !== 'meta') save(key, data[name]);
+    if (data[name] && name !== 'meta') {
+      const value = name === 'settings' && (data.meta?.schemaVersion || 1) < 4 && data[name].newPerDay == null
+        ? { ...data[name], newPerDay: 10 } : data[name];
+      save(key, value);
+    }
   }
 }
 // 同步合并：远端与本地按 meta.lastModified 新者胜（整包粒度，个人单用户场景足够）
@@ -294,4 +307,21 @@ export function mergeRemote(json) {
 export function resetAll() {
   Object.values(KEYS).forEach(k => localStorage.removeItem(k));
   localStorage.removeItem('md.local.secrets.v1');
+}
+
+/* 综合课程独立存储，旧课程记录不转成新课的能力证据。 */
+export const loadIntegrated = () => load(KEYS.integrated, { lessons:{}, reviews:{}, sessions:{}, events:[] });
+export const saveIntegrated = value => save(KEYS.integrated, value);
+export const loadWordLearning = () => load(KEYS.wordLearning, { days:{}, evidence:{}, events:{} });
+export const saveWordLearning = value => save(KEYS.wordLearning, value);
+export function newWordRemaining() {
+ const ledger=loadWordLearning();
+ return Math.max(0, Math.max(0, Number(getSettings().newPerDay)||0) - (ledger.days?.[todayKey()]||[]).length);
+}
+export function claimNewWord(id) {
+ if(loadSrs()[id]) return true;
+ const ledger=loadWordLearning(); ledger.days ||= {}; const day=ledger.days[todayKey()] ||= [];
+ if(day.includes(id)) return true;
+ if(newWordRemaining()<=0) return false;
+ day.push(id); saveWordLearning(ledger); return true;
 }

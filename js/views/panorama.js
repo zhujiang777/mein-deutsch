@@ -6,10 +6,10 @@ import {
 import { VOCAB_IDS } from '../../data/content-index.js';
 import { el, esc, toast } from '../ui.js';
 import { skillStrength } from '../mastery.js';
-import { loadSkills, getWordbook, loadExam, allLessonStates } from '../storage.js';
+import { loadSkills, getWordbook, loadExam, allLessonStates } from '../storage.js?v=4';
 import { examStrength, examSeen, mockUnlock } from '../exam.js';
 import { mainlineProgress } from '../mainline.js';
-import { srsStats } from '../srs.js';
+import { srsStats } from '../srs.js?v=4';
 
 const EXAM_STATUS = {
   ready: { label: '已具备', key: 'strong' },

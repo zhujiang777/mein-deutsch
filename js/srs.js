@@ -1,6 +1,6 @@
 // 间隔重复调度：简化版 SM-2
 // 卡片状态: { due(ms), ivl(天), ease, reps, lapses, state: 'new'|'learn'|'review' }
-import { loadSrs, saveSrs, getSettings } from './storage.js';
+import { loadSrs, saveSrs, getSettings, claimNewWord, newWordRemaining } from './storage.js?v=4';
 
 const DAY = 24 * 60 * 60 * 1000;
 export const LEARN_STEPS = [10 * 60 * 1000, DAY, 3 * DAY];
@@ -15,6 +15,7 @@ export const RATINGS = [
 export function rate(id, rating) {
   const all = loadSrs();
   const now = Date.now();
+  if (/^(?:w\d+|d:)/.test(id) && !all[id] && !claimNewWord(id)) return null;
   const c = all[id] || { ivl: 0, ease: 2.5, reps: 0, lapses: 0, state: 'new' };
   c.reps += 1;
 
@@ -61,10 +62,11 @@ export function rate(id, rating) {
   return c;
 }
 
-// 标熟：已认识的词，长间隔后再抽查一次
+// 标熟：短间隔抽查，保留旧卡其他记录
 export function markKnown(id) {
   const all = loadSrs();
-  all[id] = { ivl: 180, ease: 2.8, reps: 1, lapses: 0, state: 'review', due: Date.now() + 180 * DAY };
+  if (/^(?:w\d+|d:)/.test(id) && !all[id] && !claimNewWord(id)) return null;
+  all[id] = { ...all[id], ivl: 3, ease: all[id]?.ease || 2.5, reps: all[id]?.reps || 1, lapses: all[id]?.lapses || 0, state: 'review', due: Date.now() + 3 * DAY };
   saveSrs(all);
 }
 
@@ -74,12 +76,13 @@ export function buildQueue(allIds) {
   const now = Date.now();
   const due = [];
   const fresh = [];
-  for (const id of allIds) {
+  for (const id of new Set(allIds)) {
     const c = all[id];
     if (!c) fresh.push(id);
     else if (c.due <= now) due.push(id);
   }
-  const newLimit = getSettings().newPerDay;
+  const newLimit = newWordRemaining();
+  due.sort((a,b)=>all[a].due-all[b].due);
   return { due, fresh: fresh.slice(0, newLimit), freshTotal: fresh.length };
 }
 
@@ -87,7 +90,7 @@ export function srsStats(allIds) {
   const all = loadSrs();
   const now = Date.now();
   let learned = 0, due = 0;
-  for (const id of allIds) {
+  for (const id of new Set(allIds)) {
     const c = all[id];
     if (c) {
       learned += 1;

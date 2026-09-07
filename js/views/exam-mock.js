@@ -14,7 +14,7 @@ import {
   mockUnlock, buildMockExam, scoreMock, recordMock, examStrength,
 } from '../exam.js';
 import { mainlineProgress } from '../mainline.js';
-import { allLessonStates, loadExam, loadSkills } from '../storage.js';
+import { allLessonStates, loadExam, loadSkills } from '../storage.js?v=4';
 import { runExamShell } from '../exam-shell.js';
 
 /** 笔试总时长（分钟）：听 20 + 读 25 + 写 20 = 65。口试单独一场，不叠进来。 */

@@ -1,7 +1,7 @@
 // 我的：学习统计 + 设置入口
 import { el, guideBear, icon, motionIn } from '../ui.js';
-import { getDaily, getStreak, todayKey, allLessonStates, rewardSummary } from '../storage.js';
-import { srsStats } from '../srs.js';
+import { getDaily, getStreak, todayKey, allLessonStates, rewardSummary } from '../storage.js?v=4';
+import { srsStats } from '../srs.js?v=4';
 import { COURSE_CATALOG, VOCAB_IDS } from '../../data/content-index.js';
 import { syncConfigured } from '../sync.js';
 

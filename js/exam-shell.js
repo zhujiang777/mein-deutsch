@@ -16,7 +16,7 @@ import { speak, stopSpeak } from './speech.js';
 import { renderExercise } from './exercises.js?v=5';
 import { recordAnswer, addExamMiss } from './mastery.js';
 import { recordExamAnswer, recordExamTask, examStrength } from './exam.js';
-import { logActivity, rewardSummary } from './storage.js';
+import { logActivity, rewardSummary } from './storage.js?v=4';
 
 /**
  * 一块考试材料（邮件 / 通知 / 告示牌 / 表格说明）。

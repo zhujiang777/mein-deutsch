@@ -6,7 +6,7 @@
 //       不能让模型往学习流程里塞我们没设计过的东西。
 
 const REQUEST_KEYS = new Set([
-  'schemaVersion', 'locale', 'level', 'seedWords', 'grammarZh', 'sceneHint', 'knownWords', 'variant',
+  'schemaVersion', 'locale', 'level', 'seedWords', 'grammarZh', 'sceneHint', 'knownWords', 'variant', 'allowedGrammar',
 ]);
 
 export function cleanText(value, max) {
@@ -34,6 +34,7 @@ export function validateArticleRequest(value) {
     locale: 'de-DE',
     level: 'A1',
     seedWords,
+    ...(Array.isArray(value.allowedGrammar) ? { allowedGrammar: cleanList(value.allowedGrammar, 20, 40) } : {}),
     grammarZh: cleanText(value.grammarZh, 60),
     sceneHint: cleanText(value.sceneHint, 40),
     knownWords: cleanList(value.knownWords, 400, 40),

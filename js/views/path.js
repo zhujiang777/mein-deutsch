@@ -2,7 +2,7 @@
 // 拼读那条道没有微步课单元——旧的 u0 八节已删，整条道就是入门解码课六关。
 import { COURSE_CATALOG } from '../../data/content-index.js';
 import { el, esc, icon, motionIn, videoCard, toast } from '../ui.js';
-import { allLessonStates, setLessonState, getVideoState } from '../storage.js';
+import { allLessonStates, setLessonState, getVideoState } from '../storage.js?v=4';
 import { lessonMastery } from '../mastery.js';
 
 const TRACKS = [

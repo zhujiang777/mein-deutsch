@@ -79,6 +79,7 @@ export function buildMessages(summary) {
     '你在给一位零基础德语学习者写今天的短文。只返回 JSON，不要任何解释。',
     `必须用上这些词（至少 ${need} 个，可以变形）：${summary.seedWords.join('、')}`,
     summary.grammarZh ? `必须练到这个语法点：${summary.grammarZh}` : '',
+    summary.allowedGrammar ? `只使用这些已教范围：${summary.allowedGrammar.join('、')}。不要自行扩展语法。` : '',
     summary.sceneHint ? `场景设定：${summary.sceneHint}` : '场景自己挑一个德国日常生活里真会遇到的',
     '3 到 5 句，每句不超过 12 个词，句句配中文翻译。',
     '只用 Goethe A1 范围：不许有从句（weil/dass/wenn 都不行）、不许第二格介词、不许被动、不许过去时。',

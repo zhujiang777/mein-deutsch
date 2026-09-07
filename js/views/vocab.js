@@ -2,8 +2,8 @@
 import { VOCAB, THEMES } from '../../data/vocab.js';
 import { el, esc, audioBtn, haptic, icon, micBtn, motionIn, setProgress, toast } from '../ui.js';
 import { speak, stopSpeak, germanVoices } from '../speech.js';
-import { buildQueue, rate, srsStats, markKnown } from '../srs.js';
-import { getWordbook, removeWordEntry, logActivity, loadSrs } from '../storage.js';
+import { buildQueue, rate, srsStats, markKnown } from '../srs.js?v=4';
+import { getWordbook, removeWordEntry, logActivity, loadSrs } from '../storage.js?v=4';
 import { renderExercise } from '../exercises.js?v=5';
 import { conjugationRows, getVocabWord, normalizeWord } from '../word-model.js';
 

@@ -8,7 +8,7 @@
 // 题型熟练度和语言掌握度是两回事，所以分两个 store：
 //   答对答错喂 recordAnswer → md.skills.v1（推动全景图语法轴，联动是双向的）
 //   题型自己的强度 → md.exam.v1（不污染 skills，否则语法轴百分比会被听力题稀释）
-import { loadExam, saveExam, getSettings } from './storage.js';
+import { loadExam, saveExam, getSettings } from './storage.js?v=4';
 import { EXAM_TASKS, examPart } from '../data/exam.js';
 import { skillStrength } from './mastery.js';
 import { GRAMMAR_FLOOR } from './content-readiness.js';

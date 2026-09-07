@@ -6,7 +6,7 @@
 import { PRON_LESSONS, findPronLesson } from '../../data/pronunciation.js';
 import { runLessonShell } from '../lesson-shell.js';
 import { el, esc, icon } from '../ui.js';
-import { allLessonStates } from '../storage.js';
+import { allLessonStates } from '../storage.js?v=4';
 import { lessonMastery } from '../mastery.js';
 
 export function renderPron(host, id) {

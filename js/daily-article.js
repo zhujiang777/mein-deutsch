@@ -26,7 +26,7 @@ export function todayStamp(now = new Date()) {
 }
 
 export function buildArticleRequest({
-  seedWords = [], knownWords = [], grammarZh = '', sceneHint = '', variant = 0,
+  seedWords = [], knownWords = [], grammarZh = '', sceneHint = '', variant = 0, allowedGrammar,
 } = {}) {
   return {
     schemaVersion: 1,
@@ -34,6 +34,7 @@ export function buildArticleRequest({
     level: 'A1',
     seedWords: seedWords.filter(Boolean).slice(0, 12),
     grammarZh,
+    ...(Array.isArray(allowedGrammar) ? { allowedGrammar } : {}),
     sceneHint,
     knownWords: knownWords.filter(Boolean).slice(0, 400),
     variant,

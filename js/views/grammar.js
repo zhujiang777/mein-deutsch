@@ -6,7 +6,7 @@ import { READINGS } from '../../data/readings.js';
 import { LISTENING_PACKS } from '../../data/listening.js';
 // icon 一直被用却从没 import 过——语法课列表页因此每次渲染都抛 ReferenceError。
 import { el, esc, audioBtn, icon, micBtn, renderQuiz, toast } from '../ui.js';
-import { isDone, markDone } from '../storage.js';
+import { isDone, markDone } from '../storage.js?v=4';
 import { lessonMastery, recordAnswer } from '../mastery.js';
 
 export function renderGrammar(host, id) {

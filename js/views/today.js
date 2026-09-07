@@ -6,11 +6,11 @@
 import { el, esc, icon, motionIn, toast } from '../ui.js';
 import { VOCAB_IDS } from '../../data/content-index.js';
 import { nextMainlineStep, recentCellSkills } from '../mainline.js';
-import { srsStats, buildQueue } from '../srs.js';
+import { srsStats, buildQueue } from '../srs.js?v=4';
 import {
   dueMistakes, dueListenMisses, rateMistake, mistakeRef, listenRef, recordAnswer
 } from '../mastery.js';
-import { allLessonStates, getDaily, getStreak, getWordbook, loadSrs, loadSkills, rewardSummary } from '../storage.js';
+import { allLessonStates, getDaily, getStreak, getWordbook, loadSrs, loadSkills, rewardSummary } from '../storage.js?v=4';
 import { stopSpeak } from '../speech.js';
 import { panoramaBanner } from '../panorama-banner.js';
 import { ROUTES, STAGE_LABELS, pickMaterial, buildTodayPlan } from '../today-plan.js';

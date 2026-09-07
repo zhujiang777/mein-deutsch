@@ -11,7 +11,7 @@ import {
 } from '../exam-p1.js';
 import { examStrength, examSeen, examTaskReady } from '../exam.js';
 import { mainlineProgress } from '../mainline.js';
-import { allLessonStates, loadExam, loadSkills } from '../storage.js';
+import { allLessonStates, loadExam, loadSkills } from '../storage.js?v=4';
 import { runExamShell } from '../exam-shell.js';
 
 /**

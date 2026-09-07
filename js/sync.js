@@ -1,6 +1,6 @@
 // 跨设备同步：私有 GitHub Gist（无服务器）
 // 打开时拉取合并（整包 lastModified 新者胜），数据变更后防抖推送
-import { getSettings, setSetting, exportAll, mergeRemote } from './storage.js';
+import { getSettings, setSetting, exportAll, mergeRemote } from './storage.js?v=4';
 
 const FILE = 'mein-deutsch-progress.json';
 const API = 'https://api.github.com';

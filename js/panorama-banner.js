@@ -2,7 +2,7 @@
 // 后者才是学下去的动力，所以它放在主页——打开就看见，不用先想去哪找。
 import { PRON_CELLS, GRAMMAR_CELLS } from '../data/panorama.js';
 import { el, icon } from './ui.js';
-import { allLessonStates, loadSkills } from './storage.js';
+import { allLessonStates, loadSkills } from './storage.js?v=4';
 import { skillStrength } from './mastery.js';
 import { mainlineProgress } from './mainline.js';
 

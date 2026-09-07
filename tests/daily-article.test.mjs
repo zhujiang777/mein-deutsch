@@ -51,7 +51,7 @@ test('模型输出按白名单重建，缺件或多件都作废', () => {
 /* ---------- 出口闸门 ---------- */
 
 test('合格的文章能过闸', () => {
-  const audit = auditArticle(GOOD, { seedWords: SEEDS, knownWords: ['Berlin'] });
+  const audit = auditArticle(GOOD, { seedWords: SEEDS, knownWords: GOOD.sentences.flatMap(s => s.de.match(/[a-zäöüß]+/giu)) });
   assert.equal(audit.ok, true, `不该有 flag：${audit.flags.join(',')}`);
   assert.ok(audit.knownRatio >= ARTICLE_LIMITS.minKnownRatio);
 });
@@ -187,13 +187,13 @@ test('客户端会自己再审一遍 —— 不合格的东西不进学习流程
   };
   const fake = async () => ({ ok: true, json: async () => ({ article: bad, source: 'model' }) });
   const result = await fetchArticle(
-    buildArticleRequest({ seedWords: SEEDS }), { endpoint: 'https://x', accessCode: 'y' }, fake);
+    buildArticleRequest({ seedWords: SEEDS, knownWords: bad.sentences.flatMap(s => s.de.match(/[a-zäöüß]+/giu)) }), { endpoint: 'https://x', accessCode: 'y' }, fake);
   assert.equal(result.article, null);
   assert.match(result.reason, /seed-coverage/);
 });
 
 test('断网、没配置、服务出错都返回 null，由调用方退回库存', async () => {
-  const req = buildArticleRequest({ seedWords: SEEDS });
+  const req = buildArticleRequest({ seedWords: SEEDS, knownWords: GOOD.sentences.flatMap(s => s.de.match(/[a-zäöüß]+/giu)) });
   assert.equal((await fetchArticle(req, {})).reason, 'not-configured');
   const boom = async () => { throw new Error('offline'); };
   assert.equal((await fetchArticle(req, { endpoint: 'https://x', accessCode: 'y' }, boom)).reason, 'offline');
@@ -217,4 +217,20 @@ test('文章拼成三步课：读一遍 → 听写一句 → 跟读今天的词�
 
 test('今天按本地日期算，不是 UTC', () => {
   assert.equal(todayStamp(new Date(2026, 6, 28, 23, 30)), '2026-07-28');
+});
+
+test('A1 vocabulary is not presumed learned, repeated unknown tokens lower coverage',()=>{
+ const article={...GOOD,sentences:[{de:'Ich kaufe Brot Brot Brot.',zh:'我买面包。'},{de:'Ich kaufe Brot.',zh:'我买面包。'},{de:'Ich kaufe Brot.',zh:'我买面包。'}]};
+ const result=auditArticle(article,{seedWords:['Brot','kaufe'],knownWords:['Ich','kaufe']});
+ assert.equal(result.knownRatio,0.55);assert(result.flags.includes('known-ratio-too-low'));
+});
+test('pilot grammar guard rejects unintroduced requests even when words are known',()=>{
+ const article={...GOOD,sentences:[{de:'Ich möchte einen Kaffee.',zh:'我想要咖啡。'},{de:'Ich möchte einen Tee.',zh:'我想要茶。'},{de:'Einen Kaffee, bitte.',zh:'一杯咖啡。'}]};
+ const known=article.sentences.flatMap(s=>s.de.match(/[a-zäöüß]+/giu));
+ const request={seedWords:['Kaffee','Tee'],knownWords:known,allowedGrammar:['name']};assert(auditArticle(article,request).flags.includes('grammar-not-taught'));
+ assert(auditArticle(article,{...request,allowedGrammar:['request']}).ok);
+});
+test('pilot clause scope blocks unseen conjugation even for familiar lemmas',()=>{
+ const article={...GOOD,sentences:[{de:'Wir heißen Anna.',zh:'我们叫安娜。'},{de:'Ich heiße Anna.',zh:'我叫安娜。'},{de:'Wie heißt du?',zh:'你叫什么？'}]};
+ const known=article.sentences.flatMap(s=>s.de.match(/[a-zäöüß]+/giu));assert(auditArticle(article,{knownWords:known,seedWords:[],allowedGrammar:['name']}).flags.includes('grammar-not-taught'));
 });

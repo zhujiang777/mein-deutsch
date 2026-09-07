@@ -1,7 +1,7 @@
 // 分级阅读：精读（点词查义 + 逐句翻译 + 注释）/ 泛读（理解题）
 import { READINGS } from '../../data/readings.js';
 import { el, esc, audioBtn, icon, micBtn, renderQuiz, toast } from '../ui.js';
-import { isDone, markDone } from '../storage.js';
+import { isDone, markDone } from '../storage.js?v=4';
 import { enableGloss } from '../dict.js';
 import { getContentReadiness } from '../content-readiness.js';
 import { grammarChips } from '../grammar-links.js';

@@ -1,7 +1,7 @@
 // Global dictionary lookup and non-destructive text glossing.
 import { DICT_ENTRIES, DICT_FORMS, DICT_POS } from '../data/dict-core.js';
 import { VOCAB } from '../data/vocab.js';
-import { addWordEntry, getWordbook } from './storage.js';
+import { addWordEntry, getWordbook } from './storage.js?v=4';
 import { audioBtn, el, esc, toast } from './ui.js';
 
 const normalize = (raw) => {
@@ -176,7 +176,7 @@ function tokenAtPoint(event) {
   const left = leftMatch ? leftMatch[0] : '';
   const right = rightMatch ? rightMatch[0] : '';
   const word = `${left}${right}`;
-  if (!word) return null;
+  if (!word || !/[a-zäöüß]/iu.test(word) || /\p{Script=Han}/u.test(word)) return null;
   return {
     word,
     node,
@@ -188,7 +188,7 @@ function tokenAtPoint(event) {
 /** Handle one click-to-lookup event. Exported so the dictionary can load on the first real word tap. */
 export function handleGlossClick(event, { glossary = {}, sentenceSelector = '', source = '' } = {}) {
   if (event.__dictHandled) return;
-  if (event.target.closest('button,a,input,textarea,select,[data-no-gloss]')) return;
+  if (event.target.closest('button,a,input,textarea,select,summary,[data-no-gloss]')) return;
   const tokenInfo = tokenAtPoint(event);
   if (!tokenInfo) return;
 

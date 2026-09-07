@@ -1,14 +1,7 @@
-// 今日文章的出口闸门。规格见 docs/product-shape.md 第 4 条。
-//
-// AI 生成的东西一律不可信，所以它的产物必须过这道闸才能进学习流程：
-// 过不了就重生成，连续过不了就退回库里的现成材料——学习流程任何时候都不能中断。
-//
-// 最硬的一条是 seed-coverage：文章必须真的用上今天背的词。
-// 一篇通顺但没用上今天那些词的 A1 短文，跟成熟软件里预写好的那些没有任何区别，
-// 也就没有存在的理由。
+// Optional AI materials: separate level safety, learned-token coverage and pilot grammar scope.
 import { VOCAB } from '../../data/vocab.js';
 
-// 结构词与专名：它们不在词卡里，但零基础从第一天就见得到，不该算成"新词"。
+// 这些是级别允许词，不因此视作学习者已经学过。
 const SAFE_WORDS = new Set([
   'ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'ihnen', 'ihn', 'mich', 'dich', 'uns',
   'mein', 'meine', 'meinen', 'dein', 'deine', 'sein', 'seine', 'unser', 'unsere',
@@ -34,8 +27,7 @@ for (const word of VOCAB) {
   (word.sentences || []).forEach(item => addWords(A1_WORDS, item.de));
 }
 
-// Goethe A1 考纲里没有从句：连词只有 und/oder/aber/denn/also/auch。
-// 第二格介词、被动、Präteritum 同理——见到即判不合格，不讨价还价。
+// 当前短材料采用保守语法范围；这不是对完整 A1 考纲的定义。
 const BANNED_GRAMMAR = [
   { code: 'subordinate-clause', re: /\b(weil|dass|obwohl|während|falls|sodass|wenn|damit)\b/iu },
   { code: 'genitive-preposition', re: /\b(trotz|wegen|innerhalb|außerhalb|aufgrund)\b/iu },
@@ -90,7 +82,24 @@ export function allowedWords({ knownWords = [], seedWords = [] } = {}) {
   return allowed;
 }
 
-export function auditArticle(article, { knownWords = [], seedWords = [] } = {}) {
+// A finite set of taught clause shapes prevents familiar vocabulary from admitting
+// new verb forms or case constructions. This intentionally rejects some valid German.
+const NUMBER = '(?:null|ein|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|dreizehn|vierzehn|fünfzehn|sechzehn|siebzehn|achtzehn|neunzehn|zwanzig|[0-9]|1[0-9]|20)';
+const PILOT_CLAUSES = {
+ name: ['hallo(?: [a-zäöüß]+)?','guten tag','tschüss(?: [a-zäöüß]+)?','ich heiße [a-zäöüß]+','wie heißt du','und du','ja','nein'],
+ origin: ['ich komme aus [a-zäöüß]+','(?:und )?woher kommst du','kommst du (?:auch )?aus [a-zäöüß]+'],
+ residence: ['ich wohne (?:auch )?in [a-zäöüß]+','wo wohnst du','wohnst du in [a-zäöüß]+'],
+ quantity: [`(?:und )?${NUMBER} (?:brötchen|brot|wasser)(?: bitte)?`,'ja bitte','danke'],
+ request: ['was möchten sie',`(?:ich möchte )?einen (?:kaffee|tee)(?: und ${NUMBER} brötchen)?(?: bitte)?`,'kaffee oder tee','ja bitte','danke'],
+ price: [`(?:das kostet )?${NUMBER} euro`,'was kostet das','wie viel kostet das','wie bitte','auf wiedersehen','danke'],
+};
+function pilotGrammarAllows(text, tags) {
+ const patterns=tags.flatMap(tag=>PILOT_CLAUSES[tag]||[]).map(pattern=>new RegExp(`^(?:${pattern})$`,'iu'));
+ const clauses=text.split(/[.!?]+/u).map(s=>s.replace(/[,，]/gu,' ').replace(/\s+/gu,' ').trim()).filter(Boolean);
+ return clauses.length>0&&clauses.every(clause=>patterns.some(re=>re.test(clause)));
+}
+
+export function auditArticle(article, { knownWords = [], seedWords = [], allowedGrammar } = {}) {
   const flags = [];
   const sentences = Array.isArray(article?.sentences) ? article.sentences : [];
   if (sentences.length < ARTICLE_LIMITS.minSentences) flags.push('too-few-sentences');
@@ -100,7 +109,10 @@ export function auditArticle(article, { knownWords = [], seedWords = [] } = {}) 
 
   const used = new Set();
   const unknown = new Set();
+  const learned = new Set();
+  knownWords.forEach(word => addWords(learned, word));
   let total = 0;
+  let unknownTokens = 0;
 
   for (const sentence of sentences) {
     const de = String(sentence?.de || '');
@@ -112,13 +124,24 @@ export function auditArticle(article, { knownWords = [], seedWords = [] } = {}) 
       const normalized = word.toLocaleLowerCase('de-DE');
       used.add(normalized);
       total += 1;
-      if (!allowed.has(normalized)) unknown.add(normalized);
+      if (!allowed.has(normalized)) flags.push('outside-a1-vocabulary');
+      if (!learned.has(normalized)) { unknown.add(normalized); unknownTokens++; }
     });
     BANNED_GRAMMAR.forEach(rule => { if (rule.re.test(de)) flags.push(rule.code); });
+    if (Array.isArray(allowedGrammar)) {
+      if (!pilotGrammarAllows(de,allowedGrammar)) flags.push('grammar-not-taught');
+      const allowedSet = new Set(allowedGrammar);
+      if (/\b(möchte|möchtest|möchten|einen|einem|einer)\b/iu.test(de) && !allowedSet.has('request')) flags.push('grammar-not-taught');
+      if (/\b(wohne|wohnst|wohnt|wohnen)\b/iu.test(de) && !allowedSet.has('residence')) flags.push('grammar-not-taught');
+      if (/\b(komme|kommst|kommt|kommen|aus)\b/iu.test(de) && !allowedSet.has('origin')) flags.push('grammar-not-taught');
+      if (/\b(kostet|kosten|Euro)\b/iu.test(de) && !allowedSet.has('price')) flags.push('grammar-not-taught');
+      // Pilot only: forbid advanced forms even if a word happens to be familiar.
+      if (/\b(kann|kannst|können|muss|müssen|darf|dürfen|soll|sollen|würde|gewesen|gemacht|gegangen)\b/iu.test(de)) flags.push('grammar-not-taught');
+    }
   }
 
   if (unknown.size > ARTICLE_LIMITS.maxNewWords) flags.push('too-many-new-words');
-  const knownRatio = total ? (total - unknown.size) / total : 0;
+  const knownRatio = total ? (total - unknownTokens) / total : 0;
   if (total && knownRatio < ARTICLE_LIMITS.minKnownRatio) flags.push('known-ratio-too-low');
 
   // ⚠️ 最硬的一条：没用上今天的词，这篇就没有存在的理由。

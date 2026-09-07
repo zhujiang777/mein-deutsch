@@ -1,7 +1,7 @@
 // 设置：语音选择、语速、每日新词、Gist 同步、进度导出/导入
 import { el, esc, icon, toast } from '../ui.js';
 import { germanVoices, speak, ttsAvailable } from '../speech.js';
-import { getSettings, setSetting, exportAll, importAll, resetAll } from '../storage.js';
+import { getSettings, setSetting, exportAll, importAll, resetAll } from '../storage.js?v=4';
 import { pullMerge, pushNow, syncConfigured } from '../sync.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../secrets.js';
 import { assessmentConfigured, checkAssessmentConnection } from '../pronunciation-assessment.js';
