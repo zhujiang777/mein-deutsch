@@ -1,3 +1,4 @@
+import { pilotAudioTexts } from '../data/integrated-course.js';
 // 提取所有需要发音的德语文本，输出 JSON 数组到 stdout
 // 用法: node tools/extract_texts.mjs
 import { PRON_LESSONS } from '../data/pronunciation.js';
@@ -74,5 +75,7 @@ for (const task of EXAM_TASKS)
     add(item.audioText);
     add(item.de); // 口语题的"听标准"读的是 item.de
   }
+
+pilotAudioTexts().forEach(add);
 
 process.stdout.write(JSON.stringify([...texts], null, 0));

@@ -1,3 +1,4 @@
+import { PILOT_LESSONS } from '../data/integrated-course.js';
 // 语法点的反向索引：把 g01–g20 从孤岛接回其余模块。
 //
 // 生成三张表：
@@ -166,6 +167,8 @@ export function buildGrammarIndexSource(index = buildGrammarIndex()) {
   }
   return `// 此文件由 scripts/gen_grammar_index.mjs 自动生成，请勿手改。
 // 改了 data/grammar.js 的 skills / PREREQ_TO_GRAMMAR、或改了任何课文正文，都要重跑。
+export const INTEGRATED_GRAMMAR_REFS = ${JSON.stringify(Object.fromEntries(GRAMMAR_LESSONS.map(g=>[g.id,PILOT_LESSONS.filter(l=>l.grammarRefs.includes(g.id)).map(l=>({id:l.id,title:l.title}))])))};
+
 export const GRAMMAR_SENTENCES = ${JSON.stringify(sentences)};
 
 // 每条语法至多 ${MAX_PER_GRAMMAR} 条真实实例句，存 GRAMMAR_SENTENCES 的下标。

@@ -1,5 +1,16 @@
 # 课程开发约定
 
+## 当前主线：综合课程
+
+- 先遵循 [产品形态](product-shape.md) 与 [综合课程框架](integrated-curriculum.md)。每日 AI 文章和独立发音六关已退出主线。
+- 新主线写入 `data/integrated-course.js`，使用 `ic-` 课程 ID、稳定活动 ID 和内容版本；不要原地改旧课步骤，不复用旧掌握标记。
+- 每课填写显式顺序、先修、词条/语法引用、材料、训练对象、检查与三份复习变式；涉及修改已交付题意时升级内容版本。
+- 所有名词带冠词，需要但未系统教授的表达写明按整体短语学习；不用中文谐音或绝对化发音口诀。
+- 核心音频纳入 `pilotAudioTexts()`，生成后还必须人工抽听；未验收保留 `PILOT_RELEASE.status=preview`。
+- 下列旧技能标签和全景索引约定只适用于旧资料；综合课程的覆盖位置使用 `KNOWLEDGE_MAP`。
+
+## 共用管线与旧资料兼容
+
 - 尽量只改 `data/*.js`，不改评分链路和密钥配置。
 - 口语练习使用现有 `speak` / `reproduce` / `roleplay`，它们已接入 Azure 评分。
 - 新口语题型复用 `speakPractice()` 或 `micBtn()`，不使用 `SpeechRecognition`。

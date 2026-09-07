@@ -1,4 +1,481 @@
 // 此文件由 scripts/gen_content_index.mjs 自动生成，请勿手改。
+export const INTEGRATED_CATALOG = {
+  "framework": [
+    {
+      "id": "ic-u1",
+      "stage": "起步交流",
+      "title": "认识彼此",
+      "needs": [],
+      "goals": [
+        "问候与姓名",
+        "来源与住处"
+      ],
+      "grammar": [
+        "ich / du",
+        "简单问句"
+      ],
+      "lessons": [
+        "ic-01",
+        "ic-02",
+        "ic-03",
+        "ic-04"
+      ]
+    },
+    {
+      "id": "ic-u2",
+      "stage": "起步交流",
+      "title": "数量与简单购买",
+      "needs": [
+        "ic-u1"
+      ],
+      "goals": [
+        "数量",
+        "购买与价格"
+      ],
+      "grammar": [
+        "数量 + 名词",
+        "礼貌短语"
+      ],
+      "lessons": [
+        "ic-05",
+        "ic-06",
+        "ic-07",
+        "ic-08"
+      ]
+    },
+    {
+      "id": "ic-u3",
+      "stage": "描述生活",
+      "title": "家人与物品",
+      "needs": [
+        "ic-u2"
+      ],
+      "goals": [
+        "介绍他人",
+        "描述物品"
+      ],
+      "grammar": [
+        "sein / haben",
+        "冠词与复数",
+        "物主词"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u4",
+      "stage": "描述生活",
+      "title": "日常作息",
+      "needs": [
+        "ic-u3"
+      ],
+      "goals": [
+        "描述一天",
+        "询问时间"
+      ],
+      "grammar": [
+        "现在时",
+        "时间",
+        "可分动词"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u5",
+      "stage": "参与活动",
+      "title": "兴趣与邀约",
+      "needs": [
+        "ic-u4"
+      ],
+      "goals": [
+        "表达喜好",
+        "约定活动"
+      ],
+      "grammar": [
+        "否定",
+        "情态动词",
+        "问句"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u6",
+      "stage": "参与活动",
+      "title": "城市出行",
+      "needs": [
+        "ic-u5"
+      ],
+      "goals": [
+        "问路",
+        "理解交通信息"
+      ],
+      "grammar": [
+        "方向",
+        "常用介词"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u7",
+      "stage": "处理需求",
+      "title": "住所",
+      "needs": [
+        "ic-u6"
+      ],
+      "goals": [
+        "描述房间",
+        "说明位置"
+      ],
+      "grammar": [
+        "地点",
+        "常见第三格"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u8",
+      "stage": "处理需求",
+      "title": "饮食与购物",
+      "needs": [
+        "ic-u7"
+      ],
+      "goals": [
+        "表达选择",
+        "提出具体需求"
+      ],
+      "grammar": [
+        "第四格",
+        "比较与数量"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u9",
+      "stage": "沟通办事",
+      "title": "身体与求助",
+      "needs": [
+        "ic-u8"
+      ],
+      "goals": [
+        "描述不适",
+        "理解建议"
+      ],
+      "grammar": [
+        "请求与命令式",
+        "常见代词"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u10",
+      "stage": "沟通办事",
+      "title": "预约与留言",
+      "needs": [
+        "ic-u9"
+      ],
+      "goals": [
+        "预约",
+        "填写表格与写短消息"
+      ],
+      "grammar": [
+        "礼貌表达",
+        "时间介词"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u11",
+      "stage": "综合运用",
+      "title": "近期经历",
+      "needs": [
+        "ic-u10"
+      ],
+      "goals": [
+        "描述过去的事情"
+      ],
+      "grammar": [
+        "war / hatte",
+        "完成时"
+      ],
+      "lessons": []
+    },
+    {
+      "id": "ic-u12",
+      "stage": "综合运用",
+      "title": "日常综合交流",
+      "needs": [
+        "ic-u11"
+      ],
+      "goals": [
+        "综合听说读写",
+        "A1 题型检查"
+      ],
+      "grammar": [
+        "并列连词",
+        "综合复现"
+      ],
+      "lessons": []
+    }
+  ],
+  "lessons": [
+    {
+      "id": "ic-01",
+      "version": 1,
+      "title": "问候与名字",
+      "unit": "ic-u1",
+      "needs": [],
+      "words": [
+        "w001",
+        "w016",
+        "w020",
+        "w238",
+        "w006"
+      ],
+      "grammarRefs": [
+        "g01",
+        "g05"
+      ]
+    },
+    {
+      "id": "ic-02",
+      "version": 1,
+      "title": "来自哪里",
+      "unit": "ic-u1",
+      "needs": [
+        "ic-01"
+      ],
+      "words": [
+        "w017",
+        "w022",
+        "w023",
+        "w235",
+        "w245"
+      ],
+      "grammarRefs": [
+        "g02",
+        "g05"
+      ]
+    },
+    {
+      "id": "ic-03",
+      "version": 1,
+      "title": "住在哪里",
+      "unit": "ic-u1",
+      "needs": [
+        "ic-02"
+      ],
+      "words": [
+        "w018",
+        "w234",
+        "w247",
+        "w248",
+        "w241"
+      ],
+      "grammarRefs": [
+        "g02",
+        "g05"
+      ]
+    },
+    {
+      "id": "ic-04",
+      "version": 1,
+      "title": "交换个人信息",
+      "unit": "ic-u1",
+      "needs": [
+        "ic-03"
+      ],
+      "words": [
+        "w003",
+        "w011",
+        "w012",
+        "w008"
+      ],
+      "grammarRefs": [
+        "g01",
+        "g02",
+        "g05"
+      ]
+    },
+    {
+      "id": "ic-05",
+      "version": 1,
+      "title": "数量与常见商品",
+      "unit": "ic-u2",
+      "needs": [
+        "ic-04"
+      ],
+      "words": [
+        "w079",
+        "w078",
+        "w080",
+        "w035",
+        "w036"
+      ],
+      "grammarRefs": [
+        "g03",
+        "g04",
+        "g14"
+      ]
+    },
+    {
+      "id": "ic-06",
+      "version": 1,
+      "title": "提出购买需求",
+      "unit": "ic-u2",
+      "needs": [
+        "ic-05"
+      ],
+      "words": [
+        "w081",
+        "w082",
+        "w009",
+        "w258",
+        "w037"
+      ],
+      "grammarRefs": [
+        "g08",
+        "g06"
+      ]
+    },
+    {
+      "id": "ic-07",
+      "version": 1,
+      "title": "听懂简单价格",
+      "unit": "ic-u2",
+      "needs": [
+        "ic-06"
+      ],
+      "words": [
+        "w364",
+        "w129",
+        "w240",
+        "w038",
+        "w039"
+      ],
+      "grammarRefs": [
+        "g05"
+      ]
+    },
+    {
+      "id": "ic-08",
+      "version": 1,
+      "title": "完成一次购买",
+      "unit": "ic-u2",
+      "needs": [
+        "ic-07"
+      ],
+      "words": [
+        "w010",
+        "w254",
+        "w007",
+        "w242"
+      ],
+      "grammarRefs": [
+        "g05",
+        "g08"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "ic-read-1",
+      "title": "一位新同学",
+      "unit": "ic-u1",
+      "after": "ic-02"
+    },
+    {
+      "id": "ic-read-2",
+      "title": "在 Berlin 见面",
+      "unit": "ic-u1",
+      "after": "ic-03"
+    },
+    {
+      "id": "ic-read-3",
+      "title": "一杯茶",
+      "unit": "ic-u2",
+      "after": "ic-06"
+    },
+    {
+      "id": "ic-read-4",
+      "title": "确认价格",
+      "unit": "ic-u2",
+      "after": "ic-07"
+    }
+  ],
+  "knowledge": [
+    {
+      "id": "name",
+      "title": "介绍与询问姓名",
+      "first": "ic-01",
+      "needs": [],
+      "revisit": [
+        "ic-02",
+        "ic-04"
+      ],
+      "check": "ic-04"
+    },
+    {
+      "id": "origin",
+      "title": "来源：kommen aus",
+      "first": "ic-02",
+      "needs": [
+        "name"
+      ],
+      "revisit": [
+        "ic-03",
+        "ic-04"
+      ],
+      "check": "ic-04"
+    },
+    {
+      "id": "residence",
+      "title": "住处：wohnen in",
+      "first": "ic-03",
+      "needs": [
+        "origin"
+      ],
+      "revisit": [
+        "ic-04"
+      ],
+      "check": "ic-04"
+    },
+    {
+      "id": "quantity",
+      "title": "数量与名词",
+      "first": "ic-05",
+      "needs": [],
+      "revisit": [
+        "ic-06",
+        "ic-07",
+        "ic-08"
+      ],
+      "check": "ic-08"
+    },
+    {
+      "id": "request",
+      "title": "礼貌购买：ich möchte",
+      "first": "ic-06",
+      "needs": [
+        "quantity"
+      ],
+      "revisit": [
+        "ic-08"
+      ],
+      "check": "ic-08"
+    },
+    {
+      "id": "price",
+      "title": "价格与请求重复",
+      "first": "ic-07",
+      "needs": [
+        "quantity"
+      ],
+      "revisit": [
+        "ic-08"
+      ],
+      "check": "ic-08"
+    }
+  ]
+};
 export const COURSE_CATALOG = [
   {
     "id": "u1",

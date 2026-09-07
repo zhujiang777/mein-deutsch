@@ -1,3 +1,4 @@
+import { PILOT_LESSONS } from '../data/integrated-course.js';
 // 每个词的「最佳例句」索引。
 //
 // 为什么不做全量反向索引：现在 22 份内容就有 440 对词-内容映射；语料层一旦接进来
@@ -138,6 +139,8 @@ export function buildWordExamplesSource(index = buildWordExamples()) {
   return `// 此文件由 scripts/gen_word_examples.mjs 自动生成，请勿手改。
 // 每个词至多 ${MAX_PER_WORD} 条真实语境例句，选取标准见 tools/word-examples.mjs。
 // EXAMPLE_SENTENCES 是 [de, zh, source] 三元组；WORD_EXAMPLES 存下标，避免同句重复存储。
+export const INTEGRATED_WORD_EXAMPLES = ${JSON.stringify(Object.fromEntries([...new Set(PILOT_LESSONS.flatMap(l=>l.words))].map(id=>[id,PILOT_LESSONS.filter(l=>l.words.includes(id)).map(l=>({lessonId:l.id,title:l.title,sentences:l.text}))])))};
+
 export const EXAMPLE_SENTENCES = ${JSON.stringify(sentences)};
 
 export const WORD_EXAMPLES = ${JSON.stringify(refs)};

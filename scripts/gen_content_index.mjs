@@ -1,3 +1,4 @@
+import { FRAMEWORK, PILOT_LESSONS, PILOT_MATERIALS, KNOWLEDGE_MAP } from '../data/integrated-course.js';
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { COURSE } from '../data/course.js';
@@ -8,6 +9,7 @@ import { buildContentVocab, buildContentWordCounts } from '../tools/auto-vocab-r
 
 export function buildContentIndex() {
   return {
+    integrated: { framework: FRAMEWORK, lessons: PILOT_LESSONS.map(({id,version,title,unit,needs,words,grammarRefs})=>({id,version,title,unit,needs,words,grammarRefs})), materials: PILOT_MATERIALS.map(({id,title,unit,after})=>({id,title,unit,after})), knowledge: KNOWLEDGE_MAP },
     contentVocab: buildContentVocab([...READINGS, ...LISTENING_PACKS]),
     contentWordCounts: buildContentWordCounts([...READINGS, ...LISTENING_PACKS]),
     course: COURSE.map(unit => ({
@@ -32,6 +34,7 @@ export function buildContentIndex() {
 
 export function buildContentIndexSource(index = buildContentIndex()) {
   return `// 此文件由 scripts/gen_content_index.mjs 自动生成，请勿手改。
+export const INTEGRATED_CATALOG = ${JSON.stringify(index.integrated, null, 2)};
 export const COURSE_CATALOG = ${JSON.stringify(index.course, null, 2)};
 
 export const VOCAB_IDS = ${JSON.stringify(index.vocabIds, null, 2)};
