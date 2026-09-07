@@ -1,8 +1,9 @@
-// 应用入口 v4：五个主页面常驻缓存，深层页面按需加载
+import { renderStudy, renderWords, renderWordStudy, renderReadingShelf, renderMaterial, renderPilotLesson, renderReview, renderCoverage, renderProfile, renderPilotWord, disposePilotView, pronunciationPaused } from './views/integrated.js';
+// 四个主要入口，旧资料保留深层路由。
 import { renderToday, runDictationSet } from './views/today.js?v=15';
 import { renderLibrary } from './views/library.js?v=1';
 import { renderPanorama } from './views/panorama.js?v=2';
-import { getSettings, migrate } from './storage.js';
+import { getSettings, migrate } from './storage.js?v=4';
 import { initSync } from './sync.js';
 import { stopSpeak } from './speech.js';
 import { el, motionIn, toast } from './ui.js';
@@ -17,13 +18,10 @@ applyTheme();
 
 const app = document.getElementById('app');
 const tabbar = document.getElementById('tabbar');
-// 两栏导航：今天（一条路，系统替你决定）/ 仓库（想自己翻才进来）。
-// 全景图从 tab 降级成今天页上的横幅——它是"我还差什么"的进度表，不是学习入口，
-// 和"学"平级会让人以为那里也要做点什么（见 docs/product-shape.md）。
-// "我的"同理，收进今天页右上角的状态区。
-const tabIndexes = { today: 0, panorama: 0, library: 1 };
+// 资料页在“我的”下，综合课程独立记录推进。
+const tabIndexes = { today: 0, vocab: 1, readlisten: 2, me: 3, panorama: 3, library: 3 };
 const glossOptions = { sentenceSelector: '.rt-sent,.wc-sentence,.phrase-row,.ex-prompt,.step-p,p' };
-const rootPaths = new Set(['/', '/panorama', '/path', '/vocab', '/readlisten']);
+const rootPaths = new Set(['/', '/vocab', '/readlisten', '/me']);
 const rootViews = new Map();
 const rootScroll = new Map();
 let transientView = null;
@@ -45,33 +43,37 @@ function loadDictionary() {
 
 // 不在启动或导航时预载词典。只有用户真的点击正文词语才加载并处理本次点击。
 app.addEventListener('click', event => {
-  if (event.target.closest('button,a,input,textarea,select,[data-no-gloss]')) return;
+  if (event.target.closest('button,a,input,textarea,select,summary,[data-no-gloss]')) return;
   loadDictionary()
     .then(module => module.handleGlossClick(event, glossOptions))
     .catch(() => {});
 });
 
 const routes = [
-  { pattern: /^\/?$/, tab: 'today', root: true, render: (h) => renderToday(h) },
-  { pattern: /^\/panorama$/, tab: 'panorama', root: true, render: (h) => renderPanorama(h) },
-  // 仓库三栏各自是一条真实路由，现存的 ‹旅程 / ‹读·听 返回链一个都不用改。
-  { pattern: /^\/(path|vocab|readlisten)$/, tab: 'library', root: true, render: (h, hit) => renderLibrary(h, hit[1]) },
+  { pattern: /^\/?$/, tab: 'today', root: true, render: (h) => renderStudy(h) },
+  { pattern: /^\/vocab$/, tab: 'vocab', root:true, render: h => renderWords(h) },
+  { pattern: /^\/vocab\/study(?:\/(.+))?$/, tab: 'vocab', render: async (_m,h,hit)=>renderWordStudy(h,hit[1]||'current') },
+  { pattern: /^\/readlisten(?:\/(read|listen))?$/, tab:'readlisten', render: async (_m,h,hit)=>renderReadingShelf(h,hit[1]||'read') },
+  { pattern: /^\/material\/([^/]+)\/(read|listen)$/, tab:'readlisten', render: async (_m,h,hit)=>renderMaterial(h,hit[1],hit[2]) },
+  { pattern: /^\/learn\/([^/]+)(\/speak)?$/, tab:'today', render: async (_m,h,hit)=>renderPilotLesson(h,hit[1],!!hit[2]) },
+  { pattern: /^\/learn-review(?:\/(.+))?$/, tab:'today', render: async (_m,h,hit)=>renderReview(h,hit[1]) },
+  { pattern: /^\/coverage$/, tab:'today', render: async (_m,h)=>renderCoverage(h) },
+  { pattern: /^\/(?:reference\/)?panorama$/, tab:'me', render: async (_m,h)=>renderPanorama(h) },
+  { pattern: /^\/(?:reference\/)?path$/, tab:'me', render: async (_m,h)=>renderLibrary(h,'path') },
+  { pattern: /^\/reference\/readlisten$/, tab:'readlisten', render: async (_m,h)=>renderLibrary(h,'readlisten') },
   { pattern: /^\/lesson\/(.+)$/, tab: 'library', load: () => import('./views/lesson.js?v=10'), render: (m, h, hit) => m.renderLessonRoute(h, hit[1]) },
-  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'library', load: () => import('./views/vocab.js?v=12'), render: (m, h, hit) => m.renderVocab(h, `word-${hit[1]}`) },
-  { pattern: /^\/vocab\/(.+)$/, tab: 'library', load: () => import('./views/vocab.js?v=12'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
+  { pattern: /^\/vocab\/word\/(.+)$/, tab: 'vocab', render: async (_m,h,hit)=>renderPilotWord(h,hit[1]) },
+  { pattern: /^\/vocab\/(.+)$/, tab: 'vocab', load: () => import('./views/vocab.js?v=12'), render: (m, h, hit) => m.renderVocab(h, hit[1]) },
   { pattern: /^\/reading\/(.+)$/, tab: 'library', load: () => import('./views/reading.js?v=11'), render: (m, h, hit) => m.renderReading(h, hit[1]) },
   { pattern: /^\/listening\/(.+)$/, tab: 'library', load: () => import('./views/listening.js?v=2'), render: (m, h, hit) => m.renderListening(h, hit[1]) },
   { pattern: /^\/dictation$/, tab: 'library', render: async (_m, h) => {
       h.appendChild(el(`<a class="back-link" href="#/readlisten">‹ 读·听</a>`));
       await runDictationSet(h, 5, () => { location.hash = '#/readlisten'; });
     } },
-  { pattern: /^\/me$/, tab: 'today', load: () => import('./views/me.js?v=10'), render: (m, h) => {
-      h.appendChild(el(`<a class="back-link" href="#/">‹ 今日</a>`));
-      return m.renderMe(h);
-    } },
-  { pattern: /^\/settings$/, tab: 'today', load: () => import('./views/settings.js?v=9'), render: (m, h) => m.renderSettings(h) },
+  { pattern: /^\/me$/, tab:'me', root:true, render:h=>renderProfile(h) },
+  { pattern: /^\/settings$/, tab: 'me', load: () => import('./views/settings.js?v=9'), render: (m, h) => m.renderSettings(h) },
   // 旧版模块（内容迁移期间保留）
-  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'library', load: () => import('./views/pronunciation.js?v=10'), render: (m, h, hit) => m.renderPron(h, hit[1]) },
+  { pattern: /^\/pron(?:\/(.+))?$/, tab: 'library', load: () => import('./views/pronunciation.js?v=10'), render: (m, h, hit) => pronunciationPaused(h) },
   { pattern: /^\/grammar(?:\/(.+))?$/, tab: 'library', load: () => import('./views/grammar.js?v=10'), render: (m, h, hit) => m.renderGrammar(h, hit[1]) },
   // 题型加练与毕业模考：只从全景图题型轴进得来，首页永远看不到（首页只有一条路）。
   // mock 这条要排在通用规则前面，否则会被当成一个格子 id。
@@ -108,7 +110,7 @@ function scrollToInstant(top) {
 // 底部导航专用过渡：纯滑动+淡入、无缩放。起始透明度较高（0.6）让整页"滑进来"看得见，
 // 用匀柔的 standard 缓动（非 expo-out）避免"撞一下"，只有横向位移、绝不改变布局高度。
 function routeMotion(view, direction) {
-  if (!view.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (document.body.classList.contains('plain-app') || !view.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const from = direction
     ? { opacity: 0.6, transform: `translate3d(${22 * direction}px,0,0)` }
     : { opacity: 0, transform: 'translate3d(0,8px,0)' };
@@ -131,7 +133,7 @@ function showRootView(path, selected, hit, direction = 0) {
     app.appendChild(view);
     selected.render(view, hit);
     rootViews.set(path, view);
-  }
+  } else if (['/', '/vocab', '/me'].includes(path)) { view.replaceChildren(); selected.render(view, hit); }
   view.hidden = false;
   view.inert = false;
   scrollToInstant(rootScroll.get(path) || 0);
@@ -162,6 +164,7 @@ async function showDeepView(selected, hit, run) {
 }
 
 async function route() {
+  disposePilotView();
   const run = ++routeRun;
   // 快速连点导航时，立即解除上一条异步深层路由留下的忙碌状态。
   app.classList.remove('route-loading');
@@ -186,11 +189,11 @@ async function route() {
   document.body.dataset.section = selected.tab;
   tabbar.dataset.active = String(newIndex);
   document.querySelectorAll('#tabbar a').forEach(link =>
-    link.classList.toggle('active', link.dataset.tab === selected.tab));
+    link.classList.toggle('active', link.dataset.tab === ({library:'me',panorama:'me'}[selected.tab]||selected.tab)));
 
   try {
     if (selected.root) {
-      // 深层学习会改变进度；回到主导航时刷新一次，普通五栏切换始终复用 DOM。
+      // 深层学习会改变进度；回到主导航时刷新一次，主导航保留页面容器。
       if (activePath && !rootPaths.has(activePath)) clearRootViews();
       showRootView(path, selected, hit, direction);
     } else {

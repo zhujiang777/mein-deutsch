@@ -49,7 +49,9 @@ test('read and listen render as separate accessible panels', () => {
 });
 
 test('bilingual font and transform progress tokens are present', () => {
-  assert.match(index, /Noto\+Sans\+SC/);
+  const plain = readFileSync(new URL('../css/plain.css', import.meta.url), 'utf8');
+  assert.match(plain, /system-ui/);
+  assert.doesNotMatch(index, /fonts.googleapis.com/);
   assert.match(css, /--font-zh:/);
   assert.match(css, /--progress-fill:/);
   assert.match(css, /transform: scaleX\(0\)/);
@@ -157,29 +159,13 @@ test('语法联动的样式有覆盖', () => {
   }
 });
 
-test('两栏导航自洽：路由的 tab、tabIndexes、tabbar 链接三者对得上', () => {
-  // 深层路由的 tab 写错（比如还留着 'vocab'）不会报错，只会让底部高亮跳到错误的栏。
-  const declared = new Set([...app.matchAll(/tab: '([a-z]+)'/g)].map(hit => hit[1]));
-  const indexed = new Set([...app.match(/const tabIndexes = \{([^}]*)\}/)[1]
-    .matchAll(/([a-z]+):/g)].map(hit => hit[1]));
-  const inBar = new Set([...index.matchAll(/data-tab="([a-z]+)"/g)].map(hit => hit[1]));
-
-  // 全景图不再是 tab：它是"我还差什么"的进度表，不是学习入口（docs/product-shape.md）。
-  // tabIndexes 仍要认得 panorama，否则进全景时底部高亮会失效——它复用"今天"那一格。
-  assert.deepEqual([...indexed].sort(), ['library', 'panorama', 'today']);
-  assert.deepEqual([...inBar].sort(), ['library', 'today'], 'tabbar 只应剩今天和仓库两条链接');
-  assert.match(app, /panorama: 0/, '全景路由要高亮回"今天"那一格');
-  for (const tab of declared) {
-    assert.ok(indexed.has(tab), `路由声明了 tab: '${tab}'，但 tabIndexes 里没有它 → 高亮会落到"今天"`);
-  }
-  // 仓库三栏是三条真实根路由，现存的 ‹旅程 / ‹读·听 返回链依赖它们继续可达。
-  assert.match(app, /\/\(path\|vocab\|readlisten\)\$/);
-  for (const path of ['/', '/panorama', '/path', '/vocab', '/readlisten']) {
-    assert.ok(app.includes(`'${path}'`), `rootPaths 缺少 ${path}`);
-  }
-  // "我的"不再是主 tab，改为今天页右上角进入，因此必须是带返回链的深层视图。
-  assert.match(app, /pattern: \/\^\\\/me\$\/, tab: 'today', load:/);
-  assert.match(app, /back-link" href="#\/">‹ 今日/);
+test('四栏导航与资料路由高亮自洽', () => {
+ const indexed = new Set([...app.match(/const tabIndexes = \{([^}]*)\}/)[1].matchAll(/([a-z]+):/g)].map(hit=>hit[1]));
+ const inBar = new Set([...index.matchAll(/data-tab="([a-z]+)"/g)].map(hit=>hit[1]));
+ assert.deepEqual([...inBar].sort(), ['me','readlisten','today','vocab']);
+ for(const hit of app.matchAll(/tab:\s*'([a-z]+)'/g)) assert(indexed.has(hit[1]),hit[1]);
+ assert(app.includes("{library:'me',panorama:'me'}"));
+ assert(app.includes('renderPilotLesson'));assert(app.includes('renderWordStudy'));assert(app.includes('pronunciationPaused'));
 });
 
 test('同一个模块在所有引用点的版本号必须一致', () => {

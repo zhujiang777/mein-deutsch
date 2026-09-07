@@ -107,7 +107,7 @@ test('全景图视图与样式接线正确', () => {
   const banner = readFileSync(new URL('../js/panorama-banner.js', import.meta.url), 'utf8');
   const today = readFileSync(new URL('../js/views/today.js', import.meta.url), 'utf8');
 
-  assert.match(app, /\/panorama\$/, 'app.js 缺少 #/panorama 路由');
+  assert.match(app, /panorama\$/, 'app.js 保留全景图参考路由');
   assert.match(view, /export function renderPanorama/);
   // 100+ 个标签逐个读 localStorage 会拖慢首屏，必须传入已加载的 skills。
   assert.match(view, /skillStrength\(id, skills\)/);

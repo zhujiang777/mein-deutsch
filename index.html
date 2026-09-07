@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mein Deutsch · 我的德语</title>
-  <meta name="description" content="个人定制的德语学习应用：发音系统课、跟读检测、体系化语法、间隔重复词汇、分级阅读">
+  <meta name="description" content="个人定制的德语学习应用：综合课程、单词复习与分级读听">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F5F3EF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181715">
   <link rel="manifest" href="manifest.webmanifest">
@@ -13,18 +13,18 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="我的德语">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20">
+  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/plain.css?v=1">
 </head>
-<body>
+<body class="plain-app">
   <a class="skip-link" href="#app">跳到主要内容</a>
   <main id="app" aria-live="polite"></main>
   <nav id="tabbar" aria-label="主导航" data-active="0">
-    <a href="#/" data-tab="today"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5M5.5 10.5V20h13v-9.5M9.5 20v-6h5v6"/></svg></span><span>今天</span></a>
-    <a href="#/path" data-tab="library"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H10v18H6.5A2.5 2.5 0 0 0 4 23.5ZM20 5.5A2.5 2.5 0 0 0 17.5 3H14v18h3.5A2.5 2.5 0 0 1 20 23.5Z"/></svg></span><span>仓库</span></a>
+    <a href="#/" data-tab="today">学习</a>
+    <a href="#/vocab" data-tab="vocab">单词</a>
+    <a href="#/readlisten" data-tab="readlisten">读听</a>
+    <a href="#/me" data-tab="me">我的</a>
   </nav>
-  <script type="module" src="js/app.js?v=22"></script>
+  <script type="module" src="js/app.js?v=23"></script>
 </body>
 </html>
