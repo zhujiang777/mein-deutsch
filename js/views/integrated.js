@@ -1,9 +1,9 @@
 import { GRAMMAR_LESSONS } from '../../data/grammar.js';
-import { INTEGRATED_WORD_EXAMPLES } from '../../data/word-examples.js';
+import { INTEGRATED_WORD_EXAMPLES } from '../../data/word-examples.js?v=2';
 import { CONTENT_VERSION, FRAMEWORK, PILOT_LESSONS, PILOT_MATERIALS, PILOT_RELEASE, KNOWLEDGE_MAP, NUMBER_AUDIO, findPilotLesson, pilotAudioTexts } from '../../data/integrated-course.js';
 import { VOCAB, THEMES } from '../../data/vocab.js';
-import { esc, audioBtn, speakPractice } from '../ui.js';
-import { speak, stopSpeak, resolveFile } from '../speech.js';
+import { esc, audioBtn, speakPractice } from '../ui.js?v=2';
+import { speak, stopSpeak, resolveFile } from '../speech.js?v=2';
 import { loadSrs, getWordbook, loadIntegrated, loadWordLearning, newWordRemaining, getSettings, rewardSummary, getStreak, logActivity } from '../storage.js?v=4';
 import { lessonProgress, nextPilot, canOpen, updateProgress, saveActivity, completeLesson, recordWord, currentWords, studiedWords, wordFor, canonicalWordId, wordQueue, dueReviews, submitReview, sessionGet, sessionSave, logTrial, checkAnswer, wordKnown, lessonKey } from '../integrated.js';
 
@@ -228,7 +228,7 @@ function optionalAI(host,lesson){
  const b=button('生成材料',async()=>{
  b.disabled=true;area.textContent='正在生成…';
  try{
- const [{buildArticleRequest,fetchArticle},{coachConfigured,getCoachSecrets},{auditArticle}]=await Promise.all([import('../daily-article.js'),import('../coach-secrets.js'),import('../../coach-worker/src/a1-guard.js')]);
+ const [{buildArticleRequest,fetchArticle},{coachConfigured,getCoachSecrets},{auditArticle}]=await Promise.all([import('../daily-article.js?v=2'),import('../coach-secrets.js'),import('../../coach-worker/src/a1-guard.js?v=2')]);
  if(!coachConfigured())throw Error('not-configured');
  const evidence=loadWordLearning().evidence||{};const practiced=Object.keys(evidence).filter(id=>evidence[id]?.text?.lastCorrect).map(id=>wordFor(id)?.de).filter(Boolean);
  const completed=PILOT_LESSONS.filter(l=>lessonProgress(l).done);

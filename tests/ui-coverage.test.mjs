@@ -140,9 +140,9 @@ test('视图模块用到的 ui.js 帮手都 import 了', () => {
     const source = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
     const imported = new Set([
       // 静态 import { … } from './ui.js'
-      ...[...source.matchAll(/import\s*\{([^}]*)\}\s*from\s*['"][^'"]*ui\.js['"]/g)],
+      ...[...source.matchAll(/import\s*\{([^}]*)\}\s*from\s*['"][^'"]*ui\.js(?:\?v=\d+)?['"]/g)],
       // 动态 import('./ui.js').then(({ … }) => …)（speech.js 用这种，避免循环依赖）
-      ...[...source.matchAll(/import\(['"][^'"]*ui\.js['"]\)\.then\(\(\{([^}]*)\}/g)],
+      ...[...source.matchAll(/import\(['"][^'"]*ui\.js(?:\?v=\d+)?['"]\)\.then\(\(\{([^}]*)\}/g)],
     ].flatMap(hit => hit[1].split(',').map(name => name.trim().split(/\s+as\s+/).pop())));
     for (const helper of helpers) {
       if (!new RegExp(`\\b${helper}\\(`).test(source)) continue;

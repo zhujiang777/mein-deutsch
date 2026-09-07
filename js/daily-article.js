@@ -11,7 +11,7 @@
 //    学习流程不能因为 AI 挂了而中断。
 // 3. 生成的文章没有预生成音频，只能用浏览器语音合成朗读；界面上要说明这一点，
 //    不能让人以为听到的是和课程一样的标准音。
-import { auditArticle, auditQuiz } from '../coach-worker/src/a1-guard.js';
+import { auditArticle, auditQuiz } from '../coach-worker/src/a1-guard.js?v=2';
 import { normalizeArticle } from '../coach-worker/src/schema.js';
 
 export const ARTICLE_CACHE_KEY = 'md.article.today.v1';

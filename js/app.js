@@ -1,12 +1,12 @@
-import { renderStudy, renderWords, renderWordStudy, renderReadingShelf, renderMaterial, renderPilotLesson, renderReview, renderCoverage, renderProfile, renderPilotWord, disposePilotView, pronunciationPaused } from './views/integrated.js';
+import { renderStudy, renderWords, renderWordStudy, renderReadingShelf, renderMaterial, renderPilotLesson, renderReview, renderCoverage, renderProfile, renderPilotWord, disposePilotView, pronunciationPaused } from './views/integrated.js?v=2';
 // 四个主要入口，旧资料保留深层路由。
 import { renderToday, runDictationSet } from './views/today.js?v=15';
 import { renderLibrary } from './views/library.js?v=1';
 import { renderPanorama } from './views/panorama.js?v=2';
 import { getSettings, migrate } from './storage.js?v=4';
 import { initSync } from './sync.js';
-import { stopSpeak } from './speech.js';
-import { el, motionIn, toast } from './ui.js';
+import { stopSpeak } from './speech.js?v=2';
+import { el, motionIn, toast } from './ui.js?v=2';
 
 migrate();
 

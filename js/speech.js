@@ -15,7 +15,7 @@ let speakRequest = 0;
 function loadAudioManifest() {
   if (audioManifest) return Promise.resolve(audioManifest);
   if (!audioManifestPromise) {
-    audioManifestPromise = import('../data/audio-manifest.js')
+    audioManifestPromise = import('../data/audio-manifest.js?v=2')
       .then(module => (audioManifest = module.AUDIO_MANIFEST))
       .catch(error => {
         audioManifestPromise = null;
@@ -36,7 +36,7 @@ function playFile(file, { slow = false, onend } = {}) {
   const finish = failed => {
     if (settled) return;
     settled = true;
-    if (failed) import('./ui.js').then(({ toast }) => toast('音频暂不可用，可以查看文字继续。'));
+    if (failed) import('./ui.js?v=2').then(({ toast }) => toast('音频暂不可用，可以查看文字继续。'));
     onend?.();
   };
   node.onended = () => finish(false);
@@ -108,7 +108,7 @@ function speakTTS(text, { slow = false, onend } = {}) {
 }
 
 function notifyNoGerman() {
-  import('./ui.js').then(({ toast }) => {
+  import('./ui.js?v=2').then(({ toast }) => {
     toast('本机未安装德语语音（iOS：设置→辅助功能→朗读内容→声音→德语）', 3500);
   });
 }

@@ -1,5 +1,5 @@
 // 共享 UI 组件：音频按钮、跟读麦克风、练习题渲染、toast
-import { speak, stopSpeak } from './speech.js';
+import { speak, stopSpeak } from './speech.js?v=2';
 // 直接从 audio-timing.js 取常量而不是从 speech.js 转出：audio-timing.js 是新文件，
 // 不存在被浏览器缓存住的旧版本，避免「新 ui.js + 旧 speech.js」链接失败整页白屏。
 import { SLOW_RATE } from './audio-timing.js';
