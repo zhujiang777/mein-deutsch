@@ -400,8 +400,9 @@ function renderDictation(host, item, ctx) {
       const ansSet = new Set(answer.split(/\s+/).map(normType));
       const userHtml = val.split(/\s+/).map(w =>
         `<span class="${ansSet.has(normType(w)) ? '' : 'dict-wrong'}">${esc(w)}</span>`).join(' ');
+      // hideAnswer：只标出写错的词，让学习者再听一次自己改（课文课第一次听写）
       feedback.innerHTML = `<div class="dict-diff">
-        <div class="dict-diff-line">正确：<span class="de">${esc(answer)}</span></div>
+        ${item.hideAnswer ? '<div class="dict-diff-line">标红的词有错，再听一次试试</div>' : `<div class="dict-diff-line">正确：<span class="de">${esc(answer)}</span></div>`}
         <div class="dict-diff-line">你写的：<span class="de">${userHtml}</span></div>
       </div>`;
     }
@@ -418,9 +419,12 @@ function renderDictation(host, item, ctx) {
   host.appendChild(charBar);
   host.appendChild(feedback);
   host.appendChild(checkBtn);
-  const toBlocksWrap = el(`<div class="dict-toblocks-wrap"></div>`);
-  toBlocksWrap.appendChild(toBlocks);
-  host.appendChild(toBlocksWrap);
+  // 课文课的听写只允许打字，不提供词块退路
+  if (!item.typeOnly) {
+    const toBlocksWrap = el(`<div class="dict-toblocks-wrap"></div>`);
+    toBlocksWrap.appendChild(toBlocks);
+    host.appendChild(toBlocksWrap);
+  }
   setTimeout(() => input.focus(), 120);
 }
 
@@ -621,6 +625,10 @@ function renderRoleplay(host, item, ctx) {
       };
       if (recordingSupported()) {
         speakPractice(rc, ln.de, { onRecorded: revealRef });
+        // 不方便出声时（图书馆、车上）也能继续
+        const quiet = el(`<button class="btn secondary roleplay-show" type="button">不录音，直接看答案</button>`);
+        quiet.addEventListener('click', revealRef);
+        rc.appendChild(quiet);
       } else {
         const showBtn = el(`<button class="btn roleplay-show">看中文说德语 → 显示参考</button>`);
         showBtn.addEventListener('click', revealRef);

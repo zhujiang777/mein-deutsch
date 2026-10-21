@@ -57,3 +57,10 @@ body.plain-app::before,body.plain-app::after {display:none!important;}
 .plain-sentence>.audio-btn{grid-column:2;grid-row:1;align-self:start;margin:0;}
 .plain-sentence>details{grid-column:1 / -1;grid-row:2;}
 .plain-app .de{font-weight:400;}
+/* 课文课 */
+.tl-sentence{margin:16px 0;padding-bottom:12px;border-bottom:1px solid var(--line);}
+.tl-sentence .de{font-size:23px;line-height:1.7;margin:4px 0;}
+.tl-word{font:inherit;color:inherit;background:none;border:0;border-bottom:1px dashed var(--text-2);padding:0 1px;cursor:pointer;}
+.tl-word:active,.tl-word:focus-visible{background:var(--accent-soft);}
+.tl-gloss{min-height:1.5em;}
+.tl-sofar{margin-bottom:8px;}.tl-sofar p{margin:2px 0;font-size:15px;}

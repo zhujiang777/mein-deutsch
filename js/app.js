@@ -1,5 +1,6 @@
-import { renderStudy, renderWords, renderWordStudy, renderReadingShelf, renderMaterial, renderPilotLesson, renderReview, renderCoverage, renderProfile, renderPilotWord, disposePilotView, pronunciationPaused } from './views/integrated.js?v=2';
+import { renderStudy, renderWords, renderWordStudy, renderReadingShelf, renderMaterial, renderPilotLesson, renderReview, renderCoverage, renderProfile, renderPilotWord, disposePilotView, pronunciationPaused } from './views/integrated.js?v=3';
 // 四个主要入口，旧资料保留深层路由。
+import { renderHome, renderTextDay, renderTextReview, disposeTextView } from './views/text-lesson.js?v=1';
 import { renderToday, runDictationSet } from './views/today.js?v=15';
 import { renderLibrary } from './views/library.js?v=1';
 import { renderPanorama } from './views/panorama.js?v=2';
@@ -50,7 +51,10 @@ app.addEventListener('click', event => {
 });
 
 const routes = [
-  { pattern: /^\/?$/, tab: 'today', root: true, render: (h) => renderStudy(h) },
+  { pattern: /^\/?$/, tab: 'today', root: true, render: (h) => renderHome(h) },
+  { pattern: /^\/text\/([^/]+)\/([12])$/, tab: 'today', render: async (_m,h,hit)=>renderTextDay(h,hit[1],hit[2]) },
+  { pattern: /^\/text-review$/, tab: 'today', render: async (_m,h)=>renderTextReview(h) },
+  { pattern: /^\/reference\/pilot$/, tab: 'me', render: async (_m,h)=>renderStudy(h) },
   { pattern: /^\/vocab$/, tab: 'vocab', root:true, render: h => renderWords(h) },
   { pattern: /^\/vocab\/study(?:\/(.+))?$/, tab: 'vocab', render: async (_m,h,hit)=>renderWordStudy(h,hit[1]||'current') },
   { pattern: /^\/readlisten(?:\/(read|listen))?$/, tab:'readlisten', render: async (_m,h,hit)=>renderReadingShelf(h,hit[1]||'read') },
@@ -165,6 +169,7 @@ async function showDeepView(selected, hit, run) {
 
 async function route() {
   disposePilotView();
+  disposeTextView();
   const run = ++routeRun;
   // 快速连点导航时，立即解除上一条异步深层路由留下的忙碌状态。
   app.classList.remove('route-loading');

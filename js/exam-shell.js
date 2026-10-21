@@ -13,7 +13,7 @@
 // 所以样式表和 tests/ui-coverage.test.mjs 的选择器清单都不用动。
 import { el, esc, haptic, icon, motionIn, rewardBurst, setProgress } from './ui.js';
 import { speak, stopSpeak } from './speech.js';
-import { renderExercise } from './exercises.js?v=5';
+import { renderExercise } from './exercises.js?v=6';
 import { recordAnswer, addExamMiss } from './mastery.js';
 import { recordExamAnswer, recordExamTask, examStrength } from './exam.js';
 import { logActivity, rewardSummary } from './storage.js?v=4';

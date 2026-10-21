@@ -1,4 +1,5 @@
 import { pilotAudioTexts } from '../data/integrated-course.js';
+import { textLessonAudioTexts } from '../data/text-lessons.js';
 // 提取所有需要发音的德语文本，输出 JSON 数组到 stdout
 // 用法: node tools/extract_texts.mjs
 import { PRON_LESSONS } from '../data/pronunciation.js';
@@ -77,5 +78,6 @@ for (const task of EXAM_TASKS)
   }
 
 pilotAudioTexts().forEach(add);
+textLessonAudioTexts().forEach(add);
 
 process.stdout.write(JSON.stringify([...texts], null, 0));

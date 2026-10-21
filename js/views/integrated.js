@@ -5,6 +5,8 @@ import { VOCAB, THEMES } from '../../data/vocab.js';
 import { esc, audioBtn, speakPractice } from '../ui.js?v=2';
 import { speak, stopSpeak, resolveFile } from '../speech.js?v=2';
 import { loadSrs, getWordbook, loadIntegrated, loadWordLearning, newWordRemaining, getSettings, rewardSummary, getStreak, logActivity } from '../storage.js?v=4';
+import { TEXT_LESSONS } from '../../data/text-lessons.js';
+import { textProgress, remembered } from '../text-lesson.js';
 import { lessonProgress, nextPilot, canOpen, updateProgress, saveActivity, completeLesson, recordWord, currentWords, studiedWords, wordFor, canonicalWordId, wordQueue, dueReviews, submitReview, sessionGet, sessionSave, logTrial, checkAnswer, wordKnown, lessonKey } from '../integrated.js';
 
 // Unlike the legacy single-root helper, preserve explanatory siblings as a group.
@@ -26,14 +28,14 @@ const pronunciationPaused = host=>{head(host,'发音课已暂停');host.appendCh
 export {pronunciationPaused};
 const spoken=w=>w.art?`${w.art} ${w.de}`:w.de;
 function audio(host,text){host.appendChild(audioBtn(text));}
-function lines(host,sentences,{hideText=false}={}) {
+export function lines(host,sentences,{hideText=false}={}) {
  let playToken=0;
  const play=async()=>{const token=++playToken;for(const sentence of sentences){if(token!==playToken||!host.isConnected)return;await new Promise(resolve=>{speak(sentence.de,{onend:resolve});});}};
  const controls=el('<div class="plain-actions"></div>');controls.append(button('播放',play));controls.append(button('停止',()=>{playToken++;stopSpeak();},'btn secondary'));host.append(controls);
  const body=el(hideText?'<details><summary>查看原文</summary><div class="material-text"></div></details>':'<div class="material-text"></div>');const target=hideText?body.querySelector('.material-text'):body;
  sentences.forEach(s=>{const row=el(`<div class="plain-sentence"><p class="de">${esc(s.de)}</p><details><summary>释义</summary><p>${esc(s.zh)}</p></details></div>`);row.querySelector('details').addEventListener('toggle',event=>{if(event.target.open)logTrial('translation',{text:s.de});});audio(row,s.de);target.append(row);});host.append(body);
 }
-function wordTask(id,mode='text',key='word') {
+export function wordTask(id,mode='text',key='word') {
  const w=wordFor(id);if(!w)return null;
  const distractors=VOCAB.filter(x=>x.id!==w.id&&x.zh!==w.zh&&x.theme===w.theme).slice(0,2);
  while(distractors.length<2){const extra=VOCAB.find(x=>x.id!==w.id&&x.zh!==w.zh&&!distractors.includes(x));if(!extra)break;distractors.push(extra);}
@@ -44,7 +46,7 @@ function wordTask(id,mode='text',key='word') {
  return {id:key,type:'choice',target:`word-${mode}`,prompt:mode==='listening'?'听音，选择词义。':spoken(w),options:rotated,answer:rotated.indexOf(w.zh),audioText:mode==='listening'?spoken(w):null,wordId:w.id,mode,model:spoken(w),explain:`${spoken(w)}：${w.zh}`};
 }
 /** Persist before advancing. Choice/text answers are objective; oral results remain self-reports. */
-function task(host,a,{state={},patch=()=>{},done=()=>{},attempt=()=>{}}={}) {
+export function task(host,a,{state={},patch=()=>{},done=()=>{},attempt=()=>{}}={}) {
  let current={...state};let input;
  const save=p=>{current={...current,...p};patch(current);};
  const render=()=>{
@@ -61,7 +63,8 @@ function task(host,a,{state={},patch=()=>{},done=()=>{},attempt=()=>{}}={}) {
  }
  if(current.attempts||current.hinted||current.skipped){
  const feedback=el(`<div class="plain-feedback" role="status">${current.correct?'正确':current.skipped?'已留待练习':current.final?'参考答案':current.attempts?'再试一次':'提示'}<p>${esc(a.explain||'')}</p></div>`);
- if(!current.correct||current.hinted)feedback.append(el(`<p class="de">${esc(a.model||(a.answers||[])[0]||a.options?.[a.answer]||'')}</p>`));host.append(feedback);
+ // 第一次答错只给提示，答案留到最后一次或主动看提示时再显示，重试才不是照抄
+ if((current.final&&!current.correct)||current.hinted)feedback.append(el(`<p class="de">${esc(a.model||(a.answers||[])[0]||a.options?.[a.answer]||'')}</p>`));host.append(feedback);
  }
  if(current.final){host.append(button('继续',()=>done(current)));return;}
  const actions=el('<div class="plain-actions"></div>');
@@ -217,9 +220,9 @@ export function renderCoverage(host) {
  host.append(el('<p class="plain-muted">记录教学覆盖，不代表通过 A1 或已经掌握。</p>'));
 }
 export function renderProfile(host) {
- head(host,'我的');const d=loadIntegrated();const done=PILOT_LESSONS.filter(l=>lessonProgress(l,d).done).length;const r=rewardSummary();
- host.append(el(`<section class="plain-stats"><div><b>${done} / 8</b><span>课程已学习</span></div><div><b>${getStreak()}</b><span>连续天数</span></div><div><b>${r.totalXp}</b><span>XP</span></div></section>`));
- host.append(link('设置与备份','#/settings'));host.append(link('语法参考','#/grammar'));host.append(link('旧版课程资料','#/reference/path'));host.append(link('A1 题型与模考','#/reference/panorama'));host.append(link('知识覆盖','#/coverage'));
+ head(host,'我的');const d=loadIntegrated();const learned=TEXT_LESSONS.filter(l=>textProgress(l,d).d2).length;const kept=TEXT_LESSONS.filter(l=>remembered(l,d)).length;
+ host.append(el(`<section class="plain-stats"><div><b>${learned}</b><span>篇课文已学完</span></div><div><b>${kept}</b><span>篇已记住</span></div><div><b>${getStreak()}</b><span>连续天数</span></div></section>`));
+ host.append(link('设置与备份','#/settings'));host.append(el('<h2 class="section-title">资料库</h2>'));host.append(link('综合课试学版（8 课）','#/reference/pilot','GPT 版，旧记录保留'));host.append(link('语法参考','#/grammar'));host.append(link('旧版课程资料','#/reference/path'));host.append(link('A1 题型与模考','#/reference/panorama'));host.append(link('知识覆盖','#/coverage'));
  const refs=el('<details><summary>学习参考</summary></details>');refs.append(link('歌德学院发音训练','https://www.goethe.de/de/spr/ueb/ast.html'));host.append(refs);
  const trial=el('<details><summary>试学记录</summary><p class="plain-muted">记录卡住的位置与感受，随学习备份导出。</p><textarea class="plain-answer" aria-label="试学感受"></textarea></details>');trial.append(button('保存',()=>{const input=trial.querySelector('textarea');if(input.value.trim()){logTrial('user-note',{text:input.value.trim()});input.value='';trial.append(el('<p role="status">已保存</p>'));}}));host.append(trial);
 }

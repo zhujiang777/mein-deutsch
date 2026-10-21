@@ -84,7 +84,7 @@ function loadTodayRuntime() {
       import('../../data/readings.js'),
       import('./lesson.js'),
       import('./vocab.js'),
-      import('../exercises.js?v=5'),
+      import('../exercises.js?v=6'),
       import('./listening.js?v=2'),
       import('../lesson-shell.js'),
       import('../../data/pronunciation.js'),
