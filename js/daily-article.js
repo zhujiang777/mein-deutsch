@@ -1,5 +1,5 @@
 // 今日文章：把今天背的词 + 今天这一格语法，变成一段只属于今天的短文。
-// 产品形态见 docs/product-shape.md；Worker 侧的闸门见 coach-worker/README.md
+// 产品形态见 docs/archive/product-shape.md；Worker 侧的闸门见 coach-worker/README.md
 //
 // 这是整个产品唯一别人做不到的东西——别的软件的文章是提前写好的，
 // 所以它不可能正好用上你今天背的词。

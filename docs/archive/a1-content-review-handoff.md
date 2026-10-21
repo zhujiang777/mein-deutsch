@@ -1,3 +1,5 @@
+> **已作废，仅供历史参考。** 与 [产品宪法](../product.md) 冲突时以宪法为准。
+
 # A1 精听 / 精读教材驱动实施与审查交接
 
 > 用途：供 Claude 或其他审查者独立核对本轮实现是否真正参考教材、是否遵守版权边界，以及是否满足 A1 内容生产计划。
@@ -399,12 +401,12 @@ node tools/audit_a1_content.mjs --strict
 
 | 文件 | 作用 |
 |---|---|
-| `docs/a1-content-production-plan.md` | 正式内容生产计划和阶段门禁 |
-| `docs/textbook-extraction-guide.md` | 商业教材提取、版权边界和私有目录规范 |
-| `docs/listening-slice-plan.md` | 旧技术计划；已增加状态说明，只保留技术基线 |
+| `docs/archive/a1-content-production-plan.md` | 正式内容生产计划和阶段门禁 |
+| `docs/archive/textbook-extraction-guide.md` | 商业教材提取、版权边界和私有目录规范 |
+| `docs/archive/listening-slice-plan.md` | 旧技术计划；已增加状态说明，只保留技术基线 |
 | `docs/schema.md` | 内容字段、`designReferences`、音频状态和 `l:` 命名空间说明 |
-| `docs/a1-pilot-review.md` | 12份试点的人工验收表和当前未完成项 |
-| `docs/a1-content-review-handoff.md` | 本交接文件 |
+| `docs/archive/a1-pilot-review.md` | 12份试点的人工验收表和当前未完成项 |
+| `docs/archive/a1-content-review-handoff.md` | 本交接文件 |
 
 ### 8.2 教材证据与内容数据
 
@@ -517,14 +519,14 @@ audioStatus: 'pending-tts'
 
 如果取消全文OCR，需同步修改：
 
-- `docs/a1-content-production-plan.md`；
-- `docs/textbook-extraction-guide.md`；
+- `docs/archive/a1-content-production-plan.md`；
+- `docs/archive/textbook-extraction-guide.md`；
 - `tools/audit_a1_content.mjs`；
 - `data/a1-audit-report.json` 的门禁口径。
 
 ## 10. 建议审查顺序
 
-1. 阅读本文件和 `docs/a1-content-production-plan.md`；
+1. 阅读本文件和 `docs/archive/a1-content-production-plan.md`；
 2. 检查 `data/syllabus-ref.json` 是否真实对应教材；
 3. 抽查 `data/a1-pilot-listening.js` 与 `data/a1-pilot-readings.js`；
 4. 检查 `tools/audit_a1_content.mjs` 的覆盖率和重合算法；

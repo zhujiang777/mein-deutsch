@@ -1,4 +1,4 @@
-// 入门解码课 —— 六关一次通关。规格见 docs/decoding-course.md
+// 入门解码课 —— 六关一次通关。规格见 docs/archive/decoding-course.md
 //
 // 三个验收目标：
 //   ① 见词能读：给一个没见过的德语词，能读出来  ← 主目标

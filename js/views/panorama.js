@@ -1,4 +1,4 @@
-// A1 全景图：我学到哪了、还差什么。规格见 docs/a1-panorama.md
+// A1 全景图：我学到哪了、还差什么。规格见 docs/archive/a1-panorama.md
 // 这一页不教任何东西，只度量。它是主线排序的输入，也是"离完整 A1 还有多远"的唯一答案。
 import {
   PRON_CELLS, GRAMMAR_GROUPS, GRAMMAR_CELLS, VOCAB_AXIS, EXAM_GROUPS, bandOf,
@@ -161,5 +161,5 @@ export function renderPanorama(host) {
       </div>`));
 
   // 不在这里调 motionIn：app.js 的深层路由已经对整个 route-view 做过入场动画，再来一次会叠。
-  host.appendChild(el(`<div class="source-card">格子定义与依据见 <code>docs/a1-panorama.md</code>，权威词表为 Goethe A1 官方 Wortliste。</div>`));
+  host.appendChild(el(`<div class="source-card">格子定义与依据见 <code>docs/archive/a1-panorama.md</code>，权威词表为 Goethe A1 官方 Wortliste。</div>`));
 }

@@ -26,7 +26,7 @@ test('六关，每关都是卡片流而不是文章', () => {
   });
 });
 
-// 目标 ①：见词能读。规格见 docs/decoding-course.md
+// 目标 ①：见词能读。规格见 docs/archive/decoding-course.md
 test('每关必有生词挑战卡 —— 这是"见词能读"唯一诚实的验证', () => {
   PRON_LESSONS.forEach(lesson => {
     const blind = lesson.steps.filter(step => step.type === 'speak' && step.blind);

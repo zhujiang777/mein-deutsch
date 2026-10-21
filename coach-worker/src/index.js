@@ -1,4 +1,4 @@
-// 今日文章生成 Worker。产品形态见 docs/product-shape.md
+// 今日文章生成 Worker。产品形态见 docs/archive/product-shape.md
 //
 // 这个 Worker 只干一件事：把「今天背的词 + 今天这一格语法」写成一段能读的短文。
 // 它不编排学习、不判断掌握度、不解锁课程——那些用确定性规则做，更可控也更便宜。

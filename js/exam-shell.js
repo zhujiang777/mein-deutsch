@@ -1,4 +1,4 @@
-// 考试题外壳。产品形态见 docs/product-shape.md 第 6 条决策。
+// 考试题外壳。产品形态见 docs/archive/product-shape.md 第 6 条决策。
 //
 // 为什么不直接用 runLessonShell —— 四处冲突，而且每一处都是"记账口径"不同，
 // 不是渲染不同：

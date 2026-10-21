@@ -1,3 +1,5 @@
+> **已作废，仅供历史参考。** 与 [产品宪法](../product.md) 冲突时以宪法为准。
+
 # 生存场景线课程表（track: 'scene'）
 
 面向目标：用户 2026 年秋冬去德国交换，交换前学完本线即可应对基本生存场景。
@@ -57,7 +59,7 @@ scene 线每 3 课一个 unit：
 - unit s-e "校园生活" 🎓（S13-S15）
 - unit s-f "交朋友" 🍻（S16-S18）
 - unit s-g "生存实战·结业" 🏁（S19，单课收官）
-每 unit 配对标来源卡：链接 Nicos Weg 对应生活场景课时（待 docs/nicos-weg-map.md 完成后由 Fable 填）。
+每 unit 配对标来源卡：链接 Nicos Weg 对应生活场景课时（待 docs/archive/nicos-weg-map.md 完成后由 Fable 填）。
 
 ## 语域约定（S13 起）
 - 校园办公室、图书管理员、教授、公务员 → **Sie**；同学、朋友、同龄人 → **du**。

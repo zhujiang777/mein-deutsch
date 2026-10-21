@@ -13,7 +13,7 @@ const ORIGINAL_FROM_OWN_SYLLABUS = {
   source: 'original',
   license: 'proprietary',
   adaptedFrom: {
-    statement: '脚本依据本项目自有大纲（docs/scene-track-plan.md）与 Goethe-Zertifikat A1 词表（DWDS，tools/wortliste.json）原创撰写，未参考或复制任何教材、DW 或第三方 App 的文本。',
+    statement: '脚本依据本项目自有大纲（docs/archive/scene-track-plan.md）与 Goethe-Zertifikat A1 词表（DWDS，tools/wortliste.json）原创撰写，未参考或复制任何教材、DW 或第三方 App 的文本。',
   },
 };
 

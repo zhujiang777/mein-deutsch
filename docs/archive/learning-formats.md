@@ -1,6 +1,8 @@
+> **已作废，仅供历史参考。** 与 [产品宪法](../product.md) 冲突时以宪法为准。
+
 # 学习形式与内容生产
 
-配套文档：`docs/a1-panorama.md`（格子定义）· `docs/course-authoring.md`（数据约定）
+配套文档：`docs/archive/a1-panorama.md`（格子定义）· `docs/course-authoring.md`（数据约定）
 
 ---
 

@@ -1,4 +1,4 @@
-// 应试板块的记账与调度。产品形态见 docs/product-shape.md 第 6 条决策。
+// 应试板块的记账与调度。产品形态见 docs/archive/product-shape.md 第 6 条决策。
 //
 // 三层各自的触发在这里判定：
 //   每日小测 —— 每天，题由今日文章带来（js/daily-article.js 的 quizToTask）

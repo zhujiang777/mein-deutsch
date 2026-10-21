@@ -1,3 +1,5 @@
+> 以 [产品宪法](product.md) 为准；本文件只作字段参考。旧课程字段（微步课、技能标签、全景格子）属于资料库内容。
+
 # Mein Deutsch 内容数据规范
 
 写给内容作者（含 AI agent）。目标：只改 `data/*.js`，就能安全地扩充课程、词汇、阅读、精听。
@@ -8,7 +10,7 @@
 - `?` 表示可选字段；无标记为必填。
 - 所有德语文本改动后，必须重跑音频管线（见 §5），否则新句子会退回设备 TTS。
 - 不要手改自动生成的文件：`data/audio-manifest.js`、`data/listening-audio.js`、`data/dict-core.js`、`data/content-index.js`。
-- 引入外部语料（非原创）前先读 `docs/textbook-extraction-guide.md` 与 §4 的 `provenance` 规则。
+- 引入外部语料（非原创）前先读 `docs/archive/textbook-extraction-guide.md` 与 §4 的 `provenance` 规则。
 
 ---
 
@@ -362,7 +364,7 @@
 - **`kind === 'original'`** 必填 `adaptedFrom.statement`（交代来源边界）。若 `adaptedFrom.work`
   指向某本教材，则必须同时给出 `borrowed[]` **事实层**清单（话题/交际功能/词表/语法点/题型）。
   ⚠️ 逐句改写受版权原文属衍生作品，不是安全出口——只拿清单，句子从零写。规则见
-  `docs/textbook-extraction-guide.md`。
+  `docs/archive/textbook-extraction-guide.md`。
 
 `designReferences.evidenceIds` 必须能在 `data/syllabus-ref.json` 定位，并至少覆盖课程/主课进度、
 对应 Hueber 技能书和一个公开校准来源。页码、练习与音轨只写在证据矩阵中，内容文件不重复维护定位器。

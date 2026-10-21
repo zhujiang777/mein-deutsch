@@ -1,4 +1,4 @@
-// 应试板块的记账与触发规则。规格见 docs/product-shape.md 第 6 条决策。
+// 应试板块的记账与触发规则。规格见 docs/archive/product-shape.md 第 6 条决策。
 import test from 'node:test';
 import assert from 'node:assert/strict';
 

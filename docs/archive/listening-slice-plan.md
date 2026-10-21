@@ -1,7 +1,9 @@
+> **已作废，仅供历史参考。** 与 [产品宪法](../product.md) 冲突时以宪法为准。
+
 # 精听技术基线
 
 > 本文件记录精听功能的**架构决策和理由**，不是内容生产清单。
-> 内容边界、教材证据与生产门禁见 `docs/a1-content-production-plan.md`；字段定义见 `docs/schema.md`。
+> 内容边界、教材证据与生产门禁见 `docs/archive/a1-content-production-plan.md`；字段定义见 `docs/schema.md`。
 > 两者冲突时，内容口径以生产计划为准，技术口径以本文件为准。
 >
 > 最近核对：2026-07-25。

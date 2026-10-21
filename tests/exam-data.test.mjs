@@ -1,4 +1,4 @@
-// 应试板块的数据门禁。规格见 docs/product-shape.md 第 6 条 + docs/a1-panorama.md 题型轴。
+// 应试板块的数据门禁。规格见 docs/archive/product-shape.md 第 6 条 + docs/archive/a1-panorama.md 题型轴。
 //
 // 这套门禁在第一阶段（题库还是空的）就建齐，是因为它拦的是"内容烂掉"，
 // 而内容烂掉总是从第一条开始的。等写满了再补测试，前面那些就没人查了。
@@ -63,7 +63,7 @@ test('三处曾经写错的题型描述，现在写对了', () => {
 });
 
 test('文档里的题型表和数据对得上，且写明了核实来源', () => {
-  const docs = readFileSync(new URL('../docs/a1-panorama.md', import.meta.url), 'utf8');
+  const docs = readFileSync(new URL('../docs/archive/a1-panorama.md', import.meta.url), 'utf8');
   const rows = docs.split('\n').filter(line => /^\|\s*(\*\*[听读写说]\*\*\s*)?[HLSP]\d\s*\|/.test(line));
   assert.equal(rows.length, 11, '题型表应该正好 11 行');
   const row = id => rows.find(line => line.includes(` ${id} |`));
