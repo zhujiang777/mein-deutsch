@@ -417,6 +417,50 @@ python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/list
 
 ---
 
+## 6. 故事课 `data/story-lessons.js`（新版课文课，暂未接入应用）
+
+按 30 课进度表写的连续故事。正式版播放器仍读 `data/text-lessons.js`；接入时以本节为准。`tests/story-lesson.test.mjs` 校验下面的硬规则。
+
+导出：`STORY_CAST`（角色 → 中文简介与固定配音）、`WORD_VOICE`（念单词用哪个角色的声音）、`STORY_NAMES`（人名地名，不算生词）、`STORY_LESSONS`、`STORY_UNIT_SUMMARIES`、`storyAudioItems()`。
+
+### 6.1 课文课（第 1 课起）
+
+和 `text-lessons.js` 同名的字段含义不变（`lines / gloss / cards / dictation / shadow / reviews / reading / role`）。新增或有变化的：
+
+| 字段 | 含义 |
+|---|---|
+| `n` / `unit` / `days` | 进度表里的课号、单元号；`days: 1` 表示 1 天学完（第 1 单元），其余为 2 |
+| `canDo` | 学完能做到什么（一条一句，进度证据用） |
+| `cast` | 本课出场的其他角色，预习时“认人物”用 |
+| `lines[].who` | 说话人，必须是 `STORY_CAST` 的键；音频按“角色 + 句子”生成 |
+| `lines[].say` | ? 念出来的字和显示的字不一样时填（拼字母、数字、被打断的半句） |
+| `preview` | 预习词 4–6 个：`{ de, zh, line, pic }`，`line` 是这个词出现在第几句（听到那句时亮出来），`pic` 是图标名 |
+| `listenQuestion` | 听前问题（选择题）。`key` 是答案落在第几个预习词上 |
+| `words` | 进复习的重点词 5–8 个：`{ id?, de, zh, line, form }`。`id` 只在词库里真有这个词时才填；没有 `id` 的是词库待补的词（自带 `zh`，可带 `art / pos`），接入时追加到 `vocab.js` 末尾 |
+| `phrases` | 按整体短语学的口头语：`{ de, zh }` |
+| `cards[].table` + `on` | 语法卡的整张小表（`{ head, rows }`）和本课点亮的行下标；`contrast` 是 du / Sie 之类的成对例句 |
+| `exercises` | 轻快练习，顺序即出题顺序。类型：`choice`、`listenChoice`（带 `voice`、`audioText`，可带 `say`）、`match`、`assemble` |
+| `speak` | 开口回应场景：`{ prompt, cue?: { who, de }, answers, model }`。`cue` 是对方先说的话，用该角色的声音 |
+| `wordPack` | ? 词包：`{ title, items: [{ n, de }], refs, inText, exercises }`。`refs` 是词库里对应的词条，`inText` 是课文里真的出现的成员 |
+| `reading.newWords` | 小材料里的新词 3–5 个：`{ de, zh, forms }`，`forms` 是文中出现的小写词形 |
+| `reading.kind` | `'read'`（泛读）或 `'listen'`（泛听） |
+
+选择题的正确项都写在第一个（`answer: 0`），页面负责打乱。
+
+### 6.2 第 0 课（`kind: 'pron'`）
+
+没有课文，按 `stops`（小站）排：每站 `{ id, title, cue, exercises }`，`cue` 是唯一的讲解（不超过两句）。内容三选一：`letters`（`{ l, name, say }`，`say` 是送去配音的字母名）、`groups`（`{ label, items: [[德语, 中文]] }` 例词分组）、`blind`（先自己读再听的生词：`{ de, zh, say? }`）。多一种题型 `spell`：听拼写、打出整个词（`{ voice, say, answer }`）。
+
+### 6.3 单元总表 `STORY_UNIT_SUMMARIES`
+
+`{ unit, after, title, canDo, tables, newRows, exercises }`：`after` 是哪一课之后出现；`tables` 是整张变位表；`newRows` 是课文里没出现、在这里补齐的人称的例句。
+
+### 6.4 配音清单
+
+`node tools/voice-script.mjs` 读 `storyAudioItems()`，把所有要念的字按角色分组写到 `tools/voice-script.json`（`{ id, lesson, kind, text }`，`id` 是“角色 + 文本”的指纹，可当文件名）。改了德语文本后重跑。批量生成前先抽听：字母名（`Ell, Ih, Enn` 这类写法）和 `BWL`。
+
+---
+
 ## 附录：全局词典与生词本
 
 - `data/dict-glosses.js` 是手写的补充释义，格式为 `export const DICT_GLOSSES = { 'Bahn': { zh: '铁路；火车/轨道交通', pl: 'Bahnen' } }`；值也可以是简短中文字符串。键必须保持 `tools/wortliste.json` 的 lemma 原样。
