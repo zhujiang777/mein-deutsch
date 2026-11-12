@@ -430,6 +430,7 @@ python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/list
 | 字段 | 含义 |
 |---|---|
 | `n` / `unit` / `days` | 进度表里的课号、单元号；`days: 1` 表示 1 天学完（第 1 单元），其余为 2 |
+| `cover` | ? 首页名签上的短名，5 个字以内；课名本身不超过 5 个字时不用填（名签放不下长课名） |
 | `canDo` | 学完能做到什么（一条一句，进度证据用） |
 | `cast` | 本课出场的其他角色，预习时“认人物”用 |
 | `lines[].who` | 说话人，必须是 `STORY_CAST` 的键；音频按“角色 + 句子”生成 |
@@ -449,11 +450,19 @@ python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/list
 
 ### 6.2 第 0 课（`kind: 'pron'`）
 
-没有课文，按 `stops`（小站）排：每站 `{ id, title, cue, exercises }`，`cue` 是唯一的讲解（不超过两句）。内容三选一：`letters`（`{ l, name, say }`，`say` 是送去配音的字母名）、`groups`（`{ label, items: [[德语, 中文]] }` 例词分组）、`blind`（先自己读再听的生词：`{ de, zh, say? }`）。多一种题型 `spell`：听拼写、打出整个词（`{ voice, say, answer }`）。
+没有课文，按 `stops`（小站）排：每站 `{ id, title, cue, exercises }`，`cue` 是唯一的讲解（不超过两句）。内容三选一：`letters`（`{ l, name, say }`，`say` 是送去配音的字母名）、`groups`（`{ label, items: [[德语, 中文]] }` 例词分组）、`blind`（先自己读再听的生词：`{ de, zh, say? }`）。多一种题型 `spell`：听拼写、打出整个词（`{ voice, say, answer }`）。字母表那一站可加 `hard`（字母名最容易读错的几个字母，表里用荧光笔标出）。
 
 ### 6.3 单元总表 `STORY_UNIT_SUMMARIES`
 
-`{ unit, after, title, canDo, tables, newRows, exercises }`：`after` 是哪一课之后出现；`tables` 是整张变位表；`newRows` 是课文里没出现、在这里补齐的人称的例句。
+`{ unit, after, title, canDo, tables, newRows, exercises }`：`after` 是哪一课之后出现；`tables` 是整张变位表；`newRows` 是课文里没出现、在这里补齐的人称的例句。`rule` 是总表上方那一句规则（能照做的一句话）。
+
+`quiz`（单元小测，宪法要求“没见过的听力 + 开口回应”）：
+- `listen.lines`：一段新对话，写法同课文的 `lines`，只用本单元学过的词和已有的角色。
+- `questions`：听后选择题，`type: 'heardChoice'`（页面带「再听一遍」）。
+- `speak`：开口回应题（`response`），也可以放 `listenChoice`。
+- 小测里每道题都要有 `can`：它检验的是 `canDo` 里的第几条（从 0 数）。结果页按条打勾，名下有一题答错的那条显示「再练一次」。每条 `canDo` 至少要有一题。
+
+变位表的一格怎么念由 `rowSay(row, col)` 决定（`'er / sie'` + `'kommt'` → “er kommt”），页面和配音清单共用。
 
 ### 6.4 配音清单
 

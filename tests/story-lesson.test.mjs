@@ -89,3 +89,7 @@ test('故事课：配音清单里每条都有固定的声音', () => {
   items.forEach(i => { assert(STORY_CAST[i.voice], `没有这个声音：${i.voice}`); assert(i.text.trim()); });
   for (const l of texts) l.lines.forEach(s => assert(items.some(i => i.voice === s.who && i.text === (s.say || s.de))));
 });
+
+test('首页名签放得下：课名或封面短名不超过 5 个字', () => {
+  for (const l of STORY_LESSONS) assert.ok([...(l.cover || l.title)].length <= 5, `${l.id} 名签上的字太长：${l.cover || l.title}`);
+});

@@ -10,18 +10,20 @@ const match = (id, pairs) => ({ id, type: 'match', pairs: pairs.map(([de, zh]) =
 const assemble = (id, zh, answer, distractors = []) => ({ id, type: 'assemble', zh, answer, distractors });
 const reply = (id, prompt, answers, cue) => ({ id, type: 'response', prompt, answers, model: answers[0], ...(cue ? { cue: { who: cue[0], de: cue[1] } } : {}) });
 
-// 角色 → 固定配音（ElevenLabs 声音名，用户 2026-11-09 选定）。WORD_VOICE 读单词、词包和发音例词。
+// 角色 → 固定配音（ElevenLabs 声音名，用户 2026-11-09 选定）。hi 是预习“认人物”时听的那句自我介绍。WORD_VOICE 读单词、词包和发音例词。
 export const STORY_CAST = {
-  Lin: { zh: '你 · 新加坡来的交换生，学 BWL（会计）', voice: 'Jonas Falk', me: true },
-  Lena: { zh: 'Lena Vogel · 学医，来自 Leipzig，永远在赶时间', voice: 'Nadine Convo' },
-  Tom: { zh: 'Tom Becker · 哲学读了六年，来自 Köln，爱做饭不洗碗', voice: 'Dylan Carter' },
-  Krause: { zh: 'Herr Krause · 宿舍管理员，只说 Sie', voice: 'Erich Steiner' },
+  Lin: { zh: '你 · 新加坡来的交换生，学 BWL（会计）', voice: 'Jonas Falk', me: true, hi: 'Hallo! Ich bin Lin.' },
+  Lena: { zh: 'Lena Vogel · 学医，来自 Leipzig，永远在赶时间', voice: 'Nadine Convo', hi: 'Hallo! Ich bin Lena.' },
+  Tom: { zh: 'Tom Becker · 哲学读了六年，来自 Köln，爱做饭不洗碗', voice: 'Dylan Carter', hi: 'Hallo! Ich bin Tom.' },
+  Krause: { zh: 'Herr Krause · 宿舍管理员，只说 Sie', voice: 'Erich Steiner', hi: 'Guten Tag. Mein Name ist Krause.' },
 };
 export const WORD_VOICE = 'Lena';
 // 人名地名：不算生词，也不要求出现在词库里
 export const STORY_NAMES = ['lin', 'lena', 'tom', 'tim', 'mia', 'krause', 'becker', 'vogel', 'köln', 'leipzig', 'singapur', 'china', 'japan', 'korea'];
 
 const SEIN = { head: ['', 'sein'], rows: [['ich', 'bin'], ['du', 'bist'], ['er / sie', 'ist'], ['wir', 'sind'], ['ihr', 'seid'], ['sie / Sie', 'sind']] };
+/** 变位表里一格怎么念：'er / sie' + 'kommt' → “er kommt”。页面和配音清单共用。 */
+export const rowSay = (row, col = 1) => `${row[0].split(' / ')[0]} ${row[col]}`;
 const REGULAR = { head: ['', 'kommen', 'wohnen'], rows: [['ich', 'komme', 'wohne'], ['du', 'kommst', 'wohnst'], ['er / sie', 'kommt', 'wohnt'], ['wir', 'kommen', 'wohnen'], ['ihr', 'kommt', 'wohnt'], ['sie / Sie', 'kommen', 'wohnen']] };
 
 /* ================= 第 0 课：发音入门 ================= */
@@ -34,7 +36,7 @@ const LESSON_0 = {
   role: 'Lin', cast: ['Lena', 'Krause'],
   stops: [
     {
-      id: 'abc', title: '字母表',
+      id: 'abc', title: '字母表', hard: ['A', 'E', 'I', 'J', 'V', 'W', 'Y', 'Z'], // 字母名最容易读错的，表里标出来
       cue: '26 个字母加 ä ö ü ß。字母名和英语不同的重点听：A、E、I、J、V、W、Y、Z。',
       letters: [
         L('A', 'a', 'Ah'), L('B', 'be', 'Beh'), L('C', 'ce', 'Tseh'), L('D', 'de', 'Deh'), L('E', 'e', 'Eh'), L('F', 'ef', 'Eff'),
@@ -166,7 +168,7 @@ const LESSON_0 = {
 /* ================= 第 1 课 ================= */
 const LESSON_1 = {
   id: 'sl-01', version: 1, unit: 1, n: 1, days: 1,
-  title: '厨房里的第一面', titleDe: 'Neu hier',
+  title: '厨房里的第一面', cover: '厨房初见', titleDe: 'Neu hier',
   scene: '早上，宿舍的公用厨房。你拖着箱子走进来。Lena 叼着面包在找钥匙，Tom 在煮咖啡。',
   canDo: ['自我介绍', '名字被听错时纠正并拼出来'],
   role: 'Lin', cast: ['Lena', 'Tom'],
@@ -364,7 +366,7 @@ const LESSON_2 = {
 /* ================= 第 3 课 ================= */
 const LESSON_3 = {
   id: 'sl-03', version: 1, unit: 1, n: 3, days: 1,
-  title: '她学医，他读了六年', titleDe: 'Was studierst du?',
+  title: '她学医，他读了六年', cover: '读了六年', titleDe: 'Was studierst du?',
   scene: '厨房。你和 Tom 聊起专业。Tom 正说到 Lena，Lena 刚好推门进来。',
   canDo: ['说自己学什么', '介绍别人学什么、做什么', '数 0–12'],
   role: 'Lin', cast: ['Tom', 'Lena'],
@@ -587,6 +589,7 @@ export const STORY_UNIT_SUMMARIES = [
   {
     unit: 1, after: 'sl-04', title: '第 1 单元 · 认识彼此', titleDe: 'Präsens',
     canDo: ['自我介绍，纠正并拼出名字', '说来自哪、住在哪', '介绍别人学什么、做什么', '分清 du / Sie，应对正式提问', '数 0–12'],
+    rule: '主语换了，动词跟着换。kommen、wohnen：去掉 -en，换上词尾。sein：整列记住。',
     tables: [SEIN, REGULAR],
     // 本单元课文里没出现、在总表里补齐的人称
     newRows: [
@@ -602,6 +605,35 @@ export const STORY_UNIT_SUMMARIES = [
       choice('z5', 'Woher ___ Sie, Herr Krause?', ['kommen', 'kommst', 'kommt']),
       assemble('z6', '我们住这儿。', 'Wir wohnen hier.', ['wohnt', 'ich']),
     ],
+    // 小测（用户 2026-11-11 审过）：一段没见过的听力 + 开口回应。每题的 can 指向它检验的那条 canDo（下标）。
+    quiz: {
+      listen: {
+        lines: [
+          line('Krause', 'Guten Tag, Herr Becker!', '您好，Becker 先生！'),
+          line('Tom', 'Oh … Guten Tag, Herr Krause.', '哦……您好，Krause 先生。'),
+          line('Krause', 'Wohnen Sie in Zimmer vier?', '您住四号房间吗？'),
+          line('Tom', 'Nein, in Zimmer zwei. Lena wohnt in Zimmer vier.', '不，二号房间。Lena 住四号房间。'),
+          line('Krause', 'Ach so. Und was studieren Sie?', '原来如此。您学什么？'),
+          line('Tom', 'Philosophie.', '哲学。'),
+          line('Krause', 'Schon sechs Jahre, richtig?', '已经六年了，对吧？'),
+          line('Tom', 'Äh … ja. Aber ich koche gut!', '呃……对。但是我做饭好！'),
+          line('Krause', 'So, so. Auf Wiedersehen.', '是嘛。再见。'),
+        ],
+      },
+      questions: [
+        { ...choice('q1', 'Tom 住几号房间？', ['2 号', '4 号', '6 号']), type: 'heardChoice', can: 4 },
+        { ...choice('q2', 'Lena 住几号房间？', ['4 号', '2 号', '6 号']), type: 'heardChoice', can: 4 },
+        { ...choice('q3', 'Herr Krause 问 Tom 什么？', ['学什么专业', '从哪里来', '是不是新来的']), type: 'heardChoice', can: 3 },
+      ],
+      speak: [
+        { ...reply('k1', '向他问好，并说出你的名字。', ['Guten Tag. Ja, ich bin Lin.', 'Guten Tag! Ich bin Lin.', 'Guten Tag. Ich bin Lin.', 'Ja. Ich bin Lin.'], ['Krause', 'Guten Tag. Sind Sie neu hier?']), can: 0 },
+        { ...reply('k2', '纠正他，再把名字拼一遍。', ['Nein, Lin. L – I – N.'], ['Krause', 'Wie bitte? Tim?']), can: 0 },
+        { ...reply('k3', '回答她。', ['Ich komme aus Singapur.', 'Aus Singapur.'], ['Lena', 'Woher kommst du?']), can: 1 },
+        { ...reply('k4', '回答她。', ['Er studiert Philosophie.', 'Philosophie.', 'Tom studiert Philosophie.'], ['Lena', 'Was studiert Tom?']), can: 2 },
+        { ...reply('k5', '问 Herr Krause：您也住这儿吗？', ['Wohnen Sie auch hier?']), can: 3 },
+        { ...listen('k6', 'Lena', 'Zimmer vier, Zimmer neun, Zimmer zwölf.', '听到的是哪三个房间号？', ['4 · 9 · 12', '4 · 5 · 12', '5 · 9 · 2']), can: 4 },
+      ],
+    },
   },
 ];
 
@@ -620,12 +652,13 @@ export function storyAudioItems() {
     if (x.type === 'assemble') add(WORD_VOICE, x.answer, 'exercise', id);
     if (x.type === 'response') { if (x.cue) add(x.cue.who, x.cue.de, 'cue', id); add('Lin', x.model.replace(/L – I – N/, 'Ell, Ih, Enn'), 'model', id); }
   };
+  for (const [who, c] of Object.entries(STORY_CAST)) add(who, c.hi, 'intro', 'cast');
   for (const l of STORY_LESSONS) {
     (l.lines || []).forEach(s => add(s.who, s.say || s.de, 'line', l.id));
     (l.preview || []).forEach(p => add(WORD_VOICE, p.de.replace('…', '').trim(), 'word', l.id));
     (l.words || []).forEach(w => add(WORD_VOICE, w.de, 'word', l.id));
     (l.phrases || []).forEach(p => add(WORD_VOICE, p.de.replace('…', '').trim(), 'word', l.id));
-    (l.cards || []).forEach(c => { add(WORD_VOICE, c.example, 'card', l.id); (c.pairs || []).forEach(t => add(WORD_VOICE, t, 'card', l.id)); (c.contrast || []).flat().forEach(t => add(WORD_VOICE, t, 'card', l.id)); });
+    (l.cards || []).forEach(c => { (c.on || []).forEach(i => add(WORD_VOICE, rowSay(c.table.rows[i]), 'card', l.id)); add(WORD_VOICE, c.example, 'card', l.id); (c.pairs || []).forEach(t => add(WORD_VOICE, t, 'card', l.id)); (c.contrast || []).flat().forEach(t => add(WORD_VOICE, t, 'card', l.id)); });
     if (l.wordPack) { l.wordPack.items.forEach(i => add(WORD_VOICE, i.de, 'pack', l.id)); l.wordPack.exercises.forEach(x => fromExercise(x, l.id)); }
     [...(l.exercises || []), ...(l.speak || []), ...(l.reviews || [])].forEach(x => fromExercise(x, l.id));
     if (l.reading) { l.reading.lines.forEach(s => add(s.who, s.say || s.de, 'reading', l.id)); l.reading.newWords.forEach(w => add(WORD_VOICE, w.de, 'word', l.id)); }
@@ -638,7 +671,12 @@ export function storyAudioItems() {
   }
   for (const u of STORY_UNIT_SUMMARIES) {
     u.newRows.forEach(r => add(WORD_VOICE, r.de, 'card', `unit-${u.unit}`));
+    u.tables.forEach(t => t.rows.forEach(r => r.slice(1).forEach((_, c) => add(WORD_VOICE, rowSay(r, c + 1), 'card', `unit-${u.unit}`))));
     u.exercises.forEach(x => fromExercise(x, `unit-${u.unit}`));
+    if (u.quiz) {
+      u.quiz.listen.lines.forEach(s => add(s.who, s.say || s.de, 'line', `unit-${u.unit}`));
+      [...u.quiz.questions, ...u.quiz.speak].forEach(x => fromExercise(x, `unit-${u.unit}`));
+    }
   }
   return out;
 }

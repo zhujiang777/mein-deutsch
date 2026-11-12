@@ -3,8 +3,14 @@
  "voices": {
   "Lin": {
    "voice": "Jonas Falk",
-   "chars": 731,
+   "chars": 822,
    "items": [
+    {
+     "id": "34be9a178f61",
+     "lesson": "cast",
+     "kind": "intro",
+     "text": "Hallo! Ich bin Lin."
+    },
     {
      "id": "09e2c2e54503",
      "lesson": "sl-00",
@@ -244,13 +250,37 @@
      "lesson": "sl-04",
      "kind": "model",
      "text": "Sind Sie neu hier?"
+    },
+    {
+     "id": "3ee98ee41fdf",
+     "lesson": "unit-1",
+     "kind": "model",
+     "text": "Guten Tag. Ja, ich bin Lin."
+    },
+    {
+     "id": "00a6605fb891",
+     "lesson": "unit-1",
+     "kind": "model",
+     "text": "Er studiert Philosophie."
+    },
+    {
+     "id": "443ff1f5b9ac",
+     "lesson": "unit-1",
+     "kind": "model",
+     "text": "Wohnen Sie auch hier?"
     }
    ]
   },
   "Lena": {
    "voice": "Nadine Convo",
-   "chars": 2226,
+   "chars": 2472,
    "items": [
+    {
+     "id": "062616307468",
+     "lesson": "cast",
+     "kind": "intro",
+     "text": "Hallo! Ich bin Lena."
+    },
     {
      "id": "5c7d62b450d2",
      "lesson": "sl-00",
@@ -972,6 +1002,18 @@
      "text": "Sie ist immer so."
     },
     {
+     "id": "8c4755af4501",
+     "lesson": "sl-01",
+     "kind": "card",
+     "text": "ich bin"
+    },
+    {
+     "id": "e1e7bdb299cc",
+     "lesson": "sl-01",
+     "kind": "card",
+     "text": "du bist"
+    },
+    {
      "id": "1e5bf311dea1",
      "lesson": "sl-01",
      "kind": "card",
@@ -1122,6 +1164,18 @@
      "text": "Na endlich!"
     },
     {
+     "id": "bceb6ef4d2cb",
+     "lesson": "sl-02",
+     "kind": "card",
+     "text": "ich komme"
+    },
+    {
+     "id": "ea63e83798b4",
+     "lesson": "sl-02",
+     "kind": "card",
+     "text": "du kommst"
+    },
+    {
      "id": "b8917430d459",
      "lesson": "sl-02",
      "kind": "card",
@@ -1234,6 +1288,12 @@
      "lesson": "sl-03",
      "kind": "word",
      "text": "Sie lernt und lernt und lernt."
+    },
+    {
+     "id": "61bf33693cef",
+     "lesson": "sl-03",
+     "kind": "card",
+     "text": "er kommt"
     },
     {
      "id": "736e132db0b5",
@@ -1458,6 +1518,12 @@
      "text": "So, so."
     },
     {
+     "id": "9fc87f77b6bd",
+     "lesson": "sl-04",
+     "kind": "card",
+     "text": "sie kommen"
+    },
+    {
      "id": "0f20a2940bbe",
      "lesson": "sl-04",
      "kind": "card",
@@ -1534,13 +1600,109 @@
      "lesson": "unit-1",
      "kind": "card",
      "text": "Tom und Lena kommen aus Deutschland."
+    },
+    {
+     "id": "f4d95096ca6a",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "er ist"
+    },
+    {
+     "id": "c27c76887440",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "wir sind"
+    },
+    {
+     "id": "d10faf803b43",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "ihr seid"
+    },
+    {
+     "id": "9c71698be22d",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "sie sind"
+    },
+    {
+     "id": "bbd9340e5b6f",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "ich wohne"
+    },
+    {
+     "id": "a2d4c2b44d01",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "du wohnst"
+    },
+    {
+     "id": "47511ac1bdd2",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "er wohnt"
+    },
+    {
+     "id": "e00ee57a56f5",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "wir kommen"
+    },
+    {
+     "id": "76c8a4667ed3",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "wir wohnen"
+    },
+    {
+     "id": "771d42dbe7ae",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "ihr kommt"
+    },
+    {
+     "id": "6332ede6fe3c",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "ihr wohnt"
+    },
+    {
+     "id": "188c8cd8432e",
+     "lesson": "unit-1",
+     "kind": "card",
+     "text": "sie wohnen"
+    },
+    {
+     "id": "27839ec71f36",
+     "lesson": "unit-1",
+     "kind": "cue",
+     "text": "Woher kommst du?"
+    },
+    {
+     "id": "9793f6f91d1d",
+     "lesson": "unit-1",
+     "kind": "cue",
+     "text": "Was studiert Tom?"
+    },
+    {
+     "id": "6bc47e420f7a",
+     "lesson": "unit-1",
+     "kind": "exercise",
+     "text": "Zimmer vier, Zimmer neun, Zimmer zwölf."
     }
    ]
   },
   "Tom": {
    "voice": "Dylan Carter",
-   "chars": 476,
+   "chars": 611,
    "items": [
+    {
+     "id": "0a5fe7af989a",
+     "lesson": "cast",
+     "kind": "intro",
+     "text": "Hallo! Ich bin Tom."
+    },
     {
      "id": "5a10c271845a",
      "lesson": "sl-01",
@@ -1666,13 +1828,43 @@
      "lesson": "sl-04",
      "kind": "line",
      "text": "Puh! Danke, Lin!"
+    },
+    {
+     "id": "6d366ee8cfee",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Oh … Guten Tag, Herr Krause."
+    },
+    {
+     "id": "6b9c410983c1",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Nein, in Zimmer zwei. Lena wohnt in Zimmer vier."
+    },
+    {
+     "id": "c57494a16493",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Philosophie."
+    },
+    {
+     "id": "e28079e24321",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Äh … ja. Aber ich koche gut!"
     }
    ]
   },
   "Krause": {
    "voice": "Erich Steiner",
-   "chars": 373,
+   "chars": 503,
    "items": [
+    {
+     "id": "fbfce9554286",
+     "lesson": "cast",
+     "kind": "intro",
+     "text": "Guten Tag. Mein Name ist Krause."
+    },
     {
      "id": "31cb608e5be5",
      "lesson": "sl-00",
@@ -1762,6 +1954,30 @@
      "lesson": "sl-04",
      "kind": "reading",
      "text": "Auf Wiedersehen!"
+    },
+    {
+     "id": "332abfbed38b",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Wohnen Sie in Zimmer vier?"
+    },
+    {
+     "id": "6885366eaeeb",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Ach so. Und was studieren Sie?"
+    },
+    {
+     "id": "1049ae976167",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Schon sechs Jahre, richtig?"
+    },
+    {
+     "id": "e35c0fe6e312",
+     "lesson": "unit-1",
+     "kind": "cue",
+     "text": "Wie bitte? Tim?"
     }
    ]
   }
