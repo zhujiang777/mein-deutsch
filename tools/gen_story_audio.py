@@ -8,6 +8,7 @@
       python3 tools/gen_story_audio.py --lesson sl-01,cast # 只生成第 1 课和人物自我介绍
       python3 tools/gen_story_audio.py                    # 全部
       python3 tools/gen_story_audio.py --redo 5c7d62b450d2 # 重新生成某一条（读得不对时）
+      python3 tools/gen_story_audio.py --all               # 全部重录（改了语速或换了声音时）
 先跑 node tools/voice-script.mjs 让清单和课文一致。
 """
 import json, os, sys, time, urllib.request, urllib.error
@@ -18,6 +19,7 @@ SCRIPT = os.path.join(ROOT, 'tools', 'voice-script.json')
 KEY_PATH = os.path.expanduser('~/.config/mein-deutsch/elevenlabs.key')
 API = 'https://api.elevenlabs.io/v1'
 MODEL = 'eleven_multilingual_v2'
+SPEED = 0.85  # 2026-11-14：作者试学后觉得三个人都偏快，整体放慢约一成半（蜗牛键在这个基础上再放慢）
 BITRATE = 128000  # mp3_44100_128 是固定码率，时长 = 字节数 × 8 ÷ 码率
 
 
@@ -53,7 +55,7 @@ def main():
         for it in v['items']:
             if lessons and it['lesson'] not in lessons: continue
             path = os.path.join(OUT, it['id'] + '.mp3')
-            if os.path.exists(path) and it['id'] not in redo: continue
+            if os.path.exists(path) and it['id'] not in redo and '--all' not in sys.argv: continue
             if redo and it['id'] not in redo: continue
             jobs.append((role, v['voice'], it, path))
     chars = sum(len(j[2]['text']) for j in jobs)
@@ -78,7 +80,7 @@ def main():
     for role, _, it, path in jobs:
         for attempt in range(3):
             try:
-                audio = call(f'/text-to-speech/{ids[role]}?output_format=mp3_44100_128', key, {'text': it['text'], 'model_id': MODEL})
+                audio = call(f'/text-to-speech/{ids[role]}?output_format=mp3_44100_128', key, {'text': it['text'], 'model_id': MODEL, 'voice_settings': {'speed': SPEED}})
                 break
             except RuntimeError as e:
                 if str(e).startswith(('401', '402', '403')): write_manifest(); sys.exit(f'账户不让生成（多半是套餐不含这些声音）：{e}')

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f4f3ee">
+  <title>Mein Deutsch · 选声音</title>
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="css/tokens.css?v=2">
+  <link rel="stylesheet" href="css/ds.css?v=2">
+  <style>
+    /* 临时试听页：给 Lena（也是念单词和字母的声音）选新声音。选定后连同 audio/voice-test/ 一起删。 */
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans)}
+    main{max-width:480px;margin:0 auto;padding:20px 20px 150px}
+    h1{font:600 26px/34px var(--font-sans);margin:8px 0 4px}
+    .cap{font:400 15px/22px var(--font-sans);color:var(--muted);margin:0 0 8px}
+    section{padding:18px 0 6px;border-top:1.2px solid var(--line)}
+    section:first-of-type{border-top:0}
+    h2{font:600 20px/28px var(--font-sans);margin:0 0 10px;display:flex;align-items:center;gap:10px}
+    h2 label{margin-left:auto;font:500 15px/22px var(--font-sans);display:flex;align-items:center;gap:6px}
+    h2 input{width:20px;height:20px;accent-color:#3f76a8}
+    h3{font:500 13px/18px var(--font-sans);color:var(--quiet);margin:12px 0 6px}
+    .row{display:flex;flex-wrap:wrap;gap:8px}
+    button.it{font:500 17px/24px var(--font-sans);color:var(--ink);background:#fffdf8;border:0;border-radius:10px;padding:9px 13px;box-shadow:0 1px 2px rgba(36,39,44,.12),0 0 0 1px rgba(36,39,44,.06);text-align:left;transition:transform .12s}
+    button.it:active{transform:scale(.96)}
+    button.it.on{background:var(--sky)}
+    button.it.bad{color:var(--rot);text-decoration:line-through 2px var(--rot)}
+    .letters button.it{min-width:46px;text-align:center;font-size:20px}
+    .bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);box-shadow:0 -1px 0 var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom))}
+    .bar .in{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+    .bar label{display:flex;align-items:center;gap:8px;font:500 15px/22px var(--font-sans)}
+    .bar input{width:20px;height:20px;accent-color:#c8402f}
+    .bar p{margin:0;font:400 15px/22px var(--font-sans);color:var(--ink-2);min-height:22px}
+    .bar button{font:600 17px/24px var(--font-sans);border:0;border-radius:14px;padding:12px;background:var(--sky);color:var(--ink)}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>选一个声音</h1>
+    <p class="cap">点一下就播放。</p>
+    <div id="list"></div>
+  </main>
+  <div class="bar"><div class="in">
+    <label><input type="checkbox" id="mark">点一下 = 标成念错</label>
+    <p id="sum"></p>
+    <button type="button" id="copy">复制结果</button>
+  </div></div>
+  <script type="module">
+    const BASE = new URL('../audio/voice-test/', import.meta.url);
+    const data = await (await fetch(new URL('index.json', BASE), { cache: 'no-cache' })).json();
+    const KIND = { line: '句子', word: '词', letter: '字母' };
+    const list = document.getElementById('list'), sum = document.getElementById('sum'), mark = document.getElementById('mark');
+    const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    list.innerHTML = data.voices.map(v => `<section data-v="${v.slug}"><h2>${esc(v.name)}<label><input type="radio" name="pick" value="${v.slug}">选这个</label></h2>
+      ${Object.keys(KIND).map(k => `<h3>${KIND[k]}</h3><div class="row ${k === 'letter' ? 'letters' : ''}">${data.items.map((it, i) => it.kind === k ? `<button type="button" class="it" data-i="${i}">${esc(it.show)}</button>` : '').join('')}</div>`).join('')}</section>`).join('');
+    let audio = null, last = null;
+    const pad = i => String(i).padStart(2, '0');
+    function refresh() {
+      const pick = document.querySelector('[name=pick]:checked')?.value;
+      const parts = data.voices.map(v => { const bad = [...document.querySelectorAll(`[data-v=${v.slug}] .bad`)].map(b => b.textContent); return bad.length ? `${v.name.split(' · ')[0]} 念错：${bad.join('、')}` : ''; }).filter(Boolean);
+      sum.textContent = [pick ? `选 ${data.voices.find(v => v.slug === pick).name.split(' · ')[0]}` : '', ...parts].filter(Boolean).join('；');
+    }
+    list.addEventListener('click', e => {
+      const b = e.target.closest('.it'); if (!b) return;
+      if (mark.checked) { b.classList.toggle('bad'); refresh(); return; }
+      audio?.pause(); last?.classList.remove('on');
+      audio = new Audio(new URL(`${b.closest('section').dataset.v}/${pad(b.dataset.i)}.mp3`, BASE));
+      last = b; b.classList.add('on'); audio.onended = () => b.classList.remove('on'); audio.play();
+    });
+    list.addEventListener('change', refresh);
+    document.getElementById('copy').addEventListener('click', async e => {
+      try { await navigator.clipboard.writeText(sum.textContent); e.target.textContent = '已复制'; } catch { e.target.textContent = '复制不了，请截图'; }
+      setTimeout(() => { e.target.textContent = '复制结果'; }, 1500);
+    });
+  </script>
+</body>
+</html>

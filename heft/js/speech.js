@@ -35,3 +35,16 @@ export async function score(rec, answers) {
     return { ok: false, reason: err?.code || 'failed', message: err?.message || '' };
   }
 }
+
+/** 评分没成功时，用一句人话说出卡在哪（2026-11-14：原来一律写“评分暂时连不上”，查不出原因）。 */
+export function whyFailed(r) {
+  const m = r.message || '';
+  if (r.reason === 'not-configured') return '还没设置发音评分';
+  if (r.reason === 'unauthorized') return '访问码不对，到「我的」里重填';
+  if (r.reason === 'provider-error' && /HTTP 40[13]/.test(m)) return '评分服务里的 Azure 密钥失效了，要换新的';
+  if (r.reason === 'quota') return '这个月的评分额度用完了';
+  if (r.reason === 'no-speech') return '没听到声音，靠近话筒再说一次';
+  if (r.reason === 'network' || r.reason === 'timeout') return '网络连不上评分服务';
+  if (r.reason === 'audio-unavailable') return '这台设备录不出评分用的声音';
+  return m || '评分暂时连不上';
+}

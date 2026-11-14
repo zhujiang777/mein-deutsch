@@ -1,7 +1,7 @@
 // 试学课入口：首页手帐本 → 一课一屏一屏走 → 完成页。产品规则见 docs/product.md，界面规范见设计系统 README。
 import { load, save, clock, today, course, findItem, reviewQueue, completeLesson, completeQuiz, rateCard, submitCheck, markRead, savePlace, placeOf, blank, dayKey, KEY } from './store.js';
 import { buildLesson, buildQuiz, buildReview, rulerOf } from './flow.js';
-import { hydrate, ruler, artReady, sceneOf, seal, ico } from './art.js';
+import { hydrate, lessonRuler, artReady, sceneOf, seal, ico } from './art.js';
 import { RENDER } from './screens.js';
 import './screens2.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../../js/secrets.js';
@@ -27,7 +27,18 @@ function planOf(item, hasReview) {
   return [...(hasReview ? ['复习'] : []), ...steps].join('<i>→</i>') + `<i>·</i>约 ${mins} 分钟`;
 }
 
-const tabs = on => `<nav class="hf-tabs">${[['today', '今天', '#/'], ['log', '记录', '#/log'], ['me', '我的', '#/me']].map(([k, t, href]) => `<a class="tab ${k === on ? 'on' : ''}" href="${href}"><svg viewBox="0 0 28 28"><use href="#t-${k}"/></svg>${t}</a>`).join('')}</nav>`;
+// 底栏只画一次、固定在屏幕底部：三页切换时它不动，只有选中的那团蓝色滑过去（2026-11-17 改，原来首页的底栏画在会缩放的画布里，和另两页对不上）
+const nav = document.body.appendChild(Object.assign(document.createElement('nav'), { className: 'hf-tabs', hidden: true }));
+nav.innerHTML = `<i class="blob"></i>${[['today', '今天', '#/'], ['log', '记录', '#/log'], ['me', '我的', '#/me']].map(([k, t, href]) => `<a class="tab" data-tab="${k}" href="${href}"><svg viewBox="0 0 28 28"><use href="#t-${k}"/></svg>${t}</a>`).join('')}`;
+function setTab(on) {
+  const first = nav.hidden; nav.hidden = !on; nav.classList.remove('away');
+  if (!on) return;
+  const tab = nav.querySelector(`[data-tab=${on}]`), blob = nav.firstChild;
+  nav.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t === tab));
+  if (first) blob.style.transition = 'none';
+  blob.style.transform = `translateX(${tab.offsetLeft + tab.offsetWidth / 2 - 22}px)`;
+  if (first) { blob.offsetWidth; blob.style.transition = ''; }
+}
 
 /* ================= 首页：画出来的一整本手帐 ================= */
 const WIN = 'M89 266H323a7 7 0 0 1 7 7V509a7 7 0 0 1 -7 7H89a7 7 0 0 1 -7 -7V273a7 7 0 0 1 7 -7Z';
@@ -70,7 +81,7 @@ function home() {
       ${resting
         ? `<p class="donel">${t.item ? '今天学完了' : '都学完了'}${t.next ? `<small>明天 · ${shortOf(t.next)}</small>` : ''}</p>`
         : `<div class="foot"><p class="plan ${t.reviews > 0 && !reviewOnly ? 'tight' : ''}">${plan}</p><button type="button" class="md-btn wide go">${label} ${ico('arrow')}</button></div>`}
-      ${tabs('today')}</div></div></div>`;
+      </div></div></div>`;
   hydrate(app); fitStage();
   // 课名按名签宽度收小；收到 22px 还放不下就换成两行（设计稿按 4 个字的课名画的，实际课名最长 9 个字）
   const tt = app.querySelector('.nblabel .t');
@@ -79,14 +90,14 @@ function home() {
   if (stamped && sessionStorage.getItem('hf.stamp')) { sessionStorage.removeItem('hf.stamp'); setTimeout(() => sfx('stamp'), 560); } else app.querySelector('.erl2')?.classList.add('still');
   app.querySelector('.go')?.addEventListener('click', () => {
     const nb = app.querySelector('.nb'); sfx('tap');
-    nb.classList.add('press');
+    nb.classList.add('press'); nav.classList.add('away');
     setTimeout(() => nb.classList.add('open'), 70);
     setTimeout(() => { location.hash = t.reviews ? '#/review' : `#/${item.kind}/${item.id}`; }, 640);
   });
 }
 function fitStage() {
   const st = app.querySelector('.hf-stage'); if (!st) return;
-  const k = Math.min(innerWidth / 390, innerHeight / 844);
+  const k = Math.min(innerWidth / 390, (innerHeight - nav.offsetHeight) / 764); // 画布最下面 80 高原来是底栏的位置，现在底栏在画布外面
   st.style.transform = `scale(${k})`; st.parentNode.style.setProperty('--k', k);
 }
 addEventListener('resize', fitStage);
@@ -99,6 +110,7 @@ function run({ id, steps, lesson = null, unit = null, start = 0, keep = false, b
   app.innerHTML = `<div class="md-page hf-page"><div class="md-top"><button type="button" class="x" aria-label="关闭" data-i="x"></button><div class="hf-rul"></div></div>
     <div class="hf-body"></div><div class="hf-foot"></div></div>`;
   const page = app.firstChild, body = page.querySelector('.hf-body'), footEl = page.querySelector('.hf-foot'), rul = page.querySelector('.hf-rul');
+  const R = lessonRuler(rul, rulerOf(steps, 0).marks);
   const leave = () => { cleanups.forEach(f => f()); cleanups = []; stop(); };
   page.querySelector('.x').addEventListener('click', () => { leave(); if (keep) { savePlace(state, id, at); commit(); } location.hash = back; });
   function foot(label, fn, { arrow = false, off = false } = {}) {
@@ -125,7 +137,7 @@ function run({ id, steps, lesson = null, unit = null, start = 0, keep = false, b
     const step = steps[at], r = rulerOf(steps, at);
     // 每一屏换一个新的容器：上一屏挂的点击监听跟着旧容器一起丢掉
     const fresh = body.cloneNode(false); page.replaceChild(fresh, page.querySelector('.hf-body'));
-    rul.innerHTML = step.type === 'finish' || step.type === 'quizResult' ? '' : ruler(r.n, r.k);
+    rul.style.visibility = step.type === 'finish' || step.type === 'quizResult' ? 'hidden' : ''; R.set(r.p, r.name);
     footEl.innerHTML = ''; page.dataset.step = step.type; scrollTo(0, 0);
     const mine = at;
     await RENDER[step.type]({ lesson: step.lesson || lesson, unit, step, body: fresh, foot, foot2, redo, next: () => { if (mine === at) next(); }, flags: (flags[at] ||= {}), result: ok => { results[at] = ok; }, results, steps, cleanup: f => cleanups.push(f) });
@@ -165,7 +177,7 @@ function logPage() {
     months.at(-1).rows.push(`<div class="lg ${k === todayK ? 'today' : ''}"><div class="dt"><b>${d.getDate()}</b><span>${k === todayK ? '今天' : WEEK[d.getDay()]}</span></div><div>${state.log[k].map(entry).join('')}</div></div>`);
   }
   app.innerHTML = `<div class="md-page hf-page tabbed">${months.length ? months.map(g => `<div class="hf-calh"><h2>${g.d.getMonth() + 1} 月</h2><span>${g.d.getFullYear()}</span></div><div class="md-log">${g.rows.join('')}</div>`).join('') : '<div class="hf-calh"><h2>学习记录</h2></div><p class="md-cap">还没有记录</p>'}
-    ${tabs('log')}</div>`;
+    </div>`;
   hydrate(app);
 }
 function mePage() {
@@ -178,9 +190,9 @@ function mePage() {
     <form class="hf-set" hidden><label>服务地址<input name="endpoint" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(sec.endpoint)}"></label>
       <label>访问码<input name="code" type="password" autocomplete="off" placeholder="${sec.accessCode ? '已保存，不改就留空' : ''}"></label><button type="submit" class="md-btn">保存</button></form>
     <h1 class="hf-h1 sub">试学</h1>
-    <div class="hf-dev"><button type="button" class="md-btn sec" data-act="day">进入下一天</button><button type="button" class="md-btn sec" data-act="reset">清空试学进度</button></div>
+    <div class="hf-dev"><button type="button" class="md-btn sec" data-act="day">进入下一天</button><button type="button" class="md-btn sec" data-act="reset">清空试学进度</button><a class="md-btn sec" href="hoertest.html">选声音</a></div>
     <p class="md-cap hf-devcap">${state.shift ? `已往后拨 ${state.shift} 天` : ''}</p>
-    ${tabs('me')}</div>`;
+    </div>`;
   const status = app.querySelector('.hf-as'), form = app.querySelector('.hf-set');
   app.querySelector('[data-act=day]').addEventListener('click', () => { state.shift = (state.shift || 0) + 1; commit(); location.hash = '#/'; });
   app.querySelector('[data-act=reset]').addEventListener('click', () => { if (confirm('清空试学课的全部进度？')) { localStorage.removeItem(KEY); state = blank(); location.hash = '#/'; } });
@@ -223,6 +235,7 @@ function reviewPage() {
 function route() {
   stop();
   const [, name, id, at] = location.hash.split('/');
+  setTab(!name ? 'today' : name === 'log' ? 'log' : name === 'me' && id !== 'score' ? 'me' : '');
   if (name === 'lesson') lessonPage(id, at);
   else if (name === 'quiz') quizPage(id, at);
   else if (name === 'log') logPage();

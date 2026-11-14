@@ -32,6 +32,9 @@ export async function duration(voice, text) {
   return manifest[await audioId(voice, text)] || Math.max(1, text.length * 0.075);
 }
 
+/** 正在放的这条录音放到第几秒了（按录音本身的时间算，慢速不影响）。 */
+export const position = () => player ? player.currentTime : 0;
+
 export function stop() {
   token++;
   if (player) { player.pause(); player = null; }

@@ -1,8 +1,15 @@
 // 把一课的数据排成一屏一屏的步骤。纯逻辑，不碰页面。
 // 一天课做全套（2026-11-11 定）：预习 → 带问题听 → 精读 → 词包 → 练习 → 听写 → 跟读 → 复述 → 开口回应 → 完成页。
-// 每一步带 seg（属于哪一段），顶部进度尺按“这一段第几步”画。
+// 每一步带 seg（属于哪一环节）：顶部是整课一条进度尺，刻度是各环节的分界，尺下写当前环节的名字。
 
 export const SEGMENTS = { preview: '预习', listen: '听', read: '精读', pack: '词包', practice: '练习', dictation: '听写', shadow: '跟读', retell: '复述', speak: '开口', finish: '' };
+
+/** 连线题一屏最多 5 对（多了线会乱）：超过的平均拆成几屏。 */
+export const splitMatch = ex => {
+  if (ex.type !== 'match' || ex.pairs.length <= 5) return [ex];
+  const k = Math.ceil(ex.pairs.length / 5), size = Math.ceil(ex.pairs.length / k);
+  return Array.from({ length: k }, (_, i) => ({ ...ex, id: `${ex.id}-${i + 1}`, pairs: ex.pairs.slice(i * size, (i + 1) * size) }));
+};
 
 export function buildLesson(lesson) {
   if (lesson.kind === 'pron') return buildPron(lesson);
@@ -19,9 +26,9 @@ export function buildLesson(lesson) {
   });
   if (lesson.wordPack) {
     add('pack', 'pack');
-    lesson.wordPack.exercises.forEach(ex => add('pack', 'ex', { ex }));
+    lesson.wordPack.exercises.flatMap(splitMatch).forEach(ex => add('pack', 'ex', { ex }));
   }
-  lesson.exercises.forEach(ex => add('practice', 'ex', { ex }));
+  lesson.exercises.flatMap(splitMatch).forEach(ex => add('practice', 'ex', { ex }));
   lesson.dictation.forEach(i => add('dictation', 'dictate', { i }));
   lesson.shadow.forEach(i => add('shadow', 'shadow', { i }));
   lesson.lines.forEach((l, i) => { if (l.who === lesson.role) add('retell', 'retell', { i }); });
@@ -34,7 +41,7 @@ function buildPron(lesson) {
   const steps = [];
   for (const stop of lesson.stops) {
     steps.push({ seg: stop.id, type: 'stop', stop });
-    stop.exercises.forEach(ex => steps.push({ seg: stop.id, type: ex.type === 'response' ? 'speak' : 'ex', ex, item: ex }));
+    stop.exercises.flatMap(splitMatch).forEach(ex => steps.push({ seg: stop.id, type: ex.type === 'response' ? 'speak' : 'ex', ex, item: ex }));
   }
   steps.push({ seg: 'finish', type: 'finish' });
   return steps;
@@ -43,7 +50,7 @@ function buildPron(lesson) {
 /** 单元总表 + 小测：总表 → 表格练习 → 没见过的听力 → 开口回应 → 结果。 */
 export function buildQuiz(unit) {
   const steps = [{ seg: 'table', type: 'unitTable' }];
-  unit.exercises.forEach(ex => steps.push({ seg: 'table', type: 'ex', ex }));
+  unit.exercises.flatMap(splitMatch).forEach(ex => steps.push({ seg: 'table', type: 'ex', ex }));
   if (unit.quiz) {
     steps.push({ seg: 'quiz', type: 'quizListen' });
     unit.quiz.questions.forEach(ex => steps.push({ seg: 'quiz', type: 'ex', ex, counts: true }));
@@ -70,43 +77,73 @@ export function buildReview(queue, lessonOf) {
   return steps;
 }
 
-/** 这一步在它那一段里是第几格、一共几格。 */
+const OTHER_SEGS = { cards: '复习', check: '开口', table: '总表', quiz: '小测' };
+/**
+ * 整课一条进度尺（2026-11-14 改：不再每一段清零）。
+ * 返回 { p: 走到哪了 0–1, marks: 各环节的分界 0–1, name: 现在这一环节叫什么 }。完成页不占格。
+ */
 export function rulerOf(steps, at) {
+  const last = steps.at(-1).type, n = Math.max(1, last === 'finish' || last === 'quizResult' ? steps.length - 1 : steps.length), marks = [0];
+  for (let i = 1; i < n; i++) if (steps[i].seg !== steps[i - 1].seg) marks.push(i / n);
+  marks.push(1);
   const seg = steps[at].seg;
-  let first = at; while (first > 0 && steps[first - 1].seg === seg) first--;
-  let last = at; while (last < steps.length - 1 && steps[last + 1].seg === seg) last++;
-  return { n: last - first + 1, k: at - first };
+  const name = SEGMENTS[seg] ?? steps.find(s => s.seg === seg).stop?.title ?? (seg.startsWith('read-') ? '读一读' : OTHER_SEGS[seg] ?? '');
+  return { p: Math.min(1, at / n), marks, name };
 }
 
 const norm = s => s.toLocaleLowerCase('de-DE').replace(/[^a-zäöüß0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 export const sameText = (a, b) => norm(a) === norm(b);
 
-/**
- * 听写批改：把学习者打的字和原句逐字符对齐。
- * 返回 { ok, ops }，ops 是 [{ t: 'keep'|'miss'|'extra', ch }]：miss = 原句有、你漏了（红笔补），extra = 你多打或打错的。
- * 大小写和标点也算（德语名词大写是要学的），首尾空格不算。
- */
-export function correct(input, target) {
-  const a = [...input.trim()], b = [...target.trim()];
-  const m = a.length, n = b.length, dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
-  for (let i = m - 1; i >= 0; i--) for (let j = n - 1; j >= 0; j--) dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+const lev = (x, y) => { const d = Array.from({ length: x.length + 1 }, (_, i) => [i]); for (let j = 1; j <= y.length; j++) d[0][j] = j; for (let i = 1; i <= x.length; i++) for (let j = 1; j <= y.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (x[i - 1] === y[j - 1] ? 0 : 1)); return d[x.length][y.length]; };
+const letters = w => [...w].filter(c => /[a-zäöüß0-9]/i.test(c));
+const bare = w => letters(w).join('').toLocaleLowerCase('de-DE');
+
+/** 一个词里逐字母对齐（不分大小写）。ops: keep（to = 原句里的写法）/ miss（漏的）/ extra（多打或打错的）。 */
+function charOps(typed, word) {
+  const a = letters(typed), b = letters(word), m = a.length, n = b.length, eq = (p, q) => p.toLocaleLowerCase('de-DE') === q.toLocaleLowerCase('de-DE');
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = m - 1; i >= 0; i--) for (let j = n - 1; j >= 0; j--) dp[i][j] = eq(a[i], b[j]) ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
   const ops = []; let i = 0, j = 0;
   while (i < m && j < n) {
-    if (a[i] === b[j]) { ops.push({ t: 'keep', ch: a[i] }); i++; j++; }
+    if (eq(a[i], b[j])) ops.push({ t: 'keep', ch: a[i++], to: b[j++] });
     else if (dp[i + 1][j] >= dp[i][j + 1]) ops.push({ t: 'extra', ch: a[i++] });
     else ops.push({ t: 'miss', ch: b[j++] });
   }
   while (i < m) ops.push({ t: 'extra', ch: a[i++] });
   while (j < n) ops.push({ t: 'miss', ch: b[j++] });
-  return { ok: ops.every(o => o.t === 'keep'), ops };
+  return ops;
+}
+
+/**
+ * 听写批改（2026-11-14 改）：大小写和标点不算错。先按词对齐，再看每个词：
+ *   ok 一样 · fix 只差一两个字母（逐字母改，ops 见 charOps）· swap 错了一半以上（整词划掉）· miss 漏了一个词 · extra 多打了一个词
+ * 返回 { ok, exact, items }；exact = 连大小写标点都一样。items 里 typed 是你打的、word 是原句里的写法。
+ */
+export function correct(input, target) {
+  const split = s => s.trim().split(/\s+/).map(raw => ({ raw, key: bare(raw) })).filter(w => w.key);
+  const a = split(input), b = split(target), m = a.length, n = b.length;
+  const near = (x, y) => lev(x, y) * 2 <= Math.max(x.length, y.length);
+  const sub = (x, y) => x === y ? 0 : near(x, y) ? 0.5 : 1.2;
+  const D = Array.from({ length: m + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= n; j++) D[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) D[i][j] = Math.min(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + sub(a[i - 1].key, b[j - 1].key));
+  const items = []; let i = m, j = n;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && D[i][j] === D[i - 1][j - 1] + sub(a[i - 1].key, b[j - 1].key)) {
+      const x = a[--i], y = b[--j];
+      items.push(x.key === y.key ? { t: 'ok', typed: x.raw, word: y.raw } : near(x.key, y.key) ? { t: 'fix', typed: x.raw, word: y.raw, ops: charOps(x.raw, y.raw) } : { t: 'swap', typed: x.raw, word: y.raw });
+    } else if (i > 0 && D[i][j] === D[i - 1][j] + 1) items.push({ t: 'extra', typed: a[--i].raw });
+    else items.push({ t: 'miss', word: b[--j].raw });
+  }
+  items.reverse();
+  return { ok: items.every(o => o.t === 'ok'), exact: input.trim() === target.trim(), items };
 }
 
 /** 开口题有几种可接受的说法：挑和识别结果最接近的那一句来评分/展示。 */
 export function closest(answers, heard) {
   const h = norm(heard || '');
   if (!h) return answers[0];
-  const dist = (x, y) => { const d = Array.from({ length: x.length + 1 }, (_, i) => [i]); for (let j = 1; j <= y.length; j++) d[0][j] = j; for (let i = 1; i <= x.length; i++) for (let j = 1; j <= y.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (x[i - 1] === y[j - 1] ? 0 : 1)); return d[x.length][y.length]; };
-  return answers.map(a => [a, dist(norm(a), h)]).sort((p, q) => p[1] - q[1])[0][0];
+  return answers.map(a => [a, lev(norm(a), h)]).sort((p, q) => p[1] - q[1])[0][0];
 }
 
 /** 把一句德语切成“词 / 非词”片段，精读里点词用。 */

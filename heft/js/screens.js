@@ -3,8 +3,8 @@
 // 界面上只写“要做什么”，不写教学法说明、安慰或提示性废话。
 import { STORY_CAST, STORY_LESSONS, rowSay } from '../../data/story-lessons.js';
 import { avatar, key, q, tick, seal, hydrate, NAME, picOf } from './art.js';
-import { play, playLine, playWord, playUrl, stop, duration, sayOf, sfx } from './audio.js';
-import { canRecord, record, score } from './speech.js';
+import { play, playLine, playWord, playUrl, stop, duration, sayOf, sfx, position } from './audio.js';
+import { canRecord, record, score, whyFailed } from './speech.js';
 import { correct, pieces, entry, sameText } from './flow.js';
 
 export const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -12,6 +12,8 @@ export const shuffle = a => { const b = [...a]; for (let i = b.length - 1; i > 0
 export const tilt = i => [-1.2, 1, -0.6, 1.4, -1, 0.7][i % 6];
 export const hlClass = de => entry(de).art || 'word';
 export const lower = s => s.toLocaleLowerCase('de-DE');
+/** 系统开了「减少动态效果」：脚本里的位移动画也跳过。 */
+export const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** 在一句话里把某个词用荧光笔标出来（找不到就原样返回）。 */
 export function mark(de, needle, cls) {
@@ -29,6 +31,13 @@ export function row(line, { html, zh = true, spk = true, cls = '', big = false, 
 export function wordEntry(de, zh, size = 's') {
   const e = entry(de);
   return `<div class="md-entry ${size}"><p class="md-lm">${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}<span class="md-hl ${e.art || 'word'}">${esc(e.lemma)}</span>${key('a-spk', { cls: 's', act: 'word', aria: '听这个词', r: 5 })}</p><p class="md-mn">${esc(zh)}</p></div>`;
+}
+/** 大词条一行放不下（如 kommen aus …）就收小字号保持一行：折成两行时荧光笔只会画在第二行。 */
+export function fitEntry(root) {
+  root.querySelectorAll('.md-entry.l .md-lm').forEach(lm => {
+    const hl = lm.querySelector('.md-hl'); let size = 40;
+    while (hl && hl.offsetHeight > (size + 10) * 1.4 && size > 24) { size -= 2; lm.style.fontSize = `${size}px`; lm.style.lineHeight = `${size + 10}px`; }
+  });
 }
 /** 点 data-act 的统一入口。 */
 export function acts(body, map) {
@@ -57,6 +66,7 @@ RENDER.word = ({ lesson, step, body, foot, next }) => {
   body.innerHTML = `<p class="hf-task">先认识这个词</p>
     <div class="hf-wd ${pic ? '' : 'noimg'}">${pic ? `<div class="hf-pic">${pic}</div>` : ''}${wordEntry(item.de, item.zh, 'l')}</div>
     <div class="hf-ex">${row(line, { html: mark(line.de, entry(item.de).lemma, hlClass(item.de)) })}</div>`;
+  fitEntry(body);
   acts(body, { word: () => playWord(item.de), say: () => playLine(line) });
   foot('继续', next, { arrow: true });
   playWord(item.de);
@@ -81,27 +91,31 @@ export async function listenUI({ body, foot, next, flags }, { lesson, head }) {
   const toggle = body.querySelector('[data-act=toggle]');
   let playing = false, slow = false, run = 0;
   const setToggle = on => { toggle.dataset.k = on ? 'a-pause' : 'a-spk'; toggle.innerHTML = on ? '暂停' : '播放'; hydrate(toggle.parentNode); };
-  const paint = (i, done) => {
+  // 游标跟着声音匀速走：每一帧按「前面几句的总长 + 这一句放到第几秒」算位置
+  const starts = durs.map((_, i) => durs.slice(0, i).reduce((a, b) => a + b, 0));
+  const at = t => { bar.style.width = `${Math.min(100, t / total * 100)}%`; nowEl.textContent = mmss(t); };
+  let cur = -1;
+  const tick = () => { if (!body.isConnected) return; if (cur >= 0) at(starts[cur] + Math.min(durs[cur], position())); requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+  const paint = (i) => {
     cast.forEach(c => c.classList.toggle('on', i >= 0 && c.dataset.who === lesson.lines[i]?.who));
-    const before = durs.slice(0, Math.max(i, 0)).reduce((a, b) => a + b, 0) + (done ? durs[i] || 0 : 0);
-    bar.style.width = `${Math.min(100, before / total * 100)}%`; nowEl.textContent = mmss(before);
+    cur = i;
     const pv = i >= 0 && (lesson.preview || []).find(p => p.line === i);
     flash.innerHTML = pv ? `<span class="md-hl ${hlClass(pv.de)}">${esc(pv.de)}</span>` : '';
   };
   async function start(from = 0) {
     const mine = ++run; playing = true; setToggle(true);
     for (let i = from; i < lesson.lines.length; i++) {
-      paint(i, false);
+      paint(i);
       const ok = await playLine(lesson.lines[i], { slow });
       if (mine !== run) return;
       if (!ok) { playing = false; setToggle(false); return; }
-      paint(i, true);
     }
-    playing = false; setToggle(false); paint(-1, false); bar.style.width = '100%'; nowEl.textContent = mmss(total);
+    playing = false; setToggle(false); paint(-1); at(total);
     flags.heard = true; foot('回答问题', next);
   }
   acts(body, {
-    toggle: () => { if (playing) { run++; playing = false; stop(); setToggle(false); } else start(0); },
+    toggle: () => { if (playing) { run++; playing = false; stop(); setToggle(false); cur = -1; at(0); } else start(0); },
     slow: b => { slow = !slow; b.classList.toggle('on', slow); if (playing) { run++; stop(); start(0); } },
   });
   foot('回答问题', next, { off: !flags.heard });
@@ -250,7 +264,16 @@ EX.match = ({ step, body, foot, next, result }) => {
       const a = sel; sel = null; a.classList.remove('sel');
       if (a.dataset.i === b.dataset.i) {
         const [l, r] = a.dataset.side === 'l' ? [a, b] : [b, a];
-        [l, r].forEach(x => x.classList.add('done', 'tick')); link(l, r); sfx('ok');
+        // 连对的一对排到同一行：右边这张和左卡那一行的右卡换位置，线就是一小段横线，不会交叉
+        const cells = [...box.querySelectorAll('.hf-mc')], x = cells[cells.indexOf(l) + 1];
+        if (x !== r) {
+          const was = [r, x].map(e => e.getBoundingClientRect()), ph = document.createComment('');
+          r.replaceWith(ph); x.replaceWith(r); ph.replaceWith(x);
+          const now_ = [r, x].map(e => e.getBoundingClientRect());
+          [l, r].forEach(e => e.classList.add('done', 'tick')); link(l, r);
+          if (!calm()) [r, x].forEach((e, k) => { const rot = `rotate(${e.style.getPropertyValue('--r') || '0deg'})`; e.animate([{ transform: `translate(${was[k].left - now_[k].left}px,${was[k].top - now_[k].top}px) ${rot}` }, { transform: rot }], { duration: 320, easing: 'cubic-bezier(.2,.8,.3,1)' }); });
+        } else { [l, r].forEach(e => e.classList.add('done', 'tick')); link(l, r); }
+        sfx('ok');
         if (--left_ === 0) { result?.(wrong === 0); foot('继续', next, { arrow: true }); }
       } else { wrong++; [a, b].forEach(x => { x.classList.add('shake'); setTimeout(() => x.classList.remove('shake'), 380); }); sfx('no'); }
     },
@@ -296,11 +319,17 @@ function typing({ body, foot, next, result }, { task, target, zh, say }) {
   const input = body.querySelector('input');
   const check = () => {
     if (!input.value.trim()) return;
-    const r = correct(input.value, target); let ti = 0;
-    const written = r.ops.map(o => o.t === 'keep' ? esc(o.ch) : o.t === 'miss' ? `<span class="md-ins"><b>${esc(o.ch === ' ' ? '␣' : o.ch)}</b><svg viewBox="0 0 14 11"><path d="M1.5 10 7 2l5.5 8"/></svg></span>` : `<s>${esc(o.ch)}</s>`).join('');
-    const fixed = r.ops.filter(o => o.t !== 'extra').map(o => (ti++, o.t === 'miss' ? `<u>${esc(o.ch)}</u>` : esc(o.ch))).join('');
+    const r = correct(input.value, target);
+    const caret = b => `<span class="md-ins">${b ? `<b>${esc(b)}</b>` : ''}<svg viewBox="0 0 14 11"><path d="M1.5 10 7 2l5.5 8"/></svg></span>`;
+    // 你写的那一行：对的照抄；差一两个字母用红笔逐字母改；整词错的整词划掉；漏词只打一个插入号（正确的词看下面那一行）
+    const written = r.items.map(o => o.t === 'ok' ? esc(o.typed)
+      : o.t === 'fix' ? o.ops.map(c => c.t === 'keep' ? esc(c.ch) : c.t === 'miss' ? caret(c.ch) : `<s>${esc(c.ch)}</s>`).join('')
+      : o.t === 'miss' ? caret('') : `<s>${esc(o.typed)}</s>`).join(' ');
+    // 正确写法：错的词整词划线，差字母的只划那几个字母
+    const fixedWord = o => { const ops = o.ops.filter(c => c.t !== 'extra'); let k = 0; return [...o.word].map(ch => /[a-zäöüß0-9]/i.test(ch) ? (ops[k++]?.t === 'miss' ? `<u>${esc(ch)}</u>` : esc(ch)) : esc(ch)).join(''); };
+    const fixed = r.items.filter(o => o.t !== 'extra').map(o => o.t === 'ok' ? esc(o.word) : o.t === 'fix' ? fixedWord(o) : `<u>${esc(o.word)}</u>`).join(' ');
     body.querySelector('.hf-answer').innerHTML = `<p class="md-input hf-written">${written}${r.ok ? tick('hf-tick') : ''}</p>
-      ${r.ok ? '' : `<p class="md-fixed">${fixed}</p>`}${zh ? `<p class="md-zh">${esc(zh)}</p>` : ''}`;
+      ${r.exact ? '' : `<p class="md-fixed">${r.ok ? esc(target) : fixed}</p>`}${zh ? `<p class="md-zh">${esc(zh)}</p>` : ''}`;
     sfx(r.ok ? 'ok' : 'no'); result?.(r.ok);
     foot('继续', next, { arrow: true });
   };
@@ -359,7 +388,7 @@ export function speakBox(ctx, { answers, ref, reveal, onShown }) {
       if (r.pass) { result?.(true); foot('继续', next, { arrow: true }); auto = setTimeout(next, 1700); }
       else { if (tries >= 2) result?.(false); foot('继续', next, { arrow: true, off: tries < 2 }); }
     } else {
-      scoreEl.innerHTML = `<span>${ctx.step.detail && r.message ? esc(r.message) : r.reason === 'not-configured' ? '还没设置发音评分' : '评分暂时连不上'}</span>`;
+      scoreEl.innerHTML = `<span>${esc(whyFailed(r))}${ctx.step.detail && r.message && r.message !== whyFailed(r) ? `<small>${esc(r.message)}</small>` : ''}</span>`;
       result?.(null); foot('继续', next, { arrow: true });
     }
     onShown?.();

@@ -76,6 +76,7 @@ test('一天课做全套：预习 → 听 → 精读 → 练习 → 听写 → �
   assert.equal(steps.filter(s => s.type === 'card').length, L1.cards.length, '每张卡都排进去了');
   assert.equal(steps.filter(s => s.type === 'retell').length, L1.lines.filter(l => l.who === 'Lin').length);
   assert.ok(buildLesson(STORY_LESSONS[3]).some(s => s.type === 'pack'), '第 3 课带词包');
+  for (const l of STORY_LESSONS) for (const s of buildLesson(l)) if (s.ex?.type === 'match') assert.ok(s.ex.pairs.length <= 5, `${l.id} 连线一屏不超过 5 对`);
 });
 
 test('语法卡紧跟它 after 的那一句', () => {
@@ -94,19 +95,29 @@ test('第 0 课按小站排，每站先讲后练；每课最后一步都是完�
   assert.equal(buildQuiz(STORY_UNIT_SUMMARIES[0]).at(-1).type, 'quizResult');
 });
 
-test('进度尺：按这一段的步数走', () => {
-  const steps = buildLesson(L1), at = steps.findIndex(s => s.type === 'dictate');
-  assert.deepEqual(rulerOf(steps, at), { n: L1.dictation.length, k: 0 });
-  assert.deepEqual(rulerOf(steps, at + 2), { n: L1.dictation.length, k: 2 });
+test('进度尺：整课一条，不在每一环节清零；刻度是环节分界，带当前环节的名字', () => {
+  const steps = buildLesson(L1), n = steps.length - 1, at = steps.findIndex(s => s.type === 'dictate');
+  const r = rulerOf(steps, at);
+  assert.equal(r.p, at / n); assert.equal(r.name, '听写');
+  assert.equal(r.marks[0], 0); assert.equal(r.marks.at(-1), 1);
+  assert.equal(r.marks.length, new Set(steps.slice(0, n).map(s => s.seg)).size + 1);
+  assert.ok(rulerOf(steps, at + 1).p > r.p, '往前走只增不减');
+  assert.equal(rulerOf(steps, n).p, 1);
+  assert.equal(rulerOf(buildLesson(STORY_LESSONS[0]), 0).name, STORY_LESSONS[0].stops[0].title);
 });
 
-test('听写批改：漏的字母标 miss，多打的标 extra，全对才算对', () => {
-  assert.equal(correct(' Wie bitte? Tim? ', 'Wie bitte? Tim?').ok, true);
-  const r = correct('Das ist die Küe', 'Das ist die Küche');
+test('听写批改：大小写和标点不算错；差一两个字母逐字母改，整词错整词划，漏词多词各记一处', () => {
+  const lax = correct(' wie bitte tim ', 'Wie bitte? Tim?');
+  assert.equal(lax.ok, true); assert.equal(lax.exact, false);
+  assert.equal(correct('Wie bitte? Tim?', 'Wie bitte? Tim?').exact, true);
+  const r = correct('das ist die Küe', 'Das ist die Küche');
   assert.equal(r.ok, false);
-  assert.deepEqual(r.ops.filter(o => o.t === 'miss').map(o => o.ch), ['c', 'h']);
-  assert.deepEqual(correct('Tschüßs', 'Tschüss').ops.filter(o => o.t !== 'keep').map(o => o.t + o.ch), ['extraß', 'misss']);
-  assert.equal(correct('bist du neu hier?', 'Bist du neu hier?').ok, false, '大小写要对');
+  assert.deepEqual(r.items.map(o => o.t), ['ok', 'ok', 'ok', 'fix']);
+  assert.deepEqual(r.items[3].ops.filter(o => o.t === 'miss').map(o => o.ch), ['c', 'h']);
+  assert.deepEqual(correct('Tschüßs', 'Tschüss').items[0].ops.filter(o => o.t !== 'keep').map(o => o.t + o.ch), ['extraß', 'misss']);
+  assert.deepEqual(correct('Büö', 'Vogel').items.map(o => o.t), ['swap'], '错了一半以上：整词划掉');
+  assert.deepEqual(correct('Das die Küche', 'Das ist die Küche').items.map(o => o.t), ['ok', 'miss', 'ok', 'ok']);
+  assert.deepEqual(correct('Das ist ist die Küche', 'Das ist die Küche').items.filter(o => o.t === 'extra').length, 1);
 });
 
 test('开口题：挑最接近的那句标准答案；点词切分与词条拆冠词', () => {

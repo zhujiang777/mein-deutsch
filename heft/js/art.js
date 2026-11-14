@@ -33,6 +33,25 @@ function drawRuler(el) {
     <path d="M${xe} ${y - 8}L${xe + .6} ${y + 7}" stroke="#2f3237" stroke-width="2"/></g></svg>`;
 }
 
+/**
+ * 整课一条进度尺：底线和各环节分界的刻度只画一次，走过的蓝色和游标之后平滑地挪（不重画，所以不会跳）。
+ * 返回 set(p, name)：p = 0–1，name = 当前环节的名字（写在尺下）。
+ */
+export function lessonRuler(el, marks) {
+  const W = el.clientWidth || 280, y = 12, x0 = 3, span = W - 6;
+  let s = 20; const r = () => ((s = (s * 9301 + 49297) % 233280) / 233280 - .5);
+  const wavy = (gap, amp) => { let d = `M${x0} ${y + r()}`; for (let x = x0 + gap; x < W - 18; x += gap) d += ` Q${x - gap / 2} ${y + r() * amp} ${x} ${y + r()}`; return `${d} L${W - 3} ${y + r()}`; };
+  const base = wavy(30, 2.2), done = wavy(24, 2);
+  const ticks = marks.map(m => { const x = x0 + m * span + r(), h = 3 + Math.abs(r()) * 3; return `M${x} ${y - h}L${x + r() * 1.4} ${y + h * .8}`; }).join('');
+  const svg = inner => `<svg width="${W}" height="24" viewBox="0 0 ${W} 24" style="display:block;overflow:visible"><g filter="url(#rough)" stroke-linecap="round" fill="none">${inner}</g></svg>`;
+  el.innerHTML = `<div class="hf-lr">${svg(`<path d="${base}" stroke="#b4b3ac" stroke-width="1.3"/>`)}
+    <div class="dn">${svg(`<path d="${done}" stroke="#c3d9ec" stroke-width="10" opacity=".85"/><path d="${done}" transform="translate(4 1.2)" stroke="#b3cfe8" stroke-width="6" opacity=".6"/>`)}</div>
+    <div class="tk">${svg(`<path d="${ticks}" stroke="#8e8d87" stroke-width="1.3"/>`)}</div>
+    <div class="cu"><svg width="6" height="24" viewBox="0 0 6 24" style="display:block;overflow:visible"><path d="M3 4L3.6 19" stroke="#2f3237" stroke-width="2" stroke-linecap="round" filter="url(#rough)"/></svg></div></div><p class="hf-seg"></p>`;
+  const dn = el.querySelector('.dn'), cu = el.querySelector('.cu'), seg = el.querySelector('.hf-seg');
+  return { set(p, name) { const x = x0 + p * span; dn.style.width = `${x}px`; cu.style.transform = `translateX(${x - 3}px)`; seg.textContent = name || ''; } };
+}
+
 function drawLink(cur) {
   const de = cur.querySelector('.md-de'), hl = cur.querySelector('.md-de .md-hl'), en = cur.querySelector('.md-entry .md-lm');
   cur.querySelector('.md-link')?.remove();

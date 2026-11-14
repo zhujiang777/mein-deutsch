@@ -1,7 +1,7 @@
 // 第 0 课的小站、隔天复习、单元总表与小测。约定和 screens.js 一样；对照原型：
 // 复习卡 lab/ds-explore/round13/i-grammatik.html · 泛读/字母表/读音组/门铃 round16/l-chosen.html · 总表与小测 round15/k-chosen.html
 import { STORY_LESSONS, rowSay } from '../../data/story-lessons.js';
-import { RENDER, EX, esc, lower, row, wordEntry, acts, choiceUI, listenUI, hlClass } from './screens.js';
+import { RENDER, EX, esc, lower, row, wordEntry, acts, choiceUI, listenUI, hlClass, fitEntry } from './screens.js';
 import { key, q, tick, seal, hydrate, picOf } from './art.js';
 import { play, playLine, playWord, sfx } from './audio.js';
 import { pieces, entry, clozeAt, quizOutcome } from './flow.js';
@@ -18,7 +18,7 @@ RENDER.rvCard = ({ step, body, foot, foot2, next, result }) => {
     body.innerHTML = `<p class="hf-task">空里填什么？</p>
       <div class="hf-rv">${row(line, { html: sentence(shown), big: true, spk: shown })}</div>
       ${shown ? `<div class="hf-got">${pic ? `<div class="hf-pic sm">${pic}</div>` : ''}${wordEntry(word.de, word.zh, 'l')}</div>` : ''}`;
-    hydrate(body);
+    hydrate(body); fitEntry(body);
   };
   acts(body, { say: () => playLine(line), word: () => playWord(word.de) });
   draw(false);
