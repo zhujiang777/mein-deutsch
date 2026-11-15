@@ -1,5 +1,5 @@
 // 故事课（新版课文课）：固定人物的连续故事。第 0 课发音入门 + 第 1 单元 4 课。
-// 暂未接入应用；正式版仍读 data/text-lessons.js。字段说明见 docs/schema.md §6，写课规则见 docs/course-authoring.md。
+// 应用（heft/）直接读这个文件。字段说明见 docs/schema.md §2，写课规则见 docs/course-authoring.md。
 // lines 的下标被 preview.line / cards.after / words.line / dictation / shadow 引用；改课文顺序时一起改，并升级 version。
 // 选择题的正确项都写在第一个（answer: 0），页面负责打乱。
 
@@ -80,16 +80,18 @@ const LESSON_0 = {
       tries: [T('D[eu]tsch', '德语'), T('die K[ü]che', '厨房'), T('h[ei]ßen', '叫（名字）')],
     },
     {
-      id: 'konsonant', title: 'w v z j s ß',
+      id: 'konsonant', title: 'r w v z j s ß',
       rows: [
-        R('w', '[w]ohnen', '住', '上牙轻碰下唇，喉咙振动', false, 'm-wv'),
+        R('r', '[r]ichtig', '对的', '舌尖贴着下牙不动，舌头后部抬向嘴的最里面，气流擦过时喉咙振动', false, 'm-r'),
+        R('r', 'hie[r]', '这里', '在元音后面不摩擦，读成很轻的 a'),
+        R('w', '[w]ohnen', '住', '上牙轻碰下唇，喉咙振动', true, 'm-wv'),
         R('v', '[v]ier', '四', '嘴形同 w，喉咙不振动', false, 'm-wv'),
         R('z', 'das [Z]immer', '房间', 't 和 s 连成一个音', false, 'm-z'),
         R('j', '[j]a', '是', '很短的 i，马上接后面的元音'),
         R('s', '[S]ie', '您', '在元音前，喉咙振动', true),
         R('ß', 'die Stra[ß]e', '街', '喉咙不振动'),
       ],
-      tries: [T('das [W]a[ss]er', '水'), T('[z]ehn', '十'), T('[J]apan', '日本')],
+      tries: [T('F[r]au K[r]ause', '克劳泽女士'), T('das [W]a[ss]er', '水'), T('[z]ehn', '十'), T('[J]apan', '日本')],
     },
     {
       id: 'kombi', title: 'ch sch st sp · 词尾',

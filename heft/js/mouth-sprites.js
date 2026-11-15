@@ -1,4 +1,4 @@
-// Mein Deutsch · 口型图（第 24 轮终稿，2026-11-15）。8 个 <symbol>，统一 viewBox 0 0 240 180（4:3，以后可原位换成同比例的短视频）。
+// Mein Deutsch · 口型图（第 24 轮终稿 8 张 + 第 25 轮追加 m-r，2026-11-15）。9 个 <symbol>，统一 viewBox 0 0 240 180（4:3，以后可原位换成同比例的短视频）。
 // 用法：<div class="md-mouth"><svg viewBox="0 0 240 180"><use href="#m-oe"/></svg></div>
 //
 //   symbol   画的是什么                                  依赖（设计系统 sprites.js 里已有的）
@@ -10,9 +10,10 @@
 //   m-ich    ich 的 ch：正面扁嘴 + 正中剖面              filter #rough-s · pattern #dots-ink
 //   m-ach    auch 的 ch：只有正中剖面（放大）            filter #rough-s · pattern #dots-ink
 //   m-z      z：t（堵住）→ s（留缝）两张小剖面           filter #rough-s · pattern #dots-ink
+//   m-r      r：只有正中剖面（同 m-ach），舌后部在小舌处 + 喉咙振动弧   filter #rough-s · pattern #dots-ink
 //
 // 其余都在本文件里自带、不需要外部定义：
-//   · clipPath（嘴里的牙，id = mclip1、mclip2…，按调用顺序生成）和 linearGradient（舌头渐隐，id = tg-ich / tg-ach / tg-sch / tg-t / tg-s）写在各自的 symbol 里；
+//   · clipPath（嘴里的牙，id = mclip1、mclip2…，按调用顺序生成）和 linearGradient（舌头渐隐，id = tg-ich / tg-ach / tg-sch / tg-t / tg-s / tg-r）写在各自的 symbol 里；
 //     并进 sprites.js 时只要保证这些 id 在页面上不和别的重名。
 //   · 剖面图上的小字「上颚」「舌头」用 Instrument Sans / PingFang SC（heft/fonts/fonts.css 已加载）。
 //   · 颜色写死在下面的常量里（和 tokens 对应：CORAL = illus-coral、AIR = sky-ink、TEETH/PAPER = 纸色、HEAD = 很淡的赭黄、TONGUE2 = 淡粉）。
@@ -246,5 +247,14 @@ const S = [
     + then(120, 66)
     + panel(126, 18, 114, section('s', { ring: [44, 45, 6.5] })) + lab(57, 't', 140) + lab(183, 's', 140)),
 ];
+/* ---------- 第 25 轮追加：r（只追加这一张，上面 8 张一处没动） ----------
+   和 m-ach 同一画法、同一位置和放大倍数。舌尖照旧贴着下牙；舌头中部放低；
+   舌头后部抬起，顶到最里面、小舌尖（115.6 57.4）的正下方——比 ach（拱在软的那段上颚，约 x 107）再靠后；
+   蓝圈标这道窄缝，气流从喉咙上来、从缝里擦过去再出嘴；
+   喉咙振动用 m-wv 里同一种记号（sky-ink 弧线，放大后和 m-wv 一样 1.6 粗），画在脖子前面，三道、短一些；「舌头」字往左挪，给振动弧让位。 */
+SURF.r = 'C117.6 128 118.4 110 119.4 96C120.4 86 121 76 120.6 69C120 64.6 118 62.6 115 62.8C111 63.2 106 65.4 98 67.4C86 70 68 70.4 56 69C48 68 42.6 65.8 38.6 64.6';
+AIR2.r = 'M124.4 76C123.6 69 121.6 63.4 116.6 60.2C109 58.4 98 57.2 86 56.4C70 55.4 52 55 40 55C30 55 22 55 14 55';
+const buzzSide = (x, top, h) => `<path d="${[0, 1, 2].map(i => `M${x - i * 5.5} ${top - i * 2}C${x - 4 - i * 5.5} ${top + h * .33} ${x - 4 - i * 5.5} ${top + h * .66} ${x - i * 5.5} ${top + h + i * 2}`).join('')}" fill="none" stroke="${AIR}" stroke-width="1.36" stroke-linecap="round"/>`;
+S.push(sym('m-r', `<g transform="translate(26 2) scale(1.18)">${section('r', { ring: [116.8, 60, 6.5], notes: [['上颚', 74, 14, 74, 30.5], ['舌头', 54, 114, 64, 78]] })}${buzzSide(74, 126, 16)}</g>`));
 document.body.insertAdjacentHTML('afterbegin', `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>${S.join('')}</defs></svg>`);
 })();

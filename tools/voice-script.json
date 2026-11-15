@@ -267,7 +267,7 @@
   },
   "Lena": {
    "voice": "Lea",
-   "chars": 2415,
+   "chars": 2426,
    "items": [
     {
      "id": "062616307468",
@@ -528,6 +528,18 @@
      "text": "heißen"
     },
     {
+     "id": "a5ef0542ad99",
+     "lesson": "sl-00",
+     "kind": "word",
+     "text": "richtig"
+    },
+    {
+     "id": "ba2d373c1e2a",
+     "lesson": "sl-00",
+     "kind": "word",
+     "text": "hier"
+    },
+    {
      "id": "c3e728508e09",
      "lesson": "sl-00",
      "kind": "word",
@@ -556,6 +568,12 @@
      "lesson": "sl-00",
      "kind": "word",
      "text": "die Straße"
+    },
+    {
+     "id": "0947a1581098",
+     "lesson": "sl-00",
+     "kind": "word",
+     "text": "Frau Krause"
     },
     {
      "id": "b9a90ae029ab",
@@ -694,12 +712,6 @@
      "lesson": "sl-01",
      "kind": "word",
      "text": "der Bus"
-    },
-    {
-     "id": "ba2d373c1e2a",
-     "lesson": "sl-01",
-     "kind": "word",
-     "text": "hier"
     },
     {
      "id": "31a5013ae1d2",
@@ -922,12 +934,6 @@
      "lesson": "sl-02",
      "kind": "word",
      "text": "wo"
-    },
-    {
-     "id": "a5ef0542ad99",
-     "lesson": "sl-02",
-     "kind": "word",
-     "text": "richtig"
     },
     {
      "id": "b20864979d99",

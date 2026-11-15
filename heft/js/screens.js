@@ -75,7 +75,7 @@ RENDER.word = ({ lesson, step, body, foot, next }) => {
 /* ---------- 带着一个问题听全文 ---------- */
 export const TL_COLOR = { Lena: 'var(--illus-ochre)', Tom: 'var(--illus-sky)', Lin: 'var(--char-lin)', Krause: '#b9c7a4' };
 export const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-RENDER.listen = ctx => listenUI(ctx, { lesson: ctx.lesson, head: `<p class="hf-task">听完回答：</p><p class="hf-qq">${esc(ctx.lesson.listenQuestion.prompt)}</p>` });
+RENDER.listen = ctx => listenUI(ctx, { lesson: ctx.lesson, head: `<p class="hf-task">不看字幕，把这篇课文再听一遍</p><p class="hf-pre">听完回答：</p><p class="hf-qq">${esc(ctx.lesson.listenQuestion.prompt)}</p>` });
 /** 听一整段对话：只看谁在说，不给原文。lesson 只用到 lines 和 preview（预习词听到时闪一下）。 */
 export async function listenUI({ body, foot, next, flags }, { lesson, head }) {
   const speakers = [...new Set(lesson.lines.map(l => l.who))];
@@ -369,33 +369,103 @@ EX.match = ({ step, body, foot, next, result }) => {
   foot('继续', next, { off: true, arrow: true });
 };
 
+/** 两串词的最长公共子序列：返回各自「对上了」的下标集合。排错句子时只划掉没对上的词。 */
+export function lcsKeep(a, b) {
+  const n = a.length, m = b.length, d = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) d[i][j] = a[i] === b[j] ? d[i + 1][j + 1] + 1 : Math.max(d[i + 1][j], d[i][j + 1]);
+  const ka = new Set(), kb = new Set();
+  for (let i = 0, j = 0; i < n && j < m;) { if (a[i] === b[j]) { ka.add(i++); kb.add(j++); } else if (d[i + 1][j] >= d[i][j + 1]) i++; else j++; }
+  return [ka, kb];
+}
+
 EX.assemble = ({ step, body, foot, next, result }) => {
   const { ex } = step, words = ex.answer.split(' ');
   const bank = shuffle([...words.map((t, i) => ({ t, id: i })), ...ex.distractors.map((t, i) => ({ t, id: 100 + i }))]);
+  // 每张词卡在词堆里有一个固定的位子（留一张淡影占位）；卡片本身在「位子」和「句子那一行」之间搬来搬去
   body.innerHTML = `<p class="hf-task">把词排成句子</p><p class="md-rule hf-zhq">${esc(ex.zh)}</p>
-    <div class="hf-sb"></div><div class="hf-bank">${bank.map((w, k) => `<button type="button" class="md-paper hf-wc" data-act="w" data-id="${w.id}" style="--r:${tilt(k)}deg">${esc(w.t)}</button>`).join('')}</div>
-    <div class="hf-fix" hidden><p class="md-fixed">${esc(ex.answer)}</p>${key('a-spk', { cls: 's', act: 'say', aria: '听', r: -4 })}</div>`;
-  const sb = body.querySelector('.hf-sb'), picked = [];
-  let done = false;
-  const draw = () => {
-    sb.innerHTML = picked.map(w => `<button type="button" class="md-paper hf-wc" data-act="back" data-id="${w.id}">${esc(w.t)}</button>`).join('');
-    body.querySelectorAll('.hf-bank .hf-wc').forEach(b => b.classList.toggle('ghost', picked.some(w => w.id === +b.dataset.id)));
-    foot('检查', check, { off: !picked.length });
+    <div class="hf-sb"></div><div class="hf-bank">${bank.map((w, k) => `<span class="hf-slot" data-id="${w.id}" style="--r:${tilt(k)}deg"><span class="md-paper hf-wc ghost" aria-hidden="true">${esc(w.t)}</span><button type="button" class="md-paper hf-wc" data-id="${w.id}">${esc(w.t)}</button></span>`).join('')}</div>
+    <div class="hf-fix" hidden><p class="md-fixed"></p>${key('a-spk', { cls: 's', act: 'say', aria: '听', r: -4 })}</div>`;
+  const sb = body.querySelector('.hf-sb'), bankEl = body.querySelector('.hf-bank');
+  const cards = [...bankEl.querySelectorAll('button.hf-wc')], slotOf = c => bankEl.querySelector(`.hf-slot[data-id="${c.dataset.id}"]`);
+  const inSb = c => c.parentNode === sb, picked = () => [...sb.querySelectorAll('.hf-wc')];
+  let done = false, drag = null, skipClick = false;
+  const EASE = 'cubic-bezier(.2,.8,.2,1)';
+  // 卡片此刻「排版上」的位置：量到的位置减掉正在播的位移
+  const shiftOf = c => { const t = getComputedStyle(c).translate; if (!t || t === 'none') return [0, 0]; const [x = 0, y = 0] = t.split(' ').map(parseFloat); return [x, y]; };
+  const box = c => { const r = c.getBoundingClientRect(), [x, y] = shiftOf(c); return { l: r.left - x, t: r.top - y, w: r.width, h: r.height }; };
+  // 搬动之后：每张挪了位置的卡片从原来的地方滑到新地方
+  const move = change => {
+    const before = new Map(cards.map(c => [c, c.getBoundingClientRect()]));
+    change();
+    for (const c of cards) {
+      if (c === drag?.c) continue;
+      const a = before.get(c), b = box(c), dx = a.left - b.l, dy = a.top - b.t;
+      if (Math.abs(dx) + Math.abs(dy) > 1) c.animate({ translate: [`${dx}px ${dy}px`, '0px 0px'] }, { duration: 220, easing: EASE });
+    }
   };
+  const sync = () => foot('检查', check, { off: !picked().length });
+  const put = (c, before = null) => { sb.insertBefore(c, before); };
+  const home = c => slotOf(c).append(c);
+  // 手指在句子那一行里指着第几个位置
+  const spot = (x, y, self) => picked().filter(c => c !== self).find(c => { const b = box(c); return y < b.t || (y < b.t + b.h && x < b.l + b.w / 2); }) || null;
   const check = () => {
     done = true;
-    const ok = picked.map(w => w.t).join(' ') === ex.answer;
-    sb.classList.add(ok ? 'ok' : 'no'); if (ok) sb.insertAdjacentHTML('beforeend', tick('hf-tick'));
-    body.querySelector('.hf-fix').hidden = false; body.querySelector('.hf-bank').hidden = true;
+    const mine = picked().map(c => c.textContent), ok = mine.join(' ') === ex.answer;
+    const [keepMine, keepAns] = lcsKeep(mine, words);
+    sb.classList.add(ok ? 'ok' : 'no');
+    if (ok) sb.insertAdjacentHTML('beforeend', tick('hf-tick'));
+    // 排错了：没对上的词用红笔划掉，正确的句子里把你缺的、放错的词划线标出来
+    else picked().forEach((c, i) => c.classList.toggle('x', !keepMine.has(i)));
+    body.querySelector('.md-fixed').innerHTML = words.map((w, i) => ok || keepAns.has(i) ? esc(w) : `<u>${esc(w)}</u>`).join(' ');
+    body.querySelector('.hf-fix').hidden = false; bankEl.hidden = true;
+    cards.forEach(c => { c.disabled = true; });
     sfx(ok ? 'ok' : 'no'); result?.(ok); playWord(ex.answer);
     foot('继续', next, { arrow: true });
   };
-  acts(body, {
-    w: b => { if (done || b.classList.contains('ghost')) return; picked.push(bank.find(w => w.id === +b.dataset.id)); sfx('tap'); draw(); },
-    back: b => { if (done) return; picked.splice(picked.findIndex(w => w.id === +b.dataset.id), 1); draw(); },
-    say: () => playWord(ex.answer),
+  // 点一下：词堆里的飞到句尾，句子里的飞回原位
+  body.addEventListener('click', e => {
+    const c = e.target.closest('button.hf-wc');
+    if (!c || done) return;
+    if (skipClick) { skipClick = false; return; }
+    move(() => (inSb(c) ? home(c) : put(c)));
+    sfx('tap'); sync();
   });
-  draw();
+  // 按住拖：在句子里换位置、从词堆拖进句子、拖出句子放回去
+  body.addEventListener('pointerdown', e => {
+    const c = e.target.closest('button.hf-wc');
+    if (!c || done || drag || (e.pointerType === 'mouse' && e.button)) return;
+    const b = box(c);
+    drag = { c, id: e.pointerId, x0: e.clientX, y0: e.clientY, gx: e.clientX - b.l, gy: e.clientY - b.t, on: false };
+  });
+  const follow = e => { const b = box(drag.c); drag.c.style.translate = `${e.clientX - drag.gx - b.l}px ${e.clientY - drag.gy - b.t}px`; };
+  body.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const { c } = drag;
+    if (!drag.on) {
+      if (Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 7) return;
+      drag.on = true; c.classList.add('drag'); c.getAnimations().forEach(a => a.cancel());
+      try { c.setPointerCapture(e.pointerId); } catch {}
+    }
+    // 手指过了句子和词堆的中线算进句子，退回去算放回词堆
+    const edge = (sb.getBoundingClientRect().bottom + bankEl.getBoundingClientRect().top) / 2;
+    if (e.clientY < edge) {
+      const before = spot(e.clientX, e.clientY, c);
+      if (!inSb(c) || c.nextElementSibling !== before) move(() => put(c, before));
+    } else if (inSb(c)) move(() => home(c));
+    follow(e);
+  });
+  const drop = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const { c, on } = drag; drag = null;
+    if (!on) return;
+    skipClick = true; setTimeout(() => { skipClick = false; }, 60);
+    const from = c.style.translate; c.style.translate = ''; c.classList.remove('drag');
+    c.animate({ translate: [from, '0px 0px'] }, { duration: 180, easing: EASE });
+    sfx('tap'); sync();
+  };
+  body.addEventListener('pointerup', drop); body.addEventListener('pointercancel', drop);
+  acts(body, { say: () => playWord(ex.answer) });
+  sync();
 };
 
 /* ---------- 打字：听写一句 / 听拼写打词 ---------- */
