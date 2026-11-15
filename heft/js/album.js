@@ -1,4 +1,5 @@
-// 手帐页：最上面是学习日历，下面桌上放着一本合上的手帐（和图标是同一本，A5 比例）。点右边的签翻开到那一类的目录，点一条就在本子里翻到那一页。
+// 手帐页：桌上放着一本合上的手帐（和图标是同一本，A5 比例）。点右边的签翻开到那一类的目录——翻开后纸往下展开到屏幕底，好读；点一条就在本子里翻到那一页。
+// 学习日历 2026-11-15 搬到「我的」页最上面（calendar 由 app.js 调用）。
 // 内容全部来自课程数据，学到哪亮到哪。对照原型 lab/ds-explore/round28/t-cover.html。
 import { rowSay } from '../../data/story-lessons.js';
 import { albumOf } from './flow.js';
@@ -13,7 +14,7 @@ const TAB_KEY = 'md.heft.album';
 const DAY = 86400000;
 const mouth = id => `<div class="md-mouth"><svg viewBox="0 0 240 180"><use href="#${id}"/></svg></div>`;
 /* 顶上的日历：最近两周。学过的那天盖那一课的章，只复习的那天是复习卡，今天画圈。 */
-function calendar(state, ts, { numOf, findItem }) {
+export function calendar(state, ts, { numOf, findItem }) {
   const t0 = new Date(ts), mon = ts - ((t0.getDay() + 6) % 7) * DAY, todayK = dayKey(ts);
   const month = todayK.slice(0, 7), days = Object.keys(state.log).filter(k => k.startsWith(month)).length;
   const cells = [...Array(14)].map((_, i) => { const d = new Date(mon - 7 * DAY + i * DAY), k = dayKey(d.getTime()), log = state.log[k];
@@ -72,7 +73,7 @@ export function albumPage(app, state, ts, helpers) {
   const CLOSE = '<button type="button" class="bk-close" data-close><svg viewBox="0 0 28 28"><use href="#t-heft"/></svg>合上</button>';
 
   // 进来先看到合上的本子；纸、签、封面都叠在同一个矩形里，翻开只动封面（transform / opacity）
-  app.innerHTML = `<div class="md-page hf-page tabbed al-page">${calendar(state, ts, helpers)}
+  app.innerHTML = `<div class="md-page hf-page tabbed al-page">
     <div class="al-desk"><div class="bk-top"></div>
     <div class="bkwrap"><div class="al-book closed">
       <div class="edge e1"></div>
@@ -85,17 +86,32 @@ export function albumPage(app, state, ts, helpers) {
     </div></div></div></div>`;
   hydrate(app);
   const book = app.querySelector('.al-book'), pg = app.querySelector('.al-pg'), top = app.querySelector('.bk-top'), cover = app.querySelector('.al-cover');
-  const setTab = k => {
+  const order = T.map(x => x[0]), pageHtml = k => `<span class="md-tape"></span><div class="al-body">${bodies[k]()}</div>`;
+  const fill = (el, k) => { el.innerHTML = pageHtml(k); el.scrollTop = 0; hydrate(el); };
+  // 换一类。flip：像翻书——往后翻是这一页朝左翻走、露出下一页；往前翻是前一页从左边翻回来盖上
+  const setTab = (k, flip = false) => {
+    const fwd = order.indexOf(k) > order.indexOf(tab);
     tab = k; try { localStorage.setItem(TAB_KEY, tab); } catch { /* 记不住就算了 */ }
-    book.querySelector('.al-leaf')?.remove(); stop();
-    pg.innerHTML = `<span class="md-tape"></span><div class="al-body">${bodies[k]()}</div>`; pg.scrollTop = 0; hydrate(pg);
+    book.querySelector('.al-leaf')?.remove(); book.querySelectorAll('.al-flip').forEach(x => x.remove()); stop();
     book.querySelectorAll('.al-tabs button').forEach(b => { const on = b.dataset.t === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    if (!flip) return fill(pg, k);
+    const sheet = pg.cloneNode(true), at = pg.scrollTop, line = book.querySelector('.pgline');
+    sheet.classList.add('al-flip', fwd ? 'fwd' : 'bwd'); sheet.setAttribute('aria-hidden', 'true');
+    let done = false;
+    const end = () => { if (done) return; done = true; if (!fwd && tab === k) fill(pg, k); sheet.remove(); };
+    if (fwd) { book.insertBefore(sheet, line); sheet.scrollTop = at; fill(pg, k); } else { book.insertBefore(sheet, line); fill(sheet, k); }
+    sheet.addEventListener('animationend', end, { once: true }); setTimeout(end, 700);
   };
   const settle = (from, to) => cover.addEventListener('animationend', () => book.classList.replace(from, to), { once: true });
-  const open = k => { setTab(k); book.classList.remove('closed', 'closing'); book.classList.add('opening'); top.innerHTML = CLOSE; settle('opening', 'open'); };
+  // 翻开时本子往上挪到「合上」那一行下面，纸往下展开到底栏上方：量一下上下各有多少空
+  const desk = app.querySelector('.al-desk');
+  const room = () => { const d = desk.getBoundingClientRect(), b = book.getBoundingClientRect(), t = top.getBoundingClientRect();
+    const up = Math.max(0, t.top - d.top - 4), down = Math.max(0, d.bottom - 14 - b.bottom);
+    desk.style.setProperty('--up', `${up}px`); desk.style.setProperty('--ext', `${up + down}px`); };
+  const open = k => { if (book.classList.contains('closed')) room(); setTab(k); book.classList.remove('closed', 'closing'); book.classList.add('opening'); desk.classList.add('up'); top.innerHTML = CLOSE; settle('opening', 'open'); };
   const close = () => {
     book.querySelector('.al-leaf')?.remove(); stop();
-    book.classList.remove('open', 'opening'); book.classList.add('closing'); top.innerHTML = '';
+    book.classList.remove('open', 'opening'); book.classList.add('closing'); desk.classList.remove('up'); top.innerHTML = '';
     book.querySelectorAll('.al-tabs button').forEach(b => { b.classList.remove('on'); b.removeAttribute('aria-pressed'); });
     settle('closing', 'closed');
   };
@@ -119,7 +135,7 @@ export function albumPage(app, state, ts, helpers) {
     const b = e.target.closest('[data-t],[data-cover],[data-close],[data-back],[data-g],[data-ge],[data-u],[data-pr],[data-tp],[data-crib],[data-wd]');
     if (!b || !app.querySelector('.al-page')) return;
     const d = b.dataset, lessonOf = n => A.units.flatMap(u => u.lessons).find(x => x.n === +n);
-    if (d.t) { if (!book.classList.contains('open') && !book.classList.contains('opening')) open(d.t); else if (d.t !== tab || book.querySelector('.al-leaf')) setTab(d.t); }
+    if (d.t) { if (!book.classList.contains('open') && !book.classList.contains('opening')) open(d.t); else if (d.t !== tab) setTab(d.t, true); else if (book.querySelector('.al-leaf')) setTab(d.t); }
     else if ('cover' in d) open(tab);
     else if ('close' in d) close();
     else if ('back' in d) { turning++; stop(); book.querySelector('.al-leaf')?.remove(); }

@@ -4,7 +4,7 @@ import { buildLesson, buildQuiz, buildReview, rulerOf } from './flow.js';
 import { hydrate, lessonRuler, artReady, sceneOf, seal, ico } from './art.js';
 import { RENDER } from './screens.js';
 import { STORY_LESSONS } from '../../data/story-lessons.js';
-import { albumPage } from './album.js';
+import { albumPage, calendar } from './album.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../../js/secrets.js';
 import { checkAssessmentConnection, assessmentConfigured, assessmentErrorMessage } from '../../js/pronunciation-assessment.js';
 import { loadManifest, stop, sfx } from './audio.js';
@@ -186,13 +186,13 @@ function logPage() {
     if (months.at(-1)?.m !== m) months.push({ m, d, rows: [] });
     months.at(-1).rows.push(`<div class="lg ${k === todayK ? 'today' : ''}"><div class="dt"><b>${d.getDate()}</b><span>${k === todayK ? '今天' : WEEK[d.getDay()]}</span></div><div>${state.log[k].map(entry).join('')}</div></div>`);
   }
-  app.innerHTML = `<div class="md-page hf-page tabbed"><a class="md-more al-back" href="#/heft">${ico('arrow')}<u>手帐</u></a>${months.length ? months.map(g => `<div class="hf-calh"><h2>${g.d.getMonth() + 1} 月</h2><span>${g.d.getFullYear()}</span></div><div class="md-log">${g.rows.join('')}</div>`).join('') : '<div class="hf-calh"><h2>学习记录</h2></div><p class="md-cap">还没有记录</p>'}
+  app.innerHTML = `<div class="md-page hf-page tabbed"><a class="md-more al-back" href="#/me">${ico('arrow')}<u>我的</u></a>${months.length ? months.map(g => `<div class="hf-calh"><h2>${g.d.getMonth() + 1} 月</h2><span>${g.d.getFullYear()}</span></div><div class="md-log">${g.rows.join('')}</div>`).join('') : '<div class="hf-calh"><h2>学习记录</h2></div><p class="md-cap">还没有记录</p>'}
     </div>`;
   hydrate(app);
 }
 function mePage() {
   const sec = getAssessmentSecrets();
-  app.innerHTML = `<div class="md-page hf-page tabbed"><h1 class="hf-h1">课程</h1>
+  app.innerHTML = `<div class="md-page hf-page tabbed">${calendar(state, now(), { numOf, findItem })}<h1 class="hf-h1 sub">课程</h1>
     <div class="hf-toc">${course().map(i => { const done = (i.kind === 'quiz' ? state.quiz[i.id] : state.lessons[i.id])?.done != null; return `<a class="it ${done ? 'done' : ''}" href="#/${i.kind}/${i.id}"><span class="n">${i.kind === 'quiz' ? '测' : numOf(i)}</span><span class="t">${esc(titleOf(i))}</span>${done ? `<svg class="tick" viewBox="0 0 26 24"><use href="#tick"/></svg>` : ''}</a>`; }).join('')}</div>
     <h1 class="hf-h1 sub">发音评分</h1>
     <p class="md-cap hf-as" aria-live="polite">${assessmentConfigured() ? '已设置' : '还没设置'}</p>
@@ -247,7 +247,7 @@ function route() {
   stop();
   const [, name, id, at] = location.hash.split('/');
   app.onclick = null;
-  setTab(!name ? 'today' : name === 'log' || name === 'heft' ? 'heft' : name === 'me' && id !== 'score' ? 'me' : '');
+  setTab(!name ? 'today' : name === 'heft' ? 'heft' : name === 'log' || (name === 'me' && id !== 'score') ? 'me' : '');
   if (name === 'lesson') lessonPage(id, at);
   else if (name === 'quiz') quizPage(id, at);
   else if (name === 'log') logPage();

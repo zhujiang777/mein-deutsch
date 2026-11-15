@@ -389,12 +389,17 @@ em{font-style:normal}
 .al-cal .d.today::after{content:"";position:absolute;left:calc(50% - 17px);top:-2px;width:34px;height:34px;border:1.5px solid var(--sky-ink);border-radius:50%;filter:url(#rough-s)}
 /* 桌面：本子和右边伸出的签一起居中 */
 .al-desk{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;padding:6px 0 10px}
-.al-desk .bk-top{align-self:stretch;height:40px;display:flex;align-items:center;padding-left:max(0px,calc(50% - 160px))}
+.al-desk .bk-top{align-self:stretch;height:44px;display:flex;align-items:center;padding-left:max(0px,calc(50% - 172px))}
 .bk-close{display:inline-flex;align-items:center;gap:6px;padding:7px 10px 7px 6px;border-radius:8px;font:500 15px/20px var(--font-sans);color:var(--ink-2);cursor:pointer}
 .bk-close svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:url(#rough)}
 .bk-close:active{background:var(--wash)}
 .al-desk .bkwrap{position:relative;padding-right:32px}
-.al-book{--bw:min(288px,calc(100vw - 88px));position:relative;width:var(--bw);aspect-ratio:148/210}
+.al-book{--bw:min(311px,calc(100vw - 64px),calc((100dvh - 200px) / 1.42));position:relative;width:var(--bw);aspect-ratio:148/210;transition:transform .3s cubic-bezier(.2,.8,.3,1)}
+/* 翻开：本子往上挪，纸、描边、底下那摞纸一起往下展开（--up / --ext 由页面量出来） */
+.al-desk .bk-top{transition:transform .3s cubic-bezier(.2,.8,.3,1)}
+.al-desk.up .bk-top,.al-desk.up .al-book{transform:translateY(calc(-1 * var(--up,0px)))}
+.al-book .edge,.al-pg,.al-leaf,.al-book .pgline{transition:bottom .3s cubic-bezier(.2,.8,.3,1)}
+.al-book.opening .edge,.al-book.open .edge,.al-book.opening .al-pg,.al-book.open .al-pg,.al-book.opening .pgline,.al-book.open .pgline,.al-book.open .al-leaf,.al-book.opening .al-leaf{bottom:calc(-1 * var(--ext,0px))}
 .al-book .edge{position:absolute;inset:0;background:var(--card);border-radius:3px 8px 8px 3px}
 .al-book .edge::after{content:"";position:absolute;inset:0;border:1.6px solid #2f3237;border-radius:inherit;filter:url(#rough-box)}
 .al-book .edge.e1{transform:translate(6px,6px);box-shadow:0 2px 3px rgba(36,39,44,.12),0 18px 26px -14px rgba(36,39,44,.42)}
@@ -408,18 +413,16 @@ em{font-style:normal}
 /* 分类签：合上时是四种荧光笔色，翻开后变回灰白、选中的那张和纸连成一片。左边 8px 压在封面底下，字往右让一点 */
 .al-tabs{position:absolute;right:-1px;top:16px;z-index:2;display:flex;flex-direction:column;gap:5px}
 .al-tabs button{position:relative;isolation:isolate;width:40px;padding:10px 0 8px 8px;border-radius:0 9px 9px 0;transform:translateX(32px);background:#e8e6de;box-shadow:inset 1px 0 0 rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--ink);cursor:pointer;transition:transform .12s}
-.al-tabs button::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--card);box-shadow:2px 2px 4px -2px rgba(36,39,44,.25);opacity:0;transition:opacity .2s}
-.al-tabs button span{writing-mode:vertical-rl;font:600 14px/17px var(--font-sans);letter-spacing:.12em;opacity:.72}
-.al-tabs button small{font:500 10.5px/13px var(--font-sans);color:var(--quiet);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.al-tabs button.on{transform:translateX(31px)}.al-tabs button.on::after{opacity:1}.al-tabs button.on span{opacity:1}
+.al-tabs button span{writing-mode:vertical-rl;font:600 14px/17px var(--font-sans);letter-spacing:.12em}
+.al-tabs button small{font:500 10.5px/13px var(--font-sans);color:var(--ink-2);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.al-tabs button[data-t=pr]{background:var(--hl-sound)}.al-tabs button[data-t=gm]{background:var(--hl-word)}
+.al-tabs button[data-t=tp]{background:var(--hl-das)}.al-tabs button[data-t=wd]{background:var(--hl-die)}
+/* 翻开后颜色留着：没选中的淡一点、往里缩一点，选中的那张伸出来、左边一道蓝线 */
+.al-book.open .al-tabs button:not(.on),.al-book.opening .al-tabs button:not(.on){transform:translateX(27px);filter:saturate(.75) brightness(1.03)}
+.al-book.open .al-tabs button:not(.on) span,.al-book.opening .al-tabs button:not(.on) span{opacity:.6}
+.al-tabs button.on{transform:translateX(32px);box-shadow:2px 2px 4px -2px rgba(36,39,44,.3)}
 .al-tabs button.on::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;background:var(--sky-ink);border-radius:2px}
 .al-tabs button:active{transform:translateX(24px) scale(.96)}
-.al-book.closed .al-tabs button::before,.al-book.closing .al-tabs button::before{display:none}
-.al-book.closed .al-tabs button span,.al-book.closing .al-tabs button span{opacity:1}
-.al-book.closed .al-tabs button[data-t=pr],.al-book.closing .al-tabs button[data-t=pr]{background:var(--hl-sound)}
-.al-book.closed .al-tabs button[data-t=gm],.al-book.closing .al-tabs button[data-t=gm]{background:var(--hl-word)}
-.al-book.closed .al-tabs button[data-t=tp],.al-book.closing .al-tabs button[data-t=tp]{background:var(--hl-das)}
-.al-book.closed .al-tabs button[data-t=wd],.al-book.closing .al-tabs button[data-t=wd]{background:var(--hl-die)}
 /* 封面：和图标同一本——填色比描边往右下错一点、左边书脊一道竖线、右边一片很淡的网点、白名签 */
 .al-cover{position:absolute;inset:0;z-index:3;display:block;width:100%;transform-origin:0 50%;border-radius:3px 9px 9px 3px;cursor:pointer;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .al-cover::before{content:"";position:absolute;inset:0;border-radius:inherit;transform:translate(4px,3px);background:var(--cover)}
@@ -432,11 +435,13 @@ em{font-style:normal}
 .al-cover .lab b{display:block;font:680 26px/32px var(--font-sans);font-stretch:85%;color:var(--ink)}
 .al-cover .lab small{display:block;margin-top:2px;font:500 13px/18px var(--font-sans);color:var(--muted);letter-spacing:.06em}
 /* 目录 */
-.al-body{animation:al-turn .22s cubic-bezier(.2,.7,.3,1)}
-@keyframes al-turn{from{opacity:0;transform:translateX(10px)}}
-.al-pg h3{font:680 20px/26px var(--font-sans);font-stretch:85%;margin-bottom:4px}
+/* 翻一页：盖在目录上的一张纸，绕着左边翻走（往后）或翻回来（往前） */
+.al-flip{z-index:1;transform-origin:0 50%;pointer-events:none;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:6px 0 14px -8px rgba(36,39,44,.35)}
+.al-flip.fwd{animation:al-open .34s cubic-bezier(.3,.6,.3,1) both}
+.al-flip.bwd{animation:al-shut .3s cubic-bezier(.3,.6,.3,1) both}
+.al-pg h3{font:680 22px/28px var(--font-sans);font-stretch:85%;margin-bottom:6px}
 .al-pg h3 small{margin-left:6px;font:500 13px/18px var(--font-sans);font-stretch:100%;color:var(--muted)}
-.al-li{position:relative;display:flex;align-items:baseline;gap:5px;width:100%;padding:6px 3px 6px 0;text-align:left;font:500 15px/21px var(--font-sans);color:var(--ink);cursor:pointer;border-radius:4px}
+.al-li{position:relative;display:flex;align-items:baseline;gap:5px;width:100%;padding:8px 3px 8px 0;text-align:left;font:500 16px/22px var(--font-sans);color:var(--ink);cursor:pointer;border-radius:4px}
 .al-li .ld{flex:1;min-width:10px;border-bottom:1.6px dotted #b9b8b1;transform:translateY(-4px)}
 .al-li .pg{font:500 13px/19px var(--font-sans);color:var(--quiet);font-variant-numeric:tabular-nums}
 .al-li.got .h{box-shadow:inset 0 -.36em 0 var(--hl-word)}
@@ -444,13 +449,13 @@ em{font-style:normal}
 .al-li.no{color:var(--unlit);cursor:default}
 .al-li .th{flex:none;align-self:center;width:44px}
 .al-li .th .md-mouth{border-width:2px;border-radius:5px;box-shadow:none}
-.al-li .t small{display:block;font:400 12px/17px var(--font-sans);color:var(--muted)}
+.al-li .t small{display:block;font:400 13px/19px var(--font-sans);color:var(--muted)}
 .al-li.wd .md-art{font-weight:600;font-style:normal}
-.al-li .pg.zh{max-width:50%;text-align:right;color:var(--muted);font-size:13px}
-.al-uh{display:flex;align-items:baseline;gap:6px;margin:10px 0 2px;font:600 13px/18px var(--font-sans);color:var(--ink-2)}
+.al-li .pg.zh{max-width:50%;text-align:right;color:var(--muted);font-size:14px}
+.al-uh{display:flex;align-items:baseline;gap:6px;margin:14px 0 2px;font:600 14px/20px var(--font-sans);color:var(--ink-2)}
 .al-uh:first-of-type{margin-top:2px}
 .al-uh i{font-style:normal;color:var(--quiet);font-weight:500}
-.al-ul{display:grid;grid-template-columns:20px 1fr;gap:0 4px;padding:5px 0;border-top:1.2px solid #e6e5df;font:400 13px/18px var(--font-sans);color:var(--unlit)}
+.al-ul{display:grid;grid-template-columns:20px 1fr;gap:0 4px;padding:7px 0;border-top:1.2px solid #e6e5df;font:400 14px/20px var(--font-sans);color:var(--unlit)}
 .al-ul b{font-weight:600;color:#a3a39d}
 .al-ul span{display:block}
 .al-ul em{font-style:normal;color:#9a9a94}
@@ -459,15 +464,15 @@ em{font-style:normal}
 .al-leaf{position:absolute;inset:0;z-index:1;overflow-y:auto;overscroll-behavior:contain;padding:12px 18px 18px 14px;background:var(--card);border-radius:3px 8px 8px 3px;scrollbar-width:none}
 .al-leaf.in{animation:al-leaf .24s cubic-bezier(.2,.8,.3,1) both}
 @keyframes al-leaf{from{transform:translateX(28px) rotate(.8deg);opacity:0}}
-.al-leaf .back{display:inline-flex;align-items:center;gap:4px;margin:0 0 6px -4px;padding:4px 8px 4px 4px;border-radius:6px;font:500 13px/18px var(--font-sans);color:var(--quiet);cursor:pointer}
+.al-leaf .back{display:inline-flex;align-items:center;gap:4px;margin:0 0 8px -4px;padding:6px 10px 6px 4px;border-radius:6px;font:500 15px/20px var(--font-sans);color:var(--quiet);cursor:pointer}
 .al-leaf .back [data-i]{transform:scaleX(-1)}
 .al-leaf .back:active{background:var(--wash)}
-.al-leaf .src{font:500 12px/17px var(--font-sans);color:var(--quiet)}
-.al-leaf h2{margin:2px 0 0;font:680 22px/28px var(--font-sans);font-stretch:85%}
-.al-leaf .say{margin:6px 0 4px;font:400 14px/21px var(--font-sans);color:var(--ink-2)}
+.al-leaf .src{font:500 13px/18px var(--font-sans);color:var(--quiet)}
+.al-leaf h2{margin:2px 0 0;font:680 24px/30px var(--font-sans);font-stretch:85%}
+.al-leaf .say{margin:8px 0 4px;font:400 16px/24px var(--font-sans);color:var(--ink-2)}
 .al-leaf .hf-btbl{margin-top:12px}.al-leaf .hf-btbl+.hf-btbl{margin-top:18px}
-.al-leaf .md-tbl .r{grid-template-columns:52px repeat(var(--cols,1),1fr) 30px;min-height:38px;padding:4px 2px;font-size:15px;line-height:21px}
-.al-leaf .md-tbl .v{min-width:0}.al-leaf .md-tbl .md-key svg{width:26px;height:26px}
+.al-leaf .md-tbl .r{grid-template-columns:56px repeat(var(--cols,1),1fr) 34px;min-height:46px;padding:6px 2px;font-size:17px;line-height:24px}
+.al-leaf .md-tbl .v{min-width:0}.al-leaf .md-tbl .md-key svg{width:30px;height:30px}
 .al-leaf .md-tbl.build .r .md-key{visibility:visible}
 .al-leaf .md-tbl .r.off,.al-leaf .md-tbl .r.off .p{color:var(--ink-2)}
 .al-leaf .hf-contrast{margin-top:12px}.al-leaf .hf-contrast .md-paper{font-size:14px;padding:8px 6px}
@@ -481,11 +486,11 @@ em{font-style:normal}
 .al-leaf.wd{padding:10px 0 0}.al-leaf.wd .back{margin-left:10px}
 .al-leaf.wd .hf-kk.back{margin:0;padding:0;box-shadow:none;transform:none;background:none;display:block;font:inherit;color:inherit}
 .al-leaf.wd .hf-kk>.md-tape{display:none}
-.al-leaf.wd .hf-kk .hd{padding:6px 14px 12px}.al-leaf.wd .hf-kk .hd .md-lm{font-size:26px;line-height:34px}
-.al-leaf.wd .hf-kk .hd .mn{font-size:17px;line-height:24px}
+.al-leaf.wd .hf-kk .hd{padding:6px 14px 12px}.al-leaf.wd .hf-kk .hd .md-lm{font-size:30px;line-height:38px}
+.al-leaf.wd .hf-kk .hd .mn{font-size:19px;line-height:26px}
 .al-leaf.wd .hf-kk .sec{padding:10px 14px}.al-leaf.wd .hf-kk .sec+.sec::before{left:14px;right:14px}
-.al-leaf.wd .hf-kk .md-ln .md-ctx{font-size:16px;line-height:23px}
-.al-leaf.wd .hf-kk .ex p{font-size:15px;line-height:21px}.al-leaf.wd .hf-kk .ex small{font-size:13px;line-height:18px}
+.al-leaf.wd .hf-kk .md-ln .md-ctx{font-size:18px;line-height:26px}
+.al-leaf.wd .hf-kk .ex p{font-size:17px;line-height:24px}.al-leaf.wd .hf-kk .ex small{font-size:14px;line-height:20px}
 .al-leaf.wd .hf-kk .rule{min-height:40px;margin:0 14px 14px}
 /* 拼读小抄放进本子：小抄自己就是一张纸，贴满这一页 */
 .al-leaf.crib{padding:10px 8px 14px}.al-leaf.crib .md-crib{margin:0;box-shadow:none;transform:none}
