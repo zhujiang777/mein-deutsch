@@ -81,16 +81,23 @@ function letterTable({ step, body }) {
 
 /* 拼读小抄（设计系统 CribSheet / ReadFirst；原型 lab/ds-explore/round23/s-sounds.html）：一张贴了纸胶带的纸，一行一个读音，点一行听那个词。 */
 const sound = w => esc(entry(w).lemma).replace(/\[(.+?)\]/g, '<b>$1</b>');
+export const mouth = id => `<div class="md-mouth"><svg viewBox="0 0 240 180"><use href="#${id}"/></svg></div>`;
 export function cribHtml(s) {
   return `<div class="md-crib hf-crib"><span class="md-tape"></span><h2>${esc(s.title).replace(/ · /g, ' <i>·</i> ')}</h2>
-    ${s.rows.map((r, i) => `<button type="button" class="r ${r.gap ? 'gap' : ''}" data-act="crib" data-i="${i}"><span class="s">${esc(r.s)}</span><span><span class="w">${sound(r.w)}<small>${esc(r.zh)}</small></span><span class="c">${esc(r.c)}</span></span>${key('a-spk', { cls: 's', r: i % 2 ? 4 : -3 }).replace('<button', '<span').replace('</button>', '</span>')}</button>`).join('')}</div>`;
+    ${s.rows.map((r, i) => `<button type="button" class="r ${r.gap ? 'gap' : ''}" data-act="crib" data-i="${i}"><span class="s">${esc(r.s)}</span><span class="w">${sound(r.w)}<small>${esc(r.zh)}</small></span>${key('a-spk', { cls: 's', r: i % 2 ? 4 : -3 }).replace('<button', '<span').replace('</button>', '</span>')}</button>`).join('')}</div>`;
 }
+/** 点一行：念这个词，在这一行下面展开口型图 + 一句说明（没有图的行只出说明）；一次只开一行，再点收起。 */
 export function bindCrib(root, s) {
-  const rows = [...root.querySelectorAll('.md-crib .r')];
-  root.addEventListener('click', async e => {
+  root.addEventListener('click', e => {
     const r = e.target.closest('[data-act=crib]'); if (!r) return;
-    rows.forEach(x => x.classList.toggle('on', x === r));
-    if (await playWord(plainWord(s.rows[+r.dataset.i].w))) r.classList.remove('on');
+    const was = r.classList.contains('on'), row = s.rows[+r.dataset.i];
+    root.querySelectorAll('.md-crib .open').forEach(x => x.remove());
+    root.querySelectorAll('.md-crib .r.on').forEach(x => x.classList.remove('on'));
+    if (was) return;
+    r.classList.add('on');
+    r.insertAdjacentHTML('afterend', `<div class="open ${row.pic ? '' : 'txt'}">${row.pic ? mouth(row.pic) : ''}<p class="c">${esc(row.c)}</p></div>`);
+    playWord(plainWord(row.w));
+    r.nextElementSibling.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   });
 }
 function cribSheet({ step, body }) {

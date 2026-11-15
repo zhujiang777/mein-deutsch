@@ -35,7 +35,7 @@ export const drillSay = d => `${d.sj === 'Sie' && d.row === 5 ? 'Sie' : d.sj.toL
 
 /* ================= 第 0 课：发音入门 ================= */
 const L = (l, name, say) => ({ l, name, say });
-const R = (s, w, zh, c, gap) => ({ s, w, zh, c, ...(gap ? { gap } : {}) });
+const R = (s, w, zh, c, gap, pic) => ({ s, w, zh, c, ...(gap ? { gap } : {}), ...(pic ? { pic } : {}) });
 const T = (w, zh) => ({ w, zh });
 /** 小抄和“先读再听”里的词去掉标读音的方括号：'der K[ä]se' → 'der Käse'。页面和配音清单共用。 */
 export const plainWord = w => w.replace(/[[\]]/g, '');
@@ -69,9 +69,9 @@ const LESSON_0 = {
     {
       id: 'vokale', title: 'ä ö ü · ei ie eu au',
       rows: [
-        R('ä', 'der K[ä]se', '奶酪', '先发 e，嘴再张大一点'),
-        R('ö', 'sch[ö]n', '美、好', '先发 e，舌头不动，嘴唇收圆、往前伸'),
-        R('ü', 'Tsch[ü]ss!', '拜拜', '先发 i，舌头不动，嘴唇收圆、往前伸'),
+        R('ä', 'der K[ä]se', '奶酪', '先发 e，嘴再张大一点', false, 'm-ae'),
+        R('ö', 'sch[ö]n', '美、好', '先发 e，舌头不动，嘴唇收圆、往前伸', false, 'm-oe'),
+        R('ü', 'Tsch[ü]ss!', '拜拜', '先发 i，舌头不动，嘴唇收圆、往前伸', false, 'm-ue'),
         R('ei', 'n[ei]n', '不', '从 a 滑到 i', true),
         R('ie', 'S[ie]', '您', '长的 i，e 不发音'),
         R('eu', 'n[eu]', '新的', '从 o 滑到 i'),
@@ -82,9 +82,9 @@ const LESSON_0 = {
     {
       id: 'konsonant', title: 'w v z j s ß',
       rows: [
-        R('w', '[w]ohnen', '住', '上牙轻碰下唇，喉咙振动'),
-        R('v', '[v]ier', '四', '嘴形同 w，喉咙不振动'),
-        R('z', 'das [Z]immer', '房间', 't 和 s 连成一个音'),
+        R('w', '[w]ohnen', '住', '上牙轻碰下唇，喉咙振动', false, 'm-wv'),
+        R('v', '[v]ier', '四', '嘴形同 w，喉咙不振动', false, 'm-wv'),
+        R('z', 'das [Z]immer', '房间', 't 和 s 连成一个音', false, 'm-z'),
         R('j', '[j]a', '是', '很短的 i，马上接后面的元音'),
         R('s', '[S]ie', '您', '在元音前，喉咙振动', true),
         R('ß', 'die Stra[ß]e', '街', '喉咙不振动'),
@@ -94,9 +94,9 @@ const LESSON_0 = {
     {
       id: 'kombi', title: 'ch sch st sp · 词尾',
       rows: [
-        R('ch', 'i[ch]', '我', 'i、e 后面：摆好 i 的嘴形，不出声，只送气'),
-        R('ch', 'au[ch]', '也', 'a、o、u 后面：舌头后部抬起，在嘴的最里面送气'),
-        R('sch', '[sch]ön', '美、好', '嘴唇收圆往前伸，舌尖不卷'),
+        R('ch', 'i[ch]', '我', 'i、e 后面：摆好 i 的嘴形，不出声，只送气', false, 'm-ich'),
+        R('ch', 'au[ch]', '也', 'a、o、u 后面：舌头后部抬起，在嘴的最里面送气', false, 'm-ach'),
+        R('sch', '[sch]ön', '美、好', '嘴唇收圆往前伸，舌尖不卷', false, 'm-sch'),
         R('st', 'der [St]udent', '大学生', '在词的开头，s 读成 sch', true),
         R('sp', 'der [Sp]ort', '运动', '在词的开头，s 读成 sch'),
         R('-er', 'das Zimm[er]', '房间', '在词尾读成又短又轻的 a', true),
@@ -169,7 +169,7 @@ const LESSON_1 = {
         { line: 0, de: 'Bist du neu hier?', zh: '你是新来的？', v: 'Bist', no: 'Bin', sj: 'du', row: 1 },
         { line: 1, de: 'Ich bin Lin.', zh: '我是 Lin。', v: 'bin', no: 'bist', sj: 'Ich', row: 0 },
       ] },
-    { after: 9, kind: 'pron', title: 'ich 和 ach 里的 ch', body: 'ich 的 ch：摆好 i 的嘴形，不出声，只送气。ach 的 ch：舌头后部抬起，在嘴的最里面送气。', pairs: ['ich', 'Ach so.'], example: 'Ich bin Lin.' },
+    { after: 9, kind: 'pron', title: 'ich 和 ach 里的 ch', body: 'ich 的 ch：摆好 i 的嘴形，不出声，只送气。ach 的 ch：舌头后部抬起，在嘴的最里面送气。', pairs: ['ich', 'Ach so.'], example: 'Ich bin Lin.', pics: ['m-ich', 'm-ach'] },
   ],
   exercises: [
     match('x1', [['neu', '新的'], ['hier', '这里'], ['der Kaffee', '咖啡'], ['der Bus', '公交车'], ['immer', '总是'], ['willkommen', '欢迎']]),
@@ -276,7 +276,7 @@ const LESSON_2 = {
         { line: 9, de: 'Woher kommst du?', zh: '你是哪里人？', v: 'kommst', no: 'komme', sj: 'du', row: 1, col: 1 },
         { line: 12, de: 'Du wohnst auch hier!', zh: '你也住这儿！', v: 'wohnst', no: 'wohne', sj: 'Du', row: 1, col: 2 },
       ] },
-    { after: 0, kind: 'pron', title: 'w：上牙碰下唇', body: '上牙轻碰下唇，喉咙振动。嘴唇不要收圆。', pairs: ['wo', 'woher', 'wohnen', 'Wie bitte?'], example: 'Wo wohne ich?' },
+    { after: 0, kind: 'pron', title: 'w：上牙碰下唇', body: '上牙轻碰下唇，喉咙振动。嘴唇不要收圆。', pairs: ['wo', 'woher', 'wohnen', 'Wie bitte?'], example: 'Wo wohne ich?', pics: ['m-wv'] },
     { after: 2, kind: 'tip', title: 'China', body: '德语的 China 开头读 ich 里的 ch；南德也有人读成 k。' },
   ],
   exercises: [
@@ -376,7 +376,7 @@ const LESSON_3 = {
         { line: 3, de: 'Sie studiert Medizin.', zh: '她学医。', v: 'studiert', no: 'studiere', sj: 'Sie', row: 2, col: 1 },
         { line: 7, de: 'Er kocht gut.', zh: '他做饭确实好。', v: 'kocht', no: 'koche', sj: 'Er', row: 2, col: 2 },
       ] },
-    { after: 2, kind: 'pron', title: '词首的 st、sp', body: 'st、sp 在词的开头，s 读成 sch：studieren、Sport。sch 嘴唇收圆往前伸，舌尖不卷。', pairs: ['studieren', 'der Student', 'Stimmt.', 'der Sport'], example: 'Was studierst du?' },
+    { after: 2, kind: 'pron', title: '词首的 st、sp', body: 'st、sp 在词的开头，s 读成 sch：studieren、Sport。sch 嘴唇收圆往前伸，舌尖不卷。', pairs: ['studieren', 'der Student', 'Stimmt.', 'der Sport'], example: 'Was studierst du?', pics: ['m-sch'] },
     { after: 2, kind: 'tip', title: 'BWL', body: '会计（Rechnungswesen）在德国大学归在 BWL 下面，自我介绍说 “Ich studiere BWL.”，三个字母按字母名读：Be-We-El。' },
   ],
   // 词包：整套给全，课文里只出现其中一两个
@@ -501,7 +501,7 @@ const LESSON_4 = {
         { line: 3, de: 'Wohnen Sie in Zimmer drei?', zh: '您住三号房间？', v: 'Wohnen', no: 'Wohnst', sj: 'Sie', row: 5, col: 2 },
       ],
       contrast: [['Bist du neu hier?', 'Sind Sie neu hier?'], ['Wohnst du hier?', 'Wohnen Sie hier?'], ['Tschüss!', 'Auf Wiedersehen!']], example: 'Sind Sie neu hier? Wohnen Sie in Zimmer drei?' },
-    { after: 3, kind: 'pron', title: 'z 和 s', body: 'z：t 和 s 连成一个音，短而干脆。s 在元音前，喉咙振动。', pairs: ['das Zimmer', 'Sie', 'zehn', 'so'], example: 'Wohnen Sie in Zimmer drei?' },
+    { after: 3, kind: 'pron', title: 'z 和 s', body: 'z：t 和 s 连成一个音，短而干脆。s 在元音前，喉咙振动。', pairs: ['das Zimmer', 'Sie', 'zehn', 'so'], example: 'Wohnen Sie in Zimmer drei?', pics: ['m-z'] },
     { after: 7, kind: 'tip', title: '一般疑问句', body: '没有疑问词的问句，动词放在句首：Sind Sie neu hier? Ist Herr Becker auch da?' },
     { after: 9, kind: 'tip', title: 'du 还是 Sie', body: '同学、室友之间说 du；对管理员、老师、办事窗口、店员说 Sie。拿不准就先说 Sie。' },
   ],

@@ -339,7 +339,6 @@ em{font-style:normal}
 
 /* ---------- 第 0 课：拼读小抄、你先读再听（设计系统 CribSheet / ReadFirst） ---------- */
 .hf-crib{margin-top:24px}
-.hf-crib .r{background:none;border:0;font:inherit;color:inherit}
 .hf-crib .r.on .md-key svg{transform:scale(1.12)}
 .hf-try{margin-top:92px}
 .hf-try .big{margin:0}.hf-try .mn{margin-bottom:0}
@@ -349,3 +348,4 @@ em{font-style:normal}
 .hf-cribs p{margin:0}
 .hf-cribpull .pp{max-height:92dvh;overflow-y:auto;padding-top:44px;background:var(--paper)}
 .hf-cribpull .hf-crib{margin-top:0}
+.hf-mouth{margin:14px 0 4px}

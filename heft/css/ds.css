@@ -300,20 +300,31 @@
 .md-pull .x{position:absolute;right:10px;top:10px;width:44px;height:44px;display:grid;place-items:center;color:var(--quiet)}
 
 /* ---- 拼读小抄：一张贴纸胶带的纸，一行一个读音 ---- */
-.md-crib{position:relative;padding:22px 16px 6px 18px;background:var(--card);box-shadow:var(--shadow-paper);transform:rotate(-.6deg)}
+/* 第 24 轮终稿：A 版式——点一行，在这一行下面展开口型图 + 一句说明（lab/ds-explore/round24/crib-a.css） */
+.md-crib{position:relative;padding:20px 14px 4px 16px;background:var(--card);box-shadow:var(--shadow-paper);transform:rotate(-.5deg)}
 .md-crib .md-tape{width:84px;left:calc(50% - 42px);top:-12px;transform:rotate(2deg)}
-.md-crib h2{font:680 26px/32px var(--font-sans);font-stretch:85%;letter-spacing:.01em;margin:0 0 4px}
+.md-crib h2{margin:0 0 2px;font:680 24px/30px var(--font-sans);font-stretch:85%;letter-spacing:.01em}
 .md-crib h2 i{font-style:normal;color:#b4b3ac;margin:0 4px}
-.md-crib .r{position:relative;display:grid;grid-template-columns:54px 1fr 38px;align-items:center;width:100%;padding:9px 0 8px;text-align:left;cursor:pointer}
-.md-crib .r+.r::before{content:"";position:absolute;left:0;right:0;top:0;border-top:1.2px solid var(--line);filter:url(#rough-box)}
-.md-crib .r.gap{margin-top:6px}.md-crib .r.gap::before{border-top-width:2px;border-color:var(--line-strong)}
-.md-crib .s{font:600 26px/32px var(--font-sans)}
-.md-crib .w{font:500 19px/25px var(--font-sans)}
+
+.md-crib .r{position:relative;display:grid;grid-template-columns:50px 1fr 38px;align-items:center;width:100%;min-height:42px;padding:3px 0;margin:0;border:0;background:none;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
+.md-crib .r+.r::before,.md-crib .open+.r::before{content:"";position:absolute;left:0;right:0;top:0;border-top:1.2px solid var(--line);filter:url(#rough-box)}
+.md-crib .r.gap::before{border-top-width:2px;border-color:var(--line-strong)}
+.md-crib .s{font:600 23px/30px var(--font-sans)}
+.md-crib .w{font:500 18px/24px var(--font-sans)}
 .md-crib .w b{font-weight:500;box-shadow:inset 0 -.36em 0 var(--hl-sound);padding:0 1px}
 .md-crib .w small{margin-left:8px;font:400 15px/21px var(--font-sans);color:var(--muted)}
-.md-crib .c{display:block;margin-top:1px;font:400 15px/21px var(--font-sans);color:var(--ink-2)}
-.md-crib .md-key{justify-content:flex-end;pointer-events:none}.md-crib .md-key svg{width:32px;height:32px}
-.md-crib .r.on .w,.md-crib .r.on .s{color:var(--sky-ink)}
+.md-crib .r .md-key{min-height:0;justify-content:flex-end;pointer-events:none}
+.md-crib .r .md-key svg{width:30px;height:30px}
+.md-crib .r.on .s,.md-crib .r.on .w{color:var(--sky-ink)}
+
+.md-crib .open{padding:2px 0 12px;animation:md-rise .22s cubic-bezier(.2,.7,.3,1)}
+.md-crib .open .md-mouth{transform:rotate(.6deg)}
+.md-crib .open .c{margin:8px 0 0;font:400 16px/23px var(--font-sans);color:var(--ink-2)}
+.md-crib .open.txt .c{margin:0 0 0 50px}
+
+/* 口型图的框：4:3 纸色贴纸。以后换真人短视频：把 <svg> 换成同比例的 <video>，版式不动。精读发音点卡也用它（整宽）。 */
+.md-mouth{position:relative;width:100%;aspect-ratio:4/3;background:var(--card);border:5px solid var(--sticker-edge);border-radius:var(--radius-md);box-shadow:var(--shadow-sticker);overflow:hidden}
+.md-mouth svg,.md-mouth video{display:block;width:100%;height:100%;object-fit:cover}
 
 /* ---- 你先读，再听原声：一个没学过的词大字居中，不判对错 ---- */
 .md-try{display:flex;flex-direction:column;align-items:center;text-align:center}

@@ -293,6 +293,7 @@ RENDER.card = (ctx) => {
       ${c.contrast ? `<div class="hf-contrast">${c.contrast.map(([a, b]) => `<div class="pr"><button type="button" class="md-paper" data-act="con">${esc(a)}</button><button type="button" class="md-paper" data-act="con">${esc(b)}</button></div>`).join('')}</div>` : ''}`;
   } else {
     html = `<h2 class="hf-gname">${esc(c.title)}</h2><p class="md-rule">${esc(c.body)}</p>
+      ${c.pics ? `<div class="md-mouth hf-mouth"><svg viewBox="0 0 240 180"><use href="#${c.pics[0]}"/></svg></div>` : ''}
       <div class="md-pair hf-pair">${c.pairs.map(p => `<button type="button" class="md-paper c" data-act="pair"><p class="w">${esc(p)}</p>${key('a-spk', { cls: 's', aria: '听', r: -3 }).replace('<button', '<span').replace('</button>', '</span>')}</button>`).join('')}</div>
       <div class="hf-src">${exLine ? `<div class="md-ln say"><span></span><div><p class="md-ctx">${q(esc(c.example))}</p></div>${key('a-spk', { cls: 's', act: 'ex', aria: '听', r: -4 })}</div>` : ''}</div>`;
   }
@@ -302,7 +303,7 @@ RENDER.card = (ctx) => {
     say: () => playLine(src),
     ex: () => playWord(c.example),
     row: b => { const r = lit[[...body.querySelectorAll('[data-act=row]')].indexOf(b)]; playWord(rowSay(r)); },
-    pair: b => playWord(c.pairs[[...body.querySelectorAll('[data-act=pair]')].indexOf(b)]),
+    pair: b => { const i = [...body.querySelectorAll('[data-act=pair]')].indexOf(b); if (c.pics?.[i]) body.querySelector('.hf-mouth use').setAttribute('href', `#${c.pics[i]}`); playWord(c.pairs[i]); },
     con: b => playWord(b.textContent),
   });
   foot('继续', next, { arrow: true });
