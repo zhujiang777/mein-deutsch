@@ -1,6 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#c8461e"/>
-  <rect x="64" y="150" width="384" height="68" rx="16" fill="#1a1a1a" opacity="0.85"/>
-  <rect x="64" y="294" width="384" height="68" rx="16" fill="#f2c319"/>
-  <text x="256" y="292" font-family="Georgia, serif" font-size="150" font-weight="bold" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">De</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs>
+<filter id="afr" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter>
+<filter id="afhl" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".02 .09" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="14" xChannelSelector="R" yChannelSelector="G"/></filter>
+<filter id="afink" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="2" seed="11" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="8" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="1" seed="3"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3 2.6"/><feComposite in="d" operator="in"/></filter>
+<pattern id="afdot" width="42.67" height="42.67" patternUnits="userSpaceOnUse" x="10" y="10"><circle cx="21.3" cy="21.3" r="3" fill="#d3d2cb"/></pattern>
+<pattern id="afhalf" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="4.5" cy="4.5" r="2" fill="#24272c"/></pattern>
+</defs><g transform="translate(256 250) scale(1.18) translate(-256 -250) rotate(-6 256 256)">
+  <path d="M310 130V68L330 84L350 68V130Z" fill="#ef907d" transform="translate(6 5)"/>
+  <path d="M156 102H378a14 14 0 0 1 14 14V412a14 14 0 0 1 -14 14H156Z" fill="#fffdf8"/>
+  <path d="M144 92H368a16 16 0 0 1 16 16V404a16 16 0 0 1 -16 16H144a16 16 0 0 1 -16 -16V108a16 16 0 0 1 16 -16Z" fill="#9cc6e8" transform="translate(9 7)"/>
+  <path d="M136 99V417" stroke="#83b3dc" stroke-width="38" transform="translate(9 0)"/>
+  <path d="M300 92H384V420H300Z" fill="url(#afhalf)" opacity=".1"/>
+  
+  <g fill="none" stroke="#24272c" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" filter="url(#afr)"><path d="M156 102H378a14 14 0 0 1 14 14V412a14 14 0 0 1 -14 14H156Z"/><path d="M310 130V68L330 84L350 68V130Z"/><path d="M144 92H368a16 16 0 0 1 16 16V404a16 16 0 0 1 -16 16H144a16 16 0 0 1 -16 -16V108a16 16 0 0 1 16 -16Z"/><path d="M174 96V416"/></g>
+</g></svg>

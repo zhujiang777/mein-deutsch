@@ -1,4 +1,5 @@
-// 手帐页：学习日历 + 发音 / 语法 / 文化三类分开的合集。内容全部来自课程数据，学到哪亮到哪；点开一条就是那张卡，随时复习。
+// 手帐页：最上面是学习日历，下面桌上放着一本合上的手帐（和图标是同一本，A5 比例）。点右边的签翻开到那一类的目录，点一条就在本子里翻到那一页。
+// 内容全部来自课程数据，学到哪亮到哪。对照原型 lab/ds-explore/round28/t-cover.html。
 import { rowSay } from '../../data/story-lessons.js';
 import { albumOf } from './flow.js';
 import { key, hydrate, ico, seal } from './art.js';
@@ -23,51 +24,24 @@ function calendar(state, ts, { numOf, findItem }) {
     <div class="al-cal">${['一', '二', '三', '四', '五', '六', '日'].map(w => `<span class="w">${w}</span>`).join('')}${cells.join('')}</div>`;
 }
 
-/* 从底下拉出一张纸。返回这张纸，调用方自己接事件。 */
-function pull(html, cls = '') {
-  document.querySelector('.md-pull')?.remove();
-  document.body.insertAdjacentHTML('beforeend', `<div class="md-pull al-pull ${cls}"><div class="pp"><span class="md-tape"></span><button type="button" class="x" aria-label="关上"></button>${html}</div></div>`);
-  const sh = document.body.lastElementChild; hydrate(sh);
-  sh.addEventListener('click', e => { if (e.target === sh || e.target.closest('.x')) { stop(); sh.remove(); } });
-  return sh;
-}
 const src = l => `<p class="src">第 ${l.n} 课 · ${esc(l.title)}</p>`;
-// 整张表：每行的喇叭把这一行的每一列都念一遍
-function bindRows(sh, tables) {
-  let run = 0;
-  sh.addEventListener('click', async e => { const b = e.target.closest('[data-act=row]'); if (!b) return;
-    const t = tables[[...sh.querySelectorAll('.hf-btbl')].indexOf(b.closest('.hf-btbl'))], r = t.rows[+b.dataset.row], mine = ++run;
-    for (let k = 1; k < r.length; k++) if (mine !== run || !await playWord(rowSay(r, k))) return; });
-}
-function openGrammar({ c, l }) {
-  const lit = new Set((c.drill || []).map(cellKey));
-  const sh = pull(`${src(l)}<h2>${esc(c.title)}</h2><p class="say">${esc(c.body)}</p>${buildTbl(c, lit, { full: true })}
-    ${c.contrast ? `<div class="hf-contrast">${c.contrast.map(([a, b]) => `<div class="pr"><button type="button" class="md-paper" data-say>${esc(a)}</button><button type="button" class="md-paper" data-say>${esc(b)}</button></div>`).join('')}</div>` : ''}`);
-  bindRows(sh, [c.table]); bindSay(sh);
-}
-function openUnit(u) {
-  const all = t => new Set(t.rows.flatMap((r, i) => r.slice(1).map((_, k) => `${i}:${k + 1}`)));
-  const sh = pull(`<p class="src">第 ${u.n} 单元 · ${esc(u.name)}</p><h2>单元总表</h2><p class="say">${esc(u.sum.rule || '')}</p>${u.sum.tables.map(t => buildTbl({ table: t }, all(t), { full: true })).join('')}`);
-  bindRows(sh, u.sum.tables);
-}
-const bindSay = sh => sh.addEventListener('click', e => { const b = e.target.closest('[data-say]'); if (b) playWord(b.dataset.say || b.textContent); });
-function openTip({ c, l }) {
-  bindSay(pull(`${src(l)}<h2>${esc(c.title)}</h2><p class="say">${esc(c.body)}</p>${c.words ? `<p class="ws">${c.words.map(w => `<span><small>${{ der: '阳性', die: '阴性', das: '中性' }[hlClass(w)] || ''}</small><button type="button" class="md-hl ${hlClass(w)}" data-say>${esc(w)}</button></span>`).join('')}</p>` : ''}`));
-}
-function openPron({ c, l }) {
-  const sh = pull(`${src(l)}<h2>${esc(c.title)}</h2><p class="say">${esc(c.body)}</p>${c.pics ? `<div class="md-mouth hf-mouth"><svg viewBox="0 0 240 180"><use href="#${c.pics[0]}"/></svg></div>` : ''}
-    <div class="md-pair hf-pair">${(c.pairs || []).map((p, i) => `<button type="button" class="md-paper c" data-say="${esc(p)}" data-i="${i}"><p class="w">${esc(p)}</p>${key('a-spk', { cls: 's', aria: '听', r: -3 }).replace('<button', '<span').replace('</button>', '</span>')}</button>`).join('')}</div>`);
-  bindSay(sh);
-  sh.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b && c.pics?.[+b.dataset.i]) sh.querySelector('.hf-mouth use').setAttribute('href', `#${c.pics[+b.dataset.i]}`); });
-}
-async function openWord({ w, l }) {
-  const sh = pull(await wordBack(l, w), 'al-word'); sh.querySelector('.pp > .md-tape').remove();
-  const map = wordActs(l, w);
-  sh.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && map[b.dataset.act]) map[b.dataset.act](b); });
-}
-function openCrib(s) {
-  const sh = pull(cribHtml(s), 'hf-cribpull'); sh.querySelector('.md-tape').remove(); bindCrib(sh, s);
-}
+const BACK = `<button type="button" class="back" data-back>${ico('arrow')}目录</button>`;
+const RULED = '<div class="rule"></div>';
+const WS = c => c.words ? `<p class="ws">${c.words.map(w => `<span><small>${{ der: '阳性', die: '阴性', das: '中性' }[hlClass(w)] || ''}</small><button type="button" class="md-hl ${hlClass(w)}" data-say>${esc(w)}</button></span>`).join('')}</p>` : '';
+
+/* 本子里的一页：每种内容怎么排。返回 { html, tables?, bind? } */
+const LEAF = {
+  grammar: ({ c, l }) => ({ tables: [c.table], html: `${src(l)}<h2>${esc(c.title)}</h2><p class="say">${esc(c.body)}</p>${buildTbl(c, new Set((c.drill || []).map(cellKey)), { full: true })}
+    ${c.contrast ? `<div class="hf-contrast">${c.contrast.map(([a, b]) => `<div class="pr"><button type="button" class="md-paper" data-say>${esc(a)}</button><button type="button" class="md-paper" data-say>${esc(b)}</button></div>`).join('')}</div>` : ''}` }),
+  unit: u => { const all = t => new Set(t.rows.flatMap((r, i) => r.slice(1).map((_, k) => `${i}:${k + 1}`)));
+    return { tables: u.sum.tables, html: `<p class="src">第 ${u.n} 单元 · ${esc(u.name)}</p><h2>单元总表</h2><p class="say">${esc(u.sum.rule || '')}</p>${u.sum.tables.map(t => buildTbl({ table: t }, all(t), { full: true })).join('')}` }; },
+  tip: ({ c, l }) => ({ html: `${src(l)}<h2>${esc(c.title)}</h2><p class="say">${esc(c.body)}</p>${WS(c)}${RULED}` }),
+  pron: ({ c, l }) => ({ html: `${src(l)}<h2>${esc(c.title)}</h2><p class="say">${esc(c.body)}</p>${c.pics ? `<div class="md-mouth hf-mouth"><svg viewBox="0 0 240 180"><use href="#${c.pics[0]}"/></svg></div>` : ''}
+      <div class="md-pair hf-pair">${(c.pairs || []).map((p, i) => `<button type="button" class="md-paper c" data-say="${esc(p)}" data-i="${i}"><p class="w">${esc(p)}</p>${key('a-spk', { cls: 's', aria: '听', r: -3 }).replace('<button', '<span').replace('</button>', '</span>')}</button>`).join('')}</div>`,
+    bind: lf => lf.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b && c.pics?.[+b.dataset.i]) lf.querySelector('.hf-mouth use').setAttribute('href', `#${c.pics[+b.dataset.i]}`); }) }),
+  crib: s => ({ html: cribHtml(s), cls: 'crib', bind: lf => bindCrib(lf, s) }),
+  word: async ({ w, l }) => ({ html: await wordBack(l, w), cls: 'wd', bind: lf => { const map = wordActs(l, w); lf.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && map[b.dataset.act]) map[b.dataset.act](b); }); } }),
+};
 
 export function albumPage(app, state, ts, helpers) {
   const A = albumOf(state);
@@ -95,28 +69,66 @@ export function albumPage(app, state, ts, helpers) {
   };
   const T = [['pr', '发音', A.count.pr], ['gm', '语法', `${A.count.gm}/${A.count.gmAll}`], ['tp', '文化', A.count.tp], ['wd', '单词', A.count.wd]];
   if (!T.some(([k]) => k === tab)) tab = 'gm';
-  const draw = () => {
-    app.innerHTML = `<div class="md-page hf-page tabbed al-page">${calendar(state, ts, helpers)}
-      <div class="al-toc"><span class="md-tape"></span><div class="al-tabs">${T.map(([k, t, n]) => `<button type="button" class="${k === tab ? 'on' : ''}" data-t="${k}" aria-pressed="${k === tab}"><span>${t}</span><small>${n}</small></button>`).join('')}</div><div class="al-body">${bodies[tab]()}</div></div></div>`;
-    hydrate(app);
+  const CLOSE = '<button type="button" class="bk-close" data-close><svg viewBox="0 0 28 28"><use href="#t-heft"/></svg>合上</button>';
+
+  // 进来先看到合上的本子；纸、签、封面都叠在同一个矩形里，翻开只动封面（transform / opacity）
+  app.innerHTML = `<div class="md-page hf-page tabbed al-page">${calendar(state, ts, helpers)}
+    <div class="al-desk"><div class="bk-top"></div>
+    <div class="bkwrap"><div class="al-book closed">
+      <div class="edge e1"></div>
+      <svg class="ribbon" viewBox="0 0 22 46"><path d="M2 2h18v42l-9-8-9 8Z" fill="#ef907d"/><path d="M2 2h18v42l-9-8-9 8Z" fill="none" stroke="#24272c" stroke-width="1.8" stroke-linejoin="round" filter="url(#rough-s)"/></svg>
+      <div class="al-pg"></div>
+      <div class="pgline"></div><div class="shade"></div>
+      <div class="al-tabs">${T.map(([k, t, n]) => `<button type="button" data-t="${k}" aria-label="${t}"><span>${t}</span><small>${n}</small></button>`).join('')}</div>
+      <button type="button" class="al-cover" data-cover aria-label="翻开手帐"><span class="spine"></span><span class="dots"></span><span class="sl"></span>
+        <span class="lab"><b>我的手帐</b><small>Notizen</small></span></button>
+    </div></div></div></div>`;
+  hydrate(app);
+  const book = app.querySelector('.al-book'), pg = app.querySelector('.al-pg'), top = app.querySelector('.bk-top'), cover = app.querySelector('.al-cover');
+  const setTab = k => {
+    tab = k; try { localStorage.setItem(TAB_KEY, tab); } catch { /* 记不住就算了 */ }
+    book.querySelector('.al-leaf')?.remove(); stop();
+    pg.innerHTML = `<span class="md-tape"></span><div class="al-body">${bodies[k]()}</div>`; pg.scrollTop = 0; hydrate(pg);
+    book.querySelectorAll('.al-tabs button').forEach(b => { const on = b.dataset.t === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
   };
-  // 换一类：只换纸上的内容（日历、底栏不动），新内容像翻过来一页那样滑进来
-  const turn = () => {
-    app.querySelectorAll('.al-tabs button').forEach(b => { const on = b.dataset.t === tab; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-    const old = app.querySelector('.al-body'), body = old.cloneNode(false);
-    body.innerHTML = bodies[tab](); old.replaceWith(body); hydrate(body);
+  const settle = (from, to) => cover.addEventListener('animationend', () => book.classList.replace(from, to), { once: true });
+  const open = k => { setTab(k); book.classList.remove('closed', 'closing'); book.classList.add('opening'); top.innerHTML = CLOSE; settle('opening', 'open'); };
+  const close = () => {
+    book.querySelector('.al-leaf')?.remove(); stop();
+    book.classList.remove('open', 'opening'); book.classList.add('closing'); top.innerHTML = '';
+    book.querySelectorAll('.al-tabs button').forEach(b => { b.classList.remove('on'); b.removeAttribute('aria-pressed'); });
+    settle('closing', 'closed');
   };
-  draw();
+  // 在本子里翻到那一页：盖在目录上面，左上角「目录」翻回去
+  let turning = 0;
+  const turnTo = async (kind, item) => {
+    const mine = ++turning, leaf = await LEAF[kind](item);
+    if (mine !== turning) return;
+    book.querySelector('.al-leaf')?.remove();
+    const lf = Object.assign(document.createElement('div'), { className: `al-leaf in ${leaf.cls || ''}`, innerHTML: BACK + leaf.html });
+    book.insertBefore(lf, book.querySelector('.pgline')); hydrate(lf);
+    lf.addEventListener('click', async e => {
+      const say = e.target.closest('[data-say]'); if (say) return playWord(say.dataset.say || say.textContent);
+      const r = e.target.closest('[data-act=row]'); if (!r || !leaf.tables) return;
+      const t = leaf.tables[[...lf.querySelectorAll('.hf-btbl')].indexOf(r.closest('.hf-btbl'))], row = t.rows[+r.dataset.row], run = ++turning;
+      for (let k = 1; k < row.length; k++) if (run !== turning || !await playWord(rowSay(row, k))) return;
+    });
+    leaf.bind?.(lf);
+  };
   app.onclick = e => {
-    const b = e.target.closest('[data-t],[data-g],[data-ge],[data-u],[data-pr],[data-tp],[data-crib],[data-wd]'); if (!b || !app.querySelector('.al-page')) return;
+    const b = e.target.closest('[data-t],[data-cover],[data-close],[data-back],[data-g],[data-ge],[data-u],[data-pr],[data-tp],[data-crib],[data-wd]');
+    if (!b || !app.querySelector('.al-page')) return;
     const d = b.dataset, lessonOf = n => A.units.flatMap(u => u.lessons).find(x => x.n === +n);
-    if (d.t) { if (d.t === tab) return; tab = d.t; try { localStorage.setItem(TAB_KEY, tab); } catch { /* 记不住就算了 */ } turn(); }
-    else if (d.wd) openWord(A.words[+d.wd]);
-    else if (d.g) openGrammar(lessonOf(d.g).main);
-    else if (d.ge) { const [n, k] = d.ge.split(':'); openTip(lessonOf(n).extra[+k]); }
-    else if (d.u) openUnit(A.units[+d.u - 1]);
-    else if (d.pr) openPron(A.pron[+d.pr]);
-    else if (d.tp) openTip(A.tips[+d.tp]);
-    else if (d.crib) openCrib(A.cribs[+d.crib].s);
+    if (d.t) { if (!book.classList.contains('open') && !book.classList.contains('opening')) open(d.t); else if (d.t !== tab || book.querySelector('.al-leaf')) setTab(d.t); }
+    else if ('cover' in d) open(tab);
+    else if ('close' in d) close();
+    else if ('back' in d) { turning++; stop(); book.querySelector('.al-leaf')?.remove(); }
+    else if (d.g) turnTo('grammar', lessonOf(d.g).main);
+    else if (d.ge) { const [n, k] = d.ge.split(':'); turnTo('tip', lessonOf(n).extra[+k]); }
+    else if (d.u) turnTo('unit', A.units[+d.u - 1]);
+    else if (d.pr) turnTo('pron', A.pron[+d.pr]);
+    else if (d.tp) turnTo('tip', A.tips[+d.tp]);
+    else if (d.crib) turnTo('crib', A.cribs[+d.crib].s);
+    else if (d.wd) turnTo('word', A.words[+d.wd]);
   };
 }

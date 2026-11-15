@@ -372,7 +372,8 @@ em{font-style:normal}
 .hf-cribpull .hf-crib{margin-top:0}
 .hf-mouth{margin:14px 0 4px}
 
-/* ================= 手帐页：日历 + 目录页（右边三张索引签） ================= */
+/* ================= 手帐页：最上面日历，下面桌上一本合上的手帐（和图标同一本，A5），点签翻开 ================= */
+.al-page{display:flex;flex-direction:column;min-height:100dvh}
 .al-h{display:flex;align-items:baseline;gap:10px;margin:14px 0 4px}
 .al-h h2{font:680 24px/30px var(--font-sans);font-stretch:85%}
 .al-h span{font:500 15px/20px var(--font-sans);color:var(--muted);font-variant-numeric:tabular-nums}
@@ -386,56 +387,116 @@ em{font-style:normal}
 .al-cal .d .md-mini-seal{position:absolute;left:calc(50% - 15px);top:0;width:30px;height:30px;transform:rotate(var(--r,-8deg))}
 .al-cal .d .rv{position:absolute;left:calc(50% - 14px);top:1px;width:28px;height:28px}
 .al-cal .d.today::after{content:"";position:absolute;left:calc(50% - 17px);top:-2px;width:34px;height:34px;border:1.5px solid var(--sky-ink);border-radius:50%;filter:url(#rough-s)}
-.al-toc{position:relative;margin:18px -10px 0 0;min-height:470px;padding:20px 52px 18px 16px;background:var(--card);box-shadow:var(--shadow-paper)}
-.al-toc>.md-tape{width:70px;left:24px;top:-10px;transform:rotate(-3deg)}
-.al-tabs{position:absolute;right:-1px;top:18px;display:flex;flex-direction:column;gap:6px}
-.al-tabs button{position:relative;width:40px;padding:12px 0 10px;border-radius:0 9px 9px 0;transform:translateX(13px);background:#e8e6de;box-shadow:inset 1px 0 0 rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);cursor:pointer;transition:transform .12s}
-.al-tabs button span{writing-mode:vertical-rl;font:600 15px/18px var(--font-sans);letter-spacing:.12em}
-.al-tabs button small{font:500 11px/13px var(--font-sans);color:var(--quiet);font-variant-numeric:tabular-nums}
-.al-tabs button.on{background:var(--card);color:var(--ink);transform:translateX(12px);box-shadow:2px 2px 4px -2px rgba(36,39,44,.25)}
+/* 桌面：本子和右边伸出的签一起居中 */
+.al-desk{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;padding:6px 0 10px}
+.al-desk .bk-top{align-self:stretch;height:40px;display:flex;align-items:center;padding-left:max(0px,calc(50% - 160px))}
+.bk-close{display:inline-flex;align-items:center;gap:6px;padding:7px 10px 7px 6px;border-radius:8px;font:500 15px/20px var(--font-sans);color:var(--ink-2);cursor:pointer}
+.bk-close svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:url(#rough)}
+.bk-close:active{background:var(--wash)}
+.al-desk .bkwrap{position:relative;padding-right:32px}
+.al-book{--bw:min(288px,calc(100vw - 88px));position:relative;width:var(--bw);aspect-ratio:148/210}
+.al-book .edge{position:absolute;inset:0;background:var(--card);border-radius:3px 8px 8px 3px}
+.al-book .edge::after{content:"";position:absolute;inset:0;border:1.6px solid #2f3237;border-radius:inherit;filter:url(#rough-box)}
+.al-book .edge.e1{transform:translate(6px,6px);box-shadow:0 2px 3px rgba(36,39,44,.12),0 18px 26px -14px rgba(36,39,44,.42)}
+.al-book .edge.e1::before{content:"";position:absolute;right:-1px;top:10px;bottom:4px;width:4px;background:repeating-linear-gradient(transparent 0 2px,#d8d6ce 2px 3px)}
+.al-pg{position:absolute;inset:0;z-index:1;overflow-y:auto;overscroll-behavior:contain;padding:16px 46px 16px 14px;background:var(--card);border-radius:3px 8px 8px 3px;scrollbar-width:none}
+.al-pg::-webkit-scrollbar,.al-leaf::-webkit-scrollbar{display:none}
+.al-pg>.md-tape{width:60px;left:20px;top:-9px;transform:rotate(-3deg)}
+.al-book .pgline{position:absolute;inset:0;z-index:1;border:1.6px solid #2f3237;border-radius:3px 8px 8px 3px;filter:url(#rough-box);pointer-events:none}
+.al-book .shade{position:absolute;inset:0;z-index:1;background:rgba(36,39,44,.2);opacity:0;pointer-events:none;border-radius:3px 8px 8px 3px}
+.al-book .ribbon{position:absolute;right:58px;top:-22px;z-index:2;width:22px;height:46px}
+/* 分类签：合上时是四种荧光笔色，翻开后变回灰白、选中的那张和纸连成一片。左边 8px 压在封面底下，字往右让一点 */
+.al-tabs{position:absolute;right:-1px;top:16px;z-index:2;display:flex;flex-direction:column;gap:5px}
+.al-tabs button{position:relative;isolation:isolate;width:40px;padding:10px 0 8px 8px;border-radius:0 9px 9px 0;transform:translateX(32px);background:#e8e6de;box-shadow:inset 1px 0 0 rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--ink);cursor:pointer;transition:transform .12s}
+.al-tabs button::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--card);box-shadow:2px 2px 4px -2px rgba(36,39,44,.25);opacity:0;transition:opacity .2s}
+.al-tabs button span{writing-mode:vertical-rl;font:600 14px/17px var(--font-sans);letter-spacing:.12em;opacity:.72}
+.al-tabs button small{font:500 10.5px/13px var(--font-sans);color:var(--quiet);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.al-tabs button.on{transform:translateX(31px)}.al-tabs button.on::after{opacity:1}.al-tabs button.on span{opacity:1}
 .al-tabs button.on::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;background:var(--sky-ink);border-radius:2px}
-.al-tabs button:active{background:var(--wash)}
-.al-toc h3{font:680 22px/28px var(--font-sans);font-stretch:85%;margin-bottom:6px}
-.al-toc h3 small{margin-left:8px;font:500 14px/20px var(--font-sans);font-stretch:100%;color:var(--muted)}
-.al-li{position:relative;display:flex;align-items:baseline;gap:6px;width:100%;padding:7px 4px 7px 0;text-align:left;font:500 16px/22px var(--font-sans);color:var(--ink);cursor:pointer;border-radius:4px}
-.al-li .ld{flex:1;min-width:12px;border-bottom:1.6px dotted #b9b8b1;transform:translateY(-4px)}
-.al-li .pg{font:500 14px/20px var(--font-sans);color:var(--quiet);font-variant-numeric:tabular-nums}
+.al-tabs button:active{transform:translateX(24px) scale(.96)}
+.al-book.closed .al-tabs button::before,.al-book.closing .al-tabs button::before{display:none}
+.al-book.closed .al-tabs button span,.al-book.closing .al-tabs button span{opacity:1}
+.al-book.closed .al-tabs button[data-t=pr],.al-book.closing .al-tabs button[data-t=pr]{background:var(--hl-sound)}
+.al-book.closed .al-tabs button[data-t=gm],.al-book.closing .al-tabs button[data-t=gm]{background:var(--hl-word)}
+.al-book.closed .al-tabs button[data-t=tp],.al-book.closing .al-tabs button[data-t=tp]{background:var(--hl-das)}
+.al-book.closed .al-tabs button[data-t=wd],.al-book.closing .al-tabs button[data-t=wd]{background:var(--hl-die)}
+/* 封面：和图标同一本——填色比描边往右下错一点、左边书脊一道竖线、右边一片很淡的网点、白名签 */
+.al-cover{position:absolute;inset:0;z-index:3;display:block;width:100%;transform-origin:0 50%;border-radius:3px 9px 9px 3px;cursor:pointer;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.al-cover::before{content:"";position:absolute;inset:0;border-radius:inherit;transform:translate(4px,3px);background:var(--cover)}
+.al-cover .dots{position:absolute;right:0;top:0;bottom:0;width:30%;transform:translate(4px,3px);border-radius:0 9px 9px 0;opacity:.1;background:radial-gradient(circle,#24272c 1.2px,transparent 1.6px) 0 0/7px 7px}
+.al-cover .spine{position:absolute;left:0;top:0;bottom:0;width:30px;background:var(--cover-spine);transform:translate(4px,3px);border-radius:3px 0 0 3px}
+.al-cover::after{content:"";position:absolute;inset:0;border:2.2px solid #24272c;border-radius:inherit;filter:url(#rough-box);pointer-events:none}
+.al-cover .sl{position:absolute;left:30px;top:2px;bottom:2px;border-left:2.2px solid #24272c;filter:url(#rough-box)}
+.al-cover .lab{position:absolute;left:24%;right:18%;top:24%;display:block;padding:14px 12px 12px;background:var(--card);text-align:center}
+.al-cover .lab::after{content:"";position:absolute;inset:0;border:2px solid #24272c;filter:url(#rough-box)}
+.al-cover .lab b{display:block;font:680 26px/32px var(--font-sans);font-stretch:85%;color:var(--ink)}
+.al-cover .lab small{display:block;margin-top:2px;font:500 13px/18px var(--font-sans);color:var(--muted);letter-spacing:.06em}
+/* 目录 */
+.al-body{animation:al-turn .22s cubic-bezier(.2,.7,.3,1)}
+@keyframes al-turn{from{opacity:0;transform:translateX(10px)}}
+.al-pg h3{font:680 20px/26px var(--font-sans);font-stretch:85%;margin-bottom:4px}
+.al-pg h3 small{margin-left:6px;font:500 13px/18px var(--font-sans);font-stretch:100%;color:var(--muted)}
+.al-li{position:relative;display:flex;align-items:baseline;gap:5px;width:100%;padding:6px 3px 6px 0;text-align:left;font:500 15px/21px var(--font-sans);color:var(--ink);cursor:pointer;border-radius:4px}
+.al-li .ld{flex:1;min-width:10px;border-bottom:1.6px dotted #b9b8b1;transform:translateY(-4px)}
+.al-li .pg{font:500 13px/19px var(--font-sans);color:var(--quiet);font-variant-numeric:tabular-nums}
 .al-li.got .h{box-shadow:inset 0 -.36em 0 var(--hl-word)}
 .al-li.got:active{background:var(--wash)}
 .al-li.no{color:var(--unlit);cursor:default}
-.al-li .th{flex:none;align-self:center;width:52px}
+.al-li .th{flex:none;align-self:center;width:44px}
 .al-li .th .md-mouth{border-width:2px;border-radius:5px;box-shadow:none}
-.al-li .t small{display:block;font:400 13px/18px var(--font-sans);color:var(--muted)}
-.al-uh{display:flex;align-items:baseline;gap:8px;margin:12px 0 2px;font:600 14px/20px var(--font-sans);color:var(--ink-2)}
-.al-uh:first-of-type{margin-top:4px}
+.al-li .t small{display:block;font:400 12px/17px var(--font-sans);color:var(--muted)}
+.al-li.wd .md-art{font-weight:600;font-style:normal}
+.al-li .pg.zh{max-width:50%;text-align:right;color:var(--muted);font-size:13px}
+.al-uh{display:flex;align-items:baseline;gap:6px;margin:10px 0 2px;font:600 13px/18px var(--font-sans);color:var(--ink-2)}
+.al-uh:first-of-type{margin-top:2px}
 .al-uh i{font-style:normal;color:var(--quiet);font-weight:500}
-.al-ul{display:grid;grid-template-columns:22px 1fr;gap:0 6px;padding:6px 0;border-top:1.2px solid #e6e5df;font:400 14px/20px var(--font-sans);color:var(--unlit)}
+.al-ul{display:grid;grid-template-columns:20px 1fr;gap:0 4px;padding:5px 0;border-top:1.2px solid #e6e5df;font:400 13px/18px var(--font-sans);color:var(--unlit)}
 .al-ul b{font-weight:600;color:#a3a39d}
 .al-ul span{display:block}
 .al-ul em{font-style:normal;color:#9a9a94}
-.al-none{margin-top:6px}
-/* 点开一条：卡片出在屏幕中间（内容少也不用低头看），内容多时最高到屏幕的 86%、在卡里滚动 */
-:where(.al-pull *){box-sizing:border-box;margin:0}
-.al-pull{justify-content:center;padding:0 14px}
-.al-pull h2{margin:2px 0 0}
-.al-pull .pp{max-height:86dvh;overflow-y:auto;border-radius:14px;padding:30px 20px 24px;animation:al-pop .24s cubic-bezier(.2,.8,.3,1) both}
-@keyframes al-pop{from{opacity:0;transform:translateY(14px) scale(.97)}}
-.al-pull.hf-cribpull .pp{padding:44px 14px 18px;max-height:88dvh}
-.al-word .pp{padding:0;background:none;box-shadow:none;overflow:visible;max-height:none}
-.al-word .hf-kk.back{margin:0;max-height:86dvh;overflow-y:auto;transform:none}
-.al-word .x{z-index:2}
-.al-body{animation:al-turn .22s cubic-bezier(.2,.7,.3,1)}
-@keyframes al-turn{from{opacity:0;transform:translateX(10px)}}
-.al-li.wd .md-art{font-weight:600;font-style:normal}
-.al-li .pg.zh{max-width:46%;text-align:right;color:var(--muted);font-size:15px}
-.al-pull .src{font:500 13px/18px var(--font-sans);color:var(--quiet);margin:0 0 4px}
-.al-pull .say{margin:8px 0 6px;font:400 16px/24px var(--font-sans);color:var(--ink-2)}
-.al-pull .hf-btbl+.hf-btbl{margin-top:22px}
-.al-pull .ws{display:flex;flex-direction:column;gap:8px;margin-top:14px}.al-pull .ws span{display:flex;align-items:baseline;gap:14px}
-.al-pull .ws small{flex:none;width:2.4em;font:500 14px/30px var(--font-sans);color:var(--ink-2)}
-.al-pull .ws button{border:0;padding:0 2px;font:600 19px/30px var(--font-sans);color:var(--ink);cursor:pointer}
-.al-pull .md-tbl.build .r .md-key{visibility:visible}
-.al-pull .md-tbl .r.off,.al-pull .md-tbl .r.off .p{color:var(--ink-2)}
+.al-none{margin-top:4px;font-size:13px}
+/* 本子里翻到的那一页：盖在目录上，在纸里滚动 */
+.al-leaf{position:absolute;inset:0;z-index:1;overflow-y:auto;overscroll-behavior:contain;padding:12px 18px 18px 14px;background:var(--card);border-radius:3px 8px 8px 3px;scrollbar-width:none}
+.al-leaf.in{animation:al-leaf .24s cubic-bezier(.2,.8,.3,1) both}
+@keyframes al-leaf{from{transform:translateX(28px) rotate(.8deg);opacity:0}}
+.al-leaf .back{display:inline-flex;align-items:center;gap:4px;margin:0 0 6px -4px;padding:4px 8px 4px 4px;border-radius:6px;font:500 13px/18px var(--font-sans);color:var(--quiet);cursor:pointer}
+.al-leaf .back [data-i]{transform:scaleX(-1)}
+.al-leaf .back:active{background:var(--wash)}
+.al-leaf .src{font:500 12px/17px var(--font-sans);color:var(--quiet)}
+.al-leaf h2{margin:2px 0 0;font:680 22px/28px var(--font-sans);font-stretch:85%}
+.al-leaf .say{margin:6px 0 4px;font:400 14px/21px var(--font-sans);color:var(--ink-2)}
+.al-leaf .hf-btbl{margin-top:12px}.al-leaf .hf-btbl+.hf-btbl{margin-top:18px}
+.al-leaf .md-tbl .r{grid-template-columns:52px repeat(var(--cols,1),1fr) 30px;min-height:38px;padding:4px 2px;font-size:15px;line-height:21px}
+.al-leaf .md-tbl .v{min-width:0}.al-leaf .md-tbl .md-key svg{width:26px;height:26px}
+.al-leaf .md-tbl.build .r .md-key{visibility:visible}
+.al-leaf .md-tbl .r.off,.al-leaf .md-tbl .r.off .p{color:var(--ink-2)}
+.al-leaf .hf-contrast{margin-top:12px}.al-leaf .hf-contrast .md-paper{font-size:14px;padding:8px 6px}
+.al-leaf .rule{height:200px;margin-top:12px;background:repeating-linear-gradient(transparent 0 29px,#e3e2db 29px 30.2px)}
+.al-leaf .ws{display:flex;flex-direction:column;gap:6px;margin-top:12px}.al-leaf .ws span{display:flex;align-items:baseline;gap:12px}
+.al-leaf .ws small{flex:none;width:2.4em;font:500 13px/28px var(--font-sans);color:var(--ink-2)}
+.al-leaf .ws button{border:0;padding:0 2px;font:600 17px/28px var(--font-sans);color:var(--ink);cursor:pointer}
+.al-leaf .hf-mouth{margin:10px 0 4px}
+.al-leaf .hf-pair .w{font-size:16px}
+/* 词卡背面放进本子：不再是一张单独的卡，去掉自己的胶带、阴影和歪斜，字收一号 */
+.al-leaf.wd{padding:10px 0 0}.al-leaf.wd .back{margin-left:10px}
+.al-leaf.wd .hf-kk.back{margin:0;padding:0;box-shadow:none;transform:none;background:none;display:block;font:inherit;color:inherit}
+.al-leaf.wd .hf-kk>.md-tape{display:none}
+.al-leaf.wd .hf-kk .hd{padding:6px 14px 12px}.al-leaf.wd .hf-kk .hd .md-lm{font-size:26px;line-height:34px}
+.al-leaf.wd .hf-kk .hd .mn{font-size:17px;line-height:24px}
+.al-leaf.wd .hf-kk .sec{padding:10px 14px}.al-leaf.wd .hf-kk .sec+.sec::before{left:14px;right:14px}
+.al-leaf.wd .hf-kk .md-ln .md-ctx{font-size:16px;line-height:23px}
+.al-leaf.wd .hf-kk .ex p{font-size:15px;line-height:21px}.al-leaf.wd .hf-kk .ex small{font-size:13px;line-height:18px}
+.al-leaf.wd .hf-kk .rule{min-height:40px;margin:0 14px 14px}
+/* 拼读小抄放进本子：小抄自己就是一张纸，贴满这一页 */
+.al-leaf.crib{padding:10px 8px 14px}.al-leaf.crib .md-crib{margin:0;box-shadow:none;transform:none}
+/* 翻开 / 合上：只动封面的 transform 和 opacity */
+@keyframes al-open{0%{transform:perspective(1100px) rotateY(0);opacity:1}55%{opacity:1}100%{transform:perspective(1100px) rotateY(-100deg);opacity:0}}
+@keyframes al-shade{0%{opacity:1}100%{opacity:0}}
+@keyframes al-shut{0%{transform:perspective(1100px) rotateY(-100deg);opacity:0}45%{opacity:1}100%{transform:perspective(1100px) rotateY(0);opacity:1}}
+.al-book.opening .al-cover{animation:al-open .3s cubic-bezier(.2,.8,.3,1) both}
+.al-book.opening .shade{animation:al-shade .24s cubic-bezier(.2,.8,.3,1) both}
+.al-book.closing .al-cover{animation:al-shut .26s cubic-bezier(.4,0,.2,1) both}
+.al-book.open .al-cover{display:none}
 
 /* ================= 复习词卡：一张索引卡（正面回忆，背面详情） ================= */
 .hf-three-btn{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
