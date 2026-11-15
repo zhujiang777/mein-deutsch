@@ -92,8 +92,12 @@ function home() {
   app.querySelector('.go')?.addEventListener('click', () => {
     const nb = app.querySelector('.nb'); sfx('tap');
     nb.classList.add('press'); nav.classList.add('away');
+    // 放大到那扇窗（中心 206,391，半宽 124、半高 125）盖住整个屏幕为止；屏幕换算到画布坐标里量
+    const k = +nb.parentNode.style.getPropertyValue('--k') || 1, W = innerWidth / k, H = innerHeight / k;
+    const zoom = Math.max((206 - (195 - W / 2)) / 124, (195 + W / 2 - 206) / 124, 391 / 125, (H - 391) / 125) * 1.18;
+    nb.style.setProperty('--zoom', zoom.toFixed(2));
     setTimeout(() => nb.classList.add('open'), 70);
-    setTimeout(() => { location.hash = t.reviews ? '#/review' : `#/${item.kind}/${item.id}`; }, 640);
+    setTimeout(() => { location.hash = t.reviews ? '#/review' : `#/${item.kind}/${item.id}`; }, 590);
   });
 }
 function fitStage() {
@@ -194,7 +198,7 @@ function mePage() {
     <form class="hf-set" hidden><label>服务地址<input name="endpoint" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(sec.endpoint)}"></label>
       <label>访问码<input name="code" type="password" autocomplete="off" placeholder="${sec.accessCode ? '已保存，不改就留空' : ''}"></label><button type="submit" class="md-btn">保存</button></form>
     <h1 class="hf-h1 sub">试学</h1>
-    <div class="hf-dev"><button type="button" class="md-btn sec" data-act="day">进入下一天</button><button type="button" class="md-btn sec" data-act="reset">清空试学进度</button><a class="md-btn sec" href="hoertest.html">选声音</a></div>
+    <div class="hf-dev"><button type="button" class="md-btn sec" data-act="day">进入下一天</button><button type="button" class="md-btn sec" data-act="reset">清空试学进度</button></div>
     <p class="md-cap hf-devcap">${state.shift ? `已往后拨 ${state.shift} 天` : ''}</p>
     </div>`;
   // 小抄：从底下拉出一张纸，随时查

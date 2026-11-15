@@ -248,9 +248,10 @@ em{font-style:normal}
 .hf-stagewrap{position:fixed;inset:0;overflow:hidden;background:var(--paper)}
 .hf-stage{position:absolute;left:calc(50% - 195px * var(--k,1));top:0;width:390px;height:844px;transform-origin:0 0}
 .nb{background-color:var(--paper);background-image:radial-gradient(circle,#cfcec7 1px,transparent 1.5px);background-size:20px 20px;background-position:8px 4px}
-.nb .inner{position:absolute;inset:0}
-.nb .cover{position:absolute;inset:0;background:var(--paper);clip-path:path(evenodd,'M0 0H390V844H0ZM89 266H323a7 7 0 0 1 7 7V509a7 7 0 0 1 -7 7H89a7 7 0 0 1 -7 -7V273a7 7 0 0 1 7 -7Z');transform-origin:206px 391px;transition:clip-path .58s cubic-bezier(.4,0,.15,1),transform .58s cubic-bezier(.4,0,.15,1)}
-.nb .cover>*{transition:opacity .15s}
+/* 进课：镜头朝本子中间那扇窗推进——整本本子向四周散开滑出屏幕，窗里的纸铺满全屏，然后课的第一屏在同一张纸上长出来。
+   只动 transform 和 opacity（提前各占一层），不再每帧重画裁切路径。放大倍数 --zoom 由脚本按屏幕算。 */
+.nb .inner{position:absolute;inset:0;transform-origin:206px 391px;transition:transform .5s cubic-bezier(.55,0,.2,1);will-change:transform}
+.nb .cover{position:absolute;inset:0;background:var(--paper);clip-path:path(evenodd,'M0 0H390V844H0ZM89 266H323a7 7 0 0 1 7 7V509a7 7 0 0 1 -7 7H89a7 7 0 0 1 -7 -7V273a7 7 0 0 1 7 -7Z');transform-origin:206px 391px;transition:transform .5s cubic-bezier(.55,0,.2,1);will-change:transform}
 .nbsvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .nbprint{font:600 11px var(--font-sans);letter-spacing:.24em;fill:#3f6f96}
 .nblabel{position:absolute;left:82px;top:140px;width:248px;min-height:76px;padding:14px 84px 14px 18px;background:#fffdf8;transform:rotate(-1.2deg);box-shadow:8px 7px 0 var(--cover-spine)}
@@ -274,9 +275,11 @@ em{font-style:normal}
 .nb .plan i{font-style:normal;color:#b4b3ac}
 .nb .donel{position:absolute;left:0;right:0;top:645px;margin:0;text-align:center;font:600 20px/26px var(--font-sans)}
 .nb .donel small{display:block;font:400 15px/22px var(--font-sans);color:var(--muted);margin-top:4px}
-.nb.open .cover{clip-path:path(evenodd,'M0 0H390V844H0ZM-17 -24H407a7 7 0 0 1 7 7V861a7 7 0 0 1 -7 7H-17a7 7 0 0 1 -7 -7V-17a7 7 0 0 1 7 -7Z');transform:scale(1.06)}
+.nb.open .cover,.nb.open .inner{transform:scale(var(--zoom,4))}
+.nb .nbart{transition:opacity .24s ease-out .2s;will-change:opacity}
+.nb.open .nbart{opacity:0}
 .nb.open .thick{opacity:0}
-.nb.open .cover>*{opacity:0}
+.hf-page>.md-top,.hf-page>.hf-foot{animation:hf-fade .24s ease-out}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 

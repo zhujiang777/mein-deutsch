@@ -13,7 +13,7 @@ const reply = (id, prompt, answers, cue) => ({ id, type: 'response', prompt, ans
 // 角色 → 固定配音（ElevenLabs 声音名，用户 2026-11-09 选定）。hi 是预习“认人物”时听的那句自我介绍。WORD_VOICE 读单词、词包和发音例词。
 export const STORY_CAST = {
   Lin: { zh: '你 · 新加坡来的交换生，学 BWL（会计）', voice: 'Jonas Falk', me: true, hi: 'Hallo! Ich bin Lin.' },
-  Lena: { zh: 'Lena Vogel · 学医，来自 Leipzig，永远在赶时间', voice: 'Nadine Convo', hi: 'Hallo! Ich bin Lena.' },
+  Lena: { zh: 'Lena Vogel · 学医，来自 Leipzig，永远在赶时间', voice: 'Lea', hi: 'Hallo! Ich bin Lena.' },
   Tom: { zh: 'Tom Becker · 哲学读了六年，来自 Köln，爱做饭不洗碗', voice: 'Dylan Carter', hi: 'Hallo! Ich bin Tom.' },
   Krause: { zh: 'Herr Krause · 宿舍管理员，只说 Sie', voice: 'Erich Steiner', hi: 'Guten Tag. Mein Name ist Krause.' },
 };

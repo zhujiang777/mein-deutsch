@@ -9,6 +9,7 @@
       python3 tools/gen_story_audio.py                    # 全部
       python3 tools/gen_story_audio.py --redo 5c7d62b450d2 # 重新生成某一条（读得不对时）
       python3 tools/gen_story_audio.py --all               # 全部重录（改了语速或换了声音时）
+      python3 tools/gen_story_audio.py --role Lena         # 只重录一个角色的全部（换了她的声音时）
 先跑 node tools/voice-script.mjs 让清单和课文一致。
 """
 import json, os, sys, time, urllib.request, urllib.error
@@ -50,12 +51,14 @@ def main():
     script = json.load(open(SCRIPT))['voices']
     lessons = set((arg('--lesson') or '').split(',')) - {''}
     redo = set((arg('--redo') or '').split(',')) - {''}
+    roles = set((arg('--role') or '').split(',')) - {''}  # --role Lena：只重录这个角色的全部（换了她的声音时）
     jobs = []
     for role, v in script.items():
         for it in v['items']:
             if lessons and it['lesson'] not in lessons: continue
             path = os.path.join(OUT, it['id'] + '.mp3')
-            if os.path.exists(path) and it['id'] not in redo and '--all' not in sys.argv: continue
+            if roles and role not in roles: continue
+            if os.path.exists(path) and it['id'] not in redo and '--all' not in sys.argv and not roles: continue
             if redo and it['id'] not in redo: continue
             jobs.append((role, v['voice'], it, path))
     chars = sum(len(j[2]['text']) for j in jobs)
@@ -75,6 +78,7 @@ def main():
         hit = next((v for v in voices if v['name'].lower().startswith(name.lower())), None)
         if not hit: sys.exit(f'声音还没加到 My voices：{name}')
         ids[role] = hit['voice_id']
+        print(f'  {role} → {hit["name"]}（{hit["voice_id"]}）')
     os.makedirs(OUT, exist_ok=True)
     done = 0
     for role, _, it, path in jobs:
