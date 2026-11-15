@@ -209,7 +209,7 @@ test('复习卡选「模糊」：不往后推也不清零，明天再来', () =>
 
 test('手帐页：学到哪亮到哪；语法 29 个点，小贴士按发音 / 语法 / 文化分开', () => {
   const empty = albumOf(blank());
-  assert.deepEqual(empty.count, { pr: 0, gm: 0, gmAll: 29, tp: 0 });
+  assert.deepEqual(empty.count, { pr: 0, gm: 0, gmAll: 29, tp: 0, wd: 0, weak: 0 });
   assert(empty.units.every(u => u.lessons.every(x => !x.got)) && empty.cribs.every(c => !c.got));
   const s = blank();
   STORY_LESSONS.slice(0, 5).forEach((l, i) => completeLesson(s, l, T0 + i * DAY));
@@ -223,5 +223,12 @@ test('手帐页：学到哪亮到哪；语法 29 个点，小贴士按发音 / �
   assert.equal(u1.sumGot, false);
   completeQuiz(s, STORY_UNIT_SUMMARIES[0], [], T0 + 6 * DAY);
   assert.equal(albumOf(s).units[0].sumGot, true);
+  // 单词签：学过的课的重点词都在；复习时没选「认识」的进「不熟」，再选「认识」就摘掉
+  assert.equal(a.count.wd, STORY_LESSONS.slice(1, 5).reduce((n, l) => n + l.words.length, 0));
+  const key = Object.keys(s.cards)[0];
+  rateCard(s, key, 'fuzzy', T0 + 7 * DAY);
+  assert.equal(albumOf(s).count.weak, 1);
+  rateCard(s, key, true, T0 + 8 * DAY);
+  assert.equal(albumOf(s).count.weak, 0);
   assert(a.units.slice(1).every(u => u.lessons.every(x => !x.got && (x.plan || x.n === 30))));
 });

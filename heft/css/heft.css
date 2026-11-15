@@ -414,7 +414,20 @@ em{font-style:normal}
 .al-ul span{display:block}
 .al-ul em{font-style:normal;color:#9a9a94}
 .al-none{margin-top:6px}
-.al-pull .pp{max-height:86dvh;overflow-y:auto}
+/* 点开一条：卡片出在屏幕中间（内容少也不用低头看），内容多时最高到屏幕的 86%、在卡里滚动 */
+:where(.al-pull *){box-sizing:border-box;margin:0}
+.al-pull{justify-content:center;padding:0 14px}
+.al-pull h2{margin:2px 0 0}
+.al-pull .pp{max-height:86dvh;overflow-y:auto;border-radius:14px;padding:30px 20px 24px;animation:al-pop .24s cubic-bezier(.2,.8,.3,1) both}
+@keyframes al-pop{from{opacity:0;transform:translateY(14px) scale(.97)}}
+.al-pull.hf-cribpull .pp{padding:44px 14px 18px;max-height:88dvh}
+.al-word .pp{padding:0;background:none;box-shadow:none;overflow:visible;max-height:none}
+.al-word .hf-kk.back{margin:0;max-height:86dvh;overflow-y:auto;transform:none}
+.al-word .x{z-index:2}
+.al-body{animation:al-turn .22s cubic-bezier(.2,.7,.3,1)}
+@keyframes al-turn{from{opacity:0;transform:translateX(10px)}}
+.al-li.wd .md-art{font-weight:600;font-style:normal}
+.al-li .pg.zh{max-width:46%;text-align:right;color:var(--muted);font-size:15px}
 .al-pull .src{font:500 13px/18px var(--font-sans);color:var(--quiet);margin:0 0 4px}
 .al-pull .say{margin:8px 0 6px;font:400 16px/24px var(--font-sans);color:var(--ink-2)}
 .al-pull .hf-btbl+.hf-btbl{margin-top:22px}
@@ -429,7 +442,7 @@ em{font-style:normal}
 .hf-three-btn .md-btn{padding:0 4px;font-size:17px}
 .hf-kk{position:relative;background:var(--card);box-shadow:var(--shadow-paper)}
 .hf-kk>.md-tape{width:84px;left:calc(50% - 42px);top:-12px;transform:rotate(-2deg)}
-.hf-kk.front{margin-top:34px;min-height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-.8deg);background:var(--card) linear-gradient(var(--rot),var(--rot)) 0 64px/100% 1.4px no-repeat}
+.hf-kk.front{margin-top:34px;min-height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-.8deg)}
 .hf-kk.front .md-lm{display:flex;align-items:center;gap:8px;font:600 40px/50px var(--font-sans);letter-spacing:-.015em;padding-left:44px;flex-wrap:wrap;justify-content:center}
 .hf-kk.front .md-key svg{width:36px;height:36px}
 .hf-kkbody{display:flex;flex-direction:column}

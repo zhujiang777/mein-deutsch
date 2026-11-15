@@ -273,7 +273,7 @@
   },
   "Lena": {
    "voice": "Lea",
-   "chars": 2481,
+   "chars": 4796,
    "items": [
     {
      "id": "062616307468",
@@ -732,6 +732,198 @@
      "text": "immer"
     },
     {
+     "id": "eb6bb3748fc6",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "neu hier"
+    },
+    {
+     "id": "02ae9a4ee298",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "ganz neu"
+    },
+    {
+     "id": "7a072285acb9",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Bist du auch neu hier?"
+    },
+    {
+     "id": "e7e38029d3b5",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Das Zimmer ist neu."
+    },
+    {
+     "id": "d06d0456886c",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Was ist neu?"
+    },
+    {
+     "id": "85a55bab0a34",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Hier, bitte."
+    },
+    {
+     "id": "51ec59855840",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "hier und da"
+    },
+    {
+     "id": "dd25f26b14e4",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Ich bin hier!"
+    },
+    {
+     "id": "d36454ae3c97",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Ist Lena hier?"
+    },
+    {
+     "id": "4e2b9443b39b",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Wie bitte? Noch einmal, bitte."
+    },
+    {
+     "id": "261269f224c1",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Entschuldigung, wie bitte?"
+    },
+    {
+     "id": "99595128b455",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Herzlich willkommen!"
+    },
+    {
+     "id": "bf0aa079c7b1",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Willkommen in Deutschland!"
+    },
+    {
+     "id": "6eff4395879e",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Willkommen in der WG!"
+    },
+    {
+     "id": "4c1e06de4739",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Willkommen, Lin!"
+    },
+    {
+     "id": "b7861b0b9110",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "einen Kaffee trinken"
+    },
+    {
+     "id": "e80cab06d282",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Kaffee mit Milch"
+    },
+    {
+     "id": "b766cd237a25",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Ich trinke Kaffee."
+    },
+    {
+     "id": "df97d2e60049",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Kaffee oder Tee?"
+    },
+    {
+     "id": "5e0087366913",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Der Kaffee ist gut."
+    },
+    {
+     "id": "914f2730ac0f",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "mit dem Bus"
+    },
+    {
+     "id": "c19b3b530cca",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "im Bus"
+    },
+    {
+     "id": "f7c0e358b35c",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Der Bus kommt!"
+    },
+    {
+     "id": "cc70ff727ee3",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Wo ist der Bus?"
+    },
+    {
+     "id": "9e83841b66a8",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Ich bin im Bus."
+    },
+    {
+     "id": "98088f26004c",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Tschüss, bis später!"
+    },
+    {
+     "id": "199552dc72ac",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Tschüss, bis morgen!"
+    },
+    {
+     "id": "3c9c170f6770",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Tschüss, Tom! Bis morgen!"
+    },
+    {
+     "id": "187660eac987",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "immer so"
+    },
+    {
+     "id": "2977514626da",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "wie immer"
+    },
+    {
+     "id": "b7b106977d8e",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Tom ist immer in der Küche."
+    },
+    {
+     "id": "9b686fa132aa",
+     "lesson": "sl-01",
+     "kind": "word",
+     "text": "Kaffee? – Wie immer!"
+    },
+    {
      "id": "d73b2dcb3459",
      "lesson": "sl-01",
      "kind": "word",
@@ -846,12 +1038,6 @@
      "text": "Hallo, Lin!"
     },
     {
-     "id": "6eff4395879e",
-     "lesson": "sl-01",
-     "kind": "reading",
-     "text": "Willkommen in der WG!"
-    },
-    {
      "id": "8d5e1d64af78",
      "lesson": "sl-01",
      "kind": "reading",
@@ -940,6 +1126,198 @@
      "lesson": "sl-02",
      "kind": "word",
      "text": "wo"
+    },
+    {
+     "id": "0469723358c9",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Woher kommen Sie?"
+    },
+    {
+     "id": "b3fad35de886",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Woher kommt Lena?"
+    },
+    {
+     "id": "72c7661bc90e",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Woher ist das?"
+    },
+    {
+     "id": "69ccd0f3f13d",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "aus China kommen"
+    },
+    {
+     "id": "36df3fd1e940",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "aus Deutschland kommen"
+    },
+    {
+     "id": "4b7c9cede107",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ich komme aus China."
+    },
+    {
+     "id": "669f07a647e5",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Kommst du aus Deutschland?"
+    },
+    {
+     "id": "66efda23f13f",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Kommst du? – Ja, ich komme!"
+    },
+    {
+     "id": "093239030d16",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "aus China"
+    },
+    {
+     "id": "57a5ca2bd33c",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "aus Deutschland"
+    },
+    {
+     "id": "ab06a2df63ed",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "aus Berlin"
+    },
+    {
+     "id": "fcac011758e3",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ich bin aus Singapur."
+    },
+    {
+     "id": "310197ba2e05",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Lena ist aus Leipzig."
+    },
+    {
+     "id": "ec186a1faa6f",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ich bin neu hier, aber Tom nicht."
+    },
+    {
+     "id": "a6caa6cfaada",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ja, aber nicht jetzt."
+    },
+    {
+     "id": "3cab3674491d",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "in Berlin wohnen"
+    },
+    {
+     "id": "a6dbb563b9a2",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "in Deutschland wohnen"
+    },
+    {
+     "id": "a98f2b700fd2",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "in der WG wohnen"
+    },
+    {
+     "id": "f9e1c85094c5",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ich wohne in Berlin."
+    },
+    {
+     "id": "b2513f2b6273",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Wo wohnst du?"
+    },
+    {
+     "id": "b1935a2812f2",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Wohnst du auch in der WG?"
+    },
+    {
+     "id": "05f0205b96a1",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Wo bist du?"
+    },
+    {
+     "id": "f6e903685027",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Wo ist mein Zimmer?"
+    },
+    {
+     "id": "4aef0f21eafb",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Wo ist das?"
+    },
+    {
+     "id": "c9e688b5a5ee",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ich auch!"
+    },
+    {
+     "id": "e59eee99040e",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ich auch nicht."
+    },
+    {
+     "id": "99d6685a8a3a",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ich komme auch aus Singapur."
+    },
+    {
+     "id": "a013b4a6aec4",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Kommst du auch?"
+    },
+    {
+     "id": "998f93a416b0",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Das ist richtig."
+    },
+    {
+     "id": "dee6132dc01d",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "nicht richtig"
+    },
+    {
+     "id": "c010e94c0ffb",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ist das richtig?"
+    },
+    {
+     "id": "958ab81ded30",
+     "lesson": "sl-02",
+     "kind": "word",
+     "text": "Ja, richtig!"
     },
     {
      "id": "b20864979d99",
@@ -1150,6 +1528,228 @@
      "lesson": "sl-03",
      "kind": "word",
      "text": "das Jahr"
+    },
+    {
+     "id": "6c74e69786ad",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Was ist das?"
+    },
+    {
+     "id": "2387f65e07e4",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Was machst du?"
+    },
+    {
+     "id": "e314d4475643",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Was kochst du?"
+    },
+    {
+     "id": "4e68c285297d",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Was lernst du?"
+    },
+    {
+     "id": "c018b2202e1b",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Medizin studieren"
+    },
+    {
+     "id": "2e70932d65dd",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "in Berlin studieren"
+    },
+    {
+     "id": "d805e9e3ceea",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Ich studiere in Deutschland."
+    },
+    {
+     "id": "5997397d022e",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Studierst du auch?"
+    },
+    {
+     "id": "9793f6f91d1d",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Was studiert Tom?"
+    },
+    {
+     "id": "022040db22ad",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Deutsch lernen"
+    },
+    {
+     "id": "a331defcaf87",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "viel lernen"
+    },
+    {
+     "id": "de3090419b5f",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Ich lerne Deutsch."
+    },
+    {
+     "id": "ca9597530372",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Lernst du auch Deutsch?"
+    },
+    {
+     "id": "cdc11d9ce0ce",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Wir lernen zusammen."
+    },
+    {
+     "id": "da6cbc2ddd11",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "schon lange"
+    },
+    {
+     "id": "87a49aed7bfd",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Schon gut!"
+    },
+    {
+     "id": "e1f5bcb07c84",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Tom ist schon hier."
+    },
+    {
+     "id": "aed6f35ea50b",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Ich wohne schon zwei Jahre hier."
+    },
+    {
+     "id": "14b5e976c054",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Zimmer sechs"
+    },
+    {
+     "id": "e9590b994e76",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "um sechs"
+    },
+    {
+     "id": "b3061a64f394",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Ich wohne in Zimmer sechs."
+    },
+    {
+     "id": "75a087cfad1e",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Der Bus kommt um sechs."
+    },
+    {
+     "id": "45f6a6a7c10d",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "ein Jahr"
+    },
+    {
+     "id": "ce6027159f5e",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "zwei Jahre"
+    },
+    {
+     "id": "ffbde91b8227",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "dieses Jahr"
+    },
+    {
+     "id": "5cc94f368222",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Ich bin ein Jahr hier."
+    },
+    {
+     "id": "abe89f1db72f",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Lena wohnt schon drei Jahre hier."
+    },
+    {
+     "id": "e3d7386771fc",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "zusammen kochen"
+    },
+    {
+     "id": "5dd007e3d4ab",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Kaffee kochen"
+    },
+    {
+     "id": "7e01928760a7",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Ich koche, du spülst."
+    },
+    {
+     "id": "0bd41766f44b",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Was kochst du heute?"
+    },
+    {
+     "id": "50bcc2d9a0e6",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Wir kochen zusammen."
+    },
+    {
+     "id": "990c5bc23d8e",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "sehr gut"
+    },
+    {
+     "id": "f24ab69fc1f5",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Alles gut?"
+    },
+    {
+     "id": "eaafb8cc1890",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Das ist gut."
+    },
+    {
+     "id": "390d43bcd12d",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Der Kaffee ist sehr gut."
+    },
+    {
+     "id": "b1bb69cefa25",
+     "lesson": "sl-03",
+     "kind": "word",
+     "text": "Ja, alles gut."
     },
     {
      "id": "a8b302e7837d",
@@ -1464,6 +2064,204 @@
      "text": "da"
     },
     {
+     "id": "b5ebb1d3f084",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Herr und Frau Krause"
+    },
+    {
+     "id": "3f5d7602d61b",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Wo ist Herr Krause?"
+    },
+    {
+     "id": "0caef0398c62",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Entschuldigung, Herr Krause!"
+    },
+    {
+     "id": "68a108339365",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Guten Morgen!"
+    },
+    {
+     "id": "e17c9d37c75a",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Guten Abend!"
+    },
+    {
+     "id": "2e0f7c2bd530",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Guten Tag, Frau Vogel!"
+    },
+    {
+     "id": "35972ceffe8d",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Guten Tag. Mein Name ist Lin."
+    },
+    {
+     "id": "570c18aef9d9",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Wie ist Ihr Name?"
+    },
+    {
+     "id": "089e4574bac8",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Wie ist dein Name?"
+    },
+    {
+     "id": "4cda675b638e",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Mein Name ist Lin."
+    },
+    {
+     "id": "9654d6e44f02",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Der Name ist richtig."
+    },
+    {
+     "id": "6f359dabaeb7",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "mein Zimmer"
+    },
+    {
+     "id": "aeb3b2f3a983",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "ein Zimmer in der WG"
+    },
+    {
+     "id": "10744ebcf9cf",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Das ist mein Zimmer."
+    },
+    {
+     "id": "116c5b8300e2",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Wo ist Zimmer vier?"
+    },
+    {
+     "id": "62c4cbd9cf7b",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Ist das dein Zimmer?"
+    },
+    {
+     "id": "24912446843a",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "mein Schlüssel"
+    },
+    {
+     "id": "27c6433e8ede",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Wo ist mein Schlüssel?"
+    },
+    {
+     "id": "75348081ef47",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Das ist nicht mein Schlüssel."
+    },
+    {
+     "id": "bc07f9e6d0d9",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Ist das Ihr Schlüssel?"
+    },
+    {
+     "id": "8c38b4549fdf",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "nicht gut"
+    },
+    {
+     "id": "0ed423f2214a",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "nicht hier"
+    },
+    {
+     "id": "0783d6494d60",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "noch nicht"
+    },
+    {
+     "id": "3a0bb24d7fe6",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Ich bin nicht neu hier."
+    },
+    {
+     "id": "f37f6e0eeccc",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Das ist nicht richtig."
+    },
+    {
+     "id": "4846677c77b1",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Ich wohne nicht hier."
+    },
+    {
+     "id": "c0ab410edcc3",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Ich bin gleich da."
+    },
+    {
+     "id": "281bdf74140f",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Wer ist da?"
+    },
+    {
+     "id": "61d168d2e9e9",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Ist Lena da?"
+    },
+    {
+     "id": "166e39d42e5c",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Ich bin da!"
+    },
+    {
+     "id": "bbe24b33d60a",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Vielen Dank und auf Wiedersehen!"
+    },
+    {
+     "id": "cca883bacc1d",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Auf Wiedersehen, Frau Vogel!"
+    },
+    {
+     "id": "91896a033731",
+     "lesson": "sl-04",
+     "kind": "word",
+     "text": "Danke schön. Auf Wiedersehen!"
+    },
+    {
      "id": "7c7f091f5ab1",
      "lesson": "sl-04",
      "kind": "word",
@@ -1606,12 +2404,6 @@
      "lesson": "unit-1",
      "kind": "cue",
      "text": "Woher kommst du?"
-    },
-    {
-     "id": "9793f6f91d1d",
-     "lesson": "unit-1",
-     "kind": "cue",
-     "text": "Was studiert Tom?"
     },
     {
      "id": "6bc47e420f7a",

@@ -565,6 +565,52 @@ const LESSON_4 = {
 export const STORY_LESSONS = [LESSON_0, LESSON_1, LESSON_2, LESSON_3, LESSON_4];
 
 // 单元总表：每个单元结束时出一次，把本单元零散学到的语法收成整张表，和小测放在一起
+// 复习词卡背面的搭配和例句（2026-11-15 作者定：课文是根，这里是生枝长叶的地方——换地方、换人称、换成问句，让人能举一反三；和课文原句一样的不放）。
+// 允许带少量课外常用词，整句都有中文。键是 课号 → 词条。
+const WORD_MORE = {
+  'sl-01': {
+    'neu': { col: [['neu hier', '新来的'], ['ganz neu', '全新的']], ex: [['Bist du auch neu hier?', '你也是新来的吗？'], ['Das Zimmer ist neu.', '房间是新的。'], ['Was ist neu?', '有什么新鲜事？']] },
+    'hier': { col: [['Hier, bitte.', '给，请拿好。'], ['hier und da', '这儿那儿、到处']], ex: [['Ich bin hier!', '我在这儿！'], ['Ist Lena hier?', 'Lena 在这儿吗？']] },
+    'Wie bitte?': { col: [], ex: [['Wie bitte? Noch einmal, bitte.', '什么？请再说一遍。'], ['Entschuldigung, wie bitte?', '不好意思，您说什么？']] },
+    'willkommen': { col: [['Herzlich willkommen!', '热烈欢迎！'], ['Willkommen in Deutschland!', '欢迎来到德国！']], ex: [['Willkommen in der WG!', '欢迎来到合租公寓！'], ['Willkommen, Lin!', '欢迎你，Lin！']] },
+    'der Kaffee': { col: [['einen Kaffee trinken', '喝杯咖啡'], ['Kaffee mit Milch', '加奶的咖啡']], ex: [['Ich trinke Kaffee.', '我喝咖啡。'], ['Kaffee oder Tee?', '咖啡还是茶？'], ['Der Kaffee ist gut.', '这咖啡不错。']] },
+    'der Bus': { col: [['mit dem Bus', '坐公交车'], ['im Bus', '在公交车上']], ex: [['Der Bus kommt!', '公交车来了！'], ['Wo ist der Bus?', '公交车在哪儿？'], ['Ich bin im Bus.', '我在公交车上。']] },
+    'Tschüss!': { col: [['Tschüss, bis später!', '拜，回头见！'], ['Tschüss, bis morgen!', '拜，明天见！']], ex: [['Tschüss, Tom! Bis morgen!', '拜，Tom！明天见！']] },
+    'immer': { col: [['immer so', '总是这样'], ['wie immer', '和往常一样']], ex: [['Tom ist immer in der Küche.', 'Tom 总在厨房里。'], ['Kaffee? – Wie immer!', '咖啡？——老样子！']] },
+  },
+  'sl-02': {
+    'woher': { col: [['Woher kommen Sie?', '您从哪里来？']], ex: [['Woher kommt Lena?', 'Lena 是哪里人？'], ['Woher ist das?', '这是哪儿来的？']] },
+    'kommen': { col: [['aus China kommen', '来自中国'], ['aus Deutschland kommen', '来自德国']], ex: [['Ich komme aus China.', '我来自中国。'], ['Kommst du aus Deutschland?', '你来自德国吗？'], ['Kommst du? – Ja, ich komme!', '你来吗？——来，我这就来！']] },
+    'aus': { col: [['aus China', '来自中国'], ['aus Deutschland', '来自德国'], ['aus Berlin', '来自柏林']], ex: [['Ich bin aus Singapur.', '我是新加坡人。'], ['Lena ist aus Leipzig.', 'Lena 是莱比锡人。']] },
+    'aber': { col: [], ex: [['Ich bin neu hier, aber Tom nicht.', '我是新来的，但 Tom 不是。'], ['Ja, aber nicht jetzt.', '好，但不是现在。']] },
+    'wohnen': { col: [['in Berlin wohnen', '住在柏林'], ['in Deutschland wohnen', '住在德国'], ['in der WG wohnen', '住在合租公寓']], ex: [['Ich wohne in Berlin.', '我住在柏林。'], ['Wo wohnst du?', '你住哪儿？'], ['Wohnst du auch in der WG?', '你也住合租公寓吗？']] },
+    'wo': { col: [['Wo wohnst du?', '你住哪儿？'], ['Wo bist du?', '你在哪儿？']], ex: [['Wo ist der Bus?', '公交车在哪儿？'], ['Wo ist mein Zimmer?', '我的房间在哪儿？'], ['Wo ist das?', '那在哪儿？']] },
+    'auch': { col: [['Ich auch!', '我也是！'], ['Ich auch nicht.', '我也不。']], ex: [['Ich komme auch aus Singapur.', '我也来自新加坡。'], ['Kommst du auch?', '你也来吗？']] },
+    'richtig': { col: [['Das ist richtig.', '这是对的。'], ['nicht richtig', '不对']], ex: [['Ist das richtig?', '这样对吗？'], ['Ja, richtig!', '对，没错！']] },
+  },
+  'sl-03': {
+    'was': { col: [['Was ist das?', '这是什么？'], ['Was machst du?', '你在做什么？']], ex: [['Was kochst du?', '你在做什么菜？'], ['Was lernst du?', '你在学什么？']] },
+    'studieren': { col: [['Medizin studieren', '学医'], ['in Berlin studieren', '在柏林上大学']], ex: [['Ich studiere in Deutschland.', '我在德国上大学。'], ['Studierst du auch?', '你也是大学生吗？'], ['Was studiert Tom?', 'Tom 学什么专业？']] },
+    'lernen': { col: [['Deutsch lernen', '学德语'], ['viel lernen', '学得很多']], ex: [['Ich lerne Deutsch.', '我在学德语。'], ['Lernst du auch Deutsch?', '你也在学德语吗？'], ['Wir lernen zusammen.', '我们一起学。']] },
+    'schon': { col: [['schon lange', '已经很久了'], ['Schon gut!', '好了好了，没事。']], ex: [['Tom ist schon hier.', 'Tom 已经到了。'], ['Ich wohne schon zwei Jahre hier.', '我在这儿住了两年了。']] },
+    'sechs': { col: [['Zimmer sechs', '六号房间'], ['um sechs', '六点钟']], ex: [['Ich wohne in Zimmer sechs.', '我住六号房间。'], ['Der Bus kommt um sechs.', '公交车六点来。']] },
+    'das Jahr': { col: [['ein Jahr', '一年'], ['zwei Jahre', '两年'], ['dieses Jahr', '今年']], ex: [['Ich bin ein Jahr hier.', '我在这儿待一年。'], ['Lena wohnt schon drei Jahre hier.', 'Lena 在这儿住了三年了。']] },
+    'kochen': { col: [['zusammen kochen', '一起做饭'], ['Kaffee kochen', '煮咖啡']], ex: [['Ich koche, du spülst.', '我做饭，你洗碗。'], ['Was kochst du heute?', '你今天做什么菜？'], ['Wir kochen zusammen.', '我们一起做饭。']] },
+    'gut': { col: [['sehr gut', '很好'], ['Alles gut?', '一切都好吗？']], ex: [['Das ist gut.', '这很好。'], ['Der Kaffee ist sehr gut.', '咖啡很好喝。'], ['Ja, alles gut.', '嗯，都好。']] },
+  },
+  'sl-04': {
+    'Herr': { col: [['Herr und Frau Krause', 'Krause 先生和太太']], ex: [['Wo ist Herr Krause?', 'Krause 先生在哪儿？'], ['Entschuldigung, Herr Krause!', '打扰一下，Krause 先生！']] },
+    'Guten Tag!': { col: [['Guten Morgen!', '早上好！'], ['Guten Abend!', '晚上好！']], ex: [['Guten Tag, Frau Vogel!', '您好，Vogel 女士！'], ['Guten Tag. Mein Name ist Lin.', '您好，我叫 Lin。']] },
+    'der Name': { col: [['Wie ist Ihr Name?', '您贵姓？'], ['Wie ist dein Name?', '你叫什么名字？']], ex: [['Mein Name ist Lin.', '我叫 Lin。'], ['Der Name ist richtig.', '名字是对的。']] },
+    'das Zimmer': { col: [['mein Zimmer', '我的房间'], ['ein Zimmer in der WG', '合租公寓里的一个房间']], ex: [['Das ist mein Zimmer.', '这是我的房间。'], ['Wo ist Zimmer vier?', '四号房间在哪儿？'], ['Ist das dein Zimmer?', '这是你的房间吗？']] },
+    'der Schlüssel': { col: [['mein Schlüssel', '我的钥匙']], ex: [['Wo ist mein Schlüssel?', '我的钥匙在哪儿？'], ['Das ist nicht mein Schlüssel.', '这不是我的钥匙。'], ['Ist das Ihr Schlüssel?', '这是您的钥匙吗？']] },
+    'nicht': { col: [['nicht gut', '不好'], ['nicht hier', '不在这儿'], ['noch nicht', '还没有']], ex: [['Ich bin nicht neu hier.', '我不是新来的。'], ['Das ist nicht richtig.', '这不对。'], ['Ich wohne nicht hier.', '我不住这儿。']] },
+    'da': { col: [['Ich bin gleich da.', '我马上到。'], ['Wer ist da?', '谁在那儿？']], ex: [['Ist Lena da?', 'Lena 在吗？'], ['Ich bin da!', '我在！']] },
+    'Auf Wiedersehen!': { col: [['Vielen Dank und auf Wiedersehen!', '多谢，再见！']], ex: [['Auf Wiedersehen, Frau Vogel!', '再见，Vogel 女士！'], ['Danke schön. Auf Wiedersehen!', '非常感谢，再见！']] },
+  },
+};
+STORY_LESSONS.forEach(l => (l.words || []).forEach(w => { const m = WORD_MORE[l.id]?.[w.de]; if (m) w.more = m; }));
+
 // 30 课语法进度（docs/course-authoring.md 的进度表）：手帐页的语法地图用。写好的课以语法卡标题为准，没写的用这里的名字。
 export const STORY_SYLLABUS = [
   ['认识彼此', [[1, 'sein'], [2, '规则动词'], [3, 'er / sie'], [4, '尊称 Sie']]],
@@ -670,6 +716,7 @@ export function storyAudioItems() {
     (l.lines || []).forEach(s => add(s.who, s.say || s.de, 'line', l.id));
     (l.preview || []).forEach(p => add(WORD_VOICE, p.de.replace('…', '').trim(), 'word', l.id));
     (l.words || []).forEach(w => add(WORD_VOICE, w.de, 'word', l.id));
+    (l.words || []).forEach(w => [...(w.more?.col || []), ...(w.more?.ex || [])].forEach(([de]) => add(WORD_VOICE, de.replace('…', '').trim(), 'word', l.id)));
     (l.phrases || []).forEach(p => add(WORD_VOICE, p.de.replace('…', '').trim(), 'word', l.id));
     (l.cards || []).forEach(c => { if (c.drill) { c.table.rows.forEach(r => r.slice(1).forEach((_, k) => add(WORD_VOICE, rowSay(r, k + 1), 'card', l.id))); c.drill.forEach(d => add(WORD_VOICE, drillSay(d), 'card', l.id)); } (c.on || []).forEach(i => add(WORD_VOICE, rowSay(c.table.rows[i]), 'card', l.id)); add(WORD_VOICE, c.example, 'card', l.id); (c.pairs || []).forEach(t => add(WORD_VOICE, t, 'card', l.id)); (c.contrast || []).flat().forEach(t => add(WORD_VOICE, t, 'card', l.id)); });
     if (l.wordPack) { l.wordPack.items.forEach(i => add(WORD_VOICE, i.de, 'pack', l.id)); l.wordPack.exercises.forEach(x => fromExercise(x, l.id)); }

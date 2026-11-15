@@ -48,7 +48,7 @@ export function today(s, ts) {
   return { kind: 'go', item: next, ...base };
 }
 
-const cardKey = (lessonId, word) => `${lessonId}:${word.de}`;
+export const cardKey = (lessonId, word) => `${lessonId}:${word.de}`;
 
 /** 今天的复习：到期的卡 → 还没读的课后小材料 → 到期的隔天检查。 */
 export function reviewQueue(s, ts) {
@@ -97,6 +97,8 @@ export function completeQuiz(s, unit, results, ts) {
 export function rateCard(s, key, ok, ts) {
   const c = s.cards[key]; if (!c) return s;
   // 模糊：不往后推也不清零，明天再来一次
+  // 不熟：最近一次选的是「模糊」或「不认识」；下次选「认识」就摘掉（手帐页的单词签用）
+  c.weak = ok !== true;
   if (ok === 'fuzzy') c.due = dayNum(ts) + 1;
   else if (ok) { c.stage++; c.grad = c.stage >= CARD_GAPS.length; c.due = dayNum(ts) + (CARD_GAPS[c.stage] || 0); }
   else { c.stage = 0; c.due = dayNum(ts) + 1; }

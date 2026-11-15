@@ -3,7 +3,8 @@ import { rowSay } from '../../data/story-lessons.js';
 import { albumOf } from './flow.js';
 import { key, hydrate, ico, seal } from './art.js';
 import { esc, buildTbl, cellKey, hlClass } from './screens.js';
-import { cribHtml, bindCrib } from './screens2.js';
+import { cribHtml, bindCrib, wordBack, wordActs } from './screens2.js';
+import { entry } from './flow.js';
 import { playWord, stop } from './audio.js';
 import { dayKey } from './store.js';
 
@@ -59,6 +60,11 @@ function openPron({ c, l }) {
   bindSay(sh);
   sh.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b && c.pics?.[+b.dataset.i]) sh.querySelector('.hf-mouth use').setAttribute('href', `#${c.pics[+b.dataset.i]}`); });
 }
+async function openWord({ w, l }) {
+  const sh = pull(await wordBack(l, w), 'al-word'); sh.querySelector('.pp > .md-tape').remove();
+  const map = wordActs(l, w);
+  sh.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && map[b.dataset.act]) map[b.dataset.act](b); });
+}
 function openCrib(s) {
   const sh = pull(cribHtml(s), 'hf-cribpull'); sh.querySelector('.md-tape').remove(); bindCrib(sh, s);
 }
@@ -81,19 +87,31 @@ export function albumPage(app, state, ts, helpers) {
             ? li(x.main.c.title, x.n, { act: `data-g="${x.n}"` }) + x.extra.map((e, k) => li(e.c.title, x.n, { act: `data-ge="${x.n}:${k}"` })).join('')
             : li(x.plan || '综合运用', x.n)).join('')}${u.sum ? li('单元总表', '测', u.sumGot ? { act: `data-u="${u.n}"` } : {}) : ''}`
         : `<div class="al-ul"><b>${u.n}</b><div><span>${esc(u.name)}</span><em>${u.lessons.map(x => esc(x.plan)).filter(Boolean).join(' · ') || '综合运用'}</em></div></div>`).join('')}`,
+    wd: () => { const wli = (x, i) => { const e = entry(x.w.de); return `<button type="button" class="al-li got wd" data-wd="${i}"><span class="t">${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}<span class="h">${esc(e.lemma)}</span></span><span class="ld"></span><span class="pg zh">${esc(x.w.zh)}</span></button>`; };
+      const weak = A.words.map((x, i) => x.weak ? wli(x, i) : '').join('');
+      const byLesson = [...new Set(A.words.map(x => x.l))].map(l => `<p class="al-uh">${l.n} <i>${esc(l.title)}</i></p>${A.words.map((x, i) => x.l === l ? wli(x, i) : '').join('')}`).join('');
+      return `<h3>单词<small>已学 ${A.count.wd}</small></h3><p class="al-uh">不熟 <i>${A.count.weak}</i></p>${weak || none}${byLesson}`; },
     tp: () => `<h3>文化<small>已收 ${A.count.tp}</small></h3>${A.tips.map((x, i) => li(x.c.title, x.l.n, { act: `data-tp="${i}"`, small: x.c.body })).join('') || none}`,
   };
-  const T = [['pr', '发音', A.count.pr], ['gm', '语法', `${A.count.gm}/${A.count.gmAll}`], ['tp', '文化', A.count.tp]];
+  const T = [['pr', '发音', A.count.pr], ['gm', '语法', `${A.count.gm}/${A.count.gmAll}`], ['tp', '文化', A.count.tp], ['wd', '单词', A.count.wd]];
+  if (!T.some(([k]) => k === tab)) tab = 'gm';
   const draw = () => {
     app.innerHTML = `<div class="md-page hf-page tabbed al-page">${calendar(state, ts, helpers)}
-      <div class="al-toc"><span class="md-tape"></span><div class="al-tabs">${T.map(([k, t, n]) => `<button type="button" class="${k === tab ? 'on' : ''}" data-t="${k}" aria-pressed="${k === tab}"><span>${t}</span><small>${n}</small></button>`).join('')}</div>${bodies[tab]()}</div></div>`;
+      <div class="al-toc"><span class="md-tape"></span><div class="al-tabs">${T.map(([k, t, n]) => `<button type="button" class="${k === tab ? 'on' : ''}" data-t="${k}" aria-pressed="${k === tab}"><span>${t}</span><small>${n}</small></button>`).join('')}</div><div class="al-body">${bodies[tab]()}</div></div></div>`;
     hydrate(app);
+  };
+  // 换一类：只换纸上的内容（日历、底栏不动），新内容像翻过来一页那样滑进来
+  const turn = () => {
+    app.querySelectorAll('.al-tabs button').forEach(b => { const on = b.dataset.t === tab; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    const old = app.querySelector('.al-body'), body = old.cloneNode(false);
+    body.innerHTML = bodies[tab](); old.replaceWith(body); hydrate(body);
   };
   draw();
   app.onclick = e => {
-    const b = e.target.closest('[data-t],[data-g],[data-ge],[data-u],[data-pr],[data-tp],[data-crib]'); if (!b || !app.querySelector('.al-page')) return;
+    const b = e.target.closest('[data-t],[data-g],[data-ge],[data-u],[data-pr],[data-tp],[data-crib],[data-wd]'); if (!b || !app.querySelector('.al-page')) return;
     const d = b.dataset, lessonOf = n => A.units.flatMap(u => u.lessons).find(x => x.n === +n);
-    if (d.t) { tab = d.t; try { localStorage.setItem(TAB_KEY, tab); } catch { /* 记不住就算了 */ } draw(); }
+    if (d.t) { if (d.t === tab) return; tab = d.t; try { localStorage.setItem(TAB_KEY, tab); } catch { /* 记不住就算了 */ } turn(); }
+    else if (d.wd) openWord(A.words[+d.wd]);
     else if (d.g) openGrammar(lessonOf(d.g).main);
     else if (d.ge) { const [n, k] = d.ge.split(':'); openTip(lessonOf(n).extra[+k]); }
     else if (d.u) openUnit(A.units[+d.u - 1]);

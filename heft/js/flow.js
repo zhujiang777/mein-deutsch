@@ -207,6 +207,8 @@ export function albumOf(state) {
       lessons: list.map(([n, plan]) => { const l = texts.find(x => x.n === n), got = !!l && done(l);
         return { n, plan, got, main: got ? cards.find(x => x.l === l && x.c.kind === 'grammar') : null, extra: got ? cards.filter(x => x.l === l && x.shelf === 'gm' && x.c.kind !== 'grammar') : [] }; }) };
   });
-  return { cribs, pron: cards.filter(x => x.shelf === 'pr'), tips: cards.filter(x => x.shelf === 'tp'), units,
-    count: { pr: cribs.filter(x => x.got).length + cards.filter(x => x.shelf === 'pr').length, gm: cards.filter(x => x.c.kind === 'grammar').length, gmAll: G_TOTAL, tp: cards.filter(x => x.shelf === 'tp').length } };
+  // 单词：学过的课的重点词；最近一次复习没选「认识」的算不熟
+  const words = STORY_LESSONS.filter(l => l.lines && done(l)).flatMap(l => l.words.map(w => ({ w, l, weak: !!state.cards[`${l.id}:${w.de}`]?.weak })));
+  return { cribs, pron: cards.filter(x => x.shelf === 'pr'), tips: cards.filter(x => x.shelf === 'tp'), units, words,
+    count: { pr: cribs.filter(x => x.got).length + cards.filter(x => x.shelf === 'pr').length, gm: cards.filter(x => x.c.kind === 'grammar').length, gmAll: G_TOTAL, tp: cards.filter(x => x.shelf === 'tp').length, wd: words.length, weak: words.filter(x => x.weak).length } };
 }

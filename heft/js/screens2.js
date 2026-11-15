@@ -12,33 +12,36 @@ const artDe = de => { const e = entry(de); return `${e.art ? `<em class="md-art 
 let vocabById = null;
 // 词库 17 万字，用到复习卡时才取；取不到就只少了复数和变位，卡照常出
 const vocabOf = async id => { if (!id) return null; try { vocabById ||= Object.fromEntries((await import('../../data/vocab.js')).VOCAB.map(v => [v.id, v])); } catch { vocabById = {}; } return vocabById[id] || null; };
+const lemmaHtml = e => `<p class="md-lm">${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}<span class="md-hl ${e.art || 'word'}">${esc(e.lemma)}</span>${key('a-spk', { cls: 's', act: 'word', aria: '听', r: 5 })}</p>`;
+/** 词卡背面（复习时翻过来看的、手帐页单词签里点开的，是同一张）。喇叭的 data-act：word 读词，say 读课文原句，ex 读搭配和例句。 */
+export async function wordBack(lesson, word) {
+  const line = lesson.lines[word.line], e = entry(word.de), v = await vocabOf(word.id);
+  // 名词给复数，动词给 ich / du / er 三个变位（词尾标蓝）
+  const stem = e.lemma.replace(/e?n$/, '');
+  const gr = v?.pl ? `<div class="gr"><span>复数 <em class="md-art pl">die</em> <b>${esc(v.pl)}</b></span></div>`
+    : v?.forms?.ich ? `<div class="cj">${[['ich', v.forms.ich], ['du', v.forms.du], ['er / sie', v.forms.er]].filter(x => x[1]).map(([p, f]) => `<div><span>${p}</span><b>${f.startsWith(stem) ? `${esc(stem)}<i>${esc(f.slice(stem.length))}</i>` : esc(f)}</b></div>`).join('')}</div>` : '';
+  const more = word.more || {};
+  const list = (items, cl) => items.map(([de, zh], i) => `<div class="ex"><p class="${cl}">${esc(de)}<small>${esc(zh)}</small></p>${key('a-spk', { cls: 's', act: 'ex', aria: '听', r: i % 2 ? 4 : -3 }).replace('data-act="ex"', `data-act="ex" data-say="${esc(de)}"`)}</div>`).join('');
+  return `<div class="hf-kk back"><span class="md-tape"></span><div class="hd">${lemmaHtml(e)}<p class="mn">${esc(word.zh)}</p>${gr}</div>
+    <div class="sec"><p class="lb">第 ${lesson.n} 课 <em>·</em> ${esc(lesson.title)}</p>${row(line, { html: mark(line.de, word.form, e.art || 'word') })}</div>
+    ${more.col?.length ? `<div class="sec"><p class="lb">搭配</p>${list(more.col, 'cl')}</div>` : ''}${more.ex?.length ? `<div class="sec"><p class="lb">例句</p>${list(more.ex, '')}</div>` : ''}<div class="rule"></div></div>`;
+}
+export const wordActs = (lesson, word) => ({ word: () => playWord(word.de), say: () => playLine(lesson.lines[word.line]), ex: b => playWord(b.dataset.say) });
 RENDER.rvCard = async ({ step, body, foot, foot3, next, result }) => {
-  const { lesson, word } = step, line = lesson.lines[word.line], e = entry(word.de), v = await vocabOf(word.id);
-  const lm = `<p class="md-lm">${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}<span class="md-hl ${e.art || 'word'}">${esc(e.lemma)}</span>${key('a-spk', { cls: 's', act: 'word', aria: '听', r: 5 })}</p>`;
-  const say = () => playWord(word.de);
+  const { lesson, word } = step, backHtml = await wordBack(lesson, word);
   const back = () => {
-    // 名词给复数，动词给 ich / du / er 三个变位（词尾标蓝）
-    const stem = e.lemma.replace(/e?n$/, '');
-    const gr = v?.pl ? `<div class="gr"><span>复数 <em class="md-art pl">die</em> <b>${esc(v.pl)}</b></span></div>`
-      : v?.forms?.ich ? `<div class="cj">${[['ich', v.forms.ich], ['du', v.forms.du], ['er / sie', v.forms.er]].filter(x => x[1]).map(([p, f]) => `<div><span>${p}</span><b>${f.startsWith(stem) ? `${esc(stem)}<i>${esc(f.slice(stem.length))}</i>` : esc(f)}</b></div>`).join('')}</div>` : '';
-    const more = word.more || {};
-    const secs = [
-      `<div class="sec"><p class="lb">第 ${lesson.n} 课 <em>·</em> ${esc(lesson.title)}</p>${row(line, { html: mark(line.de, word.form, e.art || 'word') })}</div>`,
-      more.col?.length ? `<div class="sec"><p class="lb">搭配</p>${more.col.map(([de, zh], i) => `<div class="ex"><p class="cl">${esc(de)}<small>${esc(zh)}</small></p>${key('a-spk', { cls: 's', act: 'ex', aria: '听', r: i % 2 ? 4 : -3 }).replace('data-act="ex"', `data-act="ex" data-say="${esc(de)}"`)}</div>`).join('')}</div>` : '',
-      more.ex?.length ? `<div class="sec"><p class="lb">例句</p>${more.ex.map(([de, zh], i) => `<div class="ex"><p>${esc(de)}<small>${esc(zh)}</small></p>${key('a-spk', { cls: 's', act: 'ex', aria: '听', r: i % 2 ? 4 : -3 }).replace('data-act="ex"', `data-act="ex" data-say="${esc(de)}"`)}</div>`).join('')}</div>` : '',
-    ].join('');
-    body.innerHTML = `<div class="hf-kk back"><span class="md-tape"></span><div class="hd">${lm}<p class="mn">${esc(word.zh)}</p>${gr}</div>${secs}<div class="rule"></div></div>`;
+    body.innerHTML = backHtml;
     body.classList.add('hf-kkbody');
     hydrate(body);
     foot('继续', () => { body.classList.remove('hf-kkbody'); next(); }, { arrow: true });
-    playLine(line);
+    playLine(lesson.lines[word.line]);
   };
-  body.innerHTML = `<p class="hf-task">想一想是什么意思</p><div class="hf-kk front"><span class="md-tape"></span>${lm}</div>`;
+  body.innerHTML = `<p class="hf-task">想一想是什么意思</p><div class="hf-kk front"><span class="md-tape"></span>${lemmaHtml(entry(word.de))}</div>`;
   hydrate(body);
-  acts(body, { word: say, say: () => playLine(line), ex: b => playWord(b.dataset.say) });
+  acts(body, wordActs(lesson, word));
   const pick = r => () => { result(r); sfx('tap'); back(); };
   foot3([['认识', pick(true)], ['模糊', pick('fuzzy')], ['不认识', pick(false)]]);
-  say();
+  playWord(word.de);
 };
 
 /* ---------- 课后小材料：读一读，点词看意思 ---------- */
