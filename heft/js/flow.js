@@ -1,6 +1,7 @@
 // 把一课的数据排成一屏一屏的步骤。纯逻辑，不碰页面。
 // 一天课做全套（2026-11-11 定，2026-11-14 改听的顺序）：预习 → 带字幕听（不考）→ 精读 → 词包 → 练习 → 不看字幕再听并答题 → 听写 → 跟读 → 复述 → 开口回应 → 完成页。
 // 每一步带 seg（属于哪一环节）：顶部是整课一条进度尺，刻度是各环节的分界，尺下写当前环节的名字。
+import { STORY_LESSONS, STORY_UNIT_SUMMARIES, STORY_SYLLABUS } from '../../data/story-lessons.js';
 
 export const SEGMENTS = { preview: '预习', listen: '听', read: '精读', pack: '词包', practice: '练习', relisten: '再听', dictation: '听写', shadow: '跟读', retell: '复述', speak: '开口', finish: '' };
 
@@ -59,7 +60,14 @@ function buildPron(lesson) {
 
 /** 单元总表 + 小测：总表 → 表格练习 → 没见过的听力 → 开口回应 → 结果。 */
 export function buildQuiz(unit) {
-  const steps = [{ seg: 'table', type: 'unitTable' }];
+  const steps = [];
+  // 总表里第一次出现的人称先教再考：小对话 → 一格一道小空 → 再看总表
+  if (unit.intro) {
+    const lesson = { lines: unit.intro.lines }, card = unit.intro.card;
+    steps.push({ seg: 'table', type: 'card', lesson, card, part: 'src' });
+    card.drill.forEach((_, n) => steps.push({ seg: 'table', type: 'card', lesson, card, part: 'q', n }));
+  }
+  steps.push({ seg: 'table', type: 'unitTable' });
   unit.exercises.flatMap(splitMatch).forEach(ex => steps.push({ seg: 'table', type: 'ex', ex }));
   if (unit.quiz) {
     steps.push({ seg: 'quiz', type: 'quizListen' });
@@ -181,4 +189,24 @@ export function quizOutcome(unit, steps, results) {
     const mine = steps.map((s, at) => ({ s, at })).filter(x => x.s.counts && x.s.ex.can === i);
     return { text, failed: mine.filter(x => results[x.at] === false).map(x => x.at), model: mine.map(x => x.s.ex).find(e => e.type === 'response')?.model || '' };
   });
+}
+
+/* ---------- 手帐页的内容 ---------- */
+const shelfOf = c => c.kind === 'grammar' ? 'gm' : c.kind === 'pron' ? 'pr' : c.shelf === 'grammar' ? 'gm' : c.shelf === 'pron' ? 'pr' : 'tp';
+const G_TOTAL = STORY_SYLLABUS.flatMap(u => u[1]).filter(([, name]) => name).length;
+
+/** 手帐页：学过的内容里发音 / 语法 / 文化各有什么（state 只用到哪几课、哪几次小测做完了）。 */
+export function albumOf(state) {
+  const done = l => state.lessons[l.id]?.done != null;
+  const texts = STORY_LESSONS.filter(l => l.lines), zero = STORY_LESSONS.find(l => l.kind === 'pron');
+  const cards = STORY_LESSONS.filter(l => l.lines && done(l)).flatMap(l => l.cards.map(c => ({ c, l, shelf: shelfOf(c) })));
+  const cribs = zero.stops.filter(s => s.rows).map(s => ({ s, got: done(zero) }));
+  const units = STORY_SYLLABUS.map(([name, list], u) => {
+    const sum = STORY_UNIT_SUMMARIES.find(x => x.unit === u + 1);
+    return { n: u + 1, name, sum, sumGot: !!sum && state.quiz[`unit-${u + 1}`]?.done != null,
+      lessons: list.map(([n, plan]) => { const l = texts.find(x => x.n === n), got = !!l && done(l);
+        return { n, plan, got, main: got ? cards.find(x => x.l === l && x.c.kind === 'grammar') : null, extra: got ? cards.filter(x => x.l === l && x.shelf === 'gm' && x.c.kind !== 'grammar') : [] }; }) };
+  });
+  return { cribs, pron: cards.filter(x => x.shelf === 'pr'), tips: cards.filter(x => x.shelf === 'tp'), units,
+    count: { pr: cribs.filter(x => x.got).length + cards.filter(x => x.shelf === 'pr').length, gm: cards.filter(x => x.c.kind === 'grammar').length, gmAll: G_TOTAL, tp: cards.filter(x => x.shelf === 'tp').length } };
 }

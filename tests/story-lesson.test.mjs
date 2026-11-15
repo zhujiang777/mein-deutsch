@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { STORY_LESSONS, STORY_CAST, STORY_NAMES, STORY_UNIT_SUMMARIES, WORD_VOICE, storyAudioItems } from '../data/story-lessons.js';
 import { VOCAB } from '../data/vocab.js';
 
+const lowerDe = s => s.toLocaleLowerCase('de-DE');
 const tokens = s => (s.match(/[A-Za-zÄÖÜäöüß]+/g) || []).map(w => w.toLocaleLowerCase('de-DE'));
 const texts = STORY_LESSONS.filter(l => l.kind !== 'pron');
 const FREE = new Set([...STORY_NAMES, 'der', 'die', 'das', 'bwl']);
@@ -100,4 +101,37 @@ test('故事课：配音清单里每条都有固定的声音', () => {
 
 test('首页名签放得下：课名或封面短名不超过 5 个字', () => {
   for (const l of STORY_LESSONS) assert.ok([...(l.cover || l.title)].length <= 5, `${l.id} 名签上的字太长：${l.cover || l.title}`);
+});
+
+test('先教后考：练习、隔天检查、开口题和单元总表里的德语词，前面都教过', () => {
+  // “教过” = 之前的课文、预习词、重点词、口头语、词包、语法表里点亮过的格子、发音例词、第 0 课的例词、小材料的新词
+  const known = new Set(FREE);
+  const learn = s => tokens(String(s || '')).forEach(t => known.add(t));
+  STORY_LESSONS.filter(l => l.kind === 'pron').forEach(l => l.stops.forEach(st => { (st.rows || []).forEach(r => learn(r.w)); (st.tries || []).forEach(t => learn(t.w)); (st.blind || []).forEach(b => learn(b[2] || b[0])); }));
+  const german = x => x.type === 'match' ? x.pairs.map(p => p.de)
+    : x.type === 'assemble' ? [x.answer, ...x.distractors]
+    : x.type === 'response' ? [...x.answers, x.cue?.de]
+    : [x.audioText, /[一-鿿]/.test(x.prompt) ? '' : x.prompt, ...x.options.filter(o => !/[一-鿿]/.test(o))];
+  const bad = [];
+  // 单个字母是拼写题，不算词
+  // 教过的规则动词换一个教过的词尾（kochen → kochst）不算新词
+  const ENDS = ['en', 'st', 'e', 't'];
+  const sameVerb = t => ENDS.some(a => t.endsWith(a) && ENDS.some(b => known.has(t.slice(0, -a.length) + b)));
+  const check = (x, where) => german(x).forEach(g => tokens(String(g || '')).forEach(t => { if (t.length > 1 && !known.has(t) && !sameVerb(t)) bad.push(`${where}：${t}`); }));
+  for (const l of texts) {
+    l.lines.forEach(x => learn(x.de));
+    [...l.preview, ...l.words, ...(l.phrases || [])].forEach(w => learn(w.de));
+    (l.wordPack?.items || []).forEach(w => learn(w.de));
+    l.cards.forEach(c => { (c.on || []).forEach(i => c.table.rows[i].forEach(learn)); (c.drill || []).forEach(d => learn(d.no)); (c.pairs || []).forEach(learn); (c.contrast || []).flat().forEach(learn); learn(c.example); (c.words || []).forEach(learn); });
+    [...(l.wordPack?.exercises || []), ...l.exercises, ...(l.speak || []), ...(l.reviews || [])].forEach(x => check(x, `${l.id} ${x.id}`));
+    l.reading.newWords.forEach(w => w.forms.forEach(f => known.add(f)));
+    const u = STORY_UNIT_SUMMARIES.find(s => s.after === l.id);
+    if (!u) continue;
+    // 总表里新出现的人称必须先有小对话和小空（intro），练习才能考
+    if (u.intro) { u.intro.lines.forEach(x => learn(x.de)); u.intro.card.drill.forEach(d => { assert(u.intro.lines[d.line].de.includes(d.de) && d.de.includes(d.v), `单元 ${u.unit} 小空对不上原句：${d.de}`); learn(d.no); assert.equal(lowerDe(u.intro.card.table.rows[d.row][d.col || 1]), lowerDe(d.v), `单元 ${u.unit} 小空和表格对不上：${d.v}`); }); }
+    // newRows 只是总表下面的例句，亮一下不算教过
+    u.exercises.forEach(x => check(x, `单元 ${u.unit} 总表 ${x.id}`));
+    if (u.quiz) [...u.quiz.questions, ...u.quiz.speak].forEach(x => check(x, `单元 ${u.unit} 小测 ${x.id}`));
+  }
+  assert.deepEqual(bad, [], `用了前面没教过的词：\n${bad.join('\n')}`);
 });

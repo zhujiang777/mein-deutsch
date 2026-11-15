@@ -19,7 +19,7 @@ export const STORY_CAST = {
 };
 export const WORD_VOICE = 'Lena';
 // 人名地名：不算生词，也不要求出现在词库里
-export const STORY_NAMES = ['lin', 'lena', 'tom', 'tim', 'mia', 'krause', 'becker', 'vogel', 'köln', 'leipzig', 'singapur', 'china', 'japan', 'korea'];
+export const STORY_NAMES = ['lin', 'lena', 'tom', 'tim', 'mia', 'mai', 'mira', 'krause', 'becker', 'vogel', 'köln', 'leipzig', 'singapur', 'china', 'japan', 'korea'];
 
 const SEIN = { head: ['', 'sein'], rows: [['ich', 'bin'], ['du', 'bist'], ['er / sie', 'ist'], ['wir', 'sind'], ['ihr', 'seid'], ['sie / Sie', 'sind']] };
 /** 变位表里一格怎么念：'er / sie' + 'kommt' → “er kommt”。页面和配音清单共用。 */
@@ -29,6 +29,7 @@ const PERS = ['ich', 'du', 'er / sie', 'wir', 'ihr', 'sie / Sie'];
 const reg = (...inf) => ({ head: ['', ...inf], rows: PERS.map((p, i) => [p, ...inf.map(v => v.slice(0, -2) + ['e', 'st', 't', 'en', 't', 'en'][i])]) });
 const REGULAR = reg('kommen', 'wohnen');
 const STUDIEREN = reg('studieren', 'kochen');
+const SEIN_KOCHEN = { head: ['', 'sein', 'kochen'], rows: PERS.map((p, i) => [p, SEIN.rows[i][1], STUDIEREN.rows[i][2]]) };
 const SEIN_WOHNEN = { head: ['', 'sein', 'wohnen'], rows: PERS.map((p, i) => [p, SEIN.rows[i][1], REGULAR.rows[i][2]]) };
 /** 语法卡小题（drill）里那一组怎么写、怎么念：'Bist' + 'du' → “du bist”；尊称保留大写 “Sie sind”。 */
 export const drillSay = d => `${d.sj === 'Sie' && d.row === 5 ? 'Sie' : d.sj.toLowerCase()} ${d.v.toLowerCase()}`;
@@ -171,6 +172,7 @@ const LESSON_1 = {
         { line: 0, de: 'Bist du neu hier?', zh: '你是新来的？', v: 'Bist', no: 'Bin', sj: 'du', row: 1 },
         { line: 1, de: 'Ich bin Lin.', zh: '我是 Lin。', v: 'bin', no: 'bist', sj: 'Ich', row: 0 },
       ] },
+    { after: 5, kind: 'tip', shelf: 'grammar', title: 'der · die · das', body: '名词分三种性，颜色表示性：阳性 der 蓝，阴性 die 红，中性 das 绿。记名词时连冠词一起记。', words: ['der Kaffee', 'die Küche', 'das Zimmer'] },
     { after: 9, kind: 'pron', title: 'ich 和 ach 里的 ch', body: 'ich 的 ch：摆好 i 的嘴形，不出声，只送气。ach 的 ch：舌头后部抬起，在嘴的最里面送气。', pairs: ['ich', 'Ach so.'], example: 'Ich bin Lin.', pics: ['m-ich', 'm-ach'] },
   ],
   exercises: [
@@ -183,6 +185,10 @@ const LESSON_1 = {
     assemble('x7', '你是新来的吗？', 'Bist du neu hier?', ['bin', 'ich']),
     choice('x8', 'Tom 问 “Kaffee?”，你想喝。你说：', ['Ja, bitte.', 'Ach so.', 'Wie bitte?']),
     listen('x9', 'Lena', 'M – I – A', '拼的是哪个名字？', ['Mia', 'Mai', 'Mira'], { say: 'Emm, Ih, Ah.' }),
+    listen('x10', 'Tom', 'Willkommen!', '他的意思是……', ['欢迎', '再见', '谢谢']),
+    choice('x11', 'Lena 要走了，她说：', ['Tschüss!', 'Willkommen!', 'Ja, bitte.']),
+    choice('x12', 'Oh nein, mein ___! Tschüss!', ['Bus', 'Kaffee', 'Hallo']),
+    assemble('x13', '她总是这样。', 'Sie ist immer so.', ['bin', 'du']),
   ],
   dictation: [0, 1, 2, 6],
   shadow: [1, 3, 6, 9],
@@ -271,7 +277,7 @@ const LESSON_2 = {
     hallo: '你好', zusammen: '一起；Hallo zusammen! = 大家好', bin: '是（ich 用 bin）', neu: '新的', jetzt: '现在', in: '在……里', zimmer: 'das Zimmer 房间',
   },
   cards: [
-    { after: 11, kind: 'tip', title: 'Woher? · Wo?', body: 'Woher 问来源（从哪里来），Wo 问位置（在哪里）。' },
+    { after: 11, kind: 'tip', shelf: 'grammar', title: 'Woher? · Wo?', body: 'Woher 问来源（从哪里来），Wo 问位置（在哪里）。' },
     { after: 12, kind: 'grammar', title: '规则动词：ich -e · du -st', body: '规则动词的现在时 = 词干 + 人称词尾：ich → -e，du → -st。', table: REGULAR, on: [0, 1], example: 'Woher kommst du? – Ich komme aus Singapur.',
       drill: [
         { line: 7, de: 'Ich komme aus Singapur.', zh: '我来自新加坡。', v: 'komme', no: 'kommst', sj: 'Ich', row: 0, col: 1 },
@@ -279,7 +285,7 @@ const LESSON_2 = {
         { line: 12, de: 'Du wohnst auch hier!', zh: '你也住这儿！', v: 'wohnst', no: 'wohne', sj: 'Du', row: 1, col: 2 },
       ] },
     { after: 0, kind: 'pron', title: 'w：上牙碰下唇', body: '上牙轻碰下唇，喉咙振动。嘴唇不要收圆。', pairs: ['wo', 'woher', 'wohnen', 'Wie bitte?'], example: 'Wo wohne ich?', pics: ['m-wv'] },
-    { after: 2, kind: 'tip', title: 'China', body: '德语的 China 开头读 ich 里的 ch；南德也有人读成 k。' },
+    { after: 2, kind: 'tip', shelf: 'pron', title: 'China', body: '德语的 China 开头读 ich 里的 ch；南德也有人读成 k。' },
   ],
   exercises: [
     match('x1', [['Woher?', '从哪里'], ['Wo?', '在哪里'], ['kommen aus', '来自'], ['wohnen', '住'], ['auch', '也'], ['aber', '但是'], ['richtig', '对的']]),
@@ -292,6 +298,8 @@ const LESSON_2 = {
     assemble('x8', '你也住这儿！', 'Du wohnst auch hier!', ['wohne', 'aus']),
     choice('x9', 'Tom 是哪里人？', ['科隆 Köln', '柏林 Berlin', '慕尼黑 München']),
     choice('x10', 'Tom 最后猜对了什么？', ['Lin 住在哪', 'Lin 来自哪个国家', 'Lin 的名字']),
+    choice('x11', 'Ich komme aus Singapur. ___ ich wohne hier.', ['Aber', 'Woher', 'Richtig']),
+    choice('x12', '对方说对了，你说：', ['Richtig!', 'Nein!', 'Wie bitte?']),
   ],
   dictation: [0, 7, 11, 12],
   shadow: [7, 9, 11, 13],
@@ -407,6 +415,7 @@ const LESSON_3 = {
     assemble('x7', '她学医。', 'Sie studiert Medizin.', ['studiere', 'er']),
     assemble('x8', '他已经读了六年了！', 'Er studiert schon sechs Jahre!', ['studierst', 'gut']),
     listen('x9', 'Lena', 'Er kocht gut.', '她在说谁？', ['一个男生', '一个女生', '她自己']),
+    listen('x10', 'Tom', 'Sie lernt und lernt und lernt.', 'Tom 说 Lena 怎么样？', ['一直在学习', '做饭很好', '住在这儿']),
   ],
   dictation: [0, 3, 5, 7],
   shadow: [0, 2, 5],
@@ -504,7 +513,7 @@ const LESSON_4 = {
       ],
       contrast: [['Bist du neu hier?', 'Sind Sie neu hier?'], ['Wohnst du hier?', 'Wohnen Sie hier?'], ['Tschüss!', 'Auf Wiedersehen!']], example: 'Sind Sie neu hier? Wohnen Sie in Zimmer drei?' },
     { after: 3, kind: 'pron', title: 'z 和 s', body: 'z：t 和 s 连成一个音，短而干脆。s 在元音前，喉咙振动。', pairs: ['das Zimmer', 'Sie', 'zehn', 'so'], example: 'Wohnen Sie in Zimmer drei?', pics: ['m-z'] },
-    { after: 7, kind: 'tip', title: '一般疑问句', body: '没有疑问词的问句，动词放在句首：Sind Sie neu hier? Ist Herr Becker auch da?' },
+    { after: 7, kind: 'tip', shelf: 'grammar', title: '一般疑问句', body: '没有疑问词的问句，动词放在句首：Sind Sie neu hier? Ist Herr Becker auch da?' },
     { after: 9, kind: 'tip', title: 'du 还是 Sie', body: '同学、室友之间说 du；对管理员、老师、办事窗口、店员说 Sie。拿不准就先说 Sie。' },
   ],
   exercises: [
@@ -518,6 +527,8 @@ const LESSON_4 = {
     assemble('x8', '他不在。', 'Er ist nicht da.', ['bin', 'hier']),
     listen('x9', 'Krause', 'Ist Herr Becker auch da?', '他在问什么？', ['Tom 在不在', 'Lin 住几号房间', '钥匙在哪']),
     choice('x10', 'Tom 真的不在吗？', ['在，他躲起来了', '不在，他去坐公交了', '不在，他在做饭']),
+    choice('x11', 'Mein ___ ist Krause.', ['Name', 'Schlüssel', 'Zimmer']),
+    choice('x12', 'Zimmer drei? Gut. Hier ist Ihr ___.', ['Schlüssel', 'Name', 'Tag']),
   ],
   dictation: [3, 5, 8, 10],
   shadow: [2, 4, 6, 8, 10],
@@ -554,12 +565,45 @@ const LESSON_4 = {
 export const STORY_LESSONS = [LESSON_0, LESSON_1, LESSON_2, LESSON_3, LESSON_4];
 
 // 单元总表：每个单元结束时出一次，把本单元零散学到的语法收成整张表，和小测放在一起
+// 30 课语法进度（docs/course-authoring.md 的进度表）：手帐页的语法地图用。写好的课以语法卡标题为准，没写的用这里的名字。
+export const STORY_SYLLABUS = [
+  ['认识彼此', [[1, 'sein'], [2, '规则动词'], [3, 'er / sie'], [4, '尊称 Sie']]],
+  ['数量与简单购买', [[5, '数字 13–100 · der / die / das'], [6, 'ein / eine · ich möchte'], [7, 'kein / nicht']]],
+  ['家人与物品', [[8, 'mein / dein'], [9, 'haben + 第四格'], [10, '复数 · sein + 形容词']]],
+  ['日常作息', [[11, '钟点 · 动词第二位'], [12, '可分动词'], [13, '换音动词']]],
+  ['兴趣与邀约', [[14, 'gern / lieber'], [15, 'können / möchten']]],
+  ['城市出行', [[16, 'mit + 第三格'], [17, '方向词 + 命令式']]],
+  ['住所', [[18, 'es gibt + 第四格'], [19, 'in / auf / unter + 第三格']]],
+  ['饮食与购物', [[20, '数量词 · wie viel'], [21, 'müssen / wollen'], [22, '第四格代词']]],
+  ['身体与求助', [[23, 'mir / dir'], [24, 'sollen / dürfen']]],
+  ['预约与留言', [[25, '日期与序数词'], [26, 'und / aber / denn']]],
+  ['近期经历', [[27, 'war / hatte'], [28, '完成时 + haben'], [29, '完成时 + sein']]],
+  ['日常综合交流', [[30, '']]],
+];
+
 export const STORY_UNIT_SUMMARIES = [
   {
     unit: 1, after: 'sl-04', title: '第 1 单元 · 认识彼此', titleDe: 'Präsens',
     canDo: ['自我介绍，纠正并拼出名字', '说来自哪、住在哪', '介绍别人学什么、做什么', '分清 du / Sie，应对正式提问', '数 0–12'],
     rule: '动词随主语变位。规则动词（kommen、wohnen）：词干 + 人称词尾；sein 不规则，整列记。',
     tables: [SEIN, REGULAR],
+    // 先教再考：课文里没出现的 wir / ihr，先用一小段对话带出来、做几个小空，再看总表、做练习
+    intro: {
+      lines: [
+        line('Lena', 'Hallo! Seid ihr da?', '喂！你们在吗？'),
+        line('Tom', 'Ja, wir sind hier!', '在，我们在这儿！'),
+        line('Lena', 'Was kocht ihr?', '你们在做什么菜？'),
+        line('Lin', 'Wir kochen nicht. Wir lernen.', '我们没在做饭，我们在学习。'),
+        line('Lena', 'Tom lernt? Wie bitte?!', 'Tom 在学习？什么？！'),
+      ],
+      card: { kind: 'grammar', title: 'wir · ihr', all: true, table: SEIN_KOCHEN,
+        drill: [
+          { line: 0, de: 'Seid ihr da?', v: 'Seid', no: 'Sind', sj: 'ihr', row: 4 },
+          { line: 1, de: 'Ja, wir sind hier!', v: 'sind', no: 'seid', sj: 'wir', row: 3 },
+          { line: 2, de: 'Was kocht ihr?', v: 'kocht', no: 'kochen', sj: 'ihr', row: 4, col: 2 },
+          { line: 3, de: 'Wir kochen nicht.', zh: '我们没在做饭。', v: 'kochen', no: 'kocht', sj: 'Wir', row: 3, col: 2 },
+        ] },
+    },
     // 本单元课文里没出现、在总表里补齐的人称
     newRows: [
       { de: 'Wir wohnen hier.', zh: '我们住这儿。' },
@@ -641,6 +685,11 @@ export function storyAudioItems() {
   }
   for (const u of STORY_UNIT_SUMMARIES) {
     u.newRows.forEach(r => add(WORD_VOICE, r.de, 'card', `unit-${u.unit}`));
+    if (u.intro) {
+      u.intro.lines.forEach(x => add(x.who, x.say || x.de, 'line', `unit-${u.unit}`));
+      u.intro.card.table.rows.forEach(r => r.slice(1).forEach((_, c) => add(WORD_VOICE, rowSay(r, c + 1), 'card', `unit-${u.unit}`)));
+      u.intro.card.drill.forEach(d => add(WORD_VOICE, drillSay(d), 'card', `unit-${u.unit}`));
+    }
     u.tables.forEach(t => t.rows.forEach(r => r.slice(1).forEach((_, c) => add(WORD_VOICE, rowSay(r, c + 1), 'card', `unit-${u.unit}`))));
     u.exercises.forEach(x => fromExercise(x, `unit-${u.unit}`));
     if (u.quiz) {

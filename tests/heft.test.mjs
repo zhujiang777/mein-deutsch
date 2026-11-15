@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { STORY_LESSONS, STORY_UNIT_SUMMARIES } from '../data/story-lessons.js';
 import { blank, course, today, reviewQueue, findItem, completeLesson, completeQuiz, rateCard, submitCheck, markRead, dayNum, CARD_GAPS } from '../heft/js/store.js';
-import { buildLesson, buildQuiz, buildReview, rulerOf, correct, closest, pieces, entry, sameText, clozeAt, quizOutcome } from '../heft/js/flow.js';
+import { buildLesson, buildQuiz, buildReview, rulerOf, correct, closest, pieces, entry, sameText, clozeAt, quizOutcome, albumOf } from '../heft/js/flow.js';
 
 const DAY = 86400000, T0 = new Date(2026, 10, 12, 9).getTime();
 const L1 = STORY_LESSONS[1];
@@ -195,4 +195,33 @@ test('单元小测：总表 → 表格练习 → 新听力 → 开口；每条�
   assert.deepEqual(out.map(o => o.failed.length), [0, 0, 1, 0, 0]);
   assert.deepEqual(out[2].failed, [bad]);
   assert.equal(out[1].model, 'Ich komme aus Singapur.');
+});
+
+test('复习卡选「模糊」：不往后推也不清零，明天再来', () => {
+  const s = blank(); completeLesson(s, L1, T0);
+  const key = Object.keys(s.cards)[0];
+  rateCard(s, key, true, T0 + DAY);
+  const stage = s.cards[key].stage;
+  rateCard(s, key, 'fuzzy', T0 + 4 * DAY);
+  assert.equal(s.cards[key].stage, stage);
+  assert.equal(s.cards[key].due, dayNum(T0 + 4 * DAY) + 1);
+});
+
+test('手帐页：学到哪亮到哪；语法 29 个点，小贴士按发音 / 语法 / 文化分开', () => {
+  const empty = albumOf(blank());
+  assert.deepEqual(empty.count, { pr: 0, gm: 0, gmAll: 29, tp: 0 });
+  assert(empty.units.every(u => u.lessons.every(x => !x.got)) && empty.cribs.every(c => !c.got));
+  const s = blank();
+  STORY_LESSONS.slice(0, 5).forEach((l, i) => completeLesson(s, l, T0 + i * DAY));
+  const a = albumOf(s);
+  assert.equal(a.count.gm, 4);
+  assert.equal(a.count.pr, 3 + a.pron.length);
+  assert(a.pron.some(x => x.c.title === 'China') && a.tips.every(x => !x.c.shelf));
+  const u1 = a.units[0];
+  assert.deepEqual(u1.lessons.map(x => x.main.c.kind), ['grammar', 'grammar', 'grammar', 'grammar']);
+  assert(u1.lessons[0].extra.some(x => x.c.title === 'der · die · das'));
+  assert.equal(u1.sumGot, false);
+  completeQuiz(s, STORY_UNIT_SUMMARIES[0], [], T0 + 6 * DAY);
+  assert.equal(albumOf(s).units[0].sumGot, true);
+  assert(a.units.slice(1).every(u => u.lessons.every(x => !x.got && (x.plan || x.n === 30))));
 });

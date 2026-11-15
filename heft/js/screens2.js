@@ -1,31 +1,44 @@
 // 第 0 课的小站、隔天复习、单元总表与小测。约定和 screens.js 一样；对照原型：
 // 复习卡 lab/ds-explore/round13/i-grammatik.html · 泛读/字母表/读音组/门铃 round16/l-chosen.html · 总表与小测 round15/k-chosen.html
 import { STORY_LESSONS, rowSay, plainWord } from '../../data/story-lessons.js';
-import { RENDER, EX, esc, lower, row, wordEntry, acts, choiceUI, listenUI, hlClass, fitEntry, TL_COLOR, mmss } from './screens.js';
+import { RENDER, EX, esc, lower, row, wordEntry, acts, choiceUI, listenUI, hlClass, fitEntry, TL_COLOR, mmss, mark } from './screens.js';
 import { key, q, tick, seal, hydrate, picOf, avatar, NAME } from './art.js';
 import { play, playLine, playWord, sfx, stop, duration, sayOf, position } from './audio.js';
 import { pieces, entry, clozeAt, quizOutcome } from './flow.js';
 
 const artDe = de => { const e = entry(de); return `${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}${esc(e.lemma)}`; };
 
-/* ---------- 复习卡：课文原句挖空 → 看答案 → 没记住 / 记住了 ---------- */
-RENDER.rvCard = ({ step, body, foot, foot2, next, result }) => {
-  const { lesson, word } = step, line = lesson.lines[word.line], c = clozeAt(line.de, word.form);
-  const pv = lesson.preview.find(p => p.de === word.de), pic = pv ? picOf(pv.pic) : '';
-  const sentence = shown => !c ? esc(line.de)
-    : `${esc(line.de.slice(0, c.at))}<span class="md-gap ${shown ? 'filled' : ''}" style="min-width:${Math.max(3, c.len) * 0.62}em">${shown ? esc(line.de.slice(c.at, c.at + c.len)) : ''}</span>${esc(line.de.slice(c.at + c.len))}`;
-  const draw = shown => {
-    body.innerHTML = `<p class="hf-task">空里填什么？</p>
-      <div class="hf-rv">${row(line, { html: sentence(shown), big: true, spk: shown })}</div>
-      ${shown ? `<div class="hf-got">${pic ? `<div class="hf-pic sm">${pic}</div>` : ''}${wordEntry(word.de, word.zh, 'l')}</div>` : ''}`;
-    hydrate(body); fitEntry(body);
+/* ---------- 复习词卡：一张索引卡。正面只有词，先回忆（认识 / 模糊 / 不认识）；背面是词性信息、课文原句、搭配、例句 ---------- */
+let vocabById = null;
+// 词库 17 万字，用到复习卡时才取；取不到就只少了复数和变位，卡照常出
+const vocabOf = async id => { if (!id) return null; try { vocabById ||= Object.fromEntries((await import('../../data/vocab.js')).VOCAB.map(v => [v.id, v])); } catch { vocabById = {}; } return vocabById[id] || null; };
+RENDER.rvCard = async ({ step, body, foot, foot3, next, result }) => {
+  const { lesson, word } = step, line = lesson.lines[word.line], e = entry(word.de), v = await vocabOf(word.id);
+  const lm = `<p class="md-lm">${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}<span class="md-hl ${e.art || 'word'}">${esc(e.lemma)}</span>${key('a-spk', { cls: 's', act: 'word', aria: '听', r: 5 })}</p>`;
+  const say = () => playWord(word.de);
+  const back = () => {
+    // 名词给复数，动词给 ich / du / er 三个变位（词尾标蓝）
+    const stem = e.lemma.replace(/e?n$/, '');
+    const gr = v?.pl ? `<div class="gr"><span>复数 <em class="md-art pl">die</em> <b>${esc(v.pl)}</b></span></div>`
+      : v?.forms?.ich ? `<div class="cj">${[['ich', v.forms.ich], ['du', v.forms.du], ['er / sie', v.forms.er]].filter(x => x[1]).map(([p, f]) => `<div><span>${p}</span><b>${f.startsWith(stem) ? `${esc(stem)}<i>${esc(f.slice(stem.length))}</i>` : esc(f)}</b></div>`).join('')}</div>` : '';
+    const more = word.more || {};
+    const secs = [
+      `<div class="sec"><p class="lb">第 ${lesson.n} 课 <em>·</em> ${esc(lesson.title)}</p>${row(line, { html: mark(line.de, word.form, e.art || 'word') })}</div>`,
+      more.col?.length ? `<div class="sec"><p class="lb">搭配</p>${more.col.map(([de, zh], i) => `<div class="ex"><p class="cl">${esc(de)}<small>${esc(zh)}</small></p>${key('a-spk', { cls: 's', act: 'ex', aria: '听', r: i % 2 ? 4 : -3 }).replace('data-act="ex"', `data-act="ex" data-say="${esc(de)}"`)}</div>`).join('')}</div>` : '',
+      more.ex?.length ? `<div class="sec"><p class="lb">例句</p>${more.ex.map(([de, zh], i) => `<div class="ex"><p>${esc(de)}<small>${esc(zh)}</small></p>${key('a-spk', { cls: 's', act: 'ex', aria: '听', r: i % 2 ? 4 : -3 }).replace('data-act="ex"', `data-act="ex" data-say="${esc(de)}"`)}</div>`).join('')}</div>` : '',
+    ].join('');
+    body.innerHTML = `<div class="hf-kk back"><span class="md-tape"></span><div class="hd">${lm}<p class="mn">${esc(word.zh)}</p>${gr}</div>${secs}<div class="rule"></div></div>`;
+    body.classList.add('hf-kkbody');
+    hydrate(body);
+    foot('继续', () => { body.classList.remove('hf-kkbody'); next(); }, { arrow: true });
+    playLine(line);
   };
-  acts(body, { say: () => playLine(line), word: () => playWord(word.de) });
-  draw(false);
-  foot('看答案', () => {
-    draw(true); playWord(word.de);
-    foot2(['没记住', () => { result(false); next(); }], ['记住了', () => { result(true); next(); }]);
-  });
+  body.innerHTML = `<p class="hf-task">想一想是什么意思</p><div class="hf-kk front"><span class="md-tape"></span>${lm}</div>`;
+  hydrate(body);
+  acts(body, { word: say, say: () => playLine(line), ex: b => playWord(b.dataset.say) });
+  const pick = r => () => { result(r); sfx('tap'); back(); };
+  foot3([['认识', pick(true)], ['模糊', pick('fuzzy')], ['不认识', pick(false)]]);
+  say();
 };
 
 /* ---------- 课后小材料：读一读，点词看意思 ---------- */

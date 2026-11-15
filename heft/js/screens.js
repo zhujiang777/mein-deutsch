@@ -5,7 +5,7 @@ import { STORY_CAST, STORY_LESSONS, rowSay, drillSay } from '../../data/story-le
 import { avatar, key, q, tick, seal, hydrate, NAME, picOf, ico } from './art.js';
 import { play, playLine, playWord, playUrl, stop, duration, sayOf, sfx, position } from './audio.js';
 import { canRecord, record, score, whyFailed } from './speech.js';
-import { correct, pieces, entry, sameText } from './flow.js';
+import { correct, pieces, entry, sameText, clozeAt } from './flow.js';
 
 export const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 export const shuffle = a => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
@@ -196,8 +196,8 @@ function tableHtml(table, on) {
 }
 /* 语法卡「先做后讲」：课文原句 → 原句挖空选一个（答一道，表里亮一格）→ 整张表 → 规则一句 +「看整张表」。
    每一屏是一个步骤（step.part = src | q | full | rule），亮了哪几格由“做到第几道”算出来，不存状态。 */
-const cellKey = d => `${d.row}:${d.col || 1}`;
-function buildTbl(c, lit, { full = false, flash = -1, grow = false } = {}) {
+export const cellKey = d => `${d.row}:${d.col || 1}`;
+export function buildTbl(c, lit, { full = false, flash = -1, grow = false } = {}) {
   const t = c.table, cols = t.head.length - 1;
   return `<div class="md-tbl build hf-tbl hf-btbl" style="--cols:${cols}"><div class="r hd"><span></span>${t.head.slice(1).map(h => `<span>${esc(h)}</span>`).join('')}<span></span></div>${t.rows.map((r, i) => {
     const on = r.slice(1).map((_, k) => lit.has(`${i}:${k + 1}`));
@@ -213,7 +213,7 @@ function drillCard({ lesson, step, body, foot, next }) {
   const sayAll = async () => { const mine = ++run; for (let k = 1; k < t.head.length; k++) for (const r of t.rows) { if (mine !== run || !await playWord(rowSay(r, k))) return; } };
 
   if (step.part === 'src') {
-    const lines = [...new Set(ds.map(d => d.line))];
+    const lines = c.all ? lesson.lines.map((_, i) => i) : [...new Set(ds.map(d => d.line))];
     // 只在小题用到的那半句里标：动词刷荧光笔，主语用铅笔圈
     const marked = i => { const de = lesson.lines[i].de, mine = ds.filter(d => d.line === i).map(d => ({ d, from: de.indexOf(d.de), seen: new Set() })); let at = 0;
       return pieces(de).map(p => { const pos = at; at += p.t.length;
@@ -286,7 +286,7 @@ RENDER.card = (ctx) => {
   const exLine = c.example ? { who: 'Lena', de: c.example, zh: '' } : null;
   let html = '';
   if (c.kind === 'tip') {
-    html = `<div class="md-note hf-note"><span class="md-tape"></span><p>${esc(c.title)}</p><p class="b">${esc(c.body)}</p></div>`;
+    html = `<div class="md-note hf-note"><span class="md-tape"></span><p>${esc(c.title)}</p><p class="b">${esc(c.body)}</p>${c.words ? `<p class="ws">${c.words.map(w => `<span><small>${{ der: '阳性', die: '阴性', das: '中性' }[hlClass(w)] || ''}</small><button type="button" class="md-hl ${hlClass(w)}" data-act="tw">${esc(w)}</button></span>`).join('')}</p>` : ''}</div>`;
   } else if (c.kind === 'grammar') {
     html = `<h2 class="hf-gname">${esc(c.title)}</h2><p class="md-rule">${esc(c.body)}</p>
       <div class="hf-src">${row(src, {})}</div>${tableHtml(c.table, c.on)}
@@ -305,6 +305,7 @@ RENDER.card = (ctx) => {
     row: b => { const r = lit[[...body.querySelectorAll('[data-act=row]')].indexOf(b)]; playWord(rowSay(r)); },
     pair: b => { const i = [...body.querySelectorAll('[data-act=pair]')].indexOf(b); if (c.pics?.[i]) body.querySelector('.hf-mouth use').setAttribute('href', `#${c.pics[i]}`); playWord(c.pairs[i]); },
     con: b => playWord(b.textContent),
+    tw: b => playWord(b.textContent),
   });
   foot('继续', next, { arrow: true });
 };
@@ -469,8 +470,8 @@ EX.assemble = ({ step, body, foot, next, result }) => {
 };
 
 /* ---------- 打字：听写一句 / 听拼写打词 ---------- */
-function typing({ body, foot, next, result }, { task, target, zh, say }) {
-  body.innerHTML = `<p class="hf-task">${task}</p>
+function typing({ body, foot, next, result }, { task, target, zh, say, opt = '' }) {
+  body.innerHTML = `<div class="hf-dhead"><p class="hf-task">${task}</p>${opt}</div>
     <div class="hf-ctl top">${key('a-spk', { label: '播放', act: 'play', r: -5 })}${key('a-slow', { label: '慢速', act: 'slow', r: 4 })}</div>
     <div class="hf-answer"><div class="md-input hf-inp"><input type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="${task}"></div>
       <div class="md-umlaut hf-acc">${['ä', 'ö', 'ü', 'ß'].map(c => `<button type="button" class="md-paper u" data-act="ch">${c}</button>`).join('')}<button type="button" class="md-btn" data-act="check">检查</button></div></div>`;
@@ -502,7 +503,69 @@ function typing({ body, foot, next, result }, { task, target, zh, say }) {
   foot('', null);
   say(false);
 }
-RENDER.dictate = ctx => { const line = ctx.lesson.lines[ctx.step.i]; typing(ctx, { task: '听写这一句', target: line.de, zh: line.zh, say: slow => playLine(line, { slow }) }); };
+/* 听写可以只写重点词：勾上以后句子照常显示，只把这一句里要学的词挖空。选择记在本机。 */
+const KEYS_KEY = 'md.heft.dictKeys';
+const keysOn = () => { try { return localStorage.getItem(KEYS_KEY) === '1'; } catch { return false; } };
+const CHECK_SVG = '<svg viewBox="0 0 26 24"><path d="M3 13.5c2.4 1.6 4.4 3.8 6 6.5C13 12 17.6 6.6 23.5 3" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+/** 这一句里要挖的空：重点词在句中的位置，从左到右、互不重叠。 */
+export function keyGaps(lesson, i) {
+  const de = lesson.lines[i].de, out = [];
+  for (const w of lesson.words.filter(w => w.line === i)) { const c = clozeAt(de, w.form); if (c && !out.some(o => c.at < o.at + o.len && o.at < c.at + c.len)) out.push(c); }
+  return out.sort((a, b) => a.at - b.at);
+}
+RENDER.dictate = ctx => {
+  const line = ctx.lesson.lines[ctx.step.i], gaps = keyGaps(ctx.lesson, ctx.step.i);
+  const draw = () => {
+    const on = keysOn(), box = document.createElement('div');
+    ctx.body.replaceChildren(box);
+    const opt = `<button type="button" class="md-paper sx-zh ${on ? 'on' : ''}" aria-pressed="${on}" data-act="keys"><span class="bx">${CHECK_SVG}</span>只写重点词</button>`;
+    const c = { ...ctx, body: box }, say = slow => playLine(line, { slow });
+    if (on && gaps.length) gapTyping(c, { line, gaps, opt, say });
+    else typing(c, { task: '听写这一句', target: line.de, zh: line.zh, say, opt });
+    hydrate(box);
+    box.querySelector('[data-act=keys]').addEventListener('click', () => { try { localStorage.setItem(KEYS_KEY, on ? '0' : '1'); } catch { /* 记不住就算了 */ } stop(); draw(); });
+  };
+  draw();
+};
+function gapTyping({ body, foot, next, result }, { line, gaps, opt, say }) {
+  const de = line.de;
+  let html = '', at = 0;
+  gaps.forEach((g, k) => { html += `${esc(de.slice(at, g.at))}<span class="hf-gapin" style="--w:${Math.max(3, g.len) + 1}ch"><input type="text" data-k="${k}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="${k === gaps.length - 1 ? 'done' : 'next'}" aria-label="第 ${k + 1} 个空"></span>`; at = g.at + g.len; });
+  html += esc(de.slice(at));
+  body.innerHTML = `<div class="hf-dhead"><p class="hf-task">听写空着的词</p>${opt}</div>
+    <div class="hf-ctl top">${key('a-spk', { label: '播放', act: 'play', r: -5 })}${key('a-slow', { label: '慢速', act: 'slow', r: 4 })}</div>
+    <div class="hf-answer"><p class="md-input hf-gapline">${html}</p>
+      <div class="md-umlaut hf-acc">${['ä', 'ö', 'ü', 'ß'].map(c => `<button type="button" class="md-paper u" data-act="ch">${c}</button>`).join('')}<button type="button" class="md-btn" data-act="check">检查</button></div></div>`;
+  const inputs = [...body.querySelectorAll('.hf-gapin input')];
+  let last = inputs[0], done = false;
+  const check = () => {
+    if (done || inputs.every(i => !i.value.trim())) return;
+    done = true;
+    let all = true;
+    inputs.forEach((inp, k) => {
+      const want = de.slice(gaps[k].at, gaps[k].at + gaps[k].len), typed = inp.value.trim(), ok = sameText(typed, want);
+      all &&= ok;
+      // 写对的照抄；写错的用红笔划掉，正确的词写在后面并划线
+      inp.parentNode.outerHTML = ok ? `<span class="hf-gapok">${esc(want)}</span>` : `<span class="hf-gapno">${typed ? `<s>${esc(typed)}</s> ` : ''}<u>${esc(want)}</u></span>`;
+    });
+    if (all) body.querySelector('.hf-gapline').insertAdjacentHTML('beforeend', tick('hf-tick'));
+    body.querySelector('.hf-acc').remove();
+    body.querySelector('.hf-answer').insertAdjacentHTML('beforeend', `<p class="md-zh">${esc(line.zh)}</p>`);
+    sfx(all ? 'ok' : 'no'); result?.(all);
+    foot('继续', next, { arrow: true });
+  };
+  acts(body, {
+    play: () => say(false), slow: () => say(true),
+    ch: b => { const s0 = last.selectionStart ?? last.value.length, e0 = last.selectionEnd ?? s0; last.setRangeText(b.textContent, s0, e0, 'end'); last.focus(); },
+    check,
+  });
+  inputs.forEach((inp, k) => {
+    inp.addEventListener('focus', () => { last = inp; });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); inputs[k + 1] ? inputs[k + 1].focus() : check(); } });
+  });
+  foot('', null);
+  say(false);
+}
 EX.spell = ctx => { const { ex } = ctx.step; typing(ctx, { task: '听拼写，打出这个词', target: ex.answer, say: slow => play(ex.voice, ex.say, { slow }) }); };
 
 /* ---------- 开口：跟读 / 复述 / 开口回应（按住说 → 评分 → 红笔批改） ---------- */

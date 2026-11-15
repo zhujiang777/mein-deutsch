@@ -4,7 +4,7 @@ import { buildLesson, buildQuiz, buildReview, rulerOf } from './flow.js';
 import { hydrate, lessonRuler, artReady, sceneOf, seal, ico } from './art.js';
 import { RENDER } from './screens.js';
 import { STORY_LESSONS } from '../../data/story-lessons.js';
-import { cribHtml, bindCrib } from './screens2.js';
+import { albumPage } from './album.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../../js/secrets.js';
 import { checkAssessmentConnection, assessmentConfigured, assessmentErrorMessage } from '../../js/pronunciation-assessment.js';
 import { loadManifest, stop, sfx } from './audio.js';
@@ -30,7 +30,7 @@ function planOf(item, hasReview) {
 
 // 底栏只画一次、固定在屏幕底部：三页切换时它不动，只有选中的那团蓝色滑过去（2026-11-17 改，原来首页的底栏画在会缩放的画布里，和另两页对不上）
 const nav = document.body.appendChild(Object.assign(document.createElement('nav'), { className: 'hf-tabs', hidden: true }));
-nav.innerHTML = `<i class="blob"></i>${[['today', '今天', '#/'], ['log', '记录', '#/log'], ['me', '我的', '#/me']].map(([k, t, href]) => `<a class="tab" data-tab="${k}" href="${href}"><svg viewBox="0 0 28 28"><use href="#t-${k}"/></svg>${t}</a>`).join('')}`;
+nav.innerHTML = `<i class="blob"></i>${[['today', '今天', '#/'], ['heft', '手帐', '#/heft'], ['me', '我的', '#/me']].map(([k, t, href]) => `<a class="tab" data-tab="${k}" href="${href}"><svg viewBox="0 0 28 28"><use href="#t-${k}"/></svg>${t}</a>`).join('')}`;
 function setTab(on) {
   const first = nav.hidden; nav.hidden = !on; nav.classList.remove('away');
   if (!on) return;
@@ -125,6 +125,11 @@ function run({ id, steps, lesson = null, unit = null, start = 0, keep = false, b
     footEl.firstChild.addEventListener('click', () => { if (fn) fn(); }, { once: true });
   }
   // 两个并排的按钮（复习卡的「没记住 / 记住了」）：左边白、右边蓝
+  // 三个并排、不偏向哪一个的选择（复习词卡：认识 / 模糊 / 不认识）
+  function foot3(list) {
+    footEl.innerHTML = `<div class="hf-three-btn">${list.map(([t]) => `<button type="button" class="md-btn sec">${t}</button>`).join('')}</div>`;
+    list.forEach(([, fn], i) => footEl.querySelectorAll('button')[i].addEventListener('click', fn, { once: true }));
+  }
   function foot2(a, b) {
     footEl.innerHTML = `<div class="md-two"><button type="button" class="md-btn sec">${a[0]}</button><button type="button" class="md-btn">${b[0]}</button></div>`;
     [a, b].forEach(([, fn], i) => footEl.querySelectorAll('button')[i].addEventListener('click', fn, { once: true }));
@@ -145,7 +150,7 @@ function run({ id, steps, lesson = null, unit = null, start = 0, keep = false, b
     rul.style.visibility = step.type === 'finish' || step.type === 'quizResult' ? 'hidden' : ''; R.set(r.p, r.name);
     footEl.innerHTML = ''; page.dataset.step = step.type; scrollTo(0, 0);
     const mine = at;
-    await RENDER[step.type]({ lesson: step.lesson || lesson, unit, step, body: fresh, foot, foot2, redo, next: () => { if (mine === at) next(); }, flags: (flags[at] ||= {}), result: ok => { results[at] = ok; }, results, steps, cleanup: f => cleanups.push(f) });
+    await RENDER[step.type]({ lesson: step.lesson || lesson, unit, step, body: fresh, foot, foot2, foot3, redo, next: () => { if (mine === at) next(); }, flags: (flags[at] ||= {}), result: ok => { results[at] = ok; }, results, steps, cleanup: f => cleanups.push(f) });
     hydrate(page);
   }
   show();
@@ -181,16 +186,13 @@ function logPage() {
     if (months.at(-1)?.m !== m) months.push({ m, d, rows: [] });
     months.at(-1).rows.push(`<div class="lg ${k === todayK ? 'today' : ''}"><div class="dt"><b>${d.getDate()}</b><span>${k === todayK ? '今天' : WEEK[d.getDay()]}</span></div><div>${state.log[k].map(entry).join('')}</div></div>`);
   }
-  app.innerHTML = `<div class="md-page hf-page tabbed">${months.length ? months.map(g => `<div class="hf-calh"><h2>${g.d.getMonth() + 1} 月</h2><span>${g.d.getFullYear()}</span></div><div class="md-log">${g.rows.join('')}</div>`).join('') : '<div class="hf-calh"><h2>学习记录</h2></div><p class="md-cap">还没有记录</p>'}
+  app.innerHTML = `<div class="md-page hf-page tabbed"><a class="md-more al-back" href="#/heft">${ico('arrow')}<u>手帐</u></a>${months.length ? months.map(g => `<div class="hf-calh"><h2>${g.d.getMonth() + 1} 月</h2><span>${g.d.getFullYear()}</span></div><div class="md-log">${g.rows.join('')}</div>`).join('') : '<div class="hf-calh"><h2>学习记录</h2></div><p class="md-cap">还没有记录</p>'}
     </div>`;
   hydrate(app);
 }
 function mePage() {
   const sec = getAssessmentSecrets();
-  const cribs = STORY_LESSONS[0].stops.filter(s => s.rows);
-  app.innerHTML = `<div class="md-page hf-page tabbed"><h1 class="hf-h1">拼读小抄</h1>
-    <div class="md-cribs hf-cribs">${cribs.map((s, i) => `<button type="button" class="c" style="--r:${[-1.2, .8, -.6][i % 3]}deg;--t:${i % 2 ? 3 : -3}deg" data-act="crib" data-i="${i}"><span class="md-tape"></span><p>${esc(s.title).replace(/ · /g, ' <i>·</i> ')}</p></button>`).join('')}</div>
-    <h1 class="hf-h1 sub">课程</h1>
+  app.innerHTML = `<div class="md-page hf-page tabbed"><h1 class="hf-h1">课程</h1>
     <div class="hf-toc">${course().map(i => { const done = (i.kind === 'quiz' ? state.quiz[i.id] : state.lessons[i.id])?.done != null; return `<a class="it ${done ? 'done' : ''}" href="#/${i.kind}/${i.id}"><span class="n">${i.kind === 'quiz' ? '测' : numOf(i)}</span><span class="t">${esc(titleOf(i))}</span>${done ? `<svg class="tick" viewBox="0 0 26 24"><use href="#tick"/></svg>` : ''}</a>`; }).join('')}</div>
     <h1 class="hf-h1 sub">发音评分</h1>
     <p class="md-cap hf-as" aria-live="polite">${assessmentConfigured() ? '已设置' : '还没设置'}</p>
@@ -201,13 +203,6 @@ function mePage() {
     <div class="hf-dev"><button type="button" class="md-btn sec" data-act="day">进入下一天</button><button type="button" class="md-btn sec" data-act="reset">清空试学进度</button></div>
     <p class="md-cap hf-devcap">${state.shift ? `已往后拨 ${state.shift} 天` : ''}</p>
     </div>`;
-  // 小抄：从底下拉出一张纸，随时查
-  app.querySelectorAll('.hf-cribs .c').forEach(b => b.addEventListener('click', () => {
-    const s = cribs[+b.dataset.i];
-    document.body.insertAdjacentHTML('beforeend', `<div class="md-pull hf-cribpull"><div class="pp"><button type="button" class="x" aria-label="关上" data-i="x"></button>${cribHtml(s)}</div></div>`);
-    const sh = document.body.lastElementChild; hydrate(sh); bindCrib(sh, s);
-    sh.addEventListener('click', e => { if (e.target === sh || e.target.closest('.x')) { stop(); sh.remove(); } });
-  }));
   const status = app.querySelector('.hf-as'), form = app.querySelector('.hf-set');
   app.querySelector('[data-act=day]').addEventListener('click', () => { state.shift = (state.shift || 0) + 1; commit(); location.hash = '#/'; });
   app.querySelector('[data-act=reset]').addEventListener('click', () => { if (confirm('清空试学课的全部进度？')) { localStorage.removeItem(KEY); state = blank(); location.hash = '#/'; } });
@@ -251,10 +246,12 @@ function route() {
   document.querySelector('.md-pull')?.remove();
   stop();
   const [, name, id, at] = location.hash.split('/');
-  setTab(!name ? 'today' : name === 'log' ? 'log' : name === 'me' && id !== 'score' ? 'me' : '');
+  app.onclick = null;
+  setTab(!name ? 'today' : name === 'log' || name === 'heft' ? 'heft' : name === 'me' && id !== 'score' ? 'me' : '');
   if (name === 'lesson') lessonPage(id, at);
   else if (name === 'quiz') quizPage(id, at);
   else if (name === 'log') logPage();
+  else if (name === 'heft') albumPage(app, state, now(), { numOf, findItem });
   else if (name === 'me') (id === 'score' ? scoreTest : mePage)();
   else if (name === 'review') reviewPage();
   else home();

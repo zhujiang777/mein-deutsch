@@ -56,6 +56,8 @@
 
 按 30 课进度表写的连续故事，应用（`heft/`）直接读这个文件。`tests/story-lesson.test.mjs` 校验下面的硬规则。
 
+`STORY_SYLLABUS` 是 30 课的语法进度（单元名 + 每课的语法点名），手帐页的语法地图用；写好的课以语法卡标题为准。
+
 导出：`STORY_CAST`（角色 → 中文简介与固定配音）、`WORD_VOICE`（念单词用哪个角色的声音）、`STORY_NAMES`（人名地名，不算生词）、`STORY_LESSONS`、`STORY_UNIT_SUMMARIES`、`storyAudioItems()`。
 
 ### 2.1 课文课（第 1 课起）
@@ -81,6 +83,9 @@
 | `words` | 进复习的重点词 5–8 个：`{ id?, de, zh, line, form }`。`id` 只在词库里真有这个词时才填；没有 `id` 的是词库待补的词（自带 `zh`，可带 `art / pos`），接入时追加到 `vocab.js` 末尾 |
 | `phrases` | 按整体短语学的口头语：`{ de, zh }` |
 | `cards[].table` + `on` | 语法卡的整张小表（`{ head, rows }`）和本课点亮的行下标；`contrast` 是 du / Sie 之类的成对例句 |
+| `cards[].shelf` | ? 小贴士在手帐页归到哪一类：`'grammar'` 或 `'pron'`；不填算文化 |
+| `words[].more` | ? 复习词卡背面的补充：`{ col: [[搭配, 中文]], ex: [[例句, 中文]] }`，没有就不出那一块 |
+| `cards[].words` | ? 小贴士卡下面列的例词（带冠词），按词性上色、点了能听 |
 | `cards[].pics` | 发音卡的口型图（名字同第 0 课小抄的 `pic`）。一张图就写一个；和 `pairs` 一一对应时，点哪个词换哪张图（如第 1 课 ich / ach） |
 | `cards[].drill` | 语法卡「先做后讲」的小题，一道点亮表里一格：`{ line, de, zh, v, no, sj, row, col? }`——`line` 课文第几句（必须不晚于这张卡的 `after`），`de` 那句里用来挖空的半句，`v` 正确的动词（按句中写法），`no` 干扰项，`sj` 主语（按句中写法），`row`/`col` 对应表里哪一格（`col` 默认 1）。语法卡必须有 `drill`；`body` 是最后留下的那句规则，用规范术语 |
 | `exercises` | 轻快练习，顺序即出题顺序。类型：`choice`、`listenChoice`（带 `voice`、`audioText`，可带 `say`）、`match`、`assemble` |
@@ -106,6 +111,8 @@
 - 小测里每道题都要有 `can`：它检验的是 `canDo` 里的第几条（从 0 数）。结果页按条打勾，名下有一题答错的那条显示「再练一次」。每条 `canDo` 至少要有一题。
 
 变位表的一格怎么念由 `rowSay(row, col)` 决定（`'er / sie'` + `'kommt'` → “er kommt”），页面和配音清单共用。
+
+- `intro`：? 总表里第一次出现、课文没教过的格子，先教再考。`{ lines, card }`：`lines` 是 3–5 句小对话；`card` 是一张先做后讲的语法卡（`table`、`drill`，`all: true` 表示把小对话整段列出来），`drill[].line` 指 `intro.lines` 的下标。应用里的顺序：小对话 → 小空 → 总表 → 练习 → 小测
 
 ### 2.4 配音清单
 

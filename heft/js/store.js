@@ -96,7 +96,9 @@ export function completeQuiz(s, unit, results, ts) {
 }
 export function rateCard(s, key, ok, ts) {
   const c = s.cards[key]; if (!c) return s;
-  if (ok) { c.stage++; c.grad = c.stage >= CARD_GAPS.length; c.due = dayNum(ts) + (CARD_GAPS[c.stage] || 0); }
+  // 模糊：不往后推也不清零，明天再来一次
+  if (ok === 'fuzzy') c.due = dayNum(ts) + 1;
+  else if (ok) { c.stage++; c.grad = c.stage >= CARD_GAPS.length; c.due = dayNum(ts) + (CARD_GAPS[c.stage] || 0); }
   else { c.stage = 0; c.due = dayNum(ts) + 1; }
   logDay(s, ts, { type: 'review', id: 'cards' }, 1);
   return s;

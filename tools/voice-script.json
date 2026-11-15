@@ -3,7 +3,7 @@
  "voices": {
   "Lin": {
    "voice": "Jonas Falk",
-   "chars": 804,
+   "chars": 833,
    "items": [
     {
      "id": "34be9a178f61",
@@ -246,6 +246,12 @@
      "text": "Sind Sie neu hier?"
     },
     {
+     "id": "ea673f5c4147",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Wir kochen nicht. Wir lernen."
+    },
+    {
      "id": "3ee98ee41fdf",
      "lesson": "unit-1",
      "kind": "model",
@@ -267,7 +273,7 @@
   },
   "Lena": {
    "voice": "Lea",
-   "chars": 2426,
+   "chars": 2481,
    "items": [
     {
      "id": "062616307468",
@@ -1578,6 +1584,24 @@
      "text": "Tom und Lena kommen aus Deutschland."
     },
     {
+     "id": "c96da80d2df3",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Hallo! Seid ihr da?"
+    },
+    {
+     "id": "7599f4080b06",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Was kocht ihr?"
+    },
+    {
+     "id": "998a4459c9d2",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Tom lernt? Wie bitte?!"
+    },
+    {
      "id": "27839ec71f36",
      "lesson": "unit-1",
      "kind": "cue",
@@ -1599,7 +1623,7 @@
   },
   "Tom": {
    "voice": "Dylan Carter",
-   "chars": 611,
+   "chars": 670,
    "items": [
     {
      "id": "0a5fe7af989a",
@@ -1618,6 +1642,12 @@
      "lesson": "sl-01",
      "kind": "line",
      "text": "Tschüss, Lena! … Sie ist immer so."
+    },
+    {
+     "id": "64e5fb6139fb",
+     "lesson": "sl-01",
+     "kind": "exercise",
+     "text": "Willkommen!"
     },
     {
      "id": "b531db4dc46c",
@@ -1716,6 +1746,12 @@
      "text": "Na und? Ich koche gut!"
     },
     {
+     "id": "b59fea9e56fb",
+     "lesson": "sl-03",
+     "kind": "exercise",
+     "text": "Sie lernt und lernt und lernt."
+    },
+    {
      "id": "973be83781d0",
      "lesson": "sl-03",
      "kind": "cue",
@@ -1732,6 +1768,12 @@
      "lesson": "sl-04",
      "kind": "line",
      "text": "Puh! Danke, Lin!"
+    },
+    {
+     "id": "a5e4b74455ff",
+     "lesson": "unit-1",
+     "kind": "line",
+     "text": "Ja, wir sind hier!"
     },
     {
      "id": "6d366ee8cfee",
