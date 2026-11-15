@@ -92,7 +92,7 @@ function home() {
   app.querySelector('.go')?.addEventListener('click', () => {
     const nb = app.querySelector('.nb'); sfx('tap');
     nb.classList.add('press'); nav.classList.add('away');
-    // 放大到那扇窗（中心 206,391，半宽 124、半高 125）盖住整个屏幕为止；屏幕换算到画布坐标里量
+    // 只放大封面：放大到它中间那扇窗（中心 206,391，半宽 124、半高 125）盖住整个屏幕为止；屏幕换算到画布坐标里量。内页不动
     const k = +nb.parentNode.style.getPropertyValue('--k') || 1, W = innerWidth / k, H = innerHeight / k;
     const zoom = Math.max((206 - (195 - W / 2)) / 124, (195 + W / 2 - 206) / 124, 391 / 125, (H - 391) / 125) * 1.18;
     nb.style.setProperty('--zoom', zoom.toFixed(2));
