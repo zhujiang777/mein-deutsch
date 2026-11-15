@@ -1,6 +1,6 @@
 # 怎么写一篇课文课
 
-先读 [产品宪法](product.md)。本文件只放写内容时的现行规则。不要按旧模板（微步课、场景循环、全景格子、技能标签）写课。
+先读 [产品宪法](product.md)。本文件只放写内容时的现行规则。
 
 ## 一篇课文
 
@@ -45,28 +45,18 @@
 
 ## 改完内容后
 
-1. `npm run content:index` → `npm run content:examples` → `npm run content:grammar`
-2. 改了德语文本：`python3 tools/gen_audio.py`；生成后人工抽听
-3. `npm test` 必须全绿
+1. 改了德语文本：`node tools/voice-script.mjs` → `python3 tools/gen_story_audio.py`（只补缺的录音）；生成后人工抽听
+2. `npm test` 必须全绿
 
 ## 数据放在哪
 
-新版故事课（第 0 课起，按进度表写的）放在 `data/story-lessons.js`，字段见 `docs/schema.md` §6，暂未接入应用；配音清单用 `node tools/voice-script.mjs` 生成。下面是正式版仍在用的旧结构：
+课文课写在 `data/story-lessons.js`，一课一个对象，字段见 `docs/schema.md` §2；进入复习的词要登记在 `data/vocab.js`。写法要点：
 
-课文课写在 `data/text-lessons.js`，以第 1 课 `tl-01` 为样板，一课一个对象：
-
-- `lines`：课文逐句（说话人、德语、中文），`role` 是“我的角色”
-- `gloss`：点词释义，课文和课后小材料里的每个词都要有
-- `words`：进入复习的词（词库 id + 所在句 + 句中词形），复习时用这句出填空
 - `cards`：语法卡、发音卡各 1 张，生活小贴士可选，`after` 是插在第几句之后
   - 语法卡先做后讲：`drill` 里每道小题都用**已经读过的课文原句**挖空（一道点亮表里一格，2–3 道），`body` 只留一句规则，用规范术语（动词、变位、词尾、人称），不写口水话；所以语法卡的 `after` 要放在它用到的最后一句之后
   - 发音卡：说嘴怎么动，不堆语音学术语，不拿汉语拼音或英语做类比
-- `gist`（盲听大意题）、`checks`（第 1 天小检查）、`dictation`（听写哪几句）、`shadow`（跟读哪几句，只能是我的角色）
-- `reviews`：3 道隔天检查变式；`reading`：课后小材料 + 1 道理解题
 - 选择题把正确项写在第一个，页面会自动打乱顺序
-- 改了已上线的课文内容就把 `version` 加 1（学习记录按版本分开）
-
-`tests/text-lesson.test.mjs` 会检查：词数 30–80、下标有效、词在词库、释义齐全、小材料不超纲（“小材料可带 3–5 个新词”的检查，在新版铺进正式版时一起更新）。
+- `tests/story-lesson.test.mjs` 会检查硬规则（下标有效、词在词库、释义齐全、第 0 课结构等）
 
 ## 30 课进度表（2026-11-09 作者确认）
 

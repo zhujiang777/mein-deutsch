@@ -1,227 +1,16 @@
-> 以 [产品宪法](product.md) 为准；本文件只作字段参考。旧课程字段（微步课、技能标签、全景格子）属于资料库内容。
+> 以 [产品宪法](product.md) 为准；本文件只作字段参考。
 
 # Mein Deutsch 内容数据规范
 
-写给内容作者（含 AI agent）。目标：只改 `data/*.js`，就能安全地扩充课程、词汇、阅读、精听。
-**以代码实现为准**；本文所有字段都与 `js/exercises.js`、`js/views/lesson.js`、`js/views/vocab.js`、
-`js/views/reading.js`、`js/recur.js` 的实际读取一致。
+写给内容作者（含 AI agent）。内容只有两个文件：`data/story-lessons.js`（课文课）和 `data/vocab.js`（词库）。**以代码实现为准**（`heft/js/flow.js`、`heft/js/screens.js`、`heft/js/screens2.js`）。
 
 约定：
 - `?` 表示可选字段；无标记为必填。
-- 所有德语文本改动后，必须重跑音频管线（见 §5），否则新句子会退回设备 TTS。
-- 不要手改自动生成的文件：`data/audio-manifest.js`、`data/listening-audio.js`、`data/dict-core.js`、`data/content-index.js`。
-- 引入外部语料（非原创）前先读 `docs/archive/textbook-extraction-guide.md` 与 §4 的 `provenance` 规则。
+- 德语文本改动后要补录音（见 §2.4），否则那一句没有声音。
 
 ---
 
-## 1. 课程 `data/course.js`
-
-结构：`COURSE`（单元数组）→ `unit.lessons`（微步课数组）→ `lesson.steps`（步骤数组）。
-
-### 1.1 单元 unit
-
-```js
-{
-  id: 'u1',                       // 全局唯一
-  title: '第1单元 · Hallo! 我是谁',
-  icon: '👋',                     // ? 单元图标 emoji，默认 📘
-  track: 'grammar',               // 'grammar'(语法主线) | 'pron'(发音入门) | 'scene'(场景口语)；缺省按 'grammar'
-  intro: '一句话说明本单元学什么', // ?
-  nicosWeg: { name: '...', url: 'https://...' }, // ? 对标官方课程来源卡
-  videos: [                       // ? 单元视频（掌握门槛的一部分）
-    { yt: 'YOUTUBE_ID', title: '标题', note: '?说明', duration: '?12:00' },
-  ],
-  lessons: [ /* 见 1.2 */ ],
-}
-```
-
-- `track` 决定单元落在「📐 语法主线」「🔤 发音入门」还是「🗣️ 场景口语」泳道。三条线**各自独立顺序解锁**。
-- 路径页按 `track` 分组，泳道内按 `COURSE` 里的先后顺序解锁：前一课 `done` 后，下一课才解锁。
-
-### 1.2 微步课 lesson
-
-```js
-{
-  id: 'u1l1',                     // 全局唯一，路由 #/lesson/u1l1
-  title: 'ich bin · du bist',
-  skills: ['sein-sg', 'pron-sg'], // ? 技能标签，用于掌握度聚合（lessonMastery）
-  steps: [ /* 见 1.3 */ ],
-}
-```
-
-- `skills` 是自定义字符串标签。答题时 `step.skills`（优先）或 `lesson.skills` 计入掌握度。
-
-### 1.3 步骤 step（按 type 区分）
-
-步骤分三类：**信息卡**（展示）、**练习**（计分）、**展示/复述**（新增）。
-所有练习类 step 都支持可选 `skills: [...]` 和 `explain`（答后在反馈条显示）。
-
-#### 信息卡：`teach` / `example` / `recap`
-
-三者渲染完全相同（`renderInfoStep`），仅语义不同。底部固定「继续」按钮，不计分。
-
-```js
-{
-  type: 'teach',        // 或 'example' / 'recap'
-  h: '小标题',          // ?
-  p: '正文。\n用 \\n 分段。', // ? 每个 \n 拆成一个 <p>
-  table: {              // ? 变位/对照表
-    head: ['人称', 'sein', '例'],
-    rows: [['ich', 'bin', 'Ich bin müde.'], ['du', 'bist', 'Du bist nett.']],
-  },
-  example: {            // ? 内嵌例句卡（进入时自动朗读 de）
-    de: 'Ich bin Anna.',
-    zh: '我是安娜。',
-    note: '?补充说明',
-  },
-  tip: '?一句提示（高亮框）',
-}
-```
-
-#### 练习：`choice` 单选
-
-```js
-{ type: 'choice', prompt: 'Ich ___ Student.（我是大学生。）',
-  options: ['bin', 'bist', 'ist'], a: 0,   // a = 正确项下标
-  audioText: '?Ich bin Student.',          // ? 有则显示朗读按钮
-  explain: '?ich 永远配 bin。', skills: ['sein-sg'] }
-```
-
-#### 练习：`listenChoice` 听音单选
-
-```js
-{ type: 'listenChoice', audioText: 'Ich bin müde.',   // 进入时自动播放
-  options: ['我累了。', '你很好。', '我是学生。'], a: 0,  // 选项常为中文义
-  explain: '?müde = 疲惫的。', skills: ['sein-sg'] }
-```
-
-#### 练习：`assemble` 词块拼句（中→德）
-
-```js
-{ type: 'assemble', zh: '我是学生。', answer: 'Ich bin Student.',
-  distractors: ['bist'],           // ? 干扰词块
-  explain: '?', skills: ['sein-sg','v2-order'] }
-```
-
-- 判定忽略大小写/标点/ß≈ss/多空格。
-
-#### 练习：`dictation` 听写（默认打字）
-
-```js
-{ type: 'dictation', audioText: 'Ich bin Anna.',
-  mode: 'type',                    // ? 'type'(默认，打字) | 'blocks'(词块拼句)
-  distractors: ['bist','du'],      // ? 仅 blocks 模式用
-  explain: '?', skills: ['sein-sg'] }
-```
-
-- 打字模式：输入框 + 特殊字符条 `[ä ö ü ß ẞ Ä Ö Ü]`；判定忽略大小写/标点/ß≈ss/多空格。
-  仅大小写差异仍算对，但提示「注意名词大写」。答错显示 diff。右下角可临场「改用词块」。
-- `answer` 与 `audioText` 二选一即可（缺 `answer` 时用 `audioText` 当正确答案）。
-
-#### 练习：`fill` 填空打字
-
-```js
-{ type: 'fill', prompt: 'Du ___ mein Freund.（你是我的朋友。）',
-  a: ['bist'],                     // 接受答案数组（任一命中即对）
-  hint: '?占位提示', explain: '?', skills: ['sein-sg'] }
-```
-
-#### 练习：`match` 词义配对
-
-```js
-{ type: 'match',
-  pairs: [ { de: 'ich bin', zh: '我是' }, { de: 'du bist', zh: '你是' } ],
-  skills: ['sein-sg'] }
-```
-
-- 全部配对成功才算完成；中途配错会记为本题出错。
-
-#### 练习：`translate` 中译德打字
-
-```js
-{ type: 'translate', zh: '我们是大学生。',
-  a: ['Wir sind Studenten', 'Wir sind Studenten.'],  // 接受答案数组
-  explain: '?', skills: ['sein-pl'] }
-```
-
-#### 练习：`speak` 跟读（云端发音评测 + 录音对比）
-
-```js
-{ type: 'speak', de: 'Ich bin Anna und du bist Max.', zh: '?我是安娜，你是马克斯。' }
-```
-
-- 一次录音同时生成本机回放和 16 kHz PCM WAV；停止后立即并排回放「标准 / 我的录音」，
-  再异步显示综合发音、音素准确、流利度、完整度和逐词反馈（综合分 ≥70 通过）。
-- 通过 → 底部按钮变「✓ 继续」，提交记为正确（计入统计，从不计错）；
-  未通过 → 提示重录，但「完成，继续」永远可点（跳过不计）。
-- 云端未配置 / 失败 → 无感退化为纯录音对比，不生成文字匹配分。数据格式不变 `{type:'speak', de, zh}`。
-
-#### 展示：`scene` 对话展示步（新增）
-
-```js
-{ type: 'scene', title: '?在咖啡馆',
-  lines: [
-    { who: 'Kellner', de: 'Guten Tag! Was möchten Sie?', zh: '您好！想点什么？' },
-    { who: 'Anna',    de: 'Einen Kaffee, bitte.',        zh: '请来杯咖啡。' },
-  ] }
-```
-
-- 逐句展示（说话人加粗、德语大字、中文可整体开关），每句有朗读按钮，顶部「▶ 连播」。
-  纯展示，底部「继续」推进，不计分。`who` 用于区分说话人标签。
-
-#### 展示/练习：`observe` 语法观察步（新增，计分）
-
-```js
-{ type: 'observe',
-  intro: '?观察下面两句里 möchte 的位置',
-  lines: [
-    { de: 'Ich möchte einen Kaffee.', zh: '我想要一杯咖啡。', hl: 'möchte' }, // hl 首次出现处高亮
-    { de: 'Möchten Sie auch etwas?',  zh: '您也想要点什么吗？', hl: 'Möchten' },
-  ],
-  q: '动词 möchte 出现在句子的第几位？',
-  options: ['第一位', '第二位', '句尾'], a: 1,
-  explain: '?陈述句里变位动词永远在第二位。', skills: ['?'] }
-```
-
-- 先展示对话片段（`hl` 为要高亮的**子串**，转义后首次出现处包 `<mark>`），再答引导选择题。
-  计入答题统计，`explain` 在答后的反馈条显示。
-
-#### 复述：`reproduce` 整句复述（新增，计分 + 重排队）
-
-```js
-{ type: 'reproduce', de: 'Ich möchte einen Kaffee, bitte.', zh: '我想要一杯咖啡，谢谢。' }
-```
-
-- 初始只显示 `zh` 和 🔊（德语文本隐藏）→ 听后录音复现 → 停止显示 `de` + 对比回放 →
-  自评「✅ 复现出来了 / 🔁 还不行」。选「还不行」会把该步重排到队尾再练。
-  无麦克风时降级：听 → 心里复述 → 显示文本自评。
-
-#### 收尾：`roleplay` 角色扮演步（新增）
-
-```js
-{ type: 'roleplay', title: '?点一杯咖啡', userRole: 'Gast',
-  lines: [
-    { who: 'Kellner', de: 'Was möchten Sie?',        zh: '您想要什么？' },
-    { who: 'Gast',    de: 'Einen Kaffee, bitte.',    zh: '（你）请来杯咖啡。' },
-    { who: 'Kellner', de: 'Sonst noch etwas?',       zh: '还要别的吗？' },
-    { who: 'Gast',    de: 'Nein, danke.',            zh: '（你）不用了，谢谢。' },
-  ] }
-```
-
-- 逐句推进：`who !== userRole` 的句子自动播放并显示文本；轮到 `userRole` 时显示中文提示，
-  用户录音说德语 → 停止后显示参考 `de` + 对比回放 → 下一句。全部完成算通过。
-  无麦克风降级为「看中文说德语 → 点击显示参考」。`userRole` 必须与某些 `lines[].who` 精确相等。
-
-### 1.4 判定与统计口径（作者需知）
-
-- 判对宽容度（choice/match 用下标精确匹配；文本类忽略大小写/标点/ß≈ss/多余空格）。
-- 答错的**练习**会复制到队尾反复出，直到做对；成绩只记首次。
-- `scene`/`roleplay` 为展示步，不计分、不弹反馈条；`observe`/`reproduce` 计分。
-- 首答错的练习进入错题池，次日在「今日学习」复现。
-
----
-
-## 2. 词汇 `data/vocab.js`
+## 1. 词库 `data/vocab.js`
 
 `THEMES` 定义主题：`{ id, name, icon }`。`VOCAB` 每条词：
 
@@ -236,7 +25,7 @@
   exZh: '我喝咖啡。',        // 例句翻译
   theme: 'essen',            // 对应 THEMES 里的 id
 
-  // ---- 以下为可选增强字段（词卡 wordcard 会用；不填则从上面缺省派生）----
+  // ---- 以下为可选增强字段 ----
   senses: [{ pos: 'n.', zh: '咖啡' }],          // ? 多义项列表；pos 是词性缩写
   sentences: [                                   // ? 多例句
     { de: 'Ein Kaffee, bitte.', zh: '请来杯咖啡。', source: 'r04' }, // source=阅读 id，显示"出自课文"
@@ -259,176 +48,28 @@
 - 名词的 `spoken`（朗读用）自动拼成 `art + de`（如 "der Kaffee"）；因此音频管线会收录带冠词形式。
 - `valence` 只做展示，无解析逻辑；写成便于记忆的一行即可（动词支配格、介词搭配等）。
 - **新增词只能追加到 `VOCAB` 数组最末尾**——`id` 按位置自动生成，中插会让后续所有词的 id 位移、破坏 SRS 存档。主题归属靠 `theme` 字段，与数组位置无关。
-- `forms`/`phrases` 的德语文本已由 `tools/extract_texts.mjs` 提取；修改这些字段后需重跑 `gen_audio.py`。
+- 词库现在只当“登记簿”用：课文里进入复习的词要能在这里查到（`tests/story-lesson.test.mjs` 校验）；词库本身不单独配音。
 
 ---
 
-## 3. 阅读 `data/readings.js`
+## 2. 课文课 `data/story-lessons.js`
 
-```js
-{
-  id: 'r01',
-  title: 'Hallo, ich bin Anna',   // 德语标题
-  titleZh: '你好，我是安娜',
-  level: 'A1',
-  mode: 'intensiv',               // 'intensiv'(精读) | 'extensiv'(泛读)
-  skillStage: 'R1',               // 正式能力阶段 R1-R6
-  genre: 'form-and-profile',
-  topic: 'language-club-membership',
-  register: 'neutral-written',
-  grammarPrereqs: ['regular-verbs'],
-  recommendedAfter: 'u2l3',
-  targetLemmas: ['Name','Land','lernen'],
-  newLemmas: ['Mitglied','Muttersprache','Lernziel'], // 每份 3-6 个
-  knownWordTarget: 0.92,
-  designReferences: {
-    evidenceIds: ['repo-s1-u2l3','passwort-a1-progression','hueber-r-a-persons','dib-ch1-interviews'],
-    appliedConstraints: ['先扫描字段，再重组人物信息'],
-    originalityStatement: '人物、正文、题目和信息顺序均从空白页原创。'
-  },
-  provenance: { kind: 'original', source: 'original', license: 'proprietary', statement: '…' },
-  vocabRefs: ['w016','w017','w018'], // 文中确实出现的词，结合课程/SRS计算已知词比例
-  intro: '?导读一句话',
-  sentences: [
-    { de: 'Hallo! Ich heiße Anna.', zh: '你好！我叫安娜。', note: '?heißen 叫……' },
-  ],
-  speakPractice: [0, 2, 6],       // ? 仅 intensiv：挑哪几句做跟读（句子下标）
-  glossary: {                     // ? 主要 intensiv 用：点词查义
-    // 键 = 课文中出现的小写词形（含变位/复数形式）
-    heiße: { base: 'heißen', zh: '叫（名字）' },
-    heißt: { base: 'heißen', zh: '叫（名字）' },
-  },
-  questions: [                    // ? 主要 extensiv 用：读后理解题（choice）
-    { type: 'choice', q: 'Wie alt ist Bruno?', options: ['zwei','drei','vier'], a: 1, explain: '?' },
-  ],
-}
-```
-
-- `vocabRefs` 驱动「读·听」页顶部的**为你推荐**：`js/recur.js` 计算 `vocabRefs` 与用户
-  「最近学的词 + 到期复习词」的重叠数，取重叠最高的前 2 篇推荐，标注「复现你最近学的 N 个词」。
-  所以只填**文中真的出现**、且在 `vocab.js` 里有对应词条的 id（对照 `de` 找 id）。无重叠时该篇不推荐。
-- `glossary` 键必须是小写、与课文中实际词形一致（含变位）；点词时按去标点小写匹配。
-
----
-
-## 4. 精听包 `data/listening.js`
-
-阅读是「看懂语境」，精听包是「把声音切成词」。与阅读的关键差别：**带授权字段**（要能内嵌外部
-真实语料）、**带说话人**（多音色对话）、**音频与时间戳是生成物**（在 `data/listening-audio.js`，勿手写）。
-
-```js
-{
-  id: 'li-b01',                    // 必须 li- 前缀：同时是路由、md.lessons.v1 的 key、SRS 命名空间的一段
-  title: 'Im Café', titleZh: '在咖啡馆', level: 'A1',
-  skillStage: 'L1', genre: 'short-interview', register: 'neutral-spoken',
-  grammarPrereqs: ['regular-verbs'], recommendedAfter: 'u2l3',
-  targetLemmas: ['heißen','kommen'], newLemmas: ['…','…','…'],
-  knownWordTarget: 0.92,
-  designReferences: {
-    evidenceIds: ['repo-s1-u2l3','passwort-a1-progression','hueber-h-a-contact','dib-ch1-interviews'],
-    appliedConstraints: ['至少三位说话人','答案依赖说话人匹配'],
-    originalityStatement: '人物、台词、选项和信息顺序均从空白页原创。'
-  },
-  topic: 'gastronomie',            // 话题 slug，与 syllabus-ref.json 共用取值
-  func: ['bestellen'], funcZh: ['点单'],   // ? 交际功能
-  skills: ['listen-detail'],       // ? 喂 recordAnswer 的技能标签
-  intro: '?听前提示一句话',
-  provenance: { … },               // 必填，见下
-  audioStatus: 'pending-tts',       // ? TTS 未生成时显式标记；生成并核验后改为 ready
-  audio: { mode: 'sentences' },    // 'clip'(整段+时间戳) | 'sentences'(逐句独立文件)
-  speakers: [                      // ? 多说话人；单音色包只写一个
-    { id: 'K', name: 'Kellner', voice: 'de-DE-ConradNeural', gender: 'm', accent: 'de-DE' },
-  ],
-  sentences: [
-    { de: 'Guten Tag! Was möchten Sie?', zh: '您好！您想要什么？',
-      sp: 'K',                     // ? 对应 speakers[].id
-      note: '?听力难点，对照阶段显示',
-      newLemmas: ['Zucker'],       // ? 超出 A1 词表的生词，未声明会被测试拦下
-      srcId: '…', srcAudio: '…' }, // ? A 轨逐句溯源（Tatoeba 是孤立句，同包各句来源可能不同）
-  ],
-  gist: { q: '这段对话发生在哪里？', options: ['…'], a: 0, explain: '?' },  // ? 盲听后大意题，计分
-  dictation: [1, 3, 5],            // ? 挑哪几句做听写，缺省全部
-  speakPractice: [1, 9],           // ? 跟读评分（与 readings.js 同名同义）
-  reproduce: [8],                  // ? 复述
-  vocabRefs: ['w016'],             // ? 同 readings.js，驱动复现推荐
-}
-```
-
-### provenance（硬门槛，`tests/listening-data.test.mjs` 强制校验）
-
-`kind` 三选一：`'corpus'`（外部语料内嵌）/ `'original'`（原创撰写）/ `'tts'`。
-
-- **`kind !== 'original'`** 必填：`license`（白名单内）、`licenseUrl`、`attribution`、
-  `originalUrl`、`retrievedAt`（`YYYY-MM-DD`）、`modified`（布尔）；`modified: true` 时还要 `modifiedNote`。
-  CC BY 系列的署名与「声明改动」是持续义务，靠人记必漏，所以做成测试门槛。
-- **`kind === 'original'`** 必填 `adaptedFrom.statement`（交代来源边界）。若 `adaptedFrom.work`
-  指向某本教材，则必须同时给出 `borrowed[]` **事实层**清单（话题/交际功能/词表/语法点/题型）。
-  ⚠️ 逐句改写受版权原文属衍生作品，不是安全出口——只拿清单，句子从零写。规则见
-  `docs/archive/textbook-extraction-guide.md`。
-
-`designReferences.evidenceIds` 必须能在 `data/syllabus-ref.json` 定位，并至少覆盖课程/主课进度、
-对应 Hueber 技能书和一个公开校准来源。页码、练习与音轨只写在证据矩阵中，内容文件不重复维护定位器。
-
-### 音频与时间戳（生成物）
-
-```bash
-node tools/extract_texts.mjs > /dev/null   # 语法自检
-python3 tools/gen_audio.py                 # 逐句 Katja 兜底进主 manifest
-python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/listening-audio.js
-```
-
-- 产物落 `audio/listening/`，索引落 `data/listening-audio.js`（`{ mode, key, file|files, seg?, dur?, voice? }`）。
-  **绝不写 `data/audio-manifest.js`**——那个文件由 `gen_audio.py` 全量重写，塞进去的条目下轮就没了。
-- `seg` 与 `sentences` **同序同长**，`[[start, end], …]` 单位秒，取自 edge-tts 的 WordBoundary 事件
-  （服务端真值）。TTS 按标点断句，所以只能按词对齐、不能用 SentenceBoundary。
-- 对不齐 / 多音色 / 合成失败 → **自动降级 `mode:'sentences'`**，宁可没有 AB 复读也不能错位。
-- 默认音色（`de-DE-KatjaNeural`）且主库已有的句子直接复用 `audio/<hash>.mp3`，零字节重复。
-- `key` 是输入指纹（模式+音色+全部句子），不变就跳过生成并沿用上一轮时间戳。
-- 每句德语同时进主 manifest 做兜底，保证查词弹窗、慢速单句、SRS 错句复现随时有音频。
-- 精听听写或复述首答错误写入 `l:<packId>:<sentenceIndex>`；普通课程仍使用 `m:`。
-  阅读理解题只回写 `skills`，不得把整句写入词汇 SRS。
-
-### 作者自检
-
-- 生词密度上限 12%（`newLemmas` 去重后 / 总词数）。超了就换词或拆包。
-- 覆盖率判定走 `tools/a1-coverage.mjs`，已处理缩合（`im→in`、`zur→zu`）与冠词/物主代词格变化，
-  不必为这些形式声明 `newLemmas`。
-
----
-
-## 5. 音频管线（改德语文本后必做）
-
-- 播放逻辑（`js/speech.js`）：`speak(text)` 先查 `data/audio-manifest.js`，命中就放
-  预生成的 `audio/<hash>.mp3`（真人级 de-DE 神经语音）；未命中回退设备德语 TTS（音质差、可能无声）。
-- 因此**任何德语文本新增/修改后**，在项目根运行：
-
-  ```bash
-  python3 tools/gen_audio.py
-  ```
-
-  幂等：已存在的音频跳过，只补新增；同时重写 `data/audio-manifest.js`（勿手改）。
-- 需要发音的文本由 `tools/extract_texts.mjs` 统一提取，已覆盖：
-  发音/语法课例句、词汇（带冠词形式 + 例句 + `phrases` + `forms`）、全局词典词头、阅读逐句 + 全文、
-  课程步骤的 `example.de` / `audioText` / `answer` / `de`（speak·reproduce）/
-  choice 正确项 / fill·translate 首个答案 / match 的 `de` /
-  **scene·observe·roleplay 的 `lines[].de`**、**精听包 `LISTENING_PACKS[].sentences[].de`**。
-  新增题型若引入新的德语文本字段，需同步更新 `extract_texts.mjs` 再跑 `gen_audio.py`。
-- 自检：`node tools/extract_texts.mjs > /dev/null && echo OK` 应通过（数据文件语法正确）。
-
----
-
-## 6. 故事课 `data/story-lessons.js`（新版课文课，暂未接入应用）
-
-按 30 课进度表写的连续故事。正式版播放器仍读 `data/text-lessons.js`；接入时以本节为准。`tests/story-lesson.test.mjs` 校验下面的硬规则。
+按 30 课进度表写的连续故事，应用（`heft/`）直接读这个文件。`tests/story-lesson.test.mjs` 校验下面的硬规则。
 
 导出：`STORY_CAST`（角色 → 中文简介与固定配音）、`WORD_VOICE`（念单词用哪个角色的声音）、`STORY_NAMES`（人名地名，不算生词）、`STORY_LESSONS`、`STORY_UNIT_SUMMARIES`、`storyAudioItems()`。
 
-### 6.1 课文课（第 1 课起）
+### 2.1 课文课（第 1 课起）
 
-和 `text-lessons.js` 同名的字段含义不变（`lines / gloss / cards / dictation / shadow / reviews / reading / role`）。新增或有变化的：
+一课一个对象：
 
 | 字段 | 含义 |
 |---|---|
+| `lines` / `role` | 课文逐句（说话人、德语、中文）；`role` 是“我的角色” |
+| `gloss` | 点词释义，课文和课后小材料里的每个词都要有 |
+| `cards` | 语法卡、发音卡各 1 张，生活小贴士可选；`after` 是插在第几句之后 |
+| `dictation` / `shadow` | 听写哪几句；跟读哪几句（只能是我的角色） |
+| `reviews` / `reading` | 3 道隔天检查变式；课后小材料 + 1 道理解题 |
+| `version` | 改了已上线的课文内容就加 1（学习记录按版本分开） |
 | `n` / `unit` / `days` | 进度表里的课号、单元号；`days: 1` 表示 1 天学完（第 1 单元），其余为 2 |
 | `cover` | ? 首页名签上的短名，5 个字以内；课名本身不超过 5 个字时不用填（名签放不下长课名） |
 | `canDo` | 学完能做到什么（一条一句，进度证据用） |
@@ -450,11 +91,11 @@ python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/list
 
 选择题的正确项都写在第一个（`answer: 0`），页面负责打乱。
 
-### 6.2 第 0 课（`kind: 'pron'`）
+### 2.2 第 0 课（`kind: 'pron'`）
 
 没有课文，按 `stops`（小站）排，轻量版（2026-11-14）共 5 站：字母表、三张拼读小抄、门铃名牌。每站 `{ id, title }`，内容三选一：`letters`（`{ l, name, say }`，字母表，另有 `cue` 一句说明和 `hard` 要标出的字母）；`rows`（拼读小抄，一行一个读音：`{ s, w, zh, c, gap? }`——`s` 读音，`w` 例词，用 `[ ]` 标出这个读音如 `der K[ä]se`，`c` 一句“嘴怎么动”，不用拼音、英语类比；`gap` 表示这一行上面画一道粗线分组；`pic` 可选，口型图的名字（`m-ae m-oe m-ue m-wv m-sch m-ich m-ach m-z`，画在 `heft/js/mouth-sprites.js`），点开这一行时和 `c` 一起展开），后面跟 `tries`（`{ w, zh }`，照小抄先自己读、再听原声的词，不判对错）；`blind`（门铃名牌，`{ de, zh, say? }`）。`exercises` 可选，第 0 课不放辨音题、不评分；`{ type: 'try', w, prompt, voice, say }` 是“先读再听”的单独一屏。
 
-### 6.3 单元总表 `STORY_UNIT_SUMMARIES`
+### 2.3 单元总表 `STORY_UNIT_SUMMARIES`
 
 `{ unit, after, title, canDo, tables, newRows, exercises }`：`after` 是哪一课之后出现；`tables` 是整张变位表；`newRows` 是课文里没出现、在这里补齐的人称的例句。`rule` 是总表上方那一句规则（能照做的一句话）。
 
@@ -466,14 +107,8 @@ python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/list
 
 变位表的一格怎么念由 `rowSay(row, col)` 决定（`'er / sie'` + `'kommt'` → “er kommt”），页面和配音清单共用。
 
-### 6.4 配音清单
+### 2.4 配音清单
 
 `node tools/voice-script.mjs` 读 `storyAudioItems()`，把所有要念的字按角色分组写到 `tools/voice-script.json`（`{ id, lesson, kind, text }`，`id` 是“角色 + 文本”的指纹，可当文件名）。改了德语文本后重跑。批量生成前先抽听：字母名（`Ell, Ih, Enn` 这类写法）和 `BWL`。
 
 ---
-
-## 附录：全局词典与生词本
-
-- `data/dict-glosses.js` 是手写的补充释义，格式为 `export const DICT_GLOSSES = { 'Bahn': { zh: '铁路；火车/轨道交通', pl: 'Bahnen' } }`；值也可以是简短中文字符串。键必须保持 `tools/wortliste.json` 的 lemma 原样。
-- `data/dict-core.js` 是生成文件，不能手改。修改 `data/vocab.js` 的 `de`/`pl`/`forms`，修改 `data/dict-glosses.js`，或更新 `tools/wortliste.json` 后，都必须运行 `node tools/gen_dict.mjs`。脚本会打印缺释义和一形多解的 forms 冲突，缺释义阶段也会生成可运行的核心词典。
-- 用户从全局查词加入的词保存在本地 `md.wordbook.v1`，id 为 `d:<lemma>`，与课程词 `w*` 和错题 `m:*` 不冲突；其 SRS 状态与词条一起在导出/Gist 同步载荷中保存。

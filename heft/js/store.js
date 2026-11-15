@@ -1,4 +1,4 @@
-// 试学课的进度：今天该做哪一步、复习安排、学习日志。只读写自己的存档，不碰旧版 App 的记录。
+// 学习进度：今天该做哪一步、复习安排、学习日志。
 // 规则见 docs/product.md：一天一课（第 1 单元），学完的课隔天起进复习；不惩罚、不计连续天数。
 import { STORY_LESSONS, STORY_UNIT_SUMMARIES } from '../../data/story-lessons.js';
 

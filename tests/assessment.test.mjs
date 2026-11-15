@@ -11,7 +11,6 @@ import {
 } from '../js/pronunciation-assessment.js';
 import { normalizeSpeechSdkResult } from '../js/azure-speech-sdk.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../js/secrets.js';
-import { exportAll } from '../js/storage.js';
 
 function localStorageMock() {
   const values = new Map();
@@ -59,7 +58,7 @@ test('normalizes Speech SDK aggregate scores when REST detail is missing', () =>
   assert.deepEqual(result.words, []);
 });
 
-test('keeps endpoint and access code out of progress export', () => {
+test('stores the endpoint and access code, trimming the trailing slash', () => {
   globalThis.localStorage = localStorageMock();
   setAssessmentSecrets({
     endpoint: 'https://example.workers.dev/',
@@ -69,9 +68,6 @@ test('keeps endpoint and access code out of progress export', () => {
     endpoint: 'https://example.workers.dev',
     accessCode: 'private-access-code',
   });
-  const exported = exportAll();
-  assert.equal(exported.includes('private-access-code'), false);
-  assert.equal(exported.includes('example.workers.dev'), false);
 });
 
 function fakeSpeechSdk({ fail = false } = {}) {

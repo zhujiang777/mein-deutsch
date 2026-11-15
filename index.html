@@ -1,30 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mein Deutsch · 我的德语</title>
-  <meta name="description" content="个人定制的德语学习应用：综合课程、单词复习与分级读听">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F5F3EF">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181715">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icons/icon-180.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="我的德语">
-  <link rel="stylesheet" href="css/style.css?v=21">
-  <link rel="stylesheet" href="css/plain.css?v=2">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mein Deutsch</title>
+<meta http-equiv="refresh" content="0; url=heft/">
+<link rel="icon" href="icons/icon.svg">
+<script>location.replace('heft/' + location.hash);</script>
 </head>
-<body class="plain-app">
-  <a class="skip-link" href="#app">跳到主要内容</a>
-  <main id="app" aria-live="polite"></main>
-  <nav id="tabbar" aria-label="主导航" data-active="0">
-    <a href="#/" data-tab="today">学习</a>
-    <a href="#/vocab" data-tab="vocab">单词</a>
-    <a href="#/readlisten" data-tab="readlisten">读听</a>
-    <a href="#/me" data-tab="me">我的</a>
-  </nav>
-  <script type="module" src="js/app.js?v=25"></script>
-</body>
+<body><a href="heft/">Mein Deutsch</a></body>
 </html>

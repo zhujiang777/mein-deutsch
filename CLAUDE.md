@@ -1,6 +1,6 @@
 # 开发约定（Claude / Codex 共用，两份文件内容保持一致）
 
-- 开工先读 `docs/product.md`（产品宪法）。它是唯一的产品权威；`docs/archive/` 已作废，不要据此做决定。
+- 开工先读 `docs/product.md`（产品宪法）。它是唯一的产品权威。应用在 `heft/`，内容在 `data/story-lessons.js`；旧版已于 2026-11-15 删除。
 - 只能在宪法定下的主线内改进，不得自行提出或实施换主线；要换须用户拍板并修改宪法。
 - 写或改课程内容时，再读 `docs/course-authoring.md`；需要查字段时读 `docs/schema.md`。
 - 开发时要节约 token 使用量。
