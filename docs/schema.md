@@ -440,6 +440,7 @@ python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/list
 | `words` | 进复习的重点词 5–8 个：`{ id?, de, zh, line, form }`。`id` 只在词库里真有这个词时才填；没有 `id` 的是词库待补的词（自带 `zh`，可带 `art / pos`），接入时追加到 `vocab.js` 末尾 |
 | `phrases` | 按整体短语学的口头语：`{ de, zh }` |
 | `cards[].table` + `on` | 语法卡的整张小表（`{ head, rows }`）和本课点亮的行下标；`contrast` 是 du / Sie 之类的成对例句 |
+| `cards[].drill` | 语法卡「先做后讲」的小题，一道点亮表里一格：`{ line, de, zh, v, no, sj, row, col? }`——`line` 课文第几句（必须不晚于这张卡的 `after`），`de` 那句里用来挖空的半句，`v` 正确的动词（按句中写法），`no` 干扰项，`sj` 主语（按句中写法），`row`/`col` 对应表里哪一格（`col` 默认 1）。语法卡必须有 `drill`；`body` 是最后留下的那句规则，用规范术语 |
 | `exercises` | 轻快练习，顺序即出题顺序。类型：`choice`、`listenChoice`（带 `voice`、`audioText`，可带 `say`）、`match`、`assemble` |
 | `speak` | 开口回应场景：`{ prompt, cue?: { who, de }, answers, model }`。`cue` 是对方先说的话，用该角色的声音 |
 | `wordPack` | ? 词包：`{ title, items: [{ n, de }], refs, inText, exercises }`。`refs` 是词库里对应的词条，`inText` 是课文里真的出现的成员 |
@@ -450,7 +451,7 @@ python3 tools/gen_listening_audio.py       # 包音频 + 时间戳 → data/list
 
 ### 6.2 第 0 课（`kind: 'pron'`）
 
-没有课文，按 `stops`（小站）排：每站 `{ id, title, cue, exercises }`，`cue` 是唯一的讲解（不超过两句）。内容三选一：`letters`（`{ l, name, say }`，`say` 是送去配音的字母名）、`groups`（`{ label, items: [[德语, 中文]] }` 例词分组）、`blind`（先自己读再听的生词：`{ de, zh, say? }`）。多一种题型 `spell`：听拼写、打出整个词（`{ voice, say, answer }`）。字母表那一站可加 `hard`（字母名最容易读错的几个字母，表里用荧光笔标出）。
+没有课文，按 `stops`（小站）排，轻量版（2026-11-14）共 5 站：字母表、三张拼读小抄、门铃名牌。每站 `{ id, title }`，内容三选一：`letters`（`{ l, name, say }`，字母表，另有 `cue` 一句说明和 `hard` 要标出的字母）；`rows`（拼读小抄，一行一个读音：`{ s, w, zh, c, gap? }`——`s` 读音，`w` 例词，用 `[ ]` 标出这个读音如 `der K[ä]se`，`c` 一句“嘴怎么动”，不用拼音、英语类比；`gap` 表示这一行上面画一道粗线分组），后面跟 `tries`（`{ w, zh }`，照小抄先自己读、再听原声的词，不判对错）；`blind`（门铃名牌，`{ de, zh, say? }`）。`exercises` 可选，第 0 课不放辨音题、不评分；`{ type: 'try', w, prompt, voice, say }` 是“先读再听”的单独一屏。
 
 ### 6.3 单元总表 `STORY_UNIT_SUMMARIES`
 

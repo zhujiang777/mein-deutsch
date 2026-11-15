@@ -24,10 +24,21 @@ export const STORY_NAMES = ['lin', 'lena', 'tom', 'tim', 'mia', 'krause', 'becke
 const SEIN = { head: ['', 'sein'], rows: [['ich', 'bin'], ['du', 'bist'], ['er / sie', 'ist'], ['wir', 'sind'], ['ihr', 'seid'], ['sie / Sie', 'sind']] };
 /** 变位表里一格怎么念：'er / sie' + 'kommt' → “er kommt”。页面和配音清单共用。 */
 export const rowSay = (row, col = 1) => `${row[0].split(' / ')[0]} ${row[col]}`;
-const REGULAR = { head: ['', 'kommen', 'wohnen'], rows: [['ich', 'komme', 'wohne'], ['du', 'kommst', 'wohnst'], ['er / sie', 'kommt', 'wohnt'], ['wir', 'kommen', 'wohnen'], ['ihr', 'kommt', 'wohnt'], ['sie / Sie', 'kommen', 'wohnen']] };
+const PERS = ['ich', 'du', 'er / sie', 'wir', 'ihr', 'sie / Sie'];
+/** 规则动词现在时的变位表：词干 + -e -st -t -en -t -en。 */
+const reg = (...inf) => ({ head: ['', ...inf], rows: PERS.map((p, i) => [p, ...inf.map(v => v.slice(0, -2) + ['e', 'st', 't', 'en', 't', 'en'][i])]) });
+const REGULAR = reg('kommen', 'wohnen');
+const STUDIEREN = reg('studieren', 'kochen');
+const SEIN_WOHNEN = { head: ['', 'sein', 'wohnen'], rows: PERS.map((p, i) => [p, SEIN.rows[i][1], REGULAR.rows[i][2]]) };
+/** 语法卡小题（drill）里那一组怎么写、怎么念：'Bist' + 'du' → “du bist”；尊称保留大写 “Sie sind”。 */
+export const drillSay = d => `${d.sj === 'Sie' && d.row === 5 ? 'Sie' : d.sj.toLowerCase()} ${d.v.toLowerCase()}`;
 
 /* ================= 第 0 课：发音入门 ================= */
 const L = (l, name, say) => ({ l, name, say });
+const R = (s, w, zh, c, gap) => ({ s, w, zh, c, ...(gap ? { gap } : {}) });
+const T = (w, zh) => ({ w, zh });
+/** 小抄和“先读再听”里的词去掉标读音的方括号：'der K[ä]se' → 'der Käse'。页面和配音清单共用。 */
+export const plainWord = w => w.replace(/[[\]]/g, '');
 const LESSON_0 = {
   id: 'sl-00', version: 1, unit: 0, n: 0, kind: 'pron', days: 1,
   title: '发音入门', titleDe: 'Das Alphabet',
@@ -37,7 +48,7 @@ const LESSON_0 = {
   stops: [
     {
       id: 'abc', title: '字母表', hard: ['A', 'E', 'I', 'J', 'V', 'W', 'Y', 'Z'], // 字母名最容易读错的，表里标出来
-      cue: '26 个字母加 ä ö ü ß。字母名和英语不同的重点听：A、E、I、J、V、W、Y、Z。',
+      cue: '26 个字母，加 ä ö ü ß。标出来的 8 个，字母名和英语不一样。',
       letters: [
         L('A', 'a', 'Ah'), L('B', 'be', 'Beh'), L('C', 'ce', 'Tseh'), L('D', 'de', 'Deh'), L('E', 'e', 'Eh'), L('F', 'ef', 'Eff'),
         L('G', 'ge', 'Geh'), L('H', 'ha', 'Hah'), L('I', 'i', 'Ih'), L('J', 'jot', 'Jott'), L('K', 'ka', 'Kah'), L('L', 'el', 'Ell'),
@@ -47,120 +58,57 @@ const LESSON_0 = {
       ],
       exercises: [
         listen('a1', 'Lena', 'E', '听到的是哪个字母？', ['E', 'I', 'A'], { say: 'Eh' }),
-        listen('a2', 'Lena', 'I', '听到的是哪个字母？', ['I', 'E', 'Y'], { say: 'Ih' }),
         listen('a3', 'Lena', 'W', '听到的是哪个字母？', ['W', 'V', 'B'], { say: 'Weh' }),
-        listen('a4', 'Lena', 'V', '听到的是哪个字母？', ['V', 'F', 'W'], { say: 'Fau' }),
-        listen('a5', 'Lena', 'J', '听到的是哪个字母？', ['J', 'Y', 'G'], { say: 'Jott' }),
         listen('a6', 'Lena', 'L – I – N', '拼的是哪个名字？', ['Lin', 'Len', 'Lien'], { say: 'Ell, Ih, Enn.' }),
         listen('a7', 'Lena', 'T – O – M', '拼的是哪个名字？', ['Tom', 'Tim', 'Tor'], { say: 'Teh, Oh, Emm.' }),
-        reply('a8', '把你的名字拼出来。', ['L – I – N']),
+        { id: 'a8', type: 'try', w: 'L – I – N', zh: '', prompt: '把你的名字拼出来，再听原声', voice: 'Lin', say: 'Ell, Ih, Enn' },
       ],
     },
+    // 拼读小抄：一行一个读音，配一个课里会学到的词（[ ] 里是这个读音）和一句“嘴怎么动”。不用拼音、英语做类比。
+    // tries：照着小抄先自己读、再听原声的词，不判对错。
     {
-      id: 'lang-kurz', title: '长音和短音',
-      cue: '元音有长有短：后面跟 h、元音双写，或只跟一个辅音时通常是长音；后面是两个辅音时通常是短音。',
-      groups: [
-        { label: '长', items: [['der Name', '名字'], ['der Tag', '天'], ['wohnen', '住'], ['der Tee', '茶'], ['das Jahr', '年']] },
-        { label: '短', items: [['kommen', '来'], ['der Bus', '公交车'], ['bitte', '请'], ['das Zimmer', '房间'], ['immer', '总是']] },
+      id: 'vokale', title: 'ä ö ü · ei ie eu au',
+      rows: [
+        R('ä', 'der K[ä]se', '奶酪', '先发 e，嘴再张大一点'),
+        R('ö', 'sch[ö]n', '美、好', '先发 e，舌头不动，嘴唇收圆、往前伸'),
+        R('ü', 'Tsch[ü]ss!', '拜拜', '先发 i，舌头不动，嘴唇收圆、往前伸'),
+        R('ei', 'n[ei]n', '不', '从 a 滑到 i', true),
+        R('ie', 'S[ie]', '您', '长的 i，e 不发音'),
+        R('eu', 'n[eu]', '新的', '从 o 滑到 i'),
+        R('au', '[au]s', '来自', '从 a 滑到 u'),
       ],
-      exercises: [
-        listen('k1', 'Lena', 'Stadt', '听到的是哪个词？', ['Stadt', 'Staat']),
-        listen('k2', 'Lena', 'Miete', '听到的是哪个词？', ['Miete', 'Mitte']),
-        listen('k3', 'Lena', 'offen', '听到的是哪个词？', ['offen', 'Ofen']),
-        choice('k4', '哪个词里的元音是短音？', ['kommen', 'wohnen', 'Name']),
-      ],
+      tries: [T('D[eu]tsch', '德语'), T('die K[ü]che', '厨房'), T('h[ei]ßen', '叫（名字）')],
     },
     {
-      id: 'umlaut', title: 'ä ö ü',
-      cue: 'ä 接近英语 bed 里的 e。ö 和 ü 要把嘴唇收圆：先发 Tee 里的 e 再收圆是 ö，先发 i 再收圆是 ü。',
-      groups: [
-        { label: 'ä', items: [['der Käse', '奶酪'], ['spät', '晚']] },
-        { label: 'ö', items: [['schön', '美、好'], ['Köln', '科隆']] },
-        { label: 'ü', items: [['Tschüss!', '拜拜'], ['die Küche', '厨房'], ['der Schlüssel', '钥匙'], ['fünf', '五']] },
+      id: 'konsonant', title: 'w v z j s ß',
+      rows: [
+        R('w', '[w]ohnen', '住', '上牙轻碰下唇，喉咙振动'),
+        R('v', '[v]ier', '四', '嘴形同 w，喉咙不振动'),
+        R('z', 'das [Z]immer', '房间', 't 和 s 连成一个音'),
+        R('j', '[j]a', '是', '很短的 i，马上接后面的元音'),
+        R('s', '[S]ie', '您', '在元音前，喉咙振动', true),
+        R('ß', 'die Stra[ß]e', '街', '喉咙不振动'),
       ],
-      exercises: [
-        listen('u1', 'Lena', 'schön', '听到的是哪个词？', ['schön', 'schon']),
-        listen('u2', 'Lena', 'Mütter', '听到的是哪个词？', ['Mütter', 'Mutter']),
-        listen('u3', 'Lena', 'vier', '听到的是哪个词？', ['vier', 'für']),
-        choice('u4', '哪个词里有和 Tschüss 一样的元音？', ['Schlüssel', 'Bus', 'schon']),
-      ],
+      tries: [T('das [W]a[ss]er', '水'), T('[z]ehn', '十'), T('[J]apan', '日本')],
     },
     {
-      id: 'diphthong', title: 'ei · ie · eu · au',
-      cue: 'ei 像英语 my 的元音，ie 是长的 i。eu 和 äu 像英语 boy 的元音，au 像英语 how 的元音。',
-      groups: [
-        { label: 'ei', items: [['nein', '不'], ['mein', '我的'], ['heißen', '叫（名字）']] },
-        { label: 'ie', items: [['wie', '怎么'], ['Sie', '您'], ['vier', '四']] },
-        { label: 'eu', items: [['neu', '新的'], ['Deutsch', '德语'], ['der Euro', '欧元']] },
-        { label: 'au', items: [['aus', '来自'], ['das Haus', '房子'], ['die Frau', '女士']] },
+      id: 'kombi', title: 'ch sch st sp · 词尾',
+      rows: [
+        R('ch', 'i[ch]', '我', 'i、e 后面：摆好 i 的嘴形，不出声，只送气'),
+        R('ch', 'au[ch]', '也', 'a、o、u 后面：舌头后部抬起，在嘴的最里面送气'),
+        R('sch', '[sch]ön', '美、好', '嘴唇收圆往前伸，舌尖不卷'),
+        R('st', 'der [St]udent', '大学生', '在词的开头，s 读成 sch', true),
+        R('sp', 'der [Sp]ort', '运动', '在词的开头，s 读成 sch'),
+        R('-er', 'das Zimm[er]', '房间', '在词尾读成又短又轻的 a', true),
+        R('-g', 'der Ta[g]', '天', '词尾的 b、d、g 读成 p、t、k'),
       ],
-      exercises: [
-        listen('d1', 'Lena', 'Wien', '听到的是哪个词？', ['Wien', 'Wein']),
-        listen('d2', 'Lena', 'leider', '听到的是哪个词？', ['leider', 'Lieder']),
-        choice('d3', '哪个词的元音和 neu 一样？', ['Deutsch', 'Haus', 'nein']),
-        choice('d4', '哪个词的元音和 Sie 一样？', ['wie', 'mein', 'neu']),
-      ],
-    },
-    {
-      id: 'konsonant', title: 'w · v · z · j · s · ß',
-      cue: 'w 读英语的 v，v 多数读 f，z 读 ts，j 读英语 yes 开头的音。s 在元音前是浊音（像英语 zoo），ß 是清音 s。',
-      groups: [
-        { label: 'w', items: [['wo', '在哪里'], ['das Wasser', '水']] },
-        { label: 'v', items: [['vier', '四'], ['der Vater', '父亲'], ['Vogel', '姓；鸟']] },
-        { label: 'z', items: [['das Zimmer', '房间'], ['zehn', '十'], ['die Zeit', '时间']] },
-        { label: 'j', items: [['ja', '是'], ['das Jahr', '年'], ['Japan', '日本']] },
-        { label: 's', items: [['Sie', '您'], ['so', '这样'], ['sagen', '说']] },
-        { label: 'ß', items: [['heißen', '叫（名字）'], ['die Straße', '街']] },
-      ],
-      exercises: [
-        choice('c1', '哪个词开头的音和 Vogel 一样？', ['Vater', 'Wasser', 'Zimmer']),
-        choice('c2', '哪个词开头读 ts？', ['Zeit', 'Sie', 'so']),
-        listen('c3', 'Lena', 'Wein', '听到的是哪个词？', ['Wein', 'fein']),
-        listen('c4', 'Lena', 'seit', '听到的是哪个词？', ['seit', 'Zeit']),
-      ],
-    },
-    {
-      id: 'kombi', title: 'ch · sch · st · sp · -er',
-      cue: 'ch 在 i、e 后面靠前（ich），在 a、o、u 后面靠后（ach）；sch 像英语的 sh。词首的 st、sp 读 scht、schp；词尾的 -er 读得很轻，接近短 a。',
-      groups: [
-        { label: 'ich', items: [['ich', '我'], ['nicht', '不'], ['richtig', '对的']] },
-        { label: 'ach', items: [['Ach so.', '原来如此'], ['auch', '也'], ['das Buch', '书']] },
-        { label: 'sch', items: [['schön', '美、好'], ['der Schlüssel', '钥匙'], ['Tschüss!', '拜拜']] },
-        { label: 'st / sp', items: [['studieren', '上大学'], ['der Student', '大学生'], ['der Sport', '运动'], ['sprechen', '说话']] },
-        { label: '-er', items: [['das Zimmer', '房间'], ['aber', '但是'], ['Becker', '姓']] },
-      ],
-      exercises: [
-        choice('m1', '哪个词里的 ch 和 ich 一样？', ['nicht', 'auch', 'Buch']),
-        choice('m2', '哪个词开头读 scht？', ['Student', 'Sie', 'Schlüssel']),
-        listen('m3', 'Lena', 'Kirche', '听到的是哪个词？', ['Kirche', 'Kirsche']),
-        listen('m4', 'Lena', 'Nacht', '听到的是哪个词？', ['Nacht', 'nicht']),
-      ],
-    },
-    {
-      id: 'ende', title: '词尾和重音',
-      cue: '词尾的 b、d、g 读成 p、t、k：Tag、und。重音通常在第一个音节；外来词常在后面：studieren、Medizin。',
-      groups: [
-        { label: '词尾', items: [['der Tag', '天'], ['und', '和'], ['Guten Abend!', '晚上好'], ['halb', '一半']] },
-        { label: '重音在前', items: [['das Zimmer', '房间'], ['kommen', '来'], ['wohnen', '住']] },
-        { label: '重音在后', items: [['studieren', '上大学'], ['die Medizin', '医学'], ['die Philosophie', '哲学']] },
-      ],
-      exercises: [
-        choice('e1', '哪个词的结尾读 t？', ['und', 'aus', 'in']),
-        listen('e2', 'Lena', 'studieren', '重音在哪里？', ['stu-DIE-ren', 'STU-die-ren']),
-        listen('e3', 'Lena', 'Zimmer', '重音在哪里？', ['ZIM-mer', 'zim-MER']),
-      ],
+      tries: [T('[sp]re[ch]en', '说话'), T('das Bu[ch]', '书'), T('Guten Ta[g]!', '你好（白天）')],
     },
     {
       id: 'klingel', title: '门铃名牌',
       // blind：不给音、不给意思，先自己读，再点开听
-      blind: [['Krause', '管理员的姓'], ['Becker', 'Tom 的姓'], ['Vogel', 'Lena 的姓'], ['Schillerstraße 8', '宿舍地址', 'Schillerstraße acht'], ['Zimmer 3', '三号房间', 'Zimmer drei'], ['der Hausmeister', '宿舍管理员'], ['der Briefkasten', '信箱'], ['der Eingang', '入口']]
+      blind: [['Krause', '管理员的姓'], ['Becker', 'Tom 的姓'], ['Vogel', 'Lena 的姓'], ['Schillerstraße 8', '宿舍地址', 'Schillerstraße acht'], ['Zimmer 3', '三号房间', 'Zimmer drei']]
         .map(([de, zh, say]) => (say ? { de, zh, say } : { de, zh })),
-      exercises: [
-        { id: 'f1', type: 'spell', voice: 'Krause', say: 'Kah, Err, Ah, Uh, Ess, Eh.', answer: 'Krause' },
-        { id: 'f2', type: 'spell', voice: 'Krause', say: 'Fau, Oh, Geh, Eh, Ell.', answer: 'Vogel' },
-        { id: 'f3', type: 'spell', voice: 'Krause', say: 'Beh, Eh, Tseh, Kah, Eh, Err.', answer: 'Becker' },
-        reply('f4', '他没听清你的名字。再说一遍，并拼出来。', ['Lin. L – I – N.'], ['Krause', 'Wie bitte?']),
-      ],
     },
   ],
 };
@@ -216,8 +164,12 @@ const LESSON_1 = {
     bis: 'Bis später! = 回头见', 'später': '晚些时候；Bis später! = 回头见',
   },
   cards: [
-    { after: 1, kind: 'grammar', title: 'ich bin · du bist', body: '说自己用 ich bin，问对方用 bist du。', table: SEIN, on: [0, 1], example: 'Ich bin Lin. Bist du neu hier?' },
-    { after: 9, kind: 'pron', title: 'ich 和 ach 里的 ch', body: 'ich 的 ch：舌面抬高靠近上颚，嘴角向两边，送气摩擦。ach 的 ch：位置靠后，在喉咙口摩擦。', pairs: ['ich', 'Ach so.'], example: 'Ich bin Lin.' },
+    { after: 1, kind: 'grammar', title: 'sein：ich bin · du bist', body: 'sein 是不规则动词，变位要逐个记：ich bin，du bist。', table: SEIN, on: [0, 1], example: 'Ich bin Lin. Bist du neu hier?',
+      drill: [
+        { line: 0, de: 'Bist du neu hier?', zh: '你是新来的？', v: 'Bist', no: 'Bin', sj: 'du', row: 1 },
+        { line: 1, de: 'Ich bin Lin.', zh: '我是 Lin。', v: 'bin', no: 'bist', sj: 'Ich', row: 0 },
+      ] },
+    { after: 9, kind: 'pron', title: 'ich 和 ach 里的 ch', body: 'ich 的 ch：摆好 i 的嘴形，不出声，只送气。ach 的 ch：舌头后部抬起，在嘴的最里面送气。', pairs: ['ich', 'Ach so.'], example: 'Ich bin Lin.' },
   ],
   exercises: [
     match('x1', [['neu', '新的'], ['hier', '这里'], ['der Kaffee', '咖啡'], ['der Bus', '公交车'], ['immer', '总是'], ['willkommen', '欢迎']]),
@@ -317,8 +269,14 @@ const LESSON_2 = {
     hallo: '你好', zusammen: '一起；Hallo zusammen! = 大家好', bin: '是（ich 用 bin）', neu: '新的', jetzt: '现在', in: '在……里', zimmer: 'das Zimmer 房间',
   },
   cards: [
-    { after: 7, kind: 'grammar', title: 'ich komme · du kommst', body: '动词跟着“谁”换词尾：ich 加 -e，du 加 -st。问从哪来用 Woher?，问在哪用 Wo?。', table: REGULAR, on: [0, 1], example: 'Woher kommst du? – Ich komme aus Singapur.' },
-    { after: 0, kind: 'pron', title: 'w 读英语的 v', body: '上齿轻碰下唇、声带振动，和英语 very 开头的音一样。不要读成英语的 w。', pairs: ['wo', 'woher', 'wohnen', 'Wie bitte?'], example: 'Wo wohne ich?' },
+    { after: 11, kind: 'tip', title: 'Woher? · Wo?', body: 'Woher 问来源（从哪里来），Wo 问位置（在哪里）。' },
+    { after: 12, kind: 'grammar', title: '规则动词：ich -e · du -st', body: '规则动词的现在时 = 词干 + 人称词尾：ich → -e，du → -st。', table: REGULAR, on: [0, 1], example: 'Woher kommst du? – Ich komme aus Singapur.',
+      drill: [
+        { line: 7, de: 'Ich komme aus Singapur.', zh: '我来自新加坡。', v: 'komme', no: 'kommst', sj: 'Ich', row: 0, col: 1 },
+        { line: 9, de: 'Woher kommst du?', zh: '你是哪里人？', v: 'kommst', no: 'komme', sj: 'du', row: 1, col: 1 },
+        { line: 12, de: 'Du wohnst auch hier!', zh: '你也住这儿！', v: 'wohnst', no: 'wohne', sj: 'Du', row: 1, col: 2 },
+      ] },
+    { after: 0, kind: 'pron', title: 'w：上牙碰下唇', body: '上牙轻碰下唇，喉咙振动。嘴唇不要收圆。', pairs: ['wo', 'woher', 'wohnen', 'Wie bitte?'], example: 'Wo wohne ich?' },
     { after: 2, kind: 'tip', title: 'China', body: '德语的 China 开头读 ich 里的 ch；南德也有人读成 k。' },
   ],
   exercises: [
@@ -413,8 +371,12 @@ const LESSON_3 = {
     rechnungswesen: 'das Rechnungswesen 会计', neu: '新的', hier: '这里',
   },
   cards: [
-    { after: 3, kind: 'grammar', title: 'er / sie + -t', body: '说“他、她”时动词加 -t：er studiert、sie lernt。sein 是特例：er ist、sie ist。', table: REGULAR, on: [2], example: 'Sie studiert Medizin. Er kocht gut.' },
-    { after: 2, kind: 'pron', title: '词首的 st 读 scht', body: 'st 在词的开头读成 scht：studieren、Stimmt。sp 同理读 schp：Sport。', pairs: ['studieren', 'der Student', 'Stimmt.', 'der Sport'], example: 'Was studierst du?' },
+    { after: 7, kind: 'grammar', title: 'er / sie：词尾 -t', body: '第三人称单数（er / sie）：词干 + -t。sein 不规则：er / sie ist。', table: STUDIEREN, on: [2], example: 'Sie studiert Medizin. Er kocht gut.',
+      drill: [
+        { line: 3, de: 'Sie studiert Medizin.', zh: '她学医。', v: 'studiert', no: 'studiere', sj: 'Sie', row: 2, col: 1 },
+        { line: 7, de: 'Er kocht gut.', zh: '他做饭确实好。', v: 'kocht', no: 'koche', sj: 'Er', row: 2, col: 2 },
+      ] },
+    { after: 2, kind: 'pron', title: '词首的 st、sp', body: 'st、sp 在词的开头，s 读成 sch：studieren、Sport。sch 嘴唇收圆往前伸，舌尖不卷。', pairs: ['studieren', 'der Student', 'Stimmt.', 'der Sport'], example: 'Was studierst du?' },
     { after: 2, kind: 'tip', title: 'BWL', body: '会计（Rechnungswesen）在德国大学归在 BWL 下面，自我介绍说 “Ich studiere BWL.”，三个字母按字母名读：Be-We-El。' },
   ],
   // 词包：整套给全，课文里只出现其中一两个
@@ -533,9 +495,14 @@ const LESSON_4 = {
     nie: '从不', die: '冠词（die Küche）', 'küche': 'die Küche 厨房', sauber: '干净的', morgen: '明天', im: '= in dem；im Büro = 在办公室', 'büro': 'das Büro 办公室',
   },
   cards: [
-    { after: 3, kind: 'grammar', title: 'Sie · 动词放最前的问句', body: '对陌生人、长辈、办事的人用 Sie（永远大写），动词和原形一样：Sie wohnen、Sie sind。问“是不是”时把动词放到最前面：Sind Sie neu hier?', table: REGULAR, on: [5],
+    { after: 3, kind: 'grammar', title: '尊称 Sie', body: '尊称 Sie 永远大写；动词与不定式同形：Sie wohnen。sein 用 sind。', table: SEIN_WOHNEN, on: [5],
+      drill: [
+        { line: 1, de: 'Sind Sie neu hier?', zh: '您是新来的？', v: 'Sind', no: 'Bist', sj: 'Sie', row: 5, col: 1 },
+        { line: 3, de: 'Wohnen Sie in Zimmer drei?', zh: '您住三号房间？', v: 'Wohnen', no: 'Wohnst', sj: 'Sie', row: 5, col: 2 },
+      ],
       contrast: [['Bist du neu hier?', 'Sind Sie neu hier?'], ['Wohnst du hier?', 'Wohnen Sie hier?'], ['Tschüss!', 'Auf Wiedersehen!']], example: 'Sind Sie neu hier? Wohnen Sie in Zimmer drei?' },
-    { after: 3, kind: 'pron', title: 'z 读 ts', body: 'z 读成 ts，像英语 cats 结尾的音：Zimmer、zehn。s 在元音前是浊音，像英语 zoo 开头的音：Sie、so。', pairs: ['das Zimmer', 'Sie', 'zehn', 'so'], example: 'Wohnen Sie in Zimmer drei?' },
+    { after: 3, kind: 'pron', title: 'z 和 s', body: 'z：t 和 s 连成一个音，短而干脆。s 在元音前，喉咙振动。', pairs: ['das Zimmer', 'Sie', 'zehn', 'so'], example: 'Wohnen Sie in Zimmer drei?' },
+    { after: 7, kind: 'tip', title: '一般疑问句', body: '没有疑问词的问句，动词放在句首：Sind Sie neu hier? Ist Herr Becker auch da?' },
     { after: 9, kind: 'tip', title: 'du 还是 Sie', body: '同学、室友之间说 du；对管理员、老师、办事窗口、店员说 Sie。拿不准就先说 Sie。' },
   ],
   exercises: [
@@ -589,7 +556,7 @@ export const STORY_UNIT_SUMMARIES = [
   {
     unit: 1, after: 'sl-04', title: '第 1 单元 · 认识彼此', titleDe: 'Präsens',
     canDo: ['自我介绍，纠正并拼出名字', '说来自哪、住在哪', '介绍别人学什么、做什么', '分清 du / Sie，应对正式提问', '数 0–12'],
-    rule: '主语换了，动词跟着换。kommen、wohnen：去掉 -en，换上词尾。sein：整列记住。',
+    rule: '动词随主语变位。规则动词（kommen、wohnen）：词干 + 人称词尾；sein 不规则，整列记。',
     tables: [SEIN, REGULAR],
     // 本单元课文里没出现、在总表里补齐的人称
     newRows: [
@@ -658,13 +625,14 @@ export function storyAudioItems() {
     (l.preview || []).forEach(p => add(WORD_VOICE, p.de.replace('…', '').trim(), 'word', l.id));
     (l.words || []).forEach(w => add(WORD_VOICE, w.de, 'word', l.id));
     (l.phrases || []).forEach(p => add(WORD_VOICE, p.de.replace('…', '').trim(), 'word', l.id));
-    (l.cards || []).forEach(c => { (c.on || []).forEach(i => add(WORD_VOICE, rowSay(c.table.rows[i]), 'card', l.id)); add(WORD_VOICE, c.example, 'card', l.id); (c.pairs || []).forEach(t => add(WORD_VOICE, t, 'card', l.id)); (c.contrast || []).flat().forEach(t => add(WORD_VOICE, t, 'card', l.id)); });
+    (l.cards || []).forEach(c => { if (c.drill) { c.table.rows.forEach(r => r.slice(1).forEach((_, k) => add(WORD_VOICE, rowSay(r, k + 1), 'card', l.id))); c.drill.forEach(d => add(WORD_VOICE, drillSay(d), 'card', l.id)); } (c.on || []).forEach(i => add(WORD_VOICE, rowSay(c.table.rows[i]), 'card', l.id)); add(WORD_VOICE, c.example, 'card', l.id); (c.pairs || []).forEach(t => add(WORD_VOICE, t, 'card', l.id)); (c.contrast || []).flat().forEach(t => add(WORD_VOICE, t, 'card', l.id)); });
     if (l.wordPack) { l.wordPack.items.forEach(i => add(WORD_VOICE, i.de, 'pack', l.id)); l.wordPack.exercises.forEach(x => fromExercise(x, l.id)); }
     [...(l.exercises || []), ...(l.speak || []), ...(l.reviews || [])].forEach(x => fromExercise(x, l.id));
     if (l.reading) { l.reading.lines.forEach(s => add(s.who, s.say || s.de, 'reading', l.id)); l.reading.newWords.forEach(w => add(WORD_VOICE, w.de, 'word', l.id)); }
     for (const s of l.stops || []) {
       (s.letters || []).forEach(x => add(WORD_VOICE, x.say, 'letter', l.id));
-      (s.groups || []).forEach(g => g.items.forEach(([de]) => add(WORD_VOICE, de, 'word', l.id)));
+      (s.rows || []).forEach(r => add(WORD_VOICE, plainWord(r.w), 'word', l.id));
+      [...(s.tries || []), ...(s.exercises || []).filter(x => x.type === 'try')].forEach(t => add(t.voice || WORD_VOICE, t.say || plainWord(t.w), 'word', l.id));
       (s.blind || []).forEach(b => add(WORD_VOICE, b.say || b.de, 'word', l.id));
       (s.exercises || []).forEach(x => fromExercise(x, l.id));
     }

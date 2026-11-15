@@ -1,8 +1,8 @@
 // 每一种步骤怎么画。样式和结构照设计系统（css/ds.css 的 md-* 组件）和 lab/ds-explore 里对应的原型。
 // 约定：render(ctx)。ctx = { lesson, step, body, foot(label, fn, opts), next(), result(ok) }。
 // 界面上只写“要做什么”，不写教学法说明、安慰或提示性废话。
-import { STORY_CAST, STORY_LESSONS, rowSay } from '../../data/story-lessons.js';
-import { avatar, key, q, tick, seal, hydrate, NAME, picOf } from './art.js';
+import { STORY_CAST, STORY_LESSONS, rowSay, drillSay } from '../../data/story-lessons.js';
+import { avatar, key, q, tick, seal, hydrate, NAME, picOf, ico } from './art.js';
 import { play, playLine, playWord, playUrl, stop, duration, sayOf, sfx, position } from './audio.js';
 import { canRecord, record, score, whyFailed } from './speech.js';
 import { correct, pieces, entry, sameText } from './flow.js';
@@ -73,8 +73,8 @@ RENDER.word = ({ lesson, step, body, foot, next }) => {
 };
 
 /* ---------- 带着一个问题听全文 ---------- */
-const TL_COLOR = { Lena: 'var(--illus-ochre)', Tom: 'var(--illus-sky)', Lin: 'var(--char-lin)', Krause: '#b9c7a4' };
-const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+export const TL_COLOR = { Lena: 'var(--illus-ochre)', Tom: 'var(--illus-sky)', Lin: 'var(--char-lin)', Krause: '#b9c7a4' };
+export const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 RENDER.listen = ctx => listenUI(ctx, { lesson: ctx.lesson, head: `<p class="hf-task">听完回答：</p><p class="hf-qq">${esc(ctx.lesson.listenQuestion.prompt)}</p>` });
 /** 听一整段对话：只看谁在说，不给原文。lesson 只用到 lines 和 preview（预习词听到时闪一下）。 */
 export async function listenUI({ body, foot, next, flags }, { lesson, head }) {
@@ -194,7 +194,94 @@ function tableHtml(table, on) {
     return `<div class="r ${lit ? '' : 'off'}"><span class="p">${lit ? `<span class="md-sj">${esc(r[0])}</span>` : esc(r[0])}</span>${r.slice(1).map(v => `<span>${lit ? `<span class="md-hl word">${esc(v)}</span>` : esc(v)}</span>`).join('')}${lit ? key('a-spk', { cls: 's', act: 'row', aria: '听', r: 4 }) : '<span></span>'}</div>`;
   }).join('')}</div>`;
 }
-RENDER.card = ({ lesson, step, body, foot, next }) => {
+/* 语法卡「先做后讲」：课文原句 → 原句挖空选一个（答一道，表里亮一格）→ 整张表 → 规则一句 +「看整张表」。
+   每一屏是一个步骤（step.part = src | q | full | rule），亮了哪几格由“做到第几道”算出来，不存状态。 */
+const cellKey = d => `${d.row}:${d.col || 1}`;
+function buildTbl(c, lit, { full = false, flash = -1, grow = false } = {}) {
+  const t = c.table, cols = t.head.length - 1;
+  return `<div class="md-tbl build hf-tbl hf-btbl" style="--cols:${cols}"><div class="r hd"><span></span>${t.head.slice(1).map(h => `<span>${esc(h)}</span>`).join('')}<span></span></div>${t.rows.map((r, i) => {
+    const on = r.slice(1).map((_, k) => lit.has(`${i}:${k + 1}`));
+    return `<div class="r ${on.some(Boolean) ? 'lit' : 'off'} ${i === flash ? 'flash' : ''} ${grow && !on.some(Boolean) ? 'grow' : ''}"><span class="p">${esc(r[0])}</span>${r.slice(1).map((v, k) => `<span class="v">${on[k] ? `<span class="md-hl word">${esc(v)}</span>` : full ? esc(v) : ''}</span>`).join('')}${key('a-spk', { cls: 's', act: 'row', aria: '听这一行', r: i % 2 ? 3 : -4 }).replace('data-act="row"', `data-act="row" data-row="${i}"`)}</div>`;
+  }).join('')}</div>`;
+}
+function drillCard({ lesson, step, body, foot, next }) {
+  const c = step.card, ds = c.drill, t = c.table;
+  const litUpTo = n => new Set(ds.slice(0, n).map(cellKey));
+  let run = 0;
+  // 一行怎么念：亮着的那几格；整张表时每一列都念
+  const sayRow = async (i, lit, full) => { const mine = ++run; for (let k = 1; k < t.head.length; k++) if (full || lit.has(`${i}:${k}`)) { if (mine !== run || !await playWord(rowSay(t.rows[i], k))) return; } };
+  const sayAll = async () => { const mine = ++run; for (let k = 1; k < t.head.length; k++) for (const r of t.rows) { if (mine !== run || !await playWord(rowSay(r, k))) return; } };
+
+  if (step.part === 'src') {
+    const lines = [...new Set(ds.map(d => d.line))];
+    // 只在小题用到的那半句里标：动词刷荧光笔，主语用铅笔圈
+    const marked = i => { const de = lesson.lines[i].de, mine = ds.filter(d => d.line === i).map(d => ({ d, from: de.indexOf(d.de), seen: new Set() })); let at = 0;
+      return pieces(de).map(p => { const pos = at; at += p.t.length;
+        const m = mine.find(x => pos >= x.from && pos < x.from + x.d.de.length && (x.d.v === p.t || x.d.sj === p.t) && !x.seen.has(p.t)); if (!m) return esc(p.t);
+        m.seen.add(p.t); return p.t === m.d.v ? `<span class="md-hl word">${esc(p.t)}</span>` : `<span class="md-sj">${esc(p.t)}</span>`; }).join(''); };
+    body.innerHTML = `<p class="hf-task">听这${['', '', '两', '三', '四'][lines.length] || '几'}句，看标出来的词</p>
+      <div class="hf-gsrc">${lines.map(i => `<div data-i="${i}">${row(lesson.lines[i], { html: marked(i) })}</div>`).join('')}</div>`;
+    acts(body, { say: b => playLine(lesson.lines[+b.closest('[data-i]').dataset.i]) });
+    foot('继续', next, { arrow: true });
+    playLine(lesson.lines[lines[0]]);
+    return;
+  }
+  if (step.part === 'q') {
+    const d = ds[step.n], l = lesson.lines[d.line], at = d.de.indexOf(d.v), lit = litUpTo(step.n);
+    const opts = shuffle([{ t: d.v, right: true }, { t: d.no }]);
+    body.innerHTML = `<p class="hf-task">选一个填进去</p>
+      <div class="hf-gq"><div class="md-ln">${avatar(l.who)}<div><span class="md-name">${NAME[l.who]}</span>
+        <p class="gf">${q(`${esc(d.de.slice(0, at))}<span class="md-gap"></span>${esc(d.de.slice(at + d.v.length))}`)}</p><p class="md-zh">${esc(d.zh || l.zh)}</p></div></div></div>
+      <div class="hf-chs short">${opts.map((o, i) => `<button type="button" class="md-paper md-opt" style="--r:${i ? 1.2 : -1}deg" data-act="pick" data-i="${i}">${esc(o.t)}</button>`).join('')}</div>
+      <p class="hf-hint" hidden>主语是 ${esc(drillSay(d).split(' ')[0])}，动词用 ${esc(lower(d.v))}</p>
+      <div class="hf-gslot">${buildTbl(c, lit)}</div>`;
+    const btns = [...body.querySelectorAll('.md-opt')];
+    let sel = -1, done = false;
+    const check = () => {
+      done = true;
+      const ok = !!opts[sel].right;
+      btns.forEach((b, i) => { b.classList.remove('sel'); b.disabled = true; if (opts[i].right) b.classList.add(ok ? 'ok' : 'tick'); else if (i === sel) b.classList.add('no'); });
+      const g = body.querySelector('.md-gap'); g.textContent = d.v; g.classList.add('filled');
+      if (!ok) body.querySelector('.hf-hint').hidden = false;
+      sfx(ok ? 'ok' : 'no');
+      lit.add(cellKey(d));
+      const slot = body.querySelector('.hf-gslot'); slot.innerHTML = buildTbl(c, lit, { flash: d.row }); hydrate(slot);
+      foot('继续', next, { arrow: true });
+    };
+    acts(body, {
+      pick: b => { if (done) return; sel = +b.dataset.i; btns.forEach(x => x.classList.toggle('sel', x === b)); sfx('tap'); foot('检查', check); },
+      row: b => sayRow(+b.dataset.row, lit),
+    });
+    foot('检查', check, { off: true });
+    return;
+  }
+  const lit = litUpTo(ds.length);
+  if (step.part === 'full') {
+    body.innerHTML = `<div class="hf-ph"><p class="hf-task">听一遍整张表</p>${key('a-spk', { label: '播放', act: 'all', r: -4 })}</div>${buildTbl(c, lit, { full: true, grow: true })}`;
+    acts(body, { all: sayAll, row: b => sayRow(+b.dataset.row, lit, true) });
+    foot('继续', next, { arrow: true });
+    return;
+  }
+  // 规则：本课这几组大字 + 一句规则；想细看再拉出整张表
+  const three = [...new Map(ds.map(d => [drillSay(d), d])).values()];
+  body.innerHTML = `<div class="hf-grule"><div class="md-three hf-three">${three.map((d, i) => `<p>${esc(drillSay(d).split(' ')[0])} <span class="md-hl word">${esc(lower(d.v))}</span>${key('a-spk', { cls: 's', act: 'three', aria: '听', r: i % 2 ? 3 : -4 }).replace('data-act="three"', `data-act="three" data-n="${i}"`)}</p>`).join('')}</div>
+    <p class="hf-gsay">${esc(c.body)}</p>
+    ${c.contrast ? `<div class="hf-contrast">${c.contrast.map(([a, b]) => `<div class="pr"><button type="button" class="md-paper" data-act="con">${esc(a)}</button><button type="button" class="md-paper" data-act="con">${esc(b)}</button></div>`).join('')}</div>` : ''}
+    <button type="button" class="md-more" data-act="more"><u>看整张表</u>${ico('arrow')}</button></div>`;
+  acts(body, {
+    three: b => playWord(drillSay(three[+b.dataset.n])),
+    con: b => playWord(b.textContent),
+    more: () => {
+      document.body.insertAdjacentHTML('beforeend', `<div class="md-pull"><div class="pp"><span class="md-tape"></span><button type="button" class="x" aria-label="关上" data-i="x"></button><h2>${t.head.slice(1).map(esc).join(' · ')}</h2>${buildTbl(c, lit, { full: true })}</div></div>`);
+      const sh = document.body.lastElementChild; hydrate(sh);
+      sh.addEventListener('click', e => { const r = e.target.closest('[data-act=row]'); if (r) return sayRow(+r.dataset.row, lit, true); if (e.target === sh || e.target.closest('.x')) sh.remove(); });
+    },
+  });
+  foot('继续', () => { document.querySelector('.md-pull')?.remove(); next(); }, { arrow: true });
+}
+RENDER.card = (ctx) => {
+  if (ctx.step.part) return drillCard(ctx);
+  const { lesson, step, body, foot, next } = ctx;
   const c = step.card, src = lesson.lines[c.after];
   const exLine = c.example ? { who: 'Lena', de: c.example, zh: '' } : null;
   let html = '';

@@ -244,3 +244,90 @@
 .md-state p{font:400 15px/22px var(--font-sans);color:var(--muted);margin-top:8px}
 .md-state .pl{width:150px;height:100px;filter:url(#sticker);transform:rotate(-5deg)}
 .md-state h2{font:680 26px/32px var(--font-sans);font-stretch:85%;margin-top:18px}
+
+/* ================= 第五批（第 10 版，2026-11-15）：试学后的改法 ================= */
+@keyframes md-rise{from{opacity:0;transform:translateY(8px)}}
+@keyframes md-pop{40%{transform:scale(1.06)}}
+
+/* ---- 荧光笔折行：每行各画一笔 ---- */
+.md-hl{-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+/* ---- 中文开关：小号纸色贴纸 + 手绘小方框；开 = 天蓝（已选中）+ 勾 ---- */
+.md-zhsw{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 11px 0 9px;background:var(--card);border:4px solid var(--sticker-edge);border-radius:var(--radius-sm);box-shadow:var(--shadow-sticker);font:600 14px/1 var(--font-sans);color:var(--muted);cursor:pointer;transition:background .15s}
+.md-zhsw .bx{position:relative;width:16px;height:16px}
+.md-zhsw .bx::before{content:"";position:absolute;inset:0;border:1.4px solid var(--line-strong);border-radius:4px;filter:url(#rough-box)}
+.md-zhsw .bx svg{position:absolute;left:-1px;top:-3px;width:19px;height:18px;opacity:0;fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.md-zhsw.on{background:var(--sky);color:var(--ink)}
+.md-zhsw.on .bx::before{border-color:#2f3237}
+.md-zhsw.on .bx svg{opacity:1}
+.md-nozh .md-zh{display:none}
+
+/* ---- 带字幕听全文：出场人物一排（说话的人亮起放大）+ 字幕（上一句淡、当前句大字刷水彩） ---- */
+.md-subcast{display:flex;justify-content:center;gap:30px}
+.md-subcast .c{display:flex;flex-direction:column;align-items:center;gap:4px;font:600 14px/19px var(--font-sans);color:var(--ink-2);opacity:.42;transition:opacity .2s,transform .25s cubic-bezier(.2,.8,.3,1)}
+.md-subcast .md-pt{width:64px;height:64px;border-radius:15px}
+.md-subcast .c b{width:40px;height:5px;border-radius:3px}
+.md-subcast .c.on{opacity:1;transform:translateY(-2px) scale(1.18)}
+.md-sub{display:flex;flex-direction:column}
+.md-sub .prev{min-height:58px;padding:0 2px;font:400 17px/25px var(--font-sans);color:var(--ink-2);opacity:.5}
+.md-sub .prev .md-zh{font-size:15px}
+.md-sub .cur{position:relative;isolation:isolate;min-height:132px;margin:16px -12px 0;padding:16px 14px 18px}
+.md-sub .cur::before{content:"";position:absolute;inset:4px 2px 2px 2px;z-index:-1;background:var(--wash);border-radius:var(--radius-sm);filter:url(#wash2)}
+.md-sub .cur .md-name{margin-bottom:4px}
+.md-sub .cur .md-de{font-size:25px;line-height:35px}
+.md-sub .cur .md-zh{font-size:16px;line-height:24px;margin-top:6px}
+.md-sub .cur.in{animation:md-rise .26s cubic-bezier(.2,.7,.3,1)}
+
+/* ---- 语法表·先做后讲：动词格先空着（短虚线），答对一行亮一行。加 .build 才生效，不影响旧表 ---- */
+.md-tbl.build .v{justify-self:start;min-width:72px}
+.md-tbl.build .v:empty{height:2px;border-top:1.6px dashed var(--line)}
+.md-tbl.build .r .md-key{visibility:hidden}.md-tbl.build .r.lit .md-key{visibility:visible}
+.md-tbl.build .r.flash{isolation:isolate}
+.md-tbl.build .r.flash::before{content:"";position:absolute;inset:0 -8px;z-index:-1;background:var(--wash);border-radius:var(--radius-sm);filter:url(#wash2);animation:md-flash 1.6s ease-out both}
+.md-tbl.build .r.flash .v{animation:md-pop .4s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes md-flash{0%{opacity:0}15%{opacity:1}70%{opacity:1}100%{opacity:0}}
+.md-three p{display:flex;align-items:center;gap:6px;font:500 30px/42px var(--font-sans);letter-spacing:-.01em}
+.md-three .md-key svg{width:34px;height:34px}
+
+/* ---- 「看整张表」：浅灰小字入口 + 从底下拉出的一张纸 ---- */
+.md-more{display:inline-flex;align-items:center;gap:6px;padding:10px 2px;font:500 15px/20px var(--font-sans);color:var(--quiet);cursor:pointer}
+.md-more u{text-decoration:none;border-bottom:1.3px solid var(--line)}
+.md-more .ico{width:20px;height:12px}
+.md-pull{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;background:rgba(36,39,44,.18)}
+.md-pull .pp{position:relative;width:100%;max-width:480px;margin:0 auto;padding:30px 24px calc(28px + env(safe-area-inset-bottom));background:var(--card);border-radius:16px 16px 0 0;box-shadow:var(--shadow-paper);animation:md-rise .28s cubic-bezier(.2,.8,.3,1) both}
+.md-pull .md-tape{width:84px;left:calc(50% - 42px);top:-11px;transform:rotate(-2deg)}
+.md-pull h2{font:680 26px/32px var(--font-sans);font-stretch:85%}
+.md-pull .x{position:absolute;right:10px;top:10px;width:44px;height:44px;display:grid;place-items:center;color:var(--quiet)}
+
+/* ---- 拼读小抄：一张贴纸胶带的纸，一行一个读音 ---- */
+.md-crib{position:relative;padding:22px 16px 6px 18px;background:var(--card);box-shadow:var(--shadow-paper);transform:rotate(-.6deg)}
+.md-crib .md-tape{width:84px;left:calc(50% - 42px);top:-12px;transform:rotate(2deg)}
+.md-crib h2{font:680 26px/32px var(--font-sans);font-stretch:85%;letter-spacing:.01em;margin:0 0 4px}
+.md-crib h2 i{font-style:normal;color:#b4b3ac;margin:0 4px}
+.md-crib .r{position:relative;display:grid;grid-template-columns:54px 1fr 38px;align-items:center;width:100%;padding:9px 0 8px;text-align:left;cursor:pointer}
+.md-crib .r+.r::before{content:"";position:absolute;left:0;right:0;top:0;border-top:1.2px solid var(--line);filter:url(#rough-box)}
+.md-crib .r.gap{margin-top:6px}.md-crib .r.gap::before{border-top-width:2px;border-color:var(--line-strong)}
+.md-crib .s{font:600 26px/32px var(--font-sans)}
+.md-crib .w{font:500 19px/25px var(--font-sans)}
+.md-crib .w b{font-weight:500;box-shadow:inset 0 -.36em 0 var(--hl-sound);padding:0 1px}
+.md-crib .w small{margin-left:8px;font:400 15px/21px var(--font-sans);color:var(--muted)}
+.md-crib .c{display:block;margin-top:1px;font:400 15px/21px var(--font-sans);color:var(--ink-2)}
+.md-crib .md-key{justify-content:flex-end;pointer-events:none}.md-crib .md-key svg{width:32px;height:32px}
+.md-crib .r.on .w,.md-crib .r.on .s{color:var(--sky-ink)}
+
+/* ---- 你先读，再听原声：一个没学过的词大字居中，不判对错 ---- */
+.md-try{display:flex;flex-direction:column;align-items:center;text-align:center}
+.md-try .big{white-space:nowrap;font:600 44px/54px var(--font-sans);letter-spacing:-.015em}
+.md-try .big b{font-weight:600;box-shadow:inset 0 -.3em 0 var(--hl-sound);padding:0 2px}
+.md-try .big .md-art{display:block;margin:0 0 2px;font:600 22px/28px var(--font-sans)}
+.md-try .mn{min-height:28px;margin-top:10px;font:500 20px/28px var(--font-sans);color:var(--ink-2)}
+.md-try .mn.in{animation:md-rise .26s cubic-bezier(.2,.7,.3,1)}
+.md-try .md-key{flex-direction:column;gap:6px;margin-top:34px;font-size:14px}
+
+/* ---- 「我的」里的一叠小抄 ---- */
+.md-cribs{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px}
+.md-cribs .c{position:relative;min-height:74px;padding:16px 12px 10px;background:var(--note);box-shadow:var(--shadow-paper);text-align:left;transform:rotate(var(--r,0deg));cursor:pointer}
+.md-cribs .md-tape{width:44px;height:16px;left:calc(50% - 22px);top:-8px;transform:rotate(var(--t,-3deg))}
+.md-cribs p{font:600 18px/24px var(--font-sans);letter-spacing:.01em;color:var(--ink)}
+.md-cribs p i{font-style:normal;color:#b4b3ac;margin:0 2px}
+.md-cribs small{display:block;margin-top:4px;font:400 14px/19px var(--font-sans);color:var(--muted)}

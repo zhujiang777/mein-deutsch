@@ -68,12 +68,16 @@ test('全部学完后首页是休息态、没有下一课', () => {
   assert.equal(t.kind, 'rest'); assert.equal(t.next, null);
 });
 
-test('一天课做全套：预习 → 听 → 精读 → 练习 → 听写 → 跟读 → 复述 → 开口 → 完成', () => {
+test('一天课做全套：预习 → 带字幕听 → 精读 → 练习 → 再听答题 → 听写 → 跟读 → 复述 → 开口 → 完成', () => {
   const steps = buildLesson(L1), segs = [...new Set(steps.map(s => s.seg))];
-  assert.deepEqual(segs, ['preview', 'listen', 'read', 'practice', 'dictation', 'shadow', 'retell', 'speak', 'finish']);
+  assert.deepEqual(segs, ['preview', 'listen', 'read', 'practice', 'relisten', 'dictation', 'shadow', 'retell', 'speak', 'finish']);
+  assert.deepEqual(steps.filter(s => s.seg === 'listen').map(s => s.type), ['watch'], '第一遍带字幕、不考');
+  assert.deepEqual(steps.filter(s => s.seg === 'relisten').map(s => s.type), ['listen', 'listenQ'], '理解题放在学完之后的盲听');
   assert.equal(steps.filter(s => s.type === 'who').length, L1.cast.length + 1, '“你”也有一屏');
   assert.equal(steps.filter(s => s.type === 'line').length, L1.lines.length);
-  assert.equal(steps.filter(s => s.type === 'card').length, L1.cards.length, '每张卡都排进去了');
+  assert.equal(new Set(steps.filter(s => s.type === 'card').map(s => s.card)).size, L1.cards.length, '每张卡都排进去了');
+  const g = L1.cards.find(c => c.kind === 'grammar');
+  assert.deepEqual(steps.filter(s => s.card === g).map(s => s.part), ['src', ...g.drill.map(() => 'q'), 'full', 'rule'], '语法卡先做后讲：原句 → 小题 → 整张表 → 规则');
   assert.equal(steps.filter(s => s.type === 'retell').length, L1.lines.filter(l => l.who === 'Lin').length);
   assert.ok(buildLesson(STORY_LESSONS[3]).some(s => s.type === 'pack'), '第 3 课带词包');
   for (const l of STORY_LESSONS) for (const s of buildLesson(l)) if (s.ex?.type === 'match') assert.ok(s.ex.pairs.length <= 5, `${l.id} 连线一屏不超过 5 对`);
@@ -88,9 +92,25 @@ test('语法卡紧跟它 after 的那一句', () => {
   }
 });
 
+test('语法卡的小题都出自已经读过的课文原句，答案对得上变位表', () => {
+  for (const l of STORY_LESSONS) for (const c of l.cards || []) {
+    if (c.kind !== 'grammar') continue;
+    assert.ok(c.drill?.length, `${l.id} 语法卡要有小题`);
+    for (const d of c.drill) {
+      assert.ok(d.line <= c.after, `${l.id} ${d.de} 出在这张卡之前`);
+      assert.ok(l.lines[d.line].de.includes(d.de), `${l.id} ${d.de} 是课文原句`);
+      assert.ok(d.de.includes(d.v) && l.lines[d.line].de.split(/[^A-Za-zÄÖÜäöüß]+/).includes(d.sj), `${l.id} ${d.de} 标得出动词和主语`);
+      assert.equal(c.table.rows[d.row][d.col || 1], d.v.toLowerCase(), `${l.id} ${d.de} 的答案就是表里那一格`);
+      assert.notEqual(d.no, d.v);
+    }
+  }
+});
+
 test('第 0 课按小站排，每站先讲后练；每课最后一步都是完成页', () => {
   const steps = buildLesson(STORY_LESSONS[0]);
   assert.equal(steps.filter(s => s.type === 'stop').length, STORY_LESSONS[0].stops.length);
+  assert.equal(steps.filter(s => s.type === 'try').length, STORY_LESSONS[0].stops.reduce((n, s) => n + (s.tries?.length || 0), 0) + 1, '每张小抄后面先读再听，外加拼自己的名字');
+  assert.ok(!steps.some(s => s.type === 'speak'), '第 0 课不评分');
   for (const l of STORY_LESSONS) assert.equal(buildLesson(l).at(-1).type, 'finish');
   assert.equal(buildQuiz(STORY_UNIT_SUMMARIES[0]).at(-1).type, 'quizResult');
 });

@@ -1,8 +1,8 @@
 // 把一课的数据排成一屏一屏的步骤。纯逻辑，不碰页面。
-// 一天课做全套（2026-11-11 定）：预习 → 带问题听 → 精读 → 词包 → 练习 → 听写 → 跟读 → 复述 → 开口回应 → 完成页。
+// 一天课做全套（2026-11-11 定，2026-11-14 改听的顺序）：预习 → 带字幕听（不考）→ 精读 → 词包 → 练习 → 不看字幕再听并答题 → 听写 → 跟读 → 复述 → 开口回应 → 完成页。
 // 每一步带 seg（属于哪一环节）：顶部是整课一条进度尺，刻度是各环节的分界，尺下写当前环节的名字。
 
-export const SEGMENTS = { preview: '预习', listen: '听', read: '精读', pack: '词包', practice: '练习', dictation: '听写', shadow: '跟读', retell: '复述', speak: '开口', finish: '' };
+export const SEGMENTS = { preview: '预习', listen: '听', read: '精读', pack: '词包', practice: '练习', relisten: '再听', dictation: '听写', shadow: '跟读', retell: '复述', speak: '开口', finish: '' };
 
 /** 连线题一屏最多 5 对（多了线会乱）：超过的平均拆成几屏。 */
 export const splitMatch = ex => {
@@ -17,18 +17,26 @@ export function buildLesson(lesson) {
   // 预习：先认本课出场的人（“你”也有一屏），再认 4–6 个词
   for (const who of [...(lesson.cast || []), lesson.role]) add('preview', 'who', { who });
   lesson.preview.forEach((item, i) => add('preview', 'word', { item, i }));
-  // 带着一个问题听全文
-  add('listen', 'listen'); add('listen', 'listenQ');
+  // 第一遍：像看短剧一样带字幕听，不考
+  add('listen', 'watch');
   // 精读：一句一屏；语法点、发音点、小贴士插在它 after 的那一句后面
   lesson.lines.forEach((_, i) => {
     add('read', 'line', { i });
-    lesson.cards.filter(c => c.after === i).forEach(card => add('read', 'card', { card }));
+    lesson.cards.filter(c => c.after === i).forEach(card => {
+      if (!card.drill) return add('read', 'card', { card });
+      // 语法卡先做后讲：课文原句 → 一格一道小题 → 整张表 → 规则
+      add('read', 'card', { card, part: 'src' });
+      card.drill.forEach((_, n) => add('read', 'card', { card, part: 'q', n }));
+      add('read', 'card', { card, part: 'full' }); add('read', 'card', { card, part: 'rule' });
+    });
   });
   if (lesson.wordPack) {
     add('pack', 'pack');
     lesson.wordPack.exercises.flatMap(splitMatch).forEach(ex => add('pack', 'ex', { ex }));
   }
   lesson.exercises.flatMap(splitMatch).forEach(ex => add('practice', 'ex', { ex }));
+  // 学完了再合上字幕听一遍，回答一个问题：这时能听懂
+  add('relisten', 'listen'); add('relisten', 'listenQ');
   lesson.dictation.forEach(i => add('dictation', 'dictate', { i }));
   lesson.shadow.forEach(i => add('shadow', 'shadow', { i }));
   lesson.lines.forEach((l, i) => { if (l.who === lesson.role) add('retell', 'retell', { i }); });
@@ -41,7 +49,9 @@ function buildPron(lesson) {
   const steps = [];
   for (const stop of lesson.stops) {
     steps.push({ seg: stop.id, type: 'stop', stop });
-    stop.exercises.flatMap(splitMatch).forEach(ex => steps.push({ seg: stop.id, type: ex.type === 'response' ? 'speak' : 'ex', ex, item: ex }));
+    // 小抄后面：照着小抄先自己读、再听原声（不判对错）
+    (stop.tries || []).forEach(item => steps.push({ seg: stop.id, type: 'try', item }));
+    (stop.exercises || []).flatMap(splitMatch).forEach(ex => steps.push({ seg: stop.id, type: ex.type === 'try' ? 'try' : ex.type === 'response' ? 'speak' : 'ex', ex, item: ex }));
   }
   steps.push({ seg: 'finish', type: 'finish' });
   return steps;

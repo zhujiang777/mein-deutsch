@@ -279,3 +279,73 @@ em{font-style:normal}
 .nb.open .cover>*{opacity:0}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ---- 带字幕听全文（B 字幕版，样式取自 lab/ds-explore/round23/s-listen.html） ---- */
+.hf-page[data-step=watch]{height:100dvh;min-height:0}
+.hf-page[data-step=watch] .hf-body{min-height:0;padding-bottom:12px}
+.hf-page[data-step=watch] .hf-foot{position:static;margin-top:4px}
+.sx-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
+.sx-head .hf-task{margin:0}
+.sx-zh{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 11px 0 9px;border-width:4px;border-radius:var(--radius-sm);font:600 14px/1 var(--font-sans);color:var(--muted);cursor:pointer;transition:background .15s}
+.sx-zh .bx{position:relative;width:16px;height:16px}
+.sx-zh .bx::before{content:"";position:absolute;inset:0;border:1.4px solid var(--line-strong);border-radius:4px;filter:url(#rough-box)}
+.sx-zh .bx svg{position:absolute;left:-1px;top:-3px;width:19px;height:18px;opacity:0}
+.sx-zh .bx svg path{stroke:var(--ink)}
+.sx-zh.on{background:var(--sky);color:var(--ink)}
+.sx-zh.on .bx::before{border-color:#2f3237}
+.sx-zh.on .bx svg{opacity:1}
+.sx-cast{display:flex;justify-content:center;gap:30px;margin-top:30px}
+.sx-cast .c{display:flex;flex-direction:column;align-items:center;gap:4px;font:600 14px/19px var(--font-sans);color:var(--ink-2);opacity:.42;transition:opacity .2s,transform .25s cubic-bezier(.2,.8,.3,1)}
+.sx-cast .c .md-pt{width:64px;height:64px;border-radius:15px}
+.sx-cast .c b{width:40px;height:5px;border-radius:2px}
+.sx-cast .c.on{opacity:1;transform:translateY(-2px) scale(1.18)}
+.sx-sub{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;margin-top:34px}
+.sx-sub .prev{min-height:58px;font:400 17px/25px var(--font-sans);color:var(--ink-2);opacity:.5;padding:0 2px}
+.sx-sub .prev p{margin:0}
+.sx-sub .prev .md-zh{font-size:15px}
+.sx-sub .cur{position:relative;isolation:isolate;margin:16px -12px 0;padding:16px 14px 18px;min-height:132px}
+.sx-sub .cur::before{content:"";position:absolute;inset:4px 2px 2px 2px;z-index:-1;background:var(--wash);border-radius:var(--radius-sm);filter:url(#wash2)}
+.sx-sub .cur .md-name{margin-bottom:4px}
+.sx-sub .cur .md-de{font-size:25px;line-height:35px}
+.sx-sub .cur .md-zh{font-size:16px;line-height:24px;margin-top:6px}
+.sx-sub .cur.in{animation:hf-in .26s cubic-bezier(.2,.7,.3,1)}
+.hf-body.nozh .sx-sub .md-zh{display:none}
+.sx-ctl{flex:none;padding-top:10px}
+.sx-ctl .hf-tl{margin-top:0;cursor:pointer;padding:8px 0 0}
+.sx-ctl .hf-ctl{margin-top:12px;gap:40px}
+.sx-ctl .hf-ctl .md-key svg{width:50px;height:50px}
+
+/* ---------- 语法卡「先做后讲」（设计系统 GrammarFirst / PullSheet；原型 lab/ds-explore/round23/s-grammar.html） ---------- */
+.hf-gsrc{display:flex;flex-direction:column;gap:18px;margin-top:22px}
+.hf-gq{margin-top:22px}
+.hf-gq .md-ln{grid-template-columns:44px 1fr}
+.hf-gq .gf{margin:2px 0 0;font:500 25px/38px var(--font-sans);letter-spacing:-.01em}
+.hf-gq .md-gap{min-width:88px}
+.hf-gq~.hf-chs{margin:24px 0 0 56px;gap:18px}
+.hf-gq~.hf-hint{margin:18px 0 0 56px}
+.hf-btbl{margin-top:26px}
+.hf-btbl .r{min-height:45px;padding:6px 4px}
+.hf-btbl .r.lit .p{color:var(--ink);font-weight:500}
+.hf-btbl .r.hd{min-height:0;padding:0 4px 3px;font:500 13px/18px var(--font-sans);color:var(--quiet)}
+.hf-btbl .r.hd::after{display:none}
+.hf-btbl .r.grow .v{animation:hf-in .3s cubic-bezier(.2,.7,.3,1) both}
+.hf-ph+.hf-btbl{margin-top:18px}
+.md-pull .hf-btbl{margin-top:12px}
+.hf-grule{margin-top:36px}
+.hf-three{display:flex;flex-direction:column;gap:6px}
+.hf-three p{margin:0}
+.hf-gsay{margin:24px 0 0;font:500 18px/28px var(--font-sans);color:var(--ink-2)}
+.hf-grule .md-more{margin-top:32px;background:none;border:0}
+
+/* ---------- 第 0 课：拼读小抄、你先读再听（设计系统 CribSheet / ReadFirst） ---------- */
+.hf-crib{margin-top:24px}
+.hf-crib .r{background:none;border:0;font:inherit;color:inherit}
+.hf-crib .r.on .md-key svg{transform:scale(1.12)}
+.hf-try{margin-top:92px}
+.hf-try .big{margin:0}.hf-try .mn{margin-bottom:0}
+.hf-try .md-key svg{width:var(--size-key-l);height:var(--size-key-l)}
+.hf-cribs{margin-top:6px}
+.hf-cribs .c{border:0;font:inherit}
+.hf-cribs p{margin:0}
+.hf-cribpull .pp{max-height:92dvh;overflow-y:auto;padding-top:44px;background:var(--paper)}
+.hf-cribpull .hf-crib{margin-top:0}

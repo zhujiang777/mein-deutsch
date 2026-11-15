@@ -3,7 +3,8 @@ import { load, save, clock, today, course, findItem, reviewQueue, completeLesson
 import { buildLesson, buildQuiz, buildReview, rulerOf } from './flow.js';
 import { hydrate, lessonRuler, artReady, sceneOf, seal, ico } from './art.js';
 import { RENDER } from './screens.js';
-import './screens2.js';
+import { STORY_LESSONS } from '../../data/story-lessons.js';
+import { cribHtml, bindCrib } from './screens2.js';
 import { getAssessmentSecrets, setAssessmentSecrets } from '../../js/secrets.js';
 import { checkAssessmentConnection, assessmentConfigured, assessmentErrorMessage } from '../../js/pronunciation-assessment.js';
 import { loadManifest, stop, sfx } from './audio.js';
@@ -182,7 +183,10 @@ function logPage() {
 }
 function mePage() {
   const sec = getAssessmentSecrets();
-  app.innerHTML = `<div class="md-page hf-page tabbed"><h1 class="hf-h1">课程</h1>
+  const cribs = STORY_LESSONS[0].stops.filter(s => s.rows);
+  app.innerHTML = `<div class="md-page hf-page tabbed"><h1 class="hf-h1">拼读小抄</h1>
+    <div class="md-cribs hf-cribs">${cribs.map((s, i) => `<button type="button" class="c" style="--r:${[-1.2, .8, -.6][i % 3]}deg;--t:${i % 2 ? 3 : -3}deg" data-act="crib" data-i="${i}"><span class="md-tape"></span><p>${esc(s.title).replace(/ · /g, ' <i>·</i> ')}</p></button>`).join('')}</div>
+    <h1 class="hf-h1 sub">课程</h1>
     <div class="hf-toc">${course().map(i => { const done = (i.kind === 'quiz' ? state.quiz[i.id] : state.lessons[i.id])?.done != null; return `<a class="it ${done ? 'done' : ''}" href="#/${i.kind}/${i.id}"><span class="n">${i.kind === 'quiz' ? '测' : numOf(i)}</span><span class="t">${esc(titleOf(i))}</span>${done ? `<svg class="tick" viewBox="0 0 26 24"><use href="#tick"/></svg>` : ''}</a>`; }).join('')}</div>
     <h1 class="hf-h1 sub">发音评分</h1>
     <p class="md-cap hf-as" aria-live="polite">${assessmentConfigured() ? '已设置' : '还没设置'}</p>
@@ -193,6 +197,13 @@ function mePage() {
     <div class="hf-dev"><button type="button" class="md-btn sec" data-act="day">进入下一天</button><button type="button" class="md-btn sec" data-act="reset">清空试学进度</button><a class="md-btn sec" href="hoertest.html">选声音</a></div>
     <p class="md-cap hf-devcap">${state.shift ? `已往后拨 ${state.shift} 天` : ''}</p>
     </div>`;
+  // 小抄：从底下拉出一张纸，随时查
+  app.querySelectorAll('.hf-cribs .c').forEach(b => b.addEventListener('click', () => {
+    const s = cribs[+b.dataset.i];
+    document.body.insertAdjacentHTML('beforeend', `<div class="md-pull hf-cribpull"><div class="pp"><button type="button" class="x" aria-label="关上" data-i="x"></button>${cribHtml(s)}</div></div>`);
+    const sh = document.body.lastElementChild; hydrate(sh); bindCrib(sh, s);
+    sh.addEventListener('click', e => { if (e.target === sh || e.target.closest('.x')) { stop(); sh.remove(); } });
+  }));
   const status = app.querySelector('.hf-as'), form = app.querySelector('.hf-set');
   app.querySelector('[data-act=day]').addEventListener('click', () => { state.shift = (state.shift || 0) + 1; commit(); location.hash = '#/'; });
   app.querySelector('[data-act=reset]').addEventListener('click', () => { if (confirm('清空试学课的全部进度？')) { localStorage.removeItem(KEY); state = blank(); location.hash = '#/'; } });
@@ -233,6 +244,7 @@ function reviewPage() {
 
 /* ================= 路由 ================= */
 function route() {
+  document.querySelector('.md-pull')?.remove();
   stop();
   const [, name, id, at] = location.hash.split('/');
   setTab(!name ? 'today' : name === 'log' ? 'log' : name === 'me' && id !== 'score' ? 'me' : '');

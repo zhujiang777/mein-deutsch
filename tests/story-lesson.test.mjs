@@ -68,17 +68,25 @@ test('故事课：课后小材料带 3–5 个新词，其余都是教过的词'
   }
 });
 
-test('故事课：题目有效、id 不重复；隔天检查 3 道；第 0 课每站都有练习', () => {
+test('故事课：题目有效、id 不重复；隔天检查 3 道；第 0 课是字母表 + 小抄', () => {
   for (const l of texts) {
     const all = [l.listenQuestion, ...l.exercises, ...l.speak, ...l.reviews, l.reading.question, ...(l.wordPack?.exercises || [])];
     all.forEach(x => checkExercise(x, `${l.id}/${x.id}`)); uniqueIds(all, l.id);
     assert.equal(l.reviews.length, 3); assert(l.speak.length >= 2); assert(l.exercises.length >= 6);
   }
   const zero = STORY_LESSONS.find(l => l.kind === 'pron');
-  assert(zero.stops.length >= 6);
-  const all = zero.stops.flatMap(s => s.exercises);
-  zero.stops.forEach(s => assert(s.exercises.length >= 3, `第 0 课 ${s.id} 练习太少`));
+  // 轻量版（2026-11-14）：字母表 + 三张拼读小抄 + 门铃；不做辨音题，小抄后面是“先读再听”
+  assert.equal(zero.stops.length, 5);
+  const sheets = zero.stops.filter(s => s.rows);
+  assert.equal(sheets.length, 3);
+  for (const s of sheets) {
+    assert(s.tries.length >= 2, `第 0 课 ${s.id} 要有先读再听的词`);
+    for (const r of [...s.rows, ...s.tries]) assert(/\[.+?\]/.test(r.w), `第 0 课 ${s.id} ${r.w} 要标出读音`);
+    for (const r of s.rows) assert(!/拼音|英语/.test(r.c), `第 0 课 ${s.id} ${r.s} 不拿拼音、英语做类比`);
+  }
+  const all = zero.stops.flatMap(s => s.exercises || []).filter(x => x.type !== 'try');
   all.forEach(x => checkExercise(x, `sl-00/${x.id}`)); uniqueIds(all, 'sl-00');
+  for (const l of texts) for (const c of l.cards) if (c.kind === 'pron') assert(!/拼音|英语/.test(c.title + c.body), `${l.id} 发音点不拿拼音、英语做类比`);
   for (const u of STORY_UNIT_SUMMARIES) { assert(STORY_LESSONS.some(l => l.id === u.after)); u.exercises.forEach(x => checkExercise(x, `unit-${u.unit}/${x.id}`)); }
 });
 

@@ -1,9 +1,9 @@
 // 第 0 课的小站、隔天复习、单元总表与小测。约定和 screens.js 一样；对照原型：
 // 复习卡 lab/ds-explore/round13/i-grammatik.html · 泛读/字母表/读音组/门铃 round16/l-chosen.html · 总表与小测 round15/k-chosen.html
-import { STORY_LESSONS, rowSay } from '../../data/story-lessons.js';
-import { RENDER, EX, esc, lower, row, wordEntry, acts, choiceUI, listenUI, hlClass, fitEntry } from './screens.js';
-import { key, q, tick, seal, hydrate, picOf } from './art.js';
-import { play, playLine, playWord, sfx } from './audio.js';
+import { STORY_LESSONS, rowSay, plainWord } from '../../data/story-lessons.js';
+import { RENDER, EX, esc, lower, row, wordEntry, acts, choiceUI, listenUI, hlClass, fitEntry, TL_COLOR, mmss } from './screens.js';
+import { key, q, tick, seal, hydrate, picOf, avatar, NAME } from './art.js';
+import { play, playLine, playWord, sfx, stop, duration, sayOf, position } from './audio.js';
 import { pieces, entry, clozeAt, quizOutcome } from './flow.js';
 
 const artDe = de => { const e = entry(de); return `${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}${esc(e.lemma)}`; };
@@ -79,36 +79,33 @@ function letterTable({ step, body }) {
   });
 }
 
-/** 这一组练的是哪几个字母：'st / sp' → st、sp；'-er' → 词尾的 er；'ich'、'ach' → ch；中文标签（长 / 短 / 重音）不标字母。 */
-function soundsOf(label) {
-  if (label === 'ich' || label === 'ach') return ['ch'];
-  if (/[^a-zäöüß/ -]/i.test(label)) return [];
-  return label.split('/').map(t => t.trim().replace(/^-/, '')).filter(Boolean);
+/* 拼读小抄（设计系统 CribSheet / ReadFirst；原型 lab/ds-explore/round23/s-sounds.html）：一张贴了纸胶带的纸，一行一个读音，点一行听那个词。 */
+const sound = w => esc(entry(w).lemma).replace(/\[(.+?)\]/g, '<b>$1</b>');
+export function cribHtml(s) {
+  return `<div class="md-crib hf-crib"><span class="md-tape"></span><h2>${esc(s.title).replace(/ · /g, ' <i>·</i> ')}</h2>
+    ${s.rows.map((r, i) => `<button type="button" class="r ${r.gap ? 'gap' : ''}" data-act="crib" data-i="${i}"><span class="s">${esc(r.s)}</span><span><span class="w">${sound(r.w)}<small>${esc(r.zh)}</small></span><span class="c">${esc(r.c)}</span></span>${key('a-spk', { cls: 's', r: i % 2 ? 4 : -3 }).replace('<button', '<span').replace('</button>', '</span>')}</button>`).join('')}</div>`;
 }
-export function markSound(de, label) {
-  const e = entry(de), low = lower(e.lemma), tail = label.startsWith('-');
-  let at = -1, len = 0;
-  for (const x of soundsOf(label)) { const i = tail ? low.lastIndexOf(x) : low.indexOf(x); if (i >= 0 && (at < 0 || i < at)) { at = i; len = x.length; } }
-  const lemma = at < 0 ? esc(e.lemma) : `${esc(e.lemma.slice(0, at))}<b>${esc(e.lemma.slice(at, at + len))}</b>${esc(e.lemma.slice(at + len))}`;
-  return `${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}${lemma}`;
-}
-function soundGroups({ step, body }) {
-  const s = step.stop;
-  body.innerHTML = `${head(s)}
-    <div class="md-sounds hf-sounds">${s.groups.map((g, gi) => `<div class="gp"><p class="lb">${soundsOf(g.label).length ? `<span class="md-hl sound">${esc(g.label)}</span>` : `<span class="zl">${esc(g.label)}</span>`}${key('a-spk', { cls: 's', act: 'grp', aria: '听这一组', r: gi % 2 ? 3 : -4 })}</p>
-      ${g.items.map(([de, zh], k) => `<button type="button" class="it" data-act="it" data-g="${gi}" data-n="${k}">${markSound(de, g.label)}<small>${esc(zh)}</small></button>`).join('')}</div>`).join('')}</div>`;
-  const groups = [...body.querySelectorAll('.gp')];
-  let run = 0;
-  const one = async (gi, k) => {
-    const el = groups[gi].querySelectorAll('.it')[k];
-    body.querySelectorAll('.it.on').forEach(x => x.classList.remove('on')); el.classList.add('on');
-    const ok = await playWord(s.groups[gi].items[k][0]); if (ok) el.classList.remove('on'); return ok;
-  };
-  acts(body, {
-    it: b => { run++; one(+b.dataset.g, +b.dataset.n); },
-    grp: async b => { const mine = ++run, gi = groups.indexOf(b.closest('.gp')); for (let k = 0; k < s.groups[gi].items.length; k++) { if (mine !== run || !await one(gi, k)) return; } },
+export function bindCrib(root, s) {
+  const rows = [...root.querySelectorAll('.md-crib .r')];
+  root.addEventListener('click', async e => {
+    const r = e.target.closest('[data-act=crib]'); if (!r) return;
+    rows.forEach(x => x.classList.toggle('on', x === r));
+    if (await playWord(plainWord(s.rows[+r.dataset.i].w))) r.classList.remove('on');
   });
 }
+function cribSheet({ step, body }) {
+  body.innerHTML = `<p class="hf-task">点一下听，跟着读</p>${cribHtml(step.stop)}`;
+  bindCrib(body, step.stop);
+}
+/* 你先读，再听原声：一个词大字居中，不判对错；听过原声才出中文、才能继续 */
+RENDER.try = ({ step, body, foot, next }) => {
+  const t = step.item, e = entry(t.w);
+  body.innerHTML = `<p class="hf-task">${esc(t.prompt || '先自己读出来，再听原声')}</p>
+    <div class="md-try hf-try"><p class="big">${e.art ? `<em class="md-art ${e.art}">${e.art}</em>` : ''}${sound(t.w)}</p><p class="mn"></p>${key('a-spk', { label: '听原声', act: 'hear', r: -4 })}</div>`;
+  const mn = body.querySelector('.mn');
+  acts(body, { hear: () => { mn.textContent = t.zh; mn.classList.add('in'); sfx('tap'); play(t.voice || 'Lena', t.say || plainWord(t.w)); foot('继续', next, { arrow: true }); } });
+  foot('继续', next, { arrow: true, off: true });
+};
 
 function doorbell({ step, body }) {
   const s = step.stop;
@@ -120,7 +117,7 @@ function doorbell({ step, body }) {
 }
 RENDER.stop = ctx => {
   const s = ctx.step.stop;
-  (s.letters ? letterTable : s.groups ? soundGroups : doorbell)(ctx);
+  (s.letters ? letterTable : s.rows ? cribSheet : doorbell)(ctx);
   ctx.foot('继续', ctx.next, { arrow: true });
 };
 
@@ -170,4 +167,63 @@ RENDER.quizResult = ({ unit, body, foot, next, results, steps, redo, flags }) =>
   });
   if (!flags.seen) { flags.seen = true; sfx('stamp'); }
   foot('完成', next);
+};
+
+/* ---------- 带字幕听全文（2026-11-14：第一遍不考；作者选的 B 字幕版，原型 lab/ds-explore/round23/s-listen.html） ---------- */
+// 屏幕上只留当前这一句（大字 + 水彩）和上一句（淡）。中文翻译由右上角的小开关控制，记住上次的选择。
+const ZH_KEY = 'md.heft.zh';
+const zhOn = () => { try { return localStorage.getItem(ZH_KEY) !== '0'; } catch { return true; } };
+RENDER.watch = async ({ lesson, body, foot, next, flags }) => {
+  const lines = lesson.lines, speakers = [...new Set(lines.map(l => l.who))];
+  const durs = await Promise.all(lines.map(l => duration(l.who, sayOf(l))));
+  const starts = durs.map((_, i) => durs.slice(0, i).reduce((a, b) => a + b, 0)), total = durs.reduce((a, b) => a + b, 0);
+  let zh = zhOn();
+  body.classList.toggle('nozh', !zh);
+  body.innerHTML = `<div class="sx-head"><p class="hf-task">听一遍</p>
+      <button type="button" class="md-paper sx-zh ${zh ? 'on' : ''}" aria-pressed="${zh}" data-act="zh"><span class="bx"><svg viewBox="0 0 26 24"><path d="M3 13.5c2.4 1.6 4.4 3.8 6 6.5C13 12 17.6 6.6 23.5 3" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>中文</button></div>
+    <div class="sx-cast">${speakers.map(w => `<div class="c" data-who="${w}">${avatar(w)}<span>${NAME[w]}</span><b style="background:${TL_COLOR[w]}"></b></div>`).join('')}</div>
+    <div class="sx-sub" aria-live="polite"><div class="prev"></div><div class="cur" hidden></div></div>
+    <div class="sx-ctl"><div class="hf-tl"><div class="bar">${lines.map((l, i) => `<i style="flex:${durs[i]};background:${TL_COLOR[l.who]}"></i>`).join('')}<u></u></div>
+        <div class="t"><span class="now">0:00</span><span>${mmss(total)}</span></div></div>
+      <div class="hf-ctl">${key('a-slow', { label: '慢速', act: 'slow', r: 4 })}${key('a-spk', { label: '播放', act: 'toggle', r: -5 })}</div></div>`;
+  const $ = sel => body.querySelector(sel);
+  const cast = [...body.querySelectorAll('.sx-cast .c')], bar = $('.hf-tl u'), nowEl = $('.now'), toggle = $('[data-act=toggle]'), prevEl = $('.sx-sub .prev'), curEl = $('.sx-sub .cur');
+  let shown = -2, playing = false, slow = false, run = 0, at = 0, cur = -1;
+  function showLine(i) {
+    cast.forEach(c => c.classList.toggle('on', playing && i >= 0 && i < lines.length && c.dataset.who === lines[i].who));
+    if (i === shown) return;
+    shown = i;
+    const p = lines[i - 1], c = lines[i];
+    prevEl.innerHTML = p ? `<p>${q(esc(p.de))}</p><p class="md-zh">${esc(p.zh)}</p>` : '';
+    curEl.hidden = !c;
+    if (c) { curEl.classList.remove('in'); void curEl.offsetWidth; curEl.classList.add('in'); curEl.innerHTML = `<span class="md-name">${NAME[c.who]}</span><p class="md-de">${q(esc(c.de))}</p><p class="md-zh">${esc(c.zh)}</p>`; }
+  }
+  const setCursor = t => { bar.style.width = `${Math.min(100, t / total * 100)}%`; nowEl.textContent = mmss(t); };
+  const setToggle = on => { toggle.dataset.k = on ? 'a-pause' : 'a-spk'; toggle.innerHTML = on ? '暂停' : '播放'; hydrate(toggle.parentNode); };
+  const frame = () => { if (!body.isConnected) return; if (cur >= 0) setCursor(starts[cur] + Math.min(durs[cur], position())); requestAnimationFrame(frame); };
+  requestAnimationFrame(frame);
+  async function start(from) {
+    const mine = ++run; playing = true; setToggle(true);
+    for (let i = from; i < lines.length; i++) {
+      at = i; cur = i; showLine(i);
+      const ok = await playLine(lines[i], { slow });
+      if (mine !== run) return;
+      if (!ok) { playing = false; cur = -1; setToggle(false); return; }
+      await new Promise(r => setTimeout(r, 260)); // 两句之间留一口气
+      if (mine !== run) return;
+    }
+    playing = false; cur = -1; at = 0; setToggle(false); setCursor(total); cast.forEach(c => c.classList.remove('on'));
+    flags.heard = true; foot('继续', next, { arrow: true });
+  }
+  const halt = () => { run++; playing = false; cur = -1; stop(); };
+  acts(body, {
+    toggle: () => { if (playing) { halt(); setToggle(false); setCursor(starts[at]); showLine(at); } else start(at); }, // 暂停后从这一句开头接着放
+    slow: b => { slow = !slow; b.classList.toggle('on', slow); if (playing) { halt(); start(at); } },
+    zh: b => { zh = !zh; b.classList.toggle('on', zh); b.setAttribute('aria-pressed', zh); body.classList.toggle('nozh', !zh); try { localStorage.setItem(ZH_KEY, zh ? '1' : '0'); } catch { /* 记不住就算了 */ } },
+  });
+  $('.hf-tl').addEventListener('click', e => { // 点时间线跳到那一句
+    const r = $('.hf-tl .bar').getBoundingClientRect(), i = Math.max(0, starts.findLastIndex(x => x <= (e.clientX - r.left) / r.width * total));
+    if (playing) { halt(); start(i); } else { at = i; showLine(i); setCursor(starts[i]); }
+  });
+  foot('继续', next, { arrow: true, off: !flags.heard });
 };
