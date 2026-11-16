@@ -1130,6 +1130,55 @@ export const STORY_UNIT_SUMMARIES = [
       ],
     },
   },
+  {
+    unit: 2, after: 'sl-07', title: '第 2 单元 · 数量与简单购买', titleDe: 'Artikel',
+    canDo: ['听懂 100 以内的价格', '在面包店、咖啡馆说要什么', '付钱：一起付还是分开付', '说“没有、不是”，问“这是什么”'],
+    rule: '冠词跟着名词的性走：定冠词 der / die / das，不定冠词 ein / eine / ein，否定 kein / keine / kein。其他成分的否定用 nicht。',
+    // 三课各学了一列，正好拼齐，没有要补的新格子（所以不需要 intro）
+    tables: [{ head: ['', '定冠词', '不定冠词', '否定'], labels: ['阳性', '阴性', '中性'],
+      rows: [['', 'der Tee', 'ein Tee', 'kein Tee'], ['', 'die Cola', 'eine Cola', 'keine Cola'], ['', 'das Brot', 'ein Brot', 'kein Brot']] }],
+    newRows: [],
+    exercises: [
+      choice('z1', '___ Tee kostet zwei Euro.', ['Der', 'Die', 'Das']),
+      choice('z2', 'Ich möchte ___ Cola.', ['eine', 'ein', 'der']),
+      choice('z3', 'Das ist ___ Brot. Das ist Kuchen.', ['kein', 'keine', 'nicht']),
+      choice('z4', 'Das ist ___ richtig.', ['nicht', 'kein', 'keine']),
+      choice('z5', 'Ich möchte ___ Stück Kuchen.', ['ein', 'eine', 'die']),
+      listen('z6', 'Verk', 'Das macht sieben Euro achtzig.', '一共多少钱？', ['7,80 €', '7,18 €', '17,80 €']),
+      assemble('z7', '这不是可乐。', 'Das ist keine Cola.', ['kein', 'nicht']),
+    ],
+    // 小测（作者 2026-11-16 审过提纲）：Tom 退了瓶子拿回 5 欧，终于请客，还是差 3 欧
+    quiz: {
+      listen: {
+        lines: [
+          line('Tom', 'Lin! Der Pfandautomat ist sehr gut: fünf Euro zurück!', 'Lin！退瓶机太好了：退回来五欧！'),
+          line('Tom', 'Komm! Heute zahle ich. Wirklich!', '走！今天我请。真的！'),
+          line('Verk', 'Hallo! Bitte schön?', '你们好！要点什么？'),
+          line('Tom', 'Ich möchte eine Tasse Tee und ein Stück Kuchen.', '我要一杯茶和一块蛋糕。'),
+          line('Lin', 'Ich möchte eine Cola, bitte.', '我要一杯可乐。'),
+          line('Verk', 'Zusammen oder getrennt?', '一起付还是分开付？'),
+          line('Tom', 'Zusammen!', '一起！'),
+          line('Verk', 'Das macht acht Euro.', '一共八欧。'),
+          line('Tom', 'Acht? Oh. Hier sind fünf Euro. Lin …?', '八欧？哦。这是五欧。Lin……？'),
+          line('Lin', 'Kein Problem. Hier sind drei Euro.', '没问题。这是三欧。'),
+        ],
+      },
+      questions: [
+        { ...choice('q1', 'Tom 从退瓶机拿回多少钱？', ['5 欧', '8 欧', '3 欧']), type: 'heardChoice', can: 0 },
+        { ...choice('q2', '一共要付多少钱？', ['8 欧', '5 欧', '18 欧']), type: 'heardChoice', can: 0 },
+        { ...choice('q3', 'Tom 点了什么？', ['茶和蛋糕', '咖啡和蛋糕', '可乐']), type: 'heardChoice', can: 1 },
+        { ...choice('q4', 'Lin 补了多少钱？', ['3 欧', '5 欧', '8 欧']), type: 'heardChoice', can: 2 },
+      ],
+      speak: [
+        { ...reply('k1', '问面包多少钱。', ['Was kostet das Brot?'], ['Verk', 'Guten Morgen! Bitte schön?']), can: 1 },
+        { ...reply('k2', '要一杯水。', ['Ich möchte ein Wasser, bitte.', 'Ich möchte ein Wasser.', 'Ein Wasser, bitte.'], ['Verk', 'Hallo! Bitte schön?']), can: 1 },
+        { ...reply('k3', '你们各付各的。', ['Getrennt, bitte.', 'Getrennt.'], ['Verk', 'Zusammen oder getrennt?']), can: 2 },
+        { ...reply('k4', '告诉他：这不是错误，是押金。', ['Nein, das ist kein Fehler. Das ist Pfand.', 'Das ist kein Fehler. Das ist Pfand.', 'Das ist kein Fehler.'], ['Tom', 'Ist das ein Fehler?']), can: 3 },
+        { ...reply('k5', '你不认识这个东西。问：“这是什么？”', ['Was ist das?']), can: 3 },
+        { ...listen('k6', 'Verk', 'Das macht dreizehn Euro vierzig.', '一共多少钱？', ['13,40 €', '30,40 €', '13,14 €']), can: 0 },
+      ],
+    },
+  },
 ];
 
 export const findStoryLesson = id => STORY_LESSONS.find(l => l.id === id) || null;

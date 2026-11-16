@@ -148,15 +148,16 @@ RENDER.stop = ctx => {
 RENDER.unitTable = ({ unit, body, foot, next }) => {
   const heads = unit.tables.flatMap(t => t.head.slice(1));
   const rows = unit.tables[0].rows.map((r, i) => [r[0], ...unit.tables.flatMap(t => t.rows[i].slice(1))]);
+  const labels = unit.tables[0].labels; // 冠词表：行名是阳性 / 阴性 / 中性，一格是“冠词 + 名词”，冠词按这一行的性上色
   // 哪几行是这个单元的课文里没点亮过、在总表里第一次见的
   const seen = new Set();
   STORY_LESSONS.filter(l => l.unit === unit.unit).forEach(l => (l.cards || []).forEach(c => (c.on || []).forEach(i => seen.add(i))));
-  const cell = (v, h) => { const stem = h.endsWith('en') && h !== 'sein' ? h.slice(0, -2) : ''; return stem && v.startsWith(stem) ? `${esc(stem)}<span class="md-hl word">${esc(v.slice(stem.length))}</span>` : esc(v); };
+  const cell = (v, h, i) => { if (labels) { const [a, ...rest] = v.split(' '); return `<span class="md-hl ${['der', 'die', 'das'][i] || 'word'}">${esc(a)}</span> ${esc(rest.join(' '))}`; } const stem = h.endsWith('en') && h !== 'sein' ? h.slice(0, -2) : ''; return stem && v.startsWith(stem) ? `${esc(stem)}<span class="md-hl word">${esc(v.slice(stem.length))}</span>` : esc(v); };
   body.innerHTML = `<h2 class="hf-gname sm">${heads.map(esc).join(' · ')}</h2><p class="md-rule">${esc(unit.rule || '')}</p>
     <div class="md-unit hf-unit" style="--cols:${heads.map((h, c) => `${Math.max(h.length, ...rows.map(r => r[c + 1].length))}fr`).join(' ')}">
       <div class="h"><span></span><span></span>${heads.map(h => `<span>${esc(h)}</span>`).join('')}<span></span></div>
-      ${rows.map((r, i) => `<div class="r">${seen.has(i) ? '<span></span>' : '<span class="tag">新</span>'}<span class="p">${esc(r[0])}</span>${r.slice(1).map((v, c) => `<span>${cell(v, heads[c])}</span>`).join('')}${key('a-spk', { cls: 's', act: 'row', aria: '听这一行', r: i % 2 ? 3 : -4 })}</div>`).join('')}</div>
-    <div class="md-note hf-newrows"><span class="md-tape"></span>${unit.newRows.map((r, i) => `<button type="button" data-act="nr" data-i="${i}"><b>${esc(r.de)}</b><small>${esc(r.zh)}</small></button>`).join('')}</div>`;
+      ${rows.map((r, i) => `<div class="r">${seen.has(i) ? '<span></span>' : '<span class="tag">新</span>'}<span class="p">${esc(labels?.[i] ?? r[0])}</span>${r.slice(1).map((v, c) => `<span>${cell(v, heads[c], i)}</span>`).join('')}${key('a-spk', { cls: 's', act: 'row', aria: '听这一行', r: i % 2 ? 3 : -4 })}</div>`).join('')}</div>
+    <div class="md-note hf-newrows" ${unit.newRows.length ? '' : 'hidden'}><span class="md-tape"></span>${unit.newRows.map((r, i) => `<button type="button" data-act="nr" data-i="${i}"><b>${esc(r.de)}</b><small>${esc(r.zh)}</small></button>`).join('')}</div>`;
   let run = 0;
   acts(body, {
     row: async b => { const mine = ++run, i = [...body.querySelectorAll('[data-act=row]')].indexOf(b); for (let c = 1; c < rows[i].length; c++) { if (mine !== run || !await playWord(rowSay(rows[i], c))) return; } },

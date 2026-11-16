@@ -3,7 +3,7 @@
  "voices": {
   "Lin": {
    "voice": "Jonas Falk",
-   "chars": 1807,
+   "chars": 1898,
    "items": [
     {
      "id": "34be9a178f61",
@@ -490,12 +490,30 @@
      "lesson": "unit-1",
      "kind": "model",
      "text": "Wohnen Sie auch hier?"
+    },
+    {
+     "id": "02ad0e637cc5",
+     "lesson": "unit-2",
+     "kind": "line",
+     "text": "Ich möchte eine Cola, bitte."
+    },
+    {
+     "id": "52e37fe5e005",
+     "lesson": "unit-2",
+     "kind": "line",
+     "text": "Kein Problem. Hier sind drei Euro."
+    },
+    {
+     "id": "1f149c7b3da9",
+     "lesson": "unit-2",
+     "kind": "model",
+     "text": "Ich möchte ein Wasser, bitte."
     }
    ]
   },
   "Lena": {
    "voice": "Lea",
-   "chars": 8123,
+   "chars": 8193,
    "items": [
     {
      "id": "062616307468",
@@ -3922,12 +3940,54 @@
      "lesson": "unit-1",
      "kind": "exercise",
      "text": "Zimmer vier, Zimmer neun, Zimmer zwölf."
+    },
+    {
+     "id": "306d5ba26597",
+     "lesson": "unit-2",
+     "kind": "card",
+     "text": "ein Tee"
+    },
+    {
+     "id": "8b23eb93398b",
+     "lesson": "unit-2",
+     "kind": "card",
+     "text": "kein Tee"
+    },
+    {
+     "id": "a1ffff7b5e9f",
+     "lesson": "unit-2",
+     "kind": "card",
+     "text": "eine Cola"
+    },
+    {
+     "id": "bc8c8da63164",
+     "lesson": "unit-2",
+     "kind": "card",
+     "text": "keine Cola"
+    },
+    {
+     "id": "2eff8e198d9e",
+     "lesson": "unit-2",
+     "kind": "card",
+     "text": "ein Brot"
+    },
+    {
+     "id": "cd10b4bf83e4",
+     "lesson": "unit-2",
+     "kind": "card",
+     "text": "kein Brot"
+    },
+    {
+     "id": "7b79e18616d4",
+     "lesson": "unit-2",
+     "kind": "exercise",
+     "text": "Das ist keine Cola."
     }
    ]
   },
   "Tom": {
    "voice": "Dylan Carter",
-   "chars": 1029,
+   "chars": 1198,
    "items": [
     {
      "id": "0a5fe7af989a",
@@ -4180,6 +4240,30 @@
      "lesson": "unit-1",
      "kind": "line",
      "text": "Äh … ja. Aber ich koche gut!"
+    },
+    {
+     "id": "5f8aed2db67f",
+     "lesson": "unit-2",
+     "kind": "line",
+     "text": "Lin! Der Pfandautomat ist sehr gut: fünf Euro zurück!"
+    },
+    {
+     "id": "df9c42d90411",
+     "lesson": "unit-2",
+     "kind": "line",
+     "text": "Komm! Heute zahle ich. Wirklich!"
+    },
+    {
+     "id": "251882b2543f",
+     "lesson": "unit-2",
+     "kind": "line",
+     "text": "Ich möchte eine Tasse Tee und ein Stück Kuchen."
+    },
+    {
+     "id": "8a6c4bd59102",
+     "lesson": "unit-2",
+     "kind": "line",
+     "text": "Acht? Oh. Hier sind fünf Euro. Lin …?"
     }
    ]
   },
@@ -4323,7 +4407,7 @@
   },
   "Verk": {
    "voice": "Petra",
-   "chars": 652,
+   "chars": 734,
    "items": [
     {
      "id": "bf1fd8b83d7c",
@@ -4456,6 +4540,24 @@
      "lesson": "sl-06",
      "kind": "exercise",
      "text": "Zusammen oder getrennt?"
+    },
+    {
+     "id": "18d1869f18e2",
+     "lesson": "unit-2",
+     "kind": "exercise",
+     "text": "Das macht sieben Euro achtzig."
+    },
+    {
+     "id": "c5c6795ddc66",
+     "lesson": "unit-2",
+     "kind": "line",
+     "text": "Das macht acht Euro."
+    },
+    {
+     "id": "c783dd036bc7",
+     "lesson": "unit-2",
+     "kind": "exercise",
+     "text": "Das macht dreizehn Euro vierzig."
     }
    ]
   }
