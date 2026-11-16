@@ -73,7 +73,7 @@ RENDER.word = ({ lesson, step, body, foot, next }) => {
 };
 
 /* ---------- 带着一个问题听全文 ---------- */
-export const TL_COLOR = { Lena: 'var(--illus-ochre)', Tom: 'var(--illus-sky)', Lin: 'var(--char-lin)', Krause: '#b9c7a4' };
+export const TL_COLOR = { Lena: 'var(--illus-ochre)', Tom: 'var(--illus-sky)', Lin: 'var(--char-lin)', Krause: '#b9c7a4', Verk: '#eba595' };
 export const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 RENDER.listen = ctx => listenUI(ctx, { lesson: ctx.lesson, head: `<p class="hf-task">不看字幕，把这篇课文再听一遍</p><p class="hf-pre">听完回答：</p><p class="hf-qq">${esc(ctx.lesson.listenQuestion.prompt)}</p>` });
 /** 听一整段对话：只看谁在说，不给原文。lesson 只用到 lines 和 preview（预习词听到时闪一下）。 */
@@ -311,15 +311,18 @@ RENDER.card = (ctx) => {
 };
 
 /* ---------- 词包：成套的词一屏给全 ---------- */
-RENDER.pack = ({ lesson, body, foot, next }) => {
+RENDER.pack = ({ lesson, step, body, foot, next }) => {
   const p = lesson.wordPack;
-  body.innerHTML = `<p class="hf-task">${esc(p.title)}</p>
-    <div class="md-pack hf-pack">${p.items.map((it, i) => `<button type="button" class="r ${it.de.length > 11 ? 'wide' : ''}" data-act="it" data-i="${i}"><span class="n">${esc(it.n)}</span><span class="w">${p.inText.includes(it.de) ? `<span class="md-hl word">${esc(it.de)}</span>` : esc(it.de)}</span></button>`).join('')}</div>
+  // 分组的词包（数字 13–100）：一屏一组，同一个规律的放一起，规律那一段刷出来，下面一句讲解
+  const grp = step.g != null ? p.groups[step.g] : null, items = grp ? p.items.filter(it => it.g === step.g) : p.items;
+  const word = it => grp ? esc(it.mark).replace(/\[(.+?)\]/g, '<span class="md-hl sound">$1</span>') : p.inText.includes(it.de) ? `<span class="md-hl word">${esc(it.de)}</span>` : esc(it.de);
+  body.innerHTML = `<p class="hf-task">${esc(grp ? grp.title : p.title)}</p>${grp ? `<p class="hf-prule">${esc(grp.rule)}</p>` : ''}
+    <div class="md-pack hf-pack ${grp ? 'one' : ''}">${items.map((it, i) => `<button type="button" class="r ${it.de.length > 11 ? 'wide' : ''}" data-act="it" data-i="${i}"><span class="n">${esc(it.n)}</span><span class="w">${word(it)}</span></button>`).join('')}</div>
     <div class="hf-ctl">${key('a-spk', { label: '播放', act: 'all', r: -5 })}</div>`;
   let run = 0;
   acts(body, {
-    it: b => { run++; playWord(p.items[+b.dataset.i].de); },
-    all: async () => { const mine = ++run; for (const it of p.items) { if (mine !== run || !await playWord(it.de)) return; } },
+    it: b => { run++; playWord(items[+b.dataset.i].de); },
+    all: async () => { const mine = ++run; for (const it of items) { if (mine !== run || !await playWord(it.de)) return; } },
   });
   foot('继续', next, { arrow: true });
 };

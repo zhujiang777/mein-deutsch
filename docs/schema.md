@@ -93,6 +93,7 @@
 | `exercises` | 轻快练习，顺序即出题顺序。类型：`choice`、`listenChoice`（带 `voice`、`audioText`，可带 `say`）、`match`、`assemble` |
 | `speak` | 开口回应场景：`{ prompt, cue?: { who, de }, answers, model }`。`cue` 是对方先说的话，用该角色的声音 |
 | `wordPack` | ? 词包：`{ title, items: [{ n, de }], refs, inText, exercises }`。`refs` 是词库里对应的词条，`inText` 是课文里真的出现的成员 |
+| `wordPack.groups` | ? 有规律的成套词（数字 13–100）拆成几组，一组一屏：`{ title, rule }`，`rule` 是一两句讲解。这时 `items[]` 每条带 `g`（第几组）和 `mark`（方括号标出这一组共同的那一段，如 `drei[zehn]`）；小题带 `g` 的紧跟在那一组后面，不带的放最后 |
 | `reading.newWords` | 小材料里的新词 3–5 个：`{ de, zh, forms }`，`forms` 是文中出现的小写词形 |
 | `reading.kind` | `'read'`（泛读）或 `'listen'`（泛听） |
 

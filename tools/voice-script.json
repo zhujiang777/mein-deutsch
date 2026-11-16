@@ -333,7 +333,7 @@
   },
   "Lena": {
    "voice": "Lea",
-   "chars": 5963,
+   "chars": 5979,
    "items": [
     {
      "id": "062616307468",
@@ -2860,6 +2860,12 @@
      "lesson": "sl-05",
      "kind": "pack",
      "text": "fünfunddreißig"
+    },
+    {
+     "id": "d93098bf58bd",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "siebenundsechzig"
     },
     {
      "id": "7af493de7a82",

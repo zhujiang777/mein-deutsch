@@ -220,6 +220,10 @@ RENDER.watch = async ({ lesson, body, foot, next, flags }) => {
     prevEl.innerHTML = p ? `<p>${q(esc(p.de))}</p><p class="md-zh">${esc(p.zh)}</p>` : '';
     curEl.hidden = !c;
     if (c) { curEl.classList.remove('in'); void curEl.offsetWidth; curEl.classList.add('in'); curEl.innerHTML = `<span class="md-name">${NAME[c.who]}</span><p class="md-de">${q(esc(c.de))}</p><p class="md-zh">${esc(c.zh)}</p>`; }
+    // 长句子：字小一号；还放不下就先不显示上一句，别压到进度条上
+    const sub = curEl.parentNode;
+    curEl.classList.toggle('long', !!c && c.de.length > 44); sub.classList.remove('tight');
+    if (c && curEl.getBoundingClientRect().bottom > sub.getBoundingClientRect().bottom + 1) sub.classList.add('tight');
   }
   const setCursor = t => { bar.style.width = `${Math.min(100, t / total * 100)}%`; nowEl.textContent = mmss(t); };
   const setToggle = on => { toggle.dataset.k = on ? 'a-pause' : 'a-spk'; toggle.innerHTML = on ? '暂停' : '播放'; hydrate(toggle.parentNode); };

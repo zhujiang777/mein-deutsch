@@ -36,8 +36,11 @@ export function buildLesson(lesson, day = 0) {
     });
   });
   if (lesson.wordPack) {
-    add('pack', 'pack');
-    lesson.wordPack.exercises.flatMap(splitMatch).forEach(ex => add('pack', 'ex', { ex }));
+    // 分组的词包：一组一屏讲规律，后面紧跟这一组的小题（题上标 g）；没标组的题放最后
+    const p = lesson.wordPack, put = list => list.flatMap(splitMatch).forEach(ex => add('pack', 'ex', { ex }));
+    if (p.groups) p.groups.forEach((_, g) => { add('pack', 'pack', { g }); put(p.exercises.filter(x => x.g === g)); });
+    else add('pack', 'pack');
+    put(p.exercises.filter(x => !p.groups || x.g == null));
   }
   lesson.exercises.flatMap(splitMatch).forEach(ex => add('practice', 'ex', { ex }));
   // 学完了再合上字幕听一遍，回答一个问题：这时能听懂

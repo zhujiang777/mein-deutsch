@@ -102,6 +102,7 @@ em{font-style:normal}
 /* ---- 词包 ---- */
 .hf-pack{margin-top:14px}.hf-pack .r{width:100%;text-align:left;cursor:pointer}
 .hf-pack .r{grid-template-columns:minmax(34px,auto) 1fr;column-gap:5px}.hf-pack .r.wide{grid-column:1/-1}
+.hf-prule{margin-top:8px;font:400 16px/25px var(--font-sans);color:var(--ink-2)}.hf-pack.one{grid-template-columns:1fr 1fr;margin-top:18px}.hf-pack.one .w{font-size:22px}
 
 /* ---- 配对、拼句 ---- */
 .hf-mt{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px 34px;margin-top:26px}
@@ -332,6 +333,8 @@ em{font-style:normal}
 .sx-sub .cur .md-de{font-size:25px;line-height:35px}
 .sx-sub .cur .md-zh{font-size:16px;line-height:24px;margin-top:6px}
 .sx-sub .cur.in{animation:hf-in .26s cubic-bezier(.2,.7,.3,1)}
+.sx-sub .prev,.sx-sub .cur{flex:none}.sx-sub .cur.long .md-de{font-size:22px;line-height:31px}
+.sx-sub.tight .prev{display:none}.sx-sub.tight .cur{margin-top:0}
 .hf-body.nozh .sx-sub .md-zh{display:none}
 .sx-ctl{flex:none;padding-top:10px}
 .sx-ctl .hf-tl{margin-top:0;cursor:pointer;padding:8px 0 0}
