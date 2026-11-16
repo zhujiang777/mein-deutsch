@@ -706,7 +706,142 @@ const LESSON_5 = {
   },
 };
 
-export const STORY_LESSONS = [LESSON_0, LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5];
+/** 冠词表第二列：不定冠词。 */
+const ARTIKEL_6 = { head: ['', '定冠词', '不定冠词'], labels: ['阳性', '阴性', '中性'], rows: [['', 'der Kaffee', 'ein Kaffee'], ['', 'die Tasse', 'eine Tasse'], ['', 'das Stück', 'ein Stück']] };
+const LESSON_6 = {
+  id: 'sl-06', version: 1, unit: 2, n: 6, days: 2,
+  title: '一杯咖啡', titleDe: 'Heute zahle ich!',
+  scene: '下午，学校的咖啡馆。Tom 拉着你进来，说要请客。',
+  canDo: ['点单', '付钱：一起付还是分开付'],
+  role: 'Lin', cast: ['Tom', 'Verk'],
+  lines: [
+    line('Tom', 'Komm, Lin! Heute zahle ich.', '走，Lin！今天我请。'),
+    line('Lin', 'Wirklich? Danke, Tom!', '真的？谢谢你，Tom！'),
+    line('Verk', 'Hallo! Bitte schön?', '你们好！要点什么？'),
+    line('Tom', 'Was kostet ein Kaffee?', '一杯咖啡多少钱？'),
+    line('Verk', 'Zwei Euro fünfzig.', '两欧五十。'),
+    line('Tom', 'Gut. Ich möchte eine Tasse Kaffee und ein Stück Kuchen.', '好。我要一杯咖啡和一块蛋糕。'),
+    line('Lin', 'Ich möchte ein Wasser und eine Brezel, bitte.', '我要一杯水和一个碱水结。'),
+    line('Verk', 'Gern. Zusammen oder getrennt?', '好的。一起付还是分开付？'),
+    line('Tom', 'Zusammen!', '一起！'),
+    line('Verk', 'Das macht acht Euro fünfzig.', '一共八欧五十。'),
+    line('Tom', 'Moment … Oh nein! Mein Geldbeutel ist nicht da!', '等等……糟了！我的钱包不在！'),
+    line('Lin', 'Tom! Wirklich?!', 'Tom！真的假的？！'),
+    line('Tom', 'Äh … Zahlst du heute? Morgen zahle ich!', '呃……今天你付行吗？明天我付！'),
+    line('Lin', 'Na gut. Hier, bitte.', '好吧。给您。'),
+  ],
+  preview: [
+    { de: 'Ich möchte …', zh: '我想要……', line: 5, pic: 'bestellen' },
+    { de: 'zahlen', zh: '付钱', line: 0, pic: 'zahlen' },
+    { de: 'das Wasser', zh: '水', line: 6, pic: 'wasser' },
+    { de: 'die Tasse', zh: '杯子', line: 5, pic: 'tasse' },
+    { de: 'der Geldbeutel', zh: '钱包', line: 10, pic: 'geldbeutel' },
+    { de: 'Zusammen oder getrennt?', zh: '一起付还是分开付？', line: 7, pic: 'getrennt' },
+  ],
+  listenQuestion: choice('hq', 'Tom 找不到什么了？', ['钱包', '钥匙', '杯子'], { key: 4 }),
+  listenMore: [
+    choice('hq2', '一共多少钱？', ['8,50 €', '5,80 €', '18,50 €']),
+    choice('hq3', '最后谁付的钱？', ['Lin', 'Tom', '各付各的']),
+  ],
+  words: [
+    { id: 'w258', de: 'möchten', zh: '想要', line: 5, form: 'möchte' },
+    { id: 'w407', de: 'zahlen', zh: '付钱', line: 0, form: 'zahle' },
+    { de: 'die Tasse', zh: '杯子', line: 5, form: 'Tasse' },
+    { de: 'das Stück', zh: '块、件', line: 5, form: 'Stück' },
+    { id: 'w080', de: 'das Wasser', zh: '水', line: 6, form: 'Wasser' },
+    { id: 'w440', de: 'zusammen', zh: '一起', line: 7, form: 'Zusammen' },
+    { id: 'w290', de: 'getrennt', zh: '分开', line: 7, form: 'getrennt' },
+    { id: 'w242', de: 'oder', zh: '还是、或者', line: 7, form: 'oder' },
+    { de: 'wirklich', zh: '真的', pos: 'adv.', line: 1, form: 'Wirklich' },
+    { de: 'der Geldbeutel', zh: '钱包', line: 10, form: 'Geldbeutel' },
+  ],
+  phrases: [
+    { de: 'Komm!', zh: '走吧、来' }, { de: 'Heute zahle ich.', zh: '今天我请' },
+    { de: 'Ich möchte …', zh: '我想要……（点单时礼貌的说法）' }, { de: 'Na gut.', zh: '好吧（勉强答应）' },
+  ],
+  gloss: {
+    komm: 'Komm! = 走吧、来（原形 kommen）', lin: '你的名字', heute: '今天', zahle: '付钱（ich 用 zahle，原形 zahlen）', ich: '我', wirklich: '真的', danke: '谢谢', tom: '人名',
+    hallo: '你好', bitte: '请；Bitte schön? = 要点什么？', 'schön': 'Bitte schön? = 要点什么？', was: '什么；Was kostet …? = ……多少钱？', kostet: '价格是（原形 kosten）',
+    ein: '不定冠词（阳性、中性）：ein Kaffee、ein Stück', kaffee: 'der Kaffee 咖啡', zwei: '二', euro: 'der Euro 欧元', 'fünfzig': '五十', gut: '好',
+    'möchte': '想要（ich 用 möchte，原形 möchten）', eine: '不定冠词（阴性）：eine Tasse', tasse: 'die Tasse 杯子', und: '和', 'stück': 'das Stück 块、件', kuchen: 'der Kuchen 蛋糕',
+    wasser: 'das Wasser 水', brezel: 'die Brezel 碱水结', gern: '好的、乐意', zusammen: '一起', oder: '还是、或者', getrennt: '分开', das: 'Das macht … = 一共……', macht: 'Das macht … = 一共……',
+    acht: '八', moment: 'Moment! = 等一下', oh: '哦', nein: '不；Oh nein! = 糟了', mein: '我的', geldbeutel: 'der Geldbeutel 钱包（das Geld 钱）', ist: '是', nicht: '不', da: '在；nicht da = 不在',
+    'äh': '呃', zahlst: '付钱（du 用 zahlst，原形 zahlen）', du: '你', morgen: '明天', na: 'Na gut. = 好吧', hier: '这里；Hier, bitte. = 给您',
+    wieder: '又、重新；wieder da = 回来了、找到了', wo: '在哪里', im: '= in dem；im Kühlschrank = 在冰箱里', 'kühlschrank': 'der Kühlschrank 冰箱', 'für': '给、为了；für zwei = 两人份',
+  },
+  cards: [
+    { after: 5, kind: 'tip', shelf: 'grammar', title: 'ich möchte', body: 'ich möchte + 想要的东西，是点单时礼貌的说法。按整体短语学。' },
+    { after: 5, kind: 'pron', title: 'ö', body: '舌头摆在 e 的位置不动，嘴唇收圆往前伸。', pairs: ['möchte', 'schön', 'Köln', 'zwölf'], example: 'Ich möchte eine Tasse Kaffee.', pics: ['m-oe'] },
+    { after: 6, kind: 'grammar', title: '不定冠词 ein · eine', body: '不定冠词表示“一个”或第一次提到：阳性、中性用 ein，阴性用 eine。', table: ARTIKEL_6, on: [0, 1, 2],
+      drill: [
+        { line: 3, de: 'Was kostet ein Kaffee?', zh: '一杯咖啡多少钱？', v: 'ein', no: ['eine'], sj: 'Kaffee', row: 0, col: 2, say: 'ein Kaffee', hint: 'Kaffee 是阳性名词（der），用 ein' },
+        { line: 5, de: 'Ich möchte eine Tasse Kaffee', zh: '我要一杯咖啡', v: 'eine', no: ['ein'], sj: 'Tasse', row: 1, col: 2, say: 'eine Tasse', hint: 'Tasse 是阴性名词（die），用 eine' },
+        { line: 5, de: 'ein Stück Kuchen.', zh: '一块蛋糕。', v: 'ein', no: ['eine'], sj: 'Stück', row: 2, col: 2, say: 'ein Stück', hint: 'Stück 是中性名词（das），用 ein' },
+      ],
+      example: 'Ich möchte ein Wasser und eine Brezel, bitte.' },
+    { after: 7, kind: 'tip', title: 'Zusammen oder getrennt?', body: '结账时店员常这么问：一起付还是分开付。同学朋友之间各付各的（getrennt）很平常。' },
+  ],
+  wordPack: {
+    id: 'getraenke', title: '饮料与点心', refs: ['w082', 'w083', 'w084', 'w079'], inText: ['wasser'],
+    // 两组，一组一屏：先喝的，再吃的
+    groups: [{ title: '喝的' }, { title: '吃的' }],
+    items: [[0, 'der Tee', '茶'], [0, 'der Saft', '果汁'], [0, 'die Milch', '牛奶'], [0, 'die Cola', '可乐'], [0, 'das Wasser', '水'], [0, 'das Bier', '啤酒'],
+      [1, 'das Brötchen', '小面包'], [1, 'das Croissant', '牛角包'], [1, 'das Eis', '冰淇淋'], [1, 'die Schokolade', '巧克力']].map(([g, de, zh]) => ({ g, n: '', de, zh })),
+    exercises: [
+      { ...match('p1', [['der Tee', '茶'], ['der Saft', '果汁'], ['die Milch', '牛奶'], ['das Bier', '啤酒'], ['die Cola', '可乐']]), g: 0 },
+      { ...match('p2', [['das Brötchen', '小面包'], ['das Croissant', '牛角包'], ['das Eis', '冰淇淋'], ['die Schokolade', '巧克力']]), g: 1 },
+      listen('p3', 'Lena', 'das Brötchen', '听到的是哪个？', ['小面包', '牛角包', '面包'], { g: 1 }),
+      choice('p4', 'Das ist ___ Tee.', ['ein', 'eine']),
+      choice('p5', 'Das ist ___ Cola.', ['eine', 'ein']),
+      choice('p6', 'Ich möchte ___ Brötchen.', ['ein', 'eine']),
+    ],
+  },
+  exercises: [
+    match('x1', [['zahlen', '付钱'], ['die Tasse', '杯子'], ['das Stück', '块'], ['das Wasser', '水'], ['der Geldbeutel', '钱包'], ['wirklich', '真的']]),
+    choice('x2', 'Was kostet ___ Kaffee?', ['ein', 'eine', 'das']),
+    choice('x3', 'Ich möchte ___ Tasse Kaffee.', ['eine', 'ein', 'der']),
+    choice('x4', 'Ich möchte ___ Stück Kuchen.', ['ein', 'eine', 'die']),
+    choice('x5', 'Ich möchte ___ Brezel.', ['eine', 'ein', 'das']),
+    choice('x6', 'Das ist ___ Schlüssel.', ['ein', 'eine', 'die']),
+    choice('x7', '___ Wasser kostet zwei Euro.', ['Das', 'Der', 'Die']),
+    assemble('x8', '我要一杯水和一个碱水结。', 'Ich möchte ein Wasser und eine Brezel.', ['kostet', 'der']),
+    assemble('x9', '今天你付吗？', 'Zahlst du heute?', ['zahle', 'ich']),
+    listen('x10', 'Verk', 'Zusammen oder getrennt?', '她在问什么？', ['一起付还是分开付', '在这吃还是带走', '要不要袋子']),
+    listen('x11', 'Verk', 'Das macht acht Euro fünfzig.', '一共多少钱？', ['8,50 €', '8,15 €', '18,50 €']),
+    choice('x12', '店员问 “Zusammen oder getrennt?”，你们各付各的：', ['Getrennt, bitte.', 'Zusammen, bitte.', 'Nein, danke.']),
+    choice('x13', '“Wirklich?” 的意思是：', ['真的吗？', '多少钱？', '没关系']),
+  ],
+  dictation: [3, 6, 9, 12],
+  shadow: [1, 6, 11, 13],
+  speak: [
+    reply('s1', '要一杯水和一个碱水结。', ['Ich möchte ein Wasser und eine Brezel, bitte.', 'Ich möchte ein Wasser und eine Brezel.'], ['Verk', 'Hallo! Bitte schön?']),
+    reply('s2', '一起付。', ['Zusammen, bitte.', 'Zusammen.'], ['Verk', 'Zusammen oder getrennt?']),
+    reply('s3', '勉强答应。', ['Na gut.'], ['Tom', 'Zahlst du heute? Morgen zahle ich!']),
+  ],
+  reviews: [
+    reply('r1', '问一杯咖啡多少钱。', ['Was kostet ein Kaffee?']),
+    reply('r2', '点一块蛋糕。', ['Ich möchte ein Stück Kuchen, bitte.', 'Ich möchte ein Stück Kuchen.']),
+    reply('r3', '结账时：各付各的。', ['Getrennt, bitte.', 'Getrennt.']),
+  ],
+  reading: {
+    title: 'Tom 贴在冰箱上的便条', kind: 'read',
+    lines: [
+      line('Tom', 'Lin!', 'Lin！'),
+      line('Tom', 'Mein Geldbeutel ist wieder da.', '我的钱包找到了。'),
+      line('Tom', 'Wo? Im Kühlschrank!', '在哪？在冰箱里！'),
+      line('Tom', 'Morgen zahle ich. Wirklich!', '明天我请。真的！'),
+      line('Tom', 'Kaffee und Kuchen für zwei.', '咖啡加蛋糕，两人份。'),
+    ],
+    newWords: [
+      { de: 'wieder', zh: '又、重新', forms: ['wieder'] },
+      { de: 'der Kühlschrank', zh: '冰箱', forms: ['kühlschrank'] },
+      { de: 'für', zh: '给、为了（für zwei = 两人份）', forms: ['für'] },
+    ],
+    question: choice('q', '钱包在哪找到的？', ['冰箱里', '房间里', '咖啡馆里']),
+  },
+};
+
+export const STORY_LESSONS = [LESSON_0, LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6];
 
 // 单元总表：每个单元结束时出一次，把本单元零散学到的语法收成整张表，和小测放在一起
 // 复习词卡背面的搭配和例句（2026-11-15 作者定：课文是根，这里是生枝长叶的地方——换地方、换人称、换成问句，让人能举一反三；和课文原句一样的不放）。
@@ -763,6 +898,18 @@ const WORD_MORE = {
     'heute': { col: [['heute Morgen', '今天早上'], ['bis heute', '到今天为止']], ex: [['Heute ist Lena nicht da.', '今天 Lena 不在。'], ['Ich koche heute.', '今天我做饭。']] },
     'sehr': { col: [['sehr gut', '很好'], ['Danke sehr!', '非常感谢！']], ex: [['Tom kocht sehr gut.', 'Tom 做饭很好。'], ['Das Zimmer ist sehr sauber.', '房间很干净。']] },
     'Das macht …': { col: [['Das macht zusammen zehn Euro.', '一共十欧。'], ['Was macht das?', '一共多少钱？']], ex: [['Das macht zwei Euro fünfzig.', '一共两欧五十。'], ['Das macht zwölf Euro, bitte.', '一共十二欧。']] },
+  },
+  'sl-06': {
+    'möchten': { col: [['Ich möchte zahlen.', '我想结账。'], ['Was möchtest du?', '你想要什么？']], ex: [['Ich möchte ein Brötchen.', '我要一个小面包。'], ['Möchtest du eine Cola?', '你要可乐吗？']] },
+    'zahlen': { col: [['Zahlen, bitte!', '买单！'], ['zusammen zahlen', '一起付']], ex: [['Ich zahle heute.', '今天我付。'], ['Tom zahlt nie.', 'Tom 从来不付钱。']] },
+    'die Tasse': { col: [['eine Tasse Tee', '一杯茶'], ['die Tasse hier', '这个杯子']], ex: [['Ich möchte eine Tasse Tee.', '我要一杯茶。'], ['Die Tasse ist nicht sauber.', '杯子不干净。']] },
+    'das Stück': { col: [['ein Stück Brot', '一块面包'], ['zwei Stück Kuchen', '两块蛋糕（Stück 作量词不变复数）']], ex: [['Ich möchte ein Stück Brot.', '我要一块面包。'], ['Ein Stück Kuchen kostet drei Euro.', '一块蛋糕三欧。']] },
+    'das Wasser': { col: [['ein Glas Wasser', '一杯水'], ['stilles Wasser', '不带气的水']], ex: [['Das Wasser kostet zwei Euro.', '水两欧。'], ['Möchtest du Wasser oder Cola?', '你要水还是可乐？']] },
+    'zusammen': { col: [['Zusammen, bitte.', '一起付。'], ['Hallo zusammen!', '大家好！']], ex: [['Wir zahlen zusammen.', '我们一起付。'], ['Wir kochen heute zusammen.', '我们今天一起做饭。']] },
+    'getrennt': { col: [['Getrennt, bitte.', '分开付。'], ['getrennt zahlen', '分开付']], ex: [['Wir zahlen getrennt.', '我们各付各的。'], ['Zusammen? Nein, getrennt.', '一起吗？不，分开。']] },
+    'oder': { col: [['Kaffee oder Tee?', '咖啡还是茶？'], ['Ja oder nein?', '是还是不是？']], ex: [['Kommst du aus China oder aus Japan?', '你来自中国还是日本？'], ['Möchtest du Brot oder Kuchen?', '你要面包还是蛋糕？']] },
+    'wirklich': { col: [['Wirklich?', '真的吗？'], ['wirklich gut', '真的很好']], ex: [['Der Kuchen ist wirklich gut.', '蛋糕真的很好吃。'], ['Kommst du wirklich aus Köln?', '你真的是科隆人？']] },
+    'der Geldbeutel': { col: [['mein Geldbeutel', '我的钱包'], ['der Geldbeutel von Tom', 'Tom 的钱包']], ex: [['Wo ist mein Geldbeutel?', '我的钱包在哪？'], ['Der Geldbeutel ist neu.', '这钱包是新的。']] },
   },
 };
 STORY_LESSONS.forEach(l => (l.words || []).forEach(w => { const m = WORD_MORE[l.id]?.[w.de]; if (m) w.more = m; }));

@@ -102,6 +102,7 @@ em{font-style:normal}
 /* ---- 词包 ---- */
 .hf-pack{margin-top:14px}.hf-pack .r{width:100%;text-align:left;cursor:pointer}
 .hf-pack .r{grid-template-columns:minmax(34px,auto) 1fr;column-gap:5px}.hf-pack .r.wide{grid-column:1/-1}
+.hf-pack.words{grid-template-columns:1fr}.hf-pack.words .r{grid-template-columns:1fr auto;column-gap:12px}.hf-pack.words .z{font:400 16px/28px var(--font-sans);color:var(--muted)}.hf-pack.words .md-art{font-style:normal;font-weight:600}
 .hf-prule{margin-top:8px;font:400 16px/25px var(--font-sans);color:var(--ink-2)}.hf-pack.one{grid-template-columns:1fr 1fr;margin-top:18px}.hf-pack.one .w{font-size:22px}
 
 /* ---- 配对、拼句 ---- */

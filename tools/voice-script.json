@@ -3,7 +3,7 @@
  "voices": {
   "Lin": {
    "voice": "Jonas Falk",
-   "chars": 1078,
+   "chars": 1275,
    "items": [
     {
      "id": "34be9a178f61",
@@ -306,6 +306,60 @@
      "text": "Guten Morgen!"
     },
     {
+     "id": "424d7d36a42e",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Wirklich? Danke, Tom!"
+    },
+    {
+     "id": "488911f73a85",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Ich möchte ein Wasser und eine Brezel, bitte."
+    },
+    {
+     "id": "262148b752d4",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Tom! Wirklich?!"
+    },
+    {
+     "id": "31aa28b2d27f",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Na gut. Hier, bitte."
+    },
+    {
+     "id": "f3858facc9fa",
+     "lesson": "sl-06",
+     "kind": "model",
+     "text": "Zusammen, bitte."
+    },
+    {
+     "id": "9d3c5ca606d8",
+     "lesson": "sl-06",
+     "kind": "model",
+     "text": "Na gut."
+    },
+    {
+     "id": "cddbda3f9de2",
+     "lesson": "sl-06",
+     "kind": "model",
+     "text": "Was kostet ein Kaffee?"
+    },
+    {
+     "id": "bee589096da3",
+     "lesson": "sl-06",
+     "kind": "model",
+     "text": "Ich möchte ein Stück Kuchen, bitte."
+    },
+    {
+     "id": "81e34d96e1c9",
+     "lesson": "sl-06",
+     "kind": "model",
+     "text": "Getrennt, bitte."
+    },
+    {
      "id": "ea673f5c4147",
      "lesson": "unit-1",
      "kind": "line",
@@ -333,7 +387,7 @@
   },
   "Lena": {
    "voice": "Lea",
-   "chars": 5979,
+   "chars": 7162,
    "items": [
     {
      "id": "062616307468",
@@ -2904,6 +2958,444 @@
      "text": "nur"
     },
     {
+     "id": "e655fb172dc3",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Ich möchte"
+    },
+    {
+     "id": "c732b1c70880",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "zahlen"
+    },
+    {
+     "id": "d8b1add896c5",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "die Tasse"
+    },
+    {
+     "id": "72b9bf9975b7",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "der Geldbeutel"
+    },
+    {
+     "id": "db217d275afc",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Zusammen oder getrennt?"
+    },
+    {
+     "id": "8f76b8d8c8c3",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "möchten"
+    },
+    {
+     "id": "320c0541abb2",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "das Stück"
+    },
+    {
+     "id": "6084b45d53b5",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "zusammen"
+    },
+    {
+     "id": "dc9d1122cdec",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "getrennt"
+    },
+    {
+     "id": "d19e0c5fb900",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "oder"
+    },
+    {
+     "id": "316fd6cad6b4",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "wirklich"
+    },
+    {
+     "id": "f4ba333d475d",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Ich möchte zahlen."
+    },
+    {
+     "id": "2daa27c65243",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Was möchtest du?"
+    },
+    {
+     "id": "059585f63529",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Ich möchte ein Brötchen."
+    },
+    {
+     "id": "4feafddefde2",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Möchtest du eine Cola?"
+    },
+    {
+     "id": "0abfce67464e",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Zahlen, bitte!"
+    },
+    {
+     "id": "748e54ca5ef7",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "zusammen zahlen"
+    },
+    {
+     "id": "895ed5242d53",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Ich zahle heute."
+    },
+    {
+     "id": "9c032b8e093d",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Tom zahlt nie."
+    },
+    {
+     "id": "86b0aca0d1b6",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "eine Tasse Tee"
+    },
+    {
+     "id": "52310a6b3328",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "die Tasse hier"
+    },
+    {
+     "id": "c38d8841da07",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Ich möchte eine Tasse Tee."
+    },
+    {
+     "id": "89b33ca8342a",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Die Tasse ist nicht sauber."
+    },
+    {
+     "id": "8579b863c140",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "ein Stück Brot"
+    },
+    {
+     "id": "dd79eb6a3db6",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "zwei Stück Kuchen"
+    },
+    {
+     "id": "e42db0f69a99",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Ich möchte ein Stück Brot."
+    },
+    {
+     "id": "476c292f9a3e",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Ein Stück Kuchen kostet drei Euro."
+    },
+    {
+     "id": "fac03c2909ab",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "ein Glas Wasser"
+    },
+    {
+     "id": "e937bbc20098",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "stilles Wasser"
+    },
+    {
+     "id": "8f698d55dc12",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Das Wasser kostet zwei Euro."
+    },
+    {
+     "id": "18b6eeb18af3",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Möchtest du Wasser oder Cola?"
+    },
+    {
+     "id": "2272949e17b9",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Zusammen, bitte."
+    },
+    {
+     "id": "2c6047645ed6",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Wir zahlen zusammen."
+    },
+    {
+     "id": "d80735867611",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Wir kochen heute zusammen."
+    },
+    {
+     "id": "28a385f0d008",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Getrennt, bitte."
+    },
+    {
+     "id": "36c63d858f97",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "getrennt zahlen"
+    },
+    {
+     "id": "056460547eea",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Wir zahlen getrennt."
+    },
+    {
+     "id": "639ec11eafb1",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Zusammen? Nein, getrennt."
+    },
+    {
+     "id": "b62b4eba23ff",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Ja oder nein?"
+    },
+    {
+     "id": "91e30852e835",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Kommst du aus China oder aus Japan?"
+    },
+    {
+     "id": "8b306fe8cdac",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Möchtest du Brot oder Kuchen?"
+    },
+    {
+     "id": "ea6588529daa",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Wirklich?"
+    },
+    {
+     "id": "b19194f06088",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "wirklich gut"
+    },
+    {
+     "id": "03929b3684c7",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Der Kuchen ist wirklich gut."
+    },
+    {
+     "id": "ebd3f01d7f2d",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Kommst du wirklich aus Köln?"
+    },
+    {
+     "id": "0e206bad8cfe",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "mein Geldbeutel"
+    },
+    {
+     "id": "cc2a4506f525",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "der Geldbeutel von Tom"
+    },
+    {
+     "id": "d107c1b39ed7",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Wo ist mein Geldbeutel?"
+    },
+    {
+     "id": "9206c446fd75",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Der Geldbeutel ist neu."
+    },
+    {
+     "id": "ebd49b310eae",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Komm!"
+    },
+    {
+     "id": "2916741859c3",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Heute zahle ich."
+    },
+    {
+     "id": "f31da4d342f0",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "Na gut."
+    },
+    {
+     "id": "d376afbae8e1",
+     "lesson": "sl-06",
+     "kind": "card",
+     "text": "Ich möchte eine Tasse Kaffee."
+    },
+    {
+     "id": "38974ecfc9c6",
+     "lesson": "sl-06",
+     "kind": "card",
+     "text": "möchte"
+    },
+    {
+     "id": "462311587bf1",
+     "lesson": "sl-06",
+     "kind": "card",
+     "text": "Köln"
+    },
+    {
+     "id": "a485e69fa721",
+     "lesson": "sl-06",
+     "kind": "card",
+     "text": "ein Kaffee"
+    },
+    {
+     "id": "8faf5435878b",
+     "lesson": "sl-06",
+     "kind": "card",
+     "text": "eine Tasse"
+    },
+    {
+     "id": "24340d03e697",
+     "lesson": "sl-06",
+     "kind": "card",
+     "text": "ein Stück"
+    },
+    {
+     "id": "a3d82371831a",
+     "lesson": "sl-06",
+     "kind": "card",
+     "text": "Ich möchte ein Wasser und eine Brezel, bitte."
+    },
+    {
+     "id": "fc3e37b89a92",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "der Tee"
+    },
+    {
+     "id": "3301638db665",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "der Saft"
+    },
+    {
+     "id": "786fef4c0883",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "die Milch"
+    },
+    {
+     "id": "cbcfdc0490d4",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "die Cola"
+    },
+    {
+     "id": "cdf1898114a3",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "das Bier"
+    },
+    {
+     "id": "1a92c77dafb3",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "das Brötchen"
+    },
+    {
+     "id": "6b904c60b433",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "das Croissant"
+    },
+    {
+     "id": "0766832cf7a1",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "das Eis"
+    },
+    {
+     "id": "668f8d88482a",
+     "lesson": "sl-06",
+     "kind": "pack",
+     "text": "die Schokolade"
+    },
+    {
+     "id": "816015feaf58",
+     "lesson": "sl-06",
+     "kind": "exercise",
+     "text": "Ich möchte ein Wasser und eine Brezel."
+    },
+    {
+     "id": "199b3fe904c3",
+     "lesson": "sl-06",
+     "kind": "exercise",
+     "text": "Zahlst du heute?"
+    },
+    {
+     "id": "a106e3a8737b",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "wieder"
+    },
+    {
+     "id": "2fa3d29ed4e9",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "der Kühlschrank"
+    },
+    {
+     "id": "130d6cee1dbb",
+     "lesson": "sl-06",
+     "kind": "word",
+     "text": "für"
+    },
+    {
      "id": "77a1886dbb8e",
      "lesson": "unit-1",
      "kind": "card",
@@ -2955,7 +3447,7 @@
   },
   "Tom": {
    "voice": "Dylan Carter",
-   "chars": 670,
+   "chars": 1010,
    "items": [
     {
      "id": "0a5fe7af989a",
@@ -3102,6 +3594,78 @@
      "text": "Puh! Danke, Lin!"
     },
     {
+     "id": "7baf4a8f0c53",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Komm, Lin! Heute zahle ich."
+    },
+    {
+     "id": "a1bf5fcbf241",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Was kostet ein Kaffee?"
+    },
+    {
+     "id": "1acd510be246",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Gut. Ich möchte eine Tasse Kaffee und ein Stück Kuchen."
+    },
+    {
+     "id": "d9e9a8d8b1eb",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Zusammen!"
+    },
+    {
+     "id": "024722495faa",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Moment … Oh nein! Mein Geldbeutel ist nicht da!"
+    },
+    {
+     "id": "461d505d6338",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Äh … Zahlst du heute? Morgen zahle ich!"
+    },
+    {
+     "id": "f55fe265bb3e",
+     "lesson": "sl-06",
+     "kind": "cue",
+     "text": "Zahlst du heute? Morgen zahle ich!"
+    },
+    {
+     "id": "a49dc53a9bec",
+     "lesson": "sl-06",
+     "kind": "reading",
+     "text": "Lin!"
+    },
+    {
+     "id": "c869ae74049a",
+     "lesson": "sl-06",
+     "kind": "reading",
+     "text": "Mein Geldbeutel ist wieder da."
+    },
+    {
+     "id": "64c74299c48f",
+     "lesson": "sl-06",
+     "kind": "reading",
+     "text": "Wo? Im Kühlschrank!"
+    },
+    {
+     "id": "1ba226e951b2",
+     "lesson": "sl-06",
+     "kind": "reading",
+     "text": "Morgen zahle ich. Wirklich!"
+    },
+    {
+     "id": "916773c474ad",
+     "lesson": "sl-06",
+     "kind": "reading",
+     "text": "Kaffee und Kuchen für zwei."
+    },
+    {
      "id": "a5e4b74455ff",
      "lesson": "unit-1",
      "kind": "line",
@@ -3237,7 +3801,7 @@
   },
   "Verk": {
    "voice": "Petra",
-   "chars": 535,
+   "chars": 652,
    "items": [
     {
      "id": "bf1fd8b83d7c",
@@ -3340,6 +3904,36 @@
      "lesson": "sl-05",
      "kind": "reading",
      "text": "Kaffee und Kuchen zusammen: nur vier Euro!"
+    },
+    {
+     "id": "1728324cd77f",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Hallo! Bitte schön?"
+    },
+    {
+     "id": "8b14c921d484",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Zwei Euro fünfzig."
+    },
+    {
+     "id": "6784a97dbeea",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Gern. Zusammen oder getrennt?"
+    },
+    {
+     "id": "05855aa1c0d1",
+     "lesson": "sl-06",
+     "kind": "line",
+     "text": "Das macht acht Euro fünfzig."
+    },
+    {
+     "id": "aa7571e229e9",
+     "lesson": "sl-06",
+     "kind": "exercise",
+     "text": "Zusammen oder getrennt?"
     }
    ]
   }
