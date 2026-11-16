@@ -1,4 +1,5 @@
 // 手帐页：桌上放着一本合上的手帐（和图标是同一本，A5 比例）。点右边的签翻开到那一类的目录——翻开后纸往下展开到屏幕底，好读；点一条就在本子里翻到那一页。
+// 翻到具体一页时“凑近看”（2026-11-16）：签收起来，纸放宽到差不多整屏，「目录」挪到本子上方那一行，页面里只剩内容。
 // 学习日历 2026-11-15 搬到「我的」页最上面（calendar 由 app.js 调用）。
 // 内容全部来自课程数据，学到哪亮到哪。对照原型 lab/ds-explore/round28/t-cover.html。
 import { rowSay } from '../../data/story-lessons.js';
@@ -26,7 +27,7 @@ export function calendar(state, ts, { numOf, findItem }) {
 }
 
 const src = l => `<p class="src">第 ${l.n} 课 · ${esc(l.title)}</p>`;
-const BACK = `<button type="button" class="back" data-back>${ico('arrow')}目录</button>`;
+const BACK = `<button type="button" class="bk-close bk" data-back>${ico('arrow')}目录</button>`;
 const RULED = '<div class="rule"></div>';
 const WS = c => c.words ? `<p class="ws">${c.words.map(w => `<span><small>${{ der: '阳性', die: '阴性', das: '中性' }[hlClass(w)] || ''}</small><button type="button" class="md-hl ${hlClass(w)}" data-say>${esc(w)}</button></span>`).join('')}</p>` : '';
 
@@ -85,14 +86,16 @@ export function albumPage(app, state, ts, helpers) {
         <span class="lab"><b>我的手帐</b><small>Notizen</small></span></button>
     </div></div></div></div>`;
   hydrate(app);
-  const book = app.querySelector('.al-book'), pg = app.querySelector('.al-pg'), top = app.querySelector('.bk-top'), cover = app.querySelector('.al-cover');
+  const desk = app.querySelector('.al-desk'), book = app.querySelector('.al-book'), pg = app.querySelector('.al-pg'), top = app.querySelector('.bk-top'), cover = app.querySelector('.al-cover');
   const order = T.map(x => x[0]), pageHtml = k => `<span class="md-tape"></span><div class="al-body">${bodies[k]()}</div>`;
   const fill = (el, k) => { el.innerHTML = pageHtml(k); el.scrollTop = 0; hydrate(el); };
+  // 从具体一页退回目录：纸收回原来的宽度，签回来
+  const unread = () => { book.querySelector('.al-leaf')?.remove(); if (desk.classList.contains('read')) { desk.classList.remove('read'); top.innerHTML = CLOSE; } };
   // 换一类。flip：像翻书——往后翻是这一页朝左翻走、露出下一页；往前翻是前一页从左边翻回来盖上
   const setTab = (k, flip = false) => {
     const fwd = order.indexOf(k) > order.indexOf(tab);
     tab = k; try { localStorage.setItem(TAB_KEY, tab); } catch { /* 记不住就算了 */ }
-    book.querySelector('.al-leaf')?.remove(); book.querySelectorAll('.al-flip').forEach(x => x.remove()); stop();
+    unread(); book.querySelectorAll('.al-flip').forEach(x => x.remove()); stop();
     book.querySelectorAll('.al-tabs button').forEach(b => { const on = b.dataset.t === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
     if (!flip) return fill(pg, k);
     const sheet = pg.cloneNode(true), at = pg.scrollTop, line = book.querySelector('.pgline');
@@ -104,25 +107,25 @@ export function albumPage(app, state, ts, helpers) {
   };
   const settle = (from, to) => cover.addEventListener('animationend', () => book.classList.replace(from, to), { once: true });
   // 翻开时本子往上挪到「合上」那一行下面，纸往下展开到底栏上方：量一下上下各有多少空
-  const desk = app.querySelector('.al-desk');
   const room = () => { const d = desk.getBoundingClientRect(), b = book.getBoundingClientRect(), t = top.getBoundingClientRect();
     const up = Math.max(0, t.top - d.top - 4), down = Math.max(0, d.bottom - 14 - b.bottom);
-    desk.style.setProperty('--up', `${up}px`); desk.style.setProperty('--ext', `${up + down}px`); };
+    desk.style.setProperty('--up', `${up}px`); desk.style.setProperty('--ext', `${up + down}px`); book.style.height = `${b.height}px`; };
   const open = k => { if (book.classList.contains('closed')) room(); setTab(k); book.classList.remove('closed', 'closing'); book.classList.add('opening'); desk.classList.add('up'); top.innerHTML = CLOSE; settle('opening', 'open'); };
   const close = () => {
-    book.querySelector('.al-leaf')?.remove(); stop();
-    book.classList.remove('open', 'opening'); book.classList.add('closing'); desk.classList.remove('up'); top.innerHTML = '';
+    unread(); stop();
+    book.classList.remove('open', 'opening'); book.classList.add('closing'); desk.classList.remove('up'); top.innerHTML = ''; book.style.height = '';
     book.querySelectorAll('.al-tabs button').forEach(b => { b.classList.remove('on'); b.removeAttribute('aria-pressed'); });
     settle('closing', 'closed');
   };
-  // 在本子里翻到那一页：盖在目录上面，左上角「目录」翻回去
+  // 在本子里翻到那一页：盖在目录上面，本子上方的「目录」翻回去
   let turning = 0;
   const turnTo = async (kind, item) => {
     const mine = ++turning, leaf = await LEAF[kind](item);
     if (mine !== turning) return;
     book.querySelector('.al-leaf')?.remove();
-    const lf = Object.assign(document.createElement('div'), { className: `al-leaf in ${leaf.cls || ''}`, innerHTML: BACK + leaf.html });
+    const lf = Object.assign(document.createElement('div'), { className: `al-leaf in ${leaf.cls || ''}`, innerHTML: leaf.html });
     book.insertBefore(lf, book.querySelector('.pgline')); hydrate(lf);
+    desk.classList.add('read'); top.innerHTML = BACK; hydrate(top);
     lf.addEventListener('click', async e => {
       const say = e.target.closest('[data-say]'); if (say) return playWord(say.dataset.say || say.textContent);
       const r = e.target.closest('[data-act=row]'); if (!r || !leaf.tables) return;
@@ -138,7 +141,7 @@ export function albumPage(app, state, ts, helpers) {
     if (d.t) { if (!book.classList.contains('open') && !book.classList.contains('opening')) open(d.t); else if (d.t !== tab) setTab(d.t, true); else if (book.querySelector('.al-leaf')) setTab(d.t); }
     else if ('cover' in d) open(tab);
     else if ('close' in d) close();
-    else if ('back' in d) { turning++; stop(); book.querySelector('.al-leaf')?.remove(); }
+    else if ('back' in d) { turning++; stop(); unread(); }
     else if (d.g) turnTo('grammar', lessonOf(d.g).main);
     else if (d.ge) { const [n, k] = d.ge.split(':'); turnTo('tip', lessonOf(n).extra[+k]); }
     else if (d.u) turnTo('unit', A.units[+d.u - 1]);

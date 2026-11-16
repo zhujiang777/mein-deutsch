@@ -393,11 +393,17 @@ em{font-style:normal}
 .bk-close{display:inline-flex;align-items:center;gap:6px;padding:7px 10px 7px 6px;border-radius:8px;font:500 15px/20px var(--font-sans);color:var(--ink-2);cursor:pointer}
 .bk-close svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:url(#rough)}
 .bk-close:active{background:var(--wash)}
-.al-desk .bkwrap{position:relative;padding-right:32px}
-.al-book{--bw:min(311px,calc(100vw - 64px),calc((100dvh - 200px) / 1.42));position:relative;width:var(--bw);aspect-ratio:148/210;transition:transform .3s cubic-bezier(.2,.8,.3,1)}
+.al-desk .bkwrap{position:relative;align-self:stretch;display:flex;justify-content:center;padding-right:32px;transition:padding .24s cubic-bezier(.2,.8,.3,1),margin .24s cubic-bezier(.2,.8,.3,1)}
+.al-book{--bw:min(311px,calc(100vw - 64px),calc((100dvh - 200px) / 1.42));position:relative;width:var(--bw);aspect-ratio:148/210;transition:transform .3s cubic-bezier(.2,.8,.3,1),width .24s cubic-bezier(.2,.8,.3,1)}
 /* 翻开：本子往上挪，纸、描边、底下那摞纸一起往下展开（--up / --ext 由页面量出来） */
 .al-desk .bk-top{transition:transform .3s cubic-bezier(.2,.8,.3,1)}
 .al-desk.up .bk-top,.al-desk.up .al-book{transform:translateY(calc(-1 * var(--up,0px)))}
+/* 凑近看一页：签收起来，纸放宽到差不多整屏 */
+.al-desk.read .bkwrap{margin:0 -14px;padding-right:6px}
+.al-desk.read .al-book{width:min(100%,460px)}
+.al-desk.read .bk-top{padding-left:0;margin-left:-14px}
+.al-tabs{transition:opacity .16s}.al-desk.read .al-tabs{opacity:0;pointer-events:none}
+.bk-close.bk{padding-left:4px;gap:4px}.bk-close.bk [data-i]{transform:scaleX(-1)}
 .al-book .edge,.al-pg,.al-leaf,.al-book .pgline{transition:bottom .3s cubic-bezier(.2,.8,.3,1)}
 .al-book.opening .edge,.al-book.open .edge,.al-book.opening .al-pg,.al-book.open .al-pg,.al-book.opening .pgline,.al-book.open .pgline,.al-book.open .al-leaf,.al-book.opening .al-leaf{bottom:calc(-1 * var(--ext,0px))}
 .al-book .edge{position:absolute;inset:0;background:var(--card);border-radius:3px 8px 8px 3px}
@@ -461,39 +467,37 @@ em{font-style:normal}
 .al-ul em{font-style:normal;color:#9a9a94}
 .al-none{margin-top:4px;font-size:13px}
 /* 本子里翻到的那一页：盖在目录上，在纸里滚动 */
-.al-leaf{position:absolute;inset:0;z-index:1;overflow-y:auto;overscroll-behavior:contain;padding:12px 18px 18px 14px;background:var(--card);border-radius:3px 8px 8px 3px;scrollbar-width:none}
+.al-leaf{position:absolute;inset:0;z-index:1;overflow-y:auto;overscroll-behavior:contain;padding:26px 24px 30px;background:var(--card);border-radius:3px 8px 8px 3px;scrollbar-width:none}
 .al-leaf.in{animation:al-leaf .24s cubic-bezier(.2,.8,.3,1) both}
 @keyframes al-leaf{from{transform:translateX(28px) rotate(.8deg);opacity:0}}
-.al-leaf .back{display:inline-flex;align-items:center;gap:4px;margin:0 0 8px -4px;padding:6px 10px 6px 4px;border-radius:6px;font:500 15px/20px var(--font-sans);color:var(--quiet);cursor:pointer}
-.al-leaf .back [data-i]{transform:scaleX(-1)}
-.al-leaf .back:active{background:var(--wash)}
 .al-leaf .src{font:500 13px/18px var(--font-sans);color:var(--quiet)}
-.al-leaf h2{margin:2px 0 0;font:680 24px/30px var(--font-sans);font-stretch:85%}
-.al-leaf .say{margin:8px 0 4px;font:400 16px/24px var(--font-sans);color:var(--ink-2)}
-.al-leaf .hf-btbl{margin-top:12px}.al-leaf .hf-btbl+.hf-btbl{margin-top:18px}
-.al-leaf .md-tbl .r{grid-template-columns:56px repeat(var(--cols,1),1fr) 34px;min-height:46px;padding:6px 2px;font-size:17px;line-height:24px}
+.al-leaf h2{margin:4px 0 0;font:680 24px/30px var(--font-sans);font-stretch:85%}
+.al-leaf .say{margin:12px 0 6px;font:400 16px/24px var(--font-sans);color:var(--ink-2)}
+.al-leaf .hf-btbl{margin-top:20px}.al-leaf .hf-btbl+.hf-btbl{margin-top:28px}
+.al-leaf .md-tbl .r{grid-template-columns:68px repeat(var(--cols,1),1fr) 36px;min-height:54px;padding:9px 2px;font-size:17px;line-height:24px}
 .al-leaf .md-tbl .v{min-width:0}.al-leaf .md-tbl .md-key svg{width:30px;height:30px}
 .al-leaf .md-tbl.build .r .md-key{visibility:visible}
 .al-leaf .md-tbl .r.off,.al-leaf .md-tbl .r.off .p{color:var(--ink-2)}
-.al-leaf .hf-contrast{margin-top:12px}.al-leaf .hf-contrast .md-paper{font-size:14px;padding:8px 6px}
-.al-leaf .rule{height:200px;margin-top:12px;background:repeating-linear-gradient(transparent 0 29px,#e3e2db 29px 30.2px)}
-.al-leaf .ws{display:flex;flex-direction:column;gap:6px;margin-top:12px}.al-leaf .ws span{display:flex;align-items:baseline;gap:12px}
+.al-leaf .hf-contrast{margin-top:20px}.al-leaf .hf-contrast .md-paper{font-size:14px;padding:8px 6px}
+.al-leaf .rule{height:200px;margin-top:20px;background:repeating-linear-gradient(transparent 0 29px,#e3e2db 29px 30.2px)}
+.al-leaf .ws{display:flex;flex-direction:column;gap:10px;margin-top:18px}.al-leaf .ws span{display:flex;align-items:baseline;gap:12px}
 .al-leaf .ws small{flex:none;width:2.4em;font:500 13px/28px var(--font-sans);color:var(--ink-2)}
 .al-leaf .ws button{border:0;padding:0 2px;font:600 17px/28px var(--font-sans);color:var(--ink);cursor:pointer}
-.al-leaf .hf-mouth{margin:10px 0 4px}
+.al-leaf .hf-mouth{margin:18px 0 8px}
 .al-leaf .hf-pair .w{font-size:16px}
 /* 词卡背面放进本子：不再是一张单独的卡，去掉自己的胶带、阴影和歪斜，字收一号 */
-.al-leaf.wd{padding:10px 0 0}.al-leaf.wd .back{margin-left:10px}
+.al-leaf.wd{padding:16px 0 0}
 .al-leaf.wd .hf-kk.back{margin:0;padding:0;box-shadow:none;transform:none;background:none;display:block;font:inherit;color:inherit}
 .al-leaf.wd .hf-kk>.md-tape{display:none}
-.al-leaf.wd .hf-kk .hd{padding:6px 14px 12px}.al-leaf.wd .hf-kk .hd .md-lm{font-size:30px;line-height:38px}
+.al-leaf.wd .hf-kk .hd{padding:10px 24px 18px}.al-leaf.wd .hf-kk .hd .md-lm{font-size:30px;line-height:38px}
 .al-leaf.wd .hf-kk .hd .mn{font-size:19px;line-height:26px}
-.al-leaf.wd .hf-kk .sec{padding:10px 14px}.al-leaf.wd .hf-kk .sec+.sec::before{left:14px;right:14px}
+.al-leaf.wd .hf-kk .sec{padding:18px 24px}.al-leaf.wd .hf-kk .sec+.sec::before{left:24px;right:24px}
+.al-leaf.wd .hf-kk .lb{margin-bottom:10px}.al-leaf.wd .hf-kk .ex+.ex{margin-top:16px}
 .al-leaf.wd .hf-kk .md-ln .md-ctx{font-size:18px;line-height:26px}
 .al-leaf.wd .hf-kk .ex p{font-size:17px;line-height:24px}.al-leaf.wd .hf-kk .ex small{font-size:14px;line-height:20px}
-.al-leaf.wd .hf-kk .rule{min-height:40px;margin:0 14px 14px}
+.al-leaf.wd .hf-kk .rule{min-height:40px;margin:0 24px 24px}
 /* 拼读小抄放进本子：小抄自己就是一张纸，贴满这一页 */
-.al-leaf.crib{padding:10px 8px 14px}.al-leaf.crib .md-crib{margin:0;box-shadow:none;transform:none}
+.al-leaf.crib{padding:18px 14px 22px}.al-leaf.crib .md-crib{margin:0;box-shadow:none;transform:none}
 /* 翻开 / 合上：只动封面的 transform 和 opacity */
 @keyframes al-open{0%{transform:perspective(1100px) rotateY(0);opacity:1}55%{opacity:1}100%{transform:perspective(1100px) rotateY(-100deg);opacity:0}}
 @keyframes al-shade{0%{opacity:1}100%{opacity:0}}
