@@ -1,5 +1,5 @@
 // 学习进度：今天该做哪一步、复习安排、学习日志。
-// 规则见 docs/product.md：一天一课（第 1 单元），学完的课隔天起进复习；不惩罚、不计连续天数。
+// 规则见 docs/product.md：第 1 单元一天一课，第 2 单元起一课两天（lessons[id].d1 = 第 1 天学完的日子）；学过的词隔天起进复习；不惩罚、不计连续天数。
 import { STORY_LESSONS, STORY_UNIT_SUMMARIES } from '../../data/story-lessons.js';
 
 export const KEY = 'md.heft.v1';
@@ -40,7 +40,8 @@ const doneDay = (s, item) => (item.kind === 'quiz' ? s.quiz[item.id]?.done : s.l
 export function today(s, ts) {
   const d = dayNum(ts), items = course();
   const next = items.find(i => doneDay(s, i) == null) || null;
-  const finishedToday = items.filter(i => doneDay(s, i) === d).pop() || null;
+  const half = items.filter(i => i.kind === 'lesson' && s.lessons[i.id]?.d1 === d && s.lessons[i.id]?.done == null).pop(); // 两天课今天学完了第 1 天
+  const finishedToday = items.filter(i => doneDay(s, i) === d).pop() || half || null;
   const q = reviewQueue(s, ts);
   const base = { reviews: q.length, cards: q.filter(x => x.type === 'card').length };
   if (finishedToday) return { kind: 'rest', item: finishedToday, next, ...base };
@@ -54,8 +55,8 @@ export const cardKey = (lessonId, word) => `${lessonId}:${word.de}`;
 export function reviewQueue(s, ts) {
   const d = dayNum(ts), out = [];
   for (const lesson of STORY_LESSONS) {
-    const p = s.lessons[lesson.id];
-    if (p?.done == null || p.done >= d) continue;
+    const p = s.lessons[lesson.id], learned = p?.done ?? p?.d1; // 两天课的词第 1 天就学了，第 2 天开头先复习
+    if (learned == null || learned >= d) continue;
     for (const word of lesson.words || []) {
       const c = s.cards[cardKey(lesson.id, word)];
       if (c && !c.grad && c.due <= d) out.push({ type: 'card', key: cardKey(lesson.id, word), lessonId: lesson.id, word });
@@ -78,11 +79,25 @@ function logDay(s, ts, entry, count = 0) {
   if (count) e.n = (e.n || 0) + count; // 这一天复习了几张卡
 }
 
+/** 两天课现在该学第几天：1 / 2；一天课或已学完（重学）返回 0 = 全套。 */
+export function partOf(s, lesson) {
+  const p = s.lessons[lesson.id];
+  return !(lesson.days > 1) || p?.done != null ? 0 : p?.d1 != null ? 2 : 1;
+}
+/** 两天课的第 1 天学完：词进复习，课还没完。 */
+export function completeDay1(s, lesson, ts) {
+  const d = dayNum(ts), p = s.lessons[lesson.id] ||= {};
+  if (p.d1 != null || p.done != null) return s;
+  p.d1 = d; delete p.at;
+  for (const word of lesson.words || []) s.cards[cardKey(lesson.id, word)] = { due: d + CARD_GAPS[0], stage: 0 };
+  logDay(s, ts, { type: 'lesson', id: lesson.id });
+  return s;
+}
 export function completeLesson(s, lesson, ts) {
   const d = dayNum(ts), p = s.lessons[lesson.id] ||= {};
   if (p.done != null) return s; // 重学不改原日期、不重排复习
   p.done = d; delete p.at;
-  for (const word of lesson.words || []) s.cards[cardKey(lesson.id, word)] = { due: d + CARD_GAPS[0], stage: 0 };
+  for (const word of lesson.words || []) s.cards[cardKey(lesson.id, word)] ||= { due: d + CARD_GAPS[0], stage: 0 };
   if (lesson.reviews?.length) s.checks[lesson.id] = { due: d + CHECK_GAPS[0], stage: 0, tries: 0 };
   logDay(s, ts, { type: 'lesson', id: lesson.id });
   return s;

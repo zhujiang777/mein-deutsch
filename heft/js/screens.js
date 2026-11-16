@@ -147,11 +147,11 @@ export function choiceUI({ body, foot, next, result }, { ex, head, after = '', r
 const promptHtml = p => p.includes('___') ? `<p class="hf-fill">${esc(p).replace('___', '<span class="md-gap"></span>')}</p>` : `<p class="hf-qq">${esc(p)}</p>`;
 
 RENDER.listenQ = ctx => {
-  const { lesson } = ctx;
+  const { lesson } = ctx, q = ctx.step.q || lesson.listenQuestion;
   const all = async () => { for (const l of lesson.lines) if (!await playLine(l)) return; };
   choiceUI(ctx, {
-    ex: lesson.listenQuestion, replay: all,
-    head: `<p class="hf-task">听完回答：</p><p class="hf-qq">${esc(lesson.listenQuestion.prompt)}</p>`,
+    ex: q, replay: all,
+    head: `<p class="hf-task">听完回答：</p><p class="hf-qq">${esc(q.prompt)}</p>`,
     after: `<p class="hf-again">${key('a-spk', { cls: 's', act: 'replay', label: '再听一遍', r: -4 })}</p>`,
   });
 };
@@ -201,7 +201,7 @@ export function buildTbl(c, lit, { full = false, flash = -1, grow = false } = {}
   const t = c.table, cols = t.head.length - 1;
   return `<div class="md-tbl build hf-tbl hf-btbl" style="--cols:${cols}"><div class="r hd"><span></span>${t.head.slice(1).map(h => `<span>${esc(h)}</span>`).join('')}<span></span></div>${t.rows.map((r, i) => {
     const on = r.slice(1).map((_, k) => lit.has(`${i}:${k + 1}`));
-    return `<div class="r ${on.some(Boolean) ? 'lit' : 'off'} ${i === flash ? 'flash' : ''} ${grow && !on.some(Boolean) ? 'grow' : ''}"><span class="p">${esc(r[0])}</span>${r.slice(1).map((v, k) => `<span class="v">${on[k] ? `<span class="md-hl word">${esc(v)}</span>` : full ? esc(v) : ''}</span>`).join('')}${key('a-spk', { cls: 's', act: 'row', aria: '听这一行', r: i % 2 ? 3 : -4 }).replace('data-act="row"', `data-act="row" data-row="${i}"`)}</div>`;
+    return `<div class="r ${on.some(Boolean) ? 'lit' : 'off'} ${i === flash ? 'flash' : ''} ${grow && !on.some(Boolean) ? 'grow' : ''}"><span class="p">${esc(t.labels?.[i] ?? r[0])}</span>${r.slice(1).map((v, k) => `<span class="v">${on[k] ? `<span class="md-hl ${t.labels ? hlClass(v) : 'word'}">${esc(v)}</span>` : full ? esc(v) : ''}</span>`).join('')}${key('a-spk', { cls: 's', act: 'row', aria: '听这一行', r: i % 2 ? 3 : -4 }).replace('data-act="row"', `data-act="row" data-row="${i}"`)}</div>`;
   }).join('')}</div>`;
 }
 function drillCard({ lesson, step, body, foot, next }) {
@@ -228,12 +228,12 @@ function drillCard({ lesson, step, body, foot, next }) {
   }
   if (step.part === 'q') {
     const d = ds[step.n], l = lesson.lines[d.line], at = d.de.indexOf(d.v), lit = litUpTo(step.n);
-    const opts = shuffle([{ t: d.v, right: true }, { t: d.no }]);
+    const opts = shuffle([{ t: d.v, right: true }, ...[].concat(d.no).map(t => ({ t }))]); // no 可以是一个，也可以是两个（der / die / das 三选一）
     body.innerHTML = `<p class="hf-task">选一个填进去</p>
       <div class="hf-gq"><div class="md-ln">${avatar(l.who)}<div><span class="md-name">${NAME[l.who]}</span>
         <p class="gf">${q(`${esc(d.de.slice(0, at))}<span class="md-gap"></span>${esc(d.de.slice(at + d.v.length))}`)}</p><p class="md-zh">${esc(d.zh || l.zh)}</p></div></div></div>
       <div class="hf-chs short">${opts.map((o, i) => `<button type="button" class="md-paper md-opt" style="--r:${i ? 1.2 : -1}deg" data-act="pick" data-i="${i}">${esc(o.t)}</button>`).join('')}</div>
-      <p class="hf-hint" hidden>主语是 ${esc(drillSay(d).split(' ')[0])}，动词用 ${esc(lower(d.v))}</p>
+      <p class="hf-hint" hidden>${d.hint ? esc(d.hint) : `主语是 ${esc(drillSay(d).split(' ')[0])}，动词用 ${esc(lower(d.v))}`}</p>
       <div class="hf-gslot">${buildTbl(c, lit)}</div>`;
     const btns = [...body.querySelectorAll('.md-opt')];
     let sel = -1, done = false;
@@ -264,7 +264,7 @@ function drillCard({ lesson, step, body, foot, next }) {
   }
   // 规则：本课这几组大字 + 一句规则；想细看再拉出整张表
   const three = [...new Map(ds.map(d => [drillSay(d), d])).values()];
-  body.innerHTML = `<div class="hf-grule"><div class="md-three hf-three">${three.map((d, i) => `<p>${esc(drillSay(d).split(' ')[0])} <span class="md-hl word">${esc(lower(d.v))}</span>${key('a-spk', { cls: 's', act: 'three', aria: '听', r: i % 2 ? 3 : -4 }).replace('data-act="three"', `data-act="three" data-n="${i}"`)}</p>`).join('')}</div>
+  body.innerHTML = `<div class="hf-grule"><div class="md-three hf-three">${three.map((d, i) => `<p>${d.say ? `<span class="md-hl ${hlClass(d.say)}">${esc(lower(d.v))}</span> ${esc(d.sj)}` : `${esc(drillSay(d).split(' ')[0])} <span class="md-hl word">${esc(lower(d.v))}</span>`}${key('a-spk', { cls: 's', act: 'three', aria: '听', r: i % 2 ? 3 : -4 }).replace('data-act="three"', `data-act="three" data-n="${i}"`)}</p>`).join('')}</div>
     <p class="hf-gsay">${esc(c.body)}</p>
     ${c.contrast ? `<div class="hf-contrast">${c.contrast.map(([a, b]) => `<div class="pr"><button type="button" class="md-paper" data-act="con">${esc(a)}</button><button type="button" class="md-paper" data-act="con">${esc(b)}</button></div>`).join('')}</div>` : ''}
     <button type="button" class="md-more" data-act="more"><u>看整张表</u>${ico('arrow')}</button></div>`;
@@ -314,7 +314,7 @@ RENDER.card = (ctx) => {
 RENDER.pack = ({ lesson, body, foot, next }) => {
   const p = lesson.wordPack;
   body.innerHTML = `<p class="hf-task">${esc(p.title)}</p>
-    <div class="md-pack hf-pack">${p.items.map((it, i) => `<button type="button" class="r" data-act="it" data-i="${i}"><span class="n">${esc(it.n)}</span><span class="w">${p.inText.includes(it.de) ? `<span class="md-hl word">${esc(it.de)}</span>` : esc(it.de)}</span></button>`).join('')}</div>
+    <div class="md-pack hf-pack">${p.items.map((it, i) => `<button type="button" class="r ${it.de.length > 11 ? 'wide' : ''}" data-act="it" data-i="${i}"><span class="n">${esc(it.n)}</span><span class="w">${p.inText.includes(it.de) ? `<span class="md-hl word">${esc(it.de)}</span>` : esc(it.de)}</span></button>`).join('')}</div>
     <div class="hf-ctl">${key('a-spk', { label: '播放', act: 'all', r: -5 })}</div>`;
   let run = 0;
   acts(body, {
@@ -673,13 +673,15 @@ RENDER.speak = ctx => {
 };
 
 /* ---------- 完成页：故事格 + 现在你能 ---------- */
-RENDER.finish = ({ lesson, body, foot, next }) => {
-  const unit = STORY_LESSONS.filter(l => l.unit === lesson.unit), nextLesson = STORY_LESSONS[STORY_LESSONS.indexOf(lesson) + 1];
+RENDER.finish = ({ lesson, step, body, foot, next }) => {
+  const half = step?.day === 1; // 两天课的第 1 天：这一课还没盖章，明天接着学
+  const unit = STORY_LESSONS.filter(l => l.unit === lesson.unit), nextLesson = half ? lesson : STORY_LESSONS[STORY_LESSONS.indexOf(lesson) + 1];
   const panel = l => {
-    if (l.n <= lesson.n) return `<div class="p f"><span class="no">${l.n}</span><p class="tt">${esc(l.title)}</p>${seal(l.n)}</div>`;
+    if (l.n < lesson.n || (l === lesson && !half)) return `<div class="p f"><span class="no">${l.n}</span><p class="tt">${esc(l.title)}</p>${seal(l.n)}</div>`;
     if (l === nextLesson) return `<div class="p e nx"><span class="no">${l.n} · 明天</span>${avatar(l.cast?.[0] || 'Lena')}<p class="tt">${esc(l.title)}</p></div>`;
     return `<div class="p e sm"><span class="no">${l.n}</span></div>`;
   };
+  if (half) { body.innerHTML = `<div class="hf-rh"><h2>第 ${lesson.n} 课 · 第 1 天学完了</h2></div><div class="md-story hf-story">${unit.map(panel).join('')}</div>`; return foot('完成', next); }
   body.innerHTML = `<div class="hf-rh"><h2>${lesson.n ? `第 ${lesson.n} 课学完了` : `${esc(lesson.title)}学完了`}</h2></div>
     ${lesson.unit ? `<div class="md-story hf-story">${unit.map(panel).join('')}</div>` : `<div class="hf-solo">${seal(0, 'hf-bigseal')}</div>`}
     <div class="md-can plain hf-can"><h3>现在你能</h3>${lesson.canDo.map(c => `<div class="i"><p class="c">${esc(c)}</p>${tick()}</div>`).join('')}</div>`;

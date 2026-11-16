@@ -1,5 +1,5 @@
 // 试学课入口：首页手帐本 → 一课一屏一屏走 → 完成页。产品规则见 docs/product.md，界面规范见设计系统 README。
-import { load, save, clock, today, course, findItem, reviewQueue, completeLesson, completeQuiz, rateCard, submitCheck, markRead, savePlace, placeOf, blank, dayKey, KEY } from './store.js';
+import { load, save, clock, today, course, findItem, reviewQueue, completeLesson, completeDay1, partOf, completeQuiz, rateCard, submitCheck, markRead, savePlace, placeOf, blank, dayKey, KEY } from './store.js';
 import { buildLesson, buildQuiz, buildReview, rulerOf } from './flow.js';
 import { hydrate, lessonRuler, artReady, sceneOf, seal, ico } from './art.js';
 import { RENDER } from './screens.js';
@@ -23,8 +23,9 @@ const numOf = item => item.kind === 'quiz' ? item.unit.unit : item.lesson.n;
 const unitOf = item => item.kind === 'quiz' ? item.unit.unit : item.lesson.unit;
 const shortOf = item => item.kind === 'quiz' ? '小测' : `第 ${item.lesson.n} 课`;
 function planOf(item, hasReview) {
-  const steps = item.kind === 'quiz' ? ['总表', '小测'] : item.lesson.kind === 'pron' ? ['字母', '读音', '门铃名牌'] : ['预习', '听', '精读', '听写', '跟读'];
-  const mins = item.kind === 'quiz' ? 10 : 20;
+  const part = item.kind === 'lesson' ? partOf(state, item.lesson) : 0;
+  const steps = item.kind === 'quiz' ? ['总表', '小测'] : item.lesson.kind === 'pron' ? ['字母', '读音', '门铃名牌'] : part === 1 ? ['预习', '听', '精读'] : part === 2 ? ['练习', '再听', '听写', '跟读'] : ['预习', '听', '精读', '听写', '跟读'];
+  const mins = item.kind === 'quiz' ? 10 : part ? 15 : 20;
   return [...(hasReview ? ['复习'] : []), ...steps].join('<i>→</i>') + `<i>·</i>约 ${mins} 分钟`;
 }
 
@@ -58,7 +59,8 @@ function home() {
   const label = reviewOnly ? (t.cards ? `复习 ${t.cards} 张卡` : '复习') : t.reviews ? (t.cards ? `先复习 ${t.cards} 张卡` : '先复习') : resume ? '接着学' : '开始今天的课';
   const plan = reviewOnly ? '复习<i>·</i>约 5 分钟' : planOf(item, t.reviews > 0);
   const stamped = t.kind === 'rest' && t.item; // 今天真的学完了一课，才盖日期章
-  const days = item.kind === 'lesson' && item.lesson.days > 1 ? '<p class="s">第 1 天</p>' : '';
+  const lp = item.kind === 'lesson' && item.lesson.days > 1 ? state.lessons[item.id] || {} : null; // 两天课：名签上写第几天
+  const days = lp ? `<p class="s">第 ${lp.done != null || (lp.d1 != null && !(t.kind === 'rest' && t.item === item)) ? 2 : 1} 天</p>` : '';
   app.innerHTML = `<div class="hf-stagewrap"><div class="hf-stage nb">
     <div class="inner"><div class="nbart">${art}</div>
       <svg class="thick" viewBox="0 0 390 844"><defs><clipPath id="wclip2"><path d="${WIN}"/></clipPath></defs><path d="${WIN}" clip-path="url(#wclip2)" fill="none" stroke="#b6d5ef" stroke-width="5" transform="translate(2 2.5)"/></svg></div>
@@ -158,10 +160,10 @@ function run({ id, steps, lesson = null, unit = null, start = 0, keep = false, b
 
 function lessonPage(id, at) {
   const item = findItem(id); if (!item) { location.hash = '#/'; return; }
-  const lesson = item.lesson, done = state.lessons[id]?.done != null;
+  const lesson = item.lesson, done = state.lessons[id]?.done != null, part = partOf(state, lesson);
   run({
-    id, lesson, keep: true, steps: buildLesson(lesson), start: at != null ? +at : done ? 0 : placeOf(state, id), // #/lesson/sl-01/12 直接跳到第 12 步（调试用）
-    onFinish: () => { if (!done) sessionStorage.setItem('hf.stamp', '1'); completeLesson(state, lesson, now()); commit(); location.hash = '#/'; },
+    id, lesson, keep: true, steps: buildLesson(lesson, part), start: at != null ? +at : done ? 0 : placeOf(state, id), // #/lesson/sl-01/12 直接跳到第 12 步（调试用）
+    onFinish: () => { if (!done) sessionStorage.setItem('hf.stamp', '1'); (part === 1 ? completeDay1 : completeLesson)(state, lesson, now()); commit(); location.hash = '#/'; },
   });
 }
 function quizPage(id, at) {

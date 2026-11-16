@@ -12,7 +12,11 @@ export const splitMatch = ex => {
   return Array.from({ length: k }, (_, i) => ({ ...ex, id: `${ex.id}-${i + 1}`, pairs: ex.pairs.slice(i * size, (i + 1) * size) }));
 };
 
-export function buildLesson(lesson) {
+/** 两天课（days: 2，第 2 单元起）第 1 天学到哪：预习、听、精读、词包；第 2 天是练习、再听、听写、跟读、复述、开口。 */
+const DAY1 = ['preview', 'listen', 'read', 'pack'];
+
+/** day：0 = 一口气全套（一天课，或学完后重学）；1 / 2 = 两天课的第几天。 */
+export function buildLesson(lesson, day = 0) {
   if (lesson.kind === 'pron') return buildPron(lesson);
   const steps = [], add = (seg, type, extra = {}) => steps.push({ seg, type, ...extra });
   // 预习：先认本课出场的人（“你”也有一屏），再认 4–6 个词
@@ -38,11 +42,14 @@ export function buildLesson(lesson) {
   lesson.exercises.flatMap(splitMatch).forEach(ex => add('practice', 'ex', { ex }));
   // 学完了再合上字幕听一遍，回答一个问题：这时能听懂
   add('relisten', 'listen'); add('relisten', 'listenQ');
+  (lesson.listenMore || []).forEach(q => add('relisten', 'listenQ', { q })); // 盲听的第 2、3 个问题
   lesson.dictation.forEach(i => add('dictation', 'dictate', { i }));
   lesson.shadow.forEach(i => add('shadow', 'shadow', { i }));
   lesson.lines.forEach((l, i) => { if (l.who === lesson.role) add('retell', 'retell', { i }); });
   (lesson.speak || []).forEach(item => add('speak', 'speak', { item }));
   add('finish', 'finish');
+  if (day === 1) return [...steps.filter(s => DAY1.includes(s.seg)), { seg: 'finish', type: 'finish', day: 1 }];
+  if (day === 2) return steps.filter(s => !DAY1.includes(s.seg));
   return steps;
 }
 
@@ -197,7 +204,7 @@ const G_TOTAL = STORY_SYLLABUS.flatMap(u => u[1]).filter(([, name]) => name).len
 
 /** 手帐页：学过的内容里发音 / 语法 / 文化各有什么（state 只用到哪几课、哪几次小测做完了）。 */
 export function albumOf(state) {
-  const done = l => state.lessons[l.id]?.done != null;
+  const done = l => (state.lessons[l.id]?.done ?? state.lessons[l.id]?.d1) != null; // 两天课学完第 1 天就收进手帐
   const texts = STORY_LESSONS.filter(l => l.lines), zero = STORY_LESSONS.find(l => l.kind === 'pron');
   const cards = STORY_LESSONS.filter(l => l.lines && done(l)).flatMap(l => l.cards.map(c => ({ c, l, shelf: shelfOf(c) })));
   const cribs = zero.stops.filter(s => s.rows).map(s => ({ s, got: done(zero) }));

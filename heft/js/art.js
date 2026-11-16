@@ -4,8 +4,8 @@ import { EXTRA } from './sprites-extra.js';
 
 document.body.insertAdjacentHTML('afterbegin', `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>${EXTRA}</defs></svg>`);
 
-export const PERSON = { Lin: 'lin', Lena: 'lena', Tom: 'tom', Krause: 'krause' };
-export const NAME = { Lin: '你', Lena: 'Lena', Tom: 'Tom', Krause: 'Herr Krause' };
+export const PERSON = { Lin: 'lin', Lena: 'lena', Tom: 'tom', Krause: 'krause', Verk: 'verk' };
+export const NAME = { Lin: '你', Lena: 'Lena', Tom: 'Tom', Krause: 'Herr Krause', Verk: '店员' };
 
 export const avatar = (who, cls = '') => `<i class="md-pt ${cls}" data-p="${PERSON[who]}"></i>`;
 /** 插画贴纸按键。k: a-spk 播放 · a-slow 慢速 · a-pause 暂停 · a-mic 录音 · a-mine 听我的 · a-again 再来一次 */

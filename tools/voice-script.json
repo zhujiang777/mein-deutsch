@@ -3,7 +3,7 @@
  "voices": {
   "Lin": {
    "voice": "Jonas Falk",
-   "chars": 833,
+   "chars": 1078,
    "items": [
     {
      "id": "34be9a178f61",
@@ -246,6 +246,66 @@
      "text": "Sind Sie neu hier?"
     },
     {
+     "id": "b26678743f53",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Guten Morgen! Was kostet das Brot?"
+    },
+    {
+     "id": "f399ddf4d3cf",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Und die Brezel?"
+    },
+    {
+     "id": "cd1cf6a28f29",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Nein, danke. Das Brot und die Brezel, bitte."
+    },
+    {
+     "id": "96eceb68d998",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Wie bitte? Vierzehn Euro?!"
+    },
+    {
+     "id": "06bf33f64bee",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Ach so! Hier, bitte."
+    },
+    {
+     "id": "c7c2e25ba418",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Danke schön! Tschüss!"
+    },
+    {
+     "id": "2dd2d3bab1ca",
+     "lesson": "sl-05",
+     "kind": "model",
+     "text": "Was kostet das Brot?"
+    },
+    {
+     "id": "87f8f0412926",
+     "lesson": "sl-05",
+     "kind": "model",
+     "text": "Was kostet die Brezel?"
+    },
+    {
+     "id": "19898c7f5adb",
+     "lesson": "sl-05",
+     "kind": "model",
+     "text": "Der Kuchen ist heute sehr gut."
+    },
+    {
+     "id": "87152f77a77c",
+     "lesson": "sl-05",
+     "kind": "model",
+     "text": "Guten Morgen!"
+    },
+    {
      "id": "ea673f5c4147",
      "lesson": "unit-1",
      "kind": "line",
@@ -273,7 +333,7 @@
   },
   "Lena": {
    "voice": "Lea",
-   "chars": 4796,
+   "chars": 5963,
    "items": [
     {
      "id": "062616307468",
@@ -2364,6 +2424,480 @@
      "text": "das Büro"
     },
     {
+     "id": "febae22e81d1",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "das Brot"
+    },
+    {
+     "id": "e334bda6e99b",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "die Brezel"
+    },
+    {
+     "id": "e57e22b0420a",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "der Kuchen"
+    },
+    {
+     "id": "e5bd2775cce1",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Was kostet ?"
+    },
+    {
+     "id": "c1f8622da43b",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "der Euro"
+    },
+    {
+     "id": "00f40076325a",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das macht"
+    },
+    {
+     "id": "8e006dfbaa5e",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "kosten"
+    },
+    {
+     "id": "88a14884dabf",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "die Tüte"
+    },
+    {
+     "id": "7418ece7cd0a",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "der Cent"
+    },
+    {
+     "id": "f779ea04430c",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "heute"
+    },
+    {
+     "id": "74985a9f85ac",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "sehr"
+    },
+    {
+     "id": "224dee100542",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das macht …"
+    },
+    {
+     "id": "a41a1cd6e727",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Was kostet das?"
+    },
+    {
+     "id": "f51f1020aa8a",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das kostet viel."
+    },
+    {
+     "id": "43c5bb961f03",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Was kostet der Kaffee?"
+    },
+    {
+     "id": "42faea366ed2",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Was kostet das Zimmer?"
+    },
+    {
+     "id": "c1411352d9c9",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Brot und Butter"
+    },
+    {
+     "id": "ed986e3f1ac0",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "das Brot hier"
+    },
+    {
+     "id": "a3706dcb5f4a",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das Brot ist sehr gut."
+    },
+    {
+     "id": "90e5df98631a",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Wo ist das Brot?"
+    },
+    {
+     "id": "e7fd87d79b8c",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Brezel und Kaffee"
+    },
+    {
+     "id": "2fd9316e2868",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "die Brezel hier"
+    },
+    {
+     "id": "3c6e993fc4a0",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Was kostet die Brezel?"
+    },
+    {
+     "id": "851af29b39e4",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Die Brezel ist sehr gut."
+    },
+    {
+     "id": "f4b73d8017dd",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Kaffee und Kuchen"
+    },
+    {
+     "id": "7402ab5dbda4",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "der Kuchen von Tom"
+    },
+    {
+     "id": "84fedb586cb4",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Wo ist der Kuchen?"
+    },
+    {
+     "id": "abd47f2fab24",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Tom, der Kuchen ist sehr gut!"
+    },
+    {
+     "id": "f0d9528ac0b4",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Tüte? Ja, bitte."
+    },
+    {
+     "id": "b67c563314d9",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "die Tüte hier"
+    },
+    {
+     "id": "281bc24604bb",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Die Tüte kostet zwanzig Cent."
+    },
+    {
+     "id": "b61f5ee33ecf",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Wo ist die Tüte?"
+    },
+    {
+     "id": "3e4c28646d4d",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "zwei Euro fünfzig"
+    },
+    {
+     "id": "440c9f39c4e8",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "zehn Euro"
+    },
+    {
+     "id": "ea0ea2294ed5",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das Brot kostet drei Euro."
+    },
+    {
+     "id": "66f6af6c8a42",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das macht zwanzig Euro."
+    },
+    {
+     "id": "e5110e4940b8",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "fünfzig Cent"
+    },
+    {
+     "id": "63594b2037f6",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "zwei Euro und zehn Cent"
+    },
+    {
+     "id": "5f816dc11cb5",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das kostet nur fünfzig Cent."
+    },
+    {
+     "id": "8627efa895b0",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Die Tüte kostet zehn Cent."
+    },
+    {
+     "id": "0454f4cf0f9d",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "heute Morgen"
+    },
+    {
+     "id": "d38f3732a375",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "bis heute"
+    },
+    {
+     "id": "7e42c0492238",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Heute ist Lena nicht da."
+    },
+    {
+     "id": "89cc56c7129b",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Ich koche heute."
+    },
+    {
+     "id": "9e1b851e3f96",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Danke sehr!"
+    },
+    {
+     "id": "3dc74df9791b",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Tom kocht sehr gut."
+    },
+    {
+     "id": "3670cb079fd7",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das Zimmer ist sehr sauber."
+    },
+    {
+     "id": "e1644c2dff0b",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das macht zusammen zehn Euro."
+    },
+    {
+     "id": "0d6394bd5f4e",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Was macht das?"
+    },
+    {
+     "id": "445cdd3ef2fe",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das macht zwei Euro fünfzig."
+    },
+    {
+     "id": "65376968eb10",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Das macht zwölf Euro, bitte."
+    },
+    {
+     "id": "d444c3870045",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Bitte schön?"
+    },
+    {
+     "id": "3c27b7a7baa1",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "Gern."
+    },
+    {
+     "id": "d091b3531633",
+     "lesson": "sl-05",
+     "kind": "card",
+     "text": "Das Brot und die Brezel, bitte."
+    },
+    {
+     "id": "6ad1a5eb33a3",
+     "lesson": "sl-05",
+     "kind": "card",
+     "text": "Das Brot kostet drei Euro zwanzig."
+    },
+    {
+     "id": "05d188e6693c",
+     "lesson": "sl-05",
+     "kind": "card",
+     "text": "zwanzig"
+    },
+    {
+     "id": "058281e86939",
+     "lesson": "sl-05",
+     "kind": "card",
+     "text": "neunzig"
+    },
+    {
+     "id": "3d2648942d2d",
+     "lesson": "sl-05",
+     "kind": "card",
+     "text": "dreißig"
+    },
+    {
+     "id": "5d6ac490e80b",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "dreizehn"
+    },
+    {
+     "id": "bad9512945fd",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "vierzehn"
+    },
+    {
+     "id": "5c37eaa5a5ff",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "fünfzehn"
+    },
+    {
+     "id": "86ac7da37afd",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "sechzehn"
+    },
+    {
+     "id": "995c8834dd90",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "siebzehn"
+    },
+    {
+     "id": "a1cb9cd4dacd",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "achtzehn"
+    },
+    {
+     "id": "179040a42915",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "neunzehn"
+    },
+    {
+     "id": "c0137d338069",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "vierzig"
+    },
+    {
+     "id": "9e466f8def0d",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "fünfzig"
+    },
+    {
+     "id": "b62be99161d1",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "sechzig"
+    },
+    {
+     "id": "08fe2605bd77",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "siebzig"
+    },
+    {
+     "id": "9b0368fd566f",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "achtzig"
+    },
+    {
+     "id": "1cdbd976a46e",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "hundert"
+    },
+    {
+     "id": "24487b35cb3d",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "einundzwanzig"
+    },
+    {
+     "id": "b7fd5a904292",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "fünfunddreißig"
+    },
+    {
+     "id": "7af493de7a82",
+     "lesson": "sl-05",
+     "kind": "pack",
+     "text": "neunundneunzig"
+    },
+    {
+     "id": "62a761b8e8ae",
+     "lesson": "sl-05",
+     "kind": "exercise",
+     "text": "Was kostet das Brot?"
+    },
+    {
+     "id": "c6f3a5f72188",
+     "lesson": "sl-05",
+     "kind": "exercise",
+     "text": "Der Kuchen ist heute sehr gut."
+    },
+    {
+     "id": "00863bc2f88f",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "das Angebot"
+    },
+    {
+     "id": "903412363cd7",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "frisch"
+    },
+    {
+     "id": "4d1883347477",
+     "lesson": "sl-05",
+     "kind": "word",
+     "text": "nur"
+    },
+    {
      "id": "77a1886dbb8e",
      "lesson": "unit-1",
      "kind": "card",
@@ -2692,6 +3226,114 @@
      "lesson": "unit-1",
      "kind": "cue",
      "text": "Wie bitte? Tim?"
+    }
+   ]
+  },
+  "Verk": {
+   "voice": "Petra",
+   "chars": 535,
+   "items": [
+    {
+     "id": "bf1fd8b83d7c",
+     "lesson": "cast",
+     "kind": "intro",
+     "text": "Guten Morgen! Bitte schön?"
+    },
+    {
+     "id": "e05a12f765c8",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Das Brot kostet drei Euro zwanzig."
+    },
+    {
+     "id": "e467fc3ca734",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Die Brezel kostet neunzig Cent. Der Kuchen ist heute sehr gut!"
+    },
+    {
+     "id": "e71270f73ece",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Gern. Das macht vier Euro zehn."
+    },
+    {
+     "id": "e297bb54508f",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Nein, nein! Vier Euro zehn."
+    },
+    {
+     "id": "ab137ce2ae79",
+     "lesson": "sl-05",
+     "kind": "line",
+     "text": "Danke. Hier ist die Tüte. Tschüss!"
+    },
+    {
+     "id": "14de3524799f",
+     "lesson": "sl-05",
+     "kind": "exercise",
+     "text": "Das macht zwei Euro fünfzig."
+    },
+    {
+     "id": "a876d8ba240e",
+     "lesson": "sl-05",
+     "kind": "exercise",
+     "text": "neunundneunzig Cent"
+    },
+    {
+     "id": "ff11bb4e748f",
+     "lesson": "sl-05",
+     "kind": "exercise",
+     "text": "Das macht vier Euro zehn."
+    },
+    {
+     "id": "4e03c40e23e4",
+     "lesson": "sl-05",
+     "kind": "exercise",
+     "text": "Die Brezel kostet neunzig Cent."
+    },
+    {
+     "id": "ead909262b3e",
+     "lesson": "sl-05",
+     "kind": "cue",
+     "text": "Der Kuchen ist heute sehr gut!"
+    },
+    {
+     "id": "e600f6d88e7f",
+     "lesson": "sl-05",
+     "kind": "reading",
+     "text": "Heute im Angebot!"
+    },
+    {
+     "id": "4acde5216ed1",
+     "lesson": "sl-05",
+     "kind": "reading",
+     "text": "Das Brot ist heute frisch: drei Euro zwanzig."
+    },
+    {
+     "id": "d927f6ae9a5b",
+     "lesson": "sl-05",
+     "kind": "reading",
+     "text": "Die Brezel: neunzig Cent."
+    },
+    {
+     "id": "5084ac8fe360",
+     "lesson": "sl-05",
+     "kind": "reading",
+     "text": "Der Kuchen: zwei Euro fünfzig."
+    },
+    {
+     "id": "31f267b07863",
+     "lesson": "sl-05",
+     "kind": "reading",
+     "text": "Der Kaffee: ein Euro achtzig."
+    },
+    {
+     "id": "a6ac2549a0f0",
+     "lesson": "sl-05",
+     "kind": "reading",
+     "text": "Kaffee und Kuchen zusammen: nur vier Euro!"
     }
    ]
   }

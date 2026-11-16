@@ -30,9 +30,10 @@ test('故事课：课文长度、说话人、下标、预习与听前问题', ()
   }
 });
 
-test('故事课：每课重点词 5–8 个，引用的词库词条真实存在，原句能出填空', () => {
+test('故事课：每课重点词 5–8 个（第 2 单元起 8–10 个），引用的词库词条真实存在，原句能出填空', () => {
   for (const l of texts) {
-    assert(l.words.length >= 5 && l.words.length <= 8, `${l.id} 重点词 ${l.words.length} 个`);
+    const [lo, hi] = l.unit === 1 ? [5, 8] : [8, 10];
+    assert(l.words.length >= lo && l.words.length <= hi, `${l.id} 重点词 ${l.words.length} 个`);
     for (const w of l.words) {
       if (w.id) assert(VOCAB.some(v => v.id === w.id), `${l.id} 词库没有 ${w.id}`);
       else assert(w.de && w.zh, `${l.id} 词库外的词要自带释义`);
@@ -71,7 +72,7 @@ test('故事课：课后小材料带 3–5 个新词，其余都是教过的词'
 
 test('故事课：题目有效、id 不重复；隔天检查 3 道；第 0 课是字母表 + 小抄', () => {
   for (const l of texts) {
-    const all = [l.listenQuestion, ...l.exercises, ...l.speak, ...l.reviews, l.reading.question, ...(l.wordPack?.exercises || [])];
+    const all = [l.listenQuestion, ...(l.listenMore || []), ...l.exercises, ...l.speak, ...l.reviews, l.reading.question, ...(l.wordPack?.exercises || [])];
     all.forEach(x => checkExercise(x, `${l.id}/${x.id}`)); uniqueIds(all, l.id);
     assert.equal(l.reviews.length, 3); assert(l.speak.length >= 2); assert(l.exercises.length >= 6);
   }

@@ -176,6 +176,47 @@ const sl04 = svg('0 0 300 220', `
   <g transform="translate(0 -34)">${hi('M184 118c4-4 9-5 13-4')}</g>
   ${lead('M166 30C148 36 132 42 116 48', 'M214 148C212 140 208 134 204 128')}`);
 
+// ===== 第 30 轮 · sl-05 面包店（粘到 art-lessons.js 的「场景」部分、`export const SCENES` 之前） =====
+// 面包色：sprites.js 首页场景里 Brezel 用的同一个色（C.bread），这里带回退值。预习贴纸 brot / brezel 也用它。
+const BREAD = V('illus-bread', '#cf9455');
+// 碱水结：沿用 sprites.js 首页场景那条 pretzel 路径（中心约 195,117），粗墨线垫底 + 窄色线错开 = 带描边的面团（滤镜按路径本身的范围裁，粗描边会被切平，所以组里垫一个透明框把范围撑大）
+const PRETZEL = 'M163 140C185 124 210 102 217 94 227 82 250 94 243 117 237 140 210 152 195 152 180 152 153 140 147 117 140 94 163 82 173 94 180 102 205 124 227 140';
+const pretzelAt = (cx, cy, s, inner, edge) => `<g transform="translate(${cx} ${cy}) scale(${s}) translate(-195 -117)">
+    <g filter="url(#rough)"><rect x="125" y="60" width="140" height="115" style="fill:none"/><path d="${PRETZEL}" style="fill:none;stroke:${K.ink};stroke-width:${inner + edge * 2 / s};stroke-linecap:round"/></g>
+    <path d="${PRETZEL}" transform="translate(${1.4 / s} ${1.2 / s})" style="fill:none;stroke:${BREAD};stroke-width:${inner};stroke-linecap:round"/></g>`;
+
+// sl-05 面包店：柜台上一条面包、一个碱水结、一个蛋糕；柜台前沿夹着三张价签
+const LOAF5 = 'M24 150C16 128 38 108 63 108S110 128 102 150Z';
+const CAKE5 = 'M204 104V136C204 141 276 141 276 136V104';
+const priceTag = (x, s) => `<path d="M${x} 158H${x + 44}V178H${x}Z" style="fill:${K.card}"/>${txt(x + 22, 173, s, 13, K.ink, 650)}`;
+const sl05 = svg('0 0 300 220', `
+  ${off(`
+    <path d="M14 156H286V206H14Z" style="fill:${K.wash}"/>
+    <path d="M10 148H290V157H10Z" style="fill:${K.sky}"/>
+    <path d="${LOAF5}" style="fill:${BREAD}"/>
+    <path d="${CAKE5}Z" style="fill:${K.ochre}"/>
+    <path d="M222 141H258L254 149H226Z" style="fill:${K.sky}"/>`)}
+  ${dots('M246 156H286V206H246Z', 0.12)}
+  ${dots('M70 110C92 116 106 132 102 150H70Z', 0.16)}
+  <path d="M204 118H276V124H204Z" style="fill:${K.card}"/>
+  <path d="M204 104C204 97 276 97 276 104S204 111 204 104Z" style="fill:${K.card}"/>
+  ${off(`<circle cx="224" cy="102" r="4.6" style="fill:${K.coral}"/><circle cx="240" cy="99" r="4.6" style="fill:${K.coral}"/><circle cx="256" cy="102" r="4.6" style="fill:${K.coral}"/>`, 1, .8)}
+  ${hi('M30 174l14-10M36 192l26-18M196 176l10-7')}
+  ${priceTag(42, '3,20')}${priceTag(130, '0,90')}${priceTag(218, '2,50')}
+  ${pretzelAt(152, 126, 0.6, 13, 1.7)}
+  ${ink(1.7, `
+    <path d="M10 206C90 205 210 206.5 292 206"/>
+    <path d="M14 157V206M286 157V206"/><path d="M10 148H290V157H10Z"/>
+    <path d="${LOAF5}"/>
+    <path d="M44 120C48 126 50 132 51 140M62 114C66 121 68 129 69 138M80 118C84 124 86 131 86 139"/>
+    <path d="${CAKE5}"/><path d="M204 104C204 97 276 97 276 104S204 111 204 104Z"/>
+    <path d="M204 118C220 120.5 260 120.5 276 118M204 124C220 126.5 260 126.5 276 124"/>
+    <path d="M196 141H284"/><path d="M226 141L230 148H250L254 141"/>
+    <circle cx="224" cy="102" r="4.6"/><circle cx="240" cy="99" r="4.6"/><circle cx="256" cy="102" r="4.6"/>
+    <path d="M42 158H86V178H42ZM130 158H174V178H130ZM218 158H262V178H218Z" style="stroke-width:1.4"/>`)}
+  <g style="fill:${K.card}">${[[134, 113], [150, 108], [168, 113], [141, 134], [163, 134], [152, 143]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.3"/>`).join('')}</g>
+  ${lead('M48 48C52 68 56 86 60 104', 'M154 86C153 92 152 96 152 101', 'M244 42C244 58 242 74 240 90')}`);
+
 export const SCENES = {
   'sl-00': { svg: sl00, labels: [] },
   'sl-01': { svg: sl01, labels: [
@@ -192,6 +233,10 @@ export const SCENES = {
   'sl-04': { svg: sl04, labels: [
     { de: 'das Zimmer', art: 'das', x: 0.56, y: 0.06 },
     { de: 'der Schlüssel', art: 'der', x: 0.56, y: 0.67 },
+  ] },  'sl-05': { svg: sl05, labels: [
+    { de: 'das Brot', art: 'das', x: 0.04, y: 0.10 },
+    { de: 'die Brezel', art: 'die', x: 0.36, y: 0.30 },
+    { de: 'der Kuchen', art: 'der', x: 0.62, y: 0.07 },
   ] },
 };
 
@@ -297,5 +342,64 @@ const land = pic(`
   ${ink(W, `<path d="${MAP_S}"/><path d="M36 24V76M60 28V80"/>
     <path d="M58 54C55 47 50 44 50 38A8 8 0 0 1 66 38C66 44 61 47 58 54Z"/><circle cx="58" cy="38" r="2.8"/>`)}`);
 
-export const PICS = { kaffee, bus, buch, topf, tuer, haus, uni, kalender, schluessel, hand, daumen, land };
+// das Brot：一条椭圆面包，表面三道割口
+const PIC_LOAF = 'M14 70C8 46 26 28 48 28S88 46 82 70Z';
+const brot = pic(`
+  ${off(`<path d="${PIC_LOAF}" style="fill:${BREAD}"/>`)}
+  ${dots('M56 30C74 34 86 50 82 70H56Z', 0.18)}
+  <path d="M28 40C32 47 34 54 34 62M46 34C51 42 53 51 53 60M64 38C69 45 71 53 70 61" style="fill:none;stroke:${K.card};stroke-width:4;stroke-linecap:round"/>
+  ${ink(W, `<path d="${PIC_LOAF}"/><path d="M10 72H86"/>
+    <path d="M28 40C32 47 34 54 34 62M46 34C51 42 53 51 53 60M64 38C69 45 71 53 70 61"/>`)}`);
+
+// die Brezel：和首页场景同一条碱水结路径，撒几粒盐
+const brezel = pic(`
+  ${pretzelAt(48, 50, 0.64, 12, 2.3)}
+  <g style="fill:${K.card}">${[[32, 37], [42, 33], [56, 33], [66, 38], [37, 60], [59, 60], [48, 65], [27, 47]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.5"/>`).join('')}</g>`);
+
+// der Kuchen：一块蛋糕，侧面看得见夹层，顶上一颗草莓
+const CAKE_TOP = 'M14 52L66 34L84 46Z';
+const CAKE_SIDE = 'M14 52L84 46V70L14 78Z';
+const kuchen = pic(`
+  ${off(`<path d="${CAKE_SIDE}" style="fill:${K.ochre}"/>`)}
+  <path d="${CAKE_TOP}" style="fill:${K.card}"/>
+  <path d="M14 61L84 55V60L14 66Z" style="fill:${K.coral}"/>
+  ${dots('M60 48L84 46V70L60 72.7Z', 0.16)}
+  ${off(`<circle cx="62" cy="38" r="6" style="fill:${K.coral}"/>`, 1.2, 1)}
+  ${ink(W, `<path d="${CAKE_SIDE}"/><path d="M14 52L66 34L84 46"/><circle cx="62" cy="38" r="6"/><path d="M62 32C63 29 65 27 68 26"/>
+    <path d="M10 82C34 79 62 76 88 74"/>`)}
+  ${ink(1.4, '<path d="M14 61L84 55M14 66L84 60"/>', 'rough-s')}`);
+
+// Was kostet …?：一张价签，价钱那里是问号
+const TAG = 'M34 26H78C80 26 81 27 81 29V67C81 69 80 70 78 70H34L18 48Z';
+const preis = pic(`<g transform="rotate(-14 48 48)">
+  ${off(`<path d="${TAG}" style="fill:${K.coral}"/>`, 2.4, 2)}
+  <path d="${TAG}" style="fill:${K.card}"/>
+  ${txt(56, 58, '? €', 25, K.ink, 700)}
+  ${ink(W, `<path d="${TAG}"/><circle cx="30" cy="48" r="3.6"/>`)}
+  ${ink(1.6, '<path d="M27 46C20 40 16 32 14 22"/>', 'rough-s')}</g>`);
+
+// der Euro：一枚 1 欧（外圈金、里面银）压在一枚铜色硬币上
+const euro = pic(`
+  ${off(`<circle cx="66" cy="34" r="16" style="fill:${K.coral}"/>`)}
+  ${dots('M66 18A16 16 0 0 1 66 50Z', 0.16)}
+  ${ink(W, '<circle cx="66" cy="34" r="16"/>')}
+  ${off(`<circle cx="42" cy="54" r="28" style="fill:${K.ochre}"/>`)}
+  <circle cx="42" cy="54" r="28" style="fill:${K.ochre}"/>
+  <circle cx="42" cy="54" r="18" style="fill:${K.wash}"/>
+  ${txt(42, 63, '1€', 24, K.ink, 700)}
+  ${ink(W, '<circle cx="42" cy="54" r="28"/><circle cx="42" cy="54" r="18"/>')}
+  ${hi('M24 40c3-5 8-8 13-9')}`);
+
+// Das macht …：一张小票，前两行是 Brot 和 Brezel，底下一共 4,10
+const BON = 'M28 12H68V80L63 84L58 80L53 84L48 80L43 84L38 80L33 84L28 80Z';
+const kasse = pic(`<g transform="rotate(-6 48 48)">
+  ${off(`<path d="${BON}" style="fill:${K.wash}"/>`, 2.4, 2)}
+  <path d="${BON}" style="fill:${K.card}"/>
+  <g style="fill:${K.ink2}"><rect x="34" y="22" width="15" height="3.4" rx="1"/><rect x="54" y="22" width="9" height="3.4" rx="1"/>
+    <rect x="34" y="32" width="18" height="3.4" rx="1"/><rect x="54" y="32" width="9" height="3.4" rx="1"/></g>
+  ${txt(48, 66, '4,10', 16, K.ink, 700)}
+  ${ink(W, `<path d="${BON}"/>`)}
+  ${ink(1.4, '<path d="M33 45H63M33 48H63"/>', 'rough-s')}</g>`);
+
+export const PICS = { kaffee, bus, buch, topf, tuer, haus, uni, kalender, schluessel, hand, daumen, land, brot, brezel, kuchen, preis, euro, kasse };
 // 不画（用无图版式）：neu、frage、raus、woher、pfeil、ort、person、leer —— 画出来只会是抽象符号。

@@ -1,14 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { STORY_LESSONS, STORY_UNIT_SUMMARIES } from '../data/story-lessons.js';
-import { blank, course, today, reviewQueue, findItem, completeLesson, completeQuiz, rateCard, submitCheck, markRead, dayNum, CARD_GAPS } from '../heft/js/store.js';
+import { blank, course, today, reviewQueue, findItem, completeLesson, completeDay1, partOf, completeQuiz, rateCard, submitCheck, markRead, dayNum, CARD_GAPS } from '../heft/js/store.js';
 import { buildLesson, buildQuiz, buildReview, rulerOf, correct, closest, pieces, entry, sameText, clozeAt, quizOutcome, albumOf } from '../heft/js/flow.js';
 
 const DAY = 86400000, T0 = new Date(2026, 10, 12, 9).getTime();
 const L1 = STORY_LESSONS[1];
 
-test('课程顺序：第 0 课 → 第 1–4 课 → 第 1 单元总表与小测', () => {
-  assert.deepEqual(course().map(i => i.id), ['sl-00', 'sl-01', 'sl-02', 'sl-03', 'sl-04', 'unit-1']);
+test('课程顺序：第 0 课 → 第 1–4 课 → 第 1 单元总表与小测 → 第 5 课', () => {
+  assert.deepEqual(course().map(i => i.id), ['sl-00', 'sl-01', 'sl-02', 'sl-03', 'sl-04', 'unit-1', 'sl-05']);
 });
 
 test('一天一课：学完今天这课就休息，明天才给下一课', () => {
@@ -61,11 +61,38 @@ test('重学一课不改原日期；学习日志只记学过的日子', () => {
 
 test('全部学完后首页是休息态、没有下一课', () => {
   const s = blank();
-  STORY_LESSONS.forEach((l, i) => completeLesson(s, l, T0 + i * DAY));
+  STORY_LESSONS.slice(0, 5).forEach((l, i) => completeLesson(s, l, T0 + i * DAY));
   assert.equal(today(s, T0 + 5 * DAY).item.id, 'unit-1');
   completeQuiz(s, STORY_UNIT_SUMMARIES[0], [], T0 + 5 * DAY);
-  const t = today(s, T0 + 6 * DAY);
+  STORY_LESSONS.slice(5).forEach((l, i) => completeLesson(s, l, T0 + (6 + i) * DAY));
+  const t = today(s, T0 + 60 * DAY);
   assert.equal(t.kind, 'rest'); assert.equal(t.next, null);
+});
+
+test('两天课（第 2 单元起）：第 1 天预习、听、精读、词包，词当天进复习；第 2 天练习到开口，学完才盖章', () => {
+  const L5 = STORY_LESSONS.find(l => l.id === 'sl-05'), s = blank();
+  STORY_LESSONS.slice(0, 5).forEach((l, i) => completeLesson(s, l, T0 + i * DAY));
+  completeQuiz(s, STORY_UNIT_SUMMARIES[0], [], T0 + 5 * DAY);
+  const D = T0 + 6 * DAY;
+  assert.equal(today(s, D).item.id, 'sl-05'); assert.equal(partOf(s, L5), 1);
+  const d1 = buildLesson(L5, 1), d2 = buildLesson(L5, 2), all = buildLesson(L5);
+  assert.deepEqual([...new Set(d1.map(x => x.seg))], ['preview', 'listen', 'read', 'pack', 'finish']);
+  assert.deepEqual([...new Set(d2.map(x => x.seg))], ['practice', 'relisten', 'dictation', 'shadow', 'retell', 'speak', 'finish']);
+  assert.equal(d1.at(-1).day, 1); assert.equal(d1.length + d2.length, all.length + 1, '两天加起来就是全套，多一张第 1 天的完成页');
+  assert.equal(d2.filter(x => x.type === 'listenQ').length, 1 + L5.listenMore.length, '盲听后的问题一题一屏');
+  completeDay1(s, L5, D);
+  let t = today(s, D + 3600000);
+  assert.equal(t.kind, 'rest'); assert.equal(t.item.id, 'sl-05'); assert.equal(t.next.id, 'sl-05', '明天还是这一课');
+  assert.equal(s.lessons['sl-05'].done, undefined);
+  t = today(s, D + DAY);
+  assert.equal(t.kind, 'go'); assert.equal(t.item.id, 'sl-05'); assert.equal(partOf(s, L5), 2);
+  assert.equal(reviewQueue(s, D + DAY).filter(x => x.lessonId === 'sl-05' && x.type === 'card').length, L5.words.length, '第 2 天开头先复习昨天的词');
+  assert.equal(reviewQueue(s, D + DAY).filter(x => x.lessonId === 'sl-05' && x.type !== 'card').length, 0, '小材料和隔天检查等整课学完');
+  assert.equal(albumOf(s).words.filter(x => x.l === L5).length, L5.words.length, '第 1 天学完就收进手帐');
+  rateCard(s, `sl-05:${L5.words[0].de}`, true, D + DAY);
+  completeLesson(s, L5, D + DAY);
+  assert.equal(s.cards[`sl-05:${L5.words[0].de}`].stage, 1, '学完第 2 天不重置已经复习过的卡');
+  assert.equal(partOf(s, L5), 0); assert.equal(today(s, D + DAY).kind, 'rest');
 });
 
 test('一天课做全套：预习 → 带字幕听 → 精读 → 练习 → 再听答题 → 听写 → 跟读 → 复述 → 开口 → 完成', () => {
@@ -100,8 +127,8 @@ test('语法卡的小题都出自已经读过的课文原句，答案对得上�
       assert.ok(d.line <= c.after, `${l.id} ${d.de} 出在这张卡之前`);
       assert.ok(l.lines[d.line].de.includes(d.de), `${l.id} ${d.de} 是课文原句`);
       assert.ok(d.de.includes(d.v) && l.lines[d.line].de.split(/[^A-Za-zÄÖÜäöüß]+/).includes(d.sj), `${l.id} ${d.de} 标得出动词和主语`);
-      assert.equal(c.table.rows[d.row][d.col || 1], d.v.toLowerCase(), `${l.id} ${d.de} 的答案就是表里那一格`);
-      assert.notEqual(d.no, d.v);
+      assert.equal(c.table.rows[d.row][d.col || 1], c.table.labels ? d.say : d.v.toLowerCase(), `${l.id} ${d.de} 的答案就是表里那一格`); // 冠词表一格是“冠词 + 名词”
+      [].concat(d.no).forEach(n => assert.notEqual(n, d.v));
     }
   }
 });

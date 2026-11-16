@@ -16,6 +16,8 @@ export const STORY_CAST = {
   Lena: { zh: 'Lena Vogel · 学医，来自 Leipzig，永远在赶时间', voice: 'Lea', hi: 'Hallo! Ich bin Lena.' },
   Tom: { zh: 'Tom Becker · 哲学读了六年，来自 Köln，爱做饭不洗碗', voice: 'Dylan Carter', hi: 'Hallo! Ich bin Tom.' },
   Krause: { zh: 'Herr Krause · 宿舍管理员，只说 Sie', voice: 'Erich Steiner', hi: 'Guten Tag. Mein Name ist Krause.' },
+  // 第 2 单元起：面包店、咖啡馆（以后超市、药店）共用的店员
+  Verk: { zh: '店员 · 面包店、咖啡馆里招呼你的人', voice: 'Petra', hi: 'Guten Morgen! Bitte schön?' },
 };
 export const WORD_VOICE = 'Lena';
 // 人名地名：不算生词，也不要求出现在词库里
@@ -23,7 +25,7 @@ export const STORY_NAMES = ['lin', 'lena', 'tom', 'tim', 'mia', 'mai', 'mira', '
 
 const SEIN = { head: ['', 'sein'], rows: [['ich', 'bin'], ['du', 'bist'], ['er / sie', 'ist'], ['wir', 'sind'], ['ihr', 'seid'], ['sie / Sie', 'sind']] };
 /** 变位表里一格怎么念：'er / sie' + 'kommt' → “er kommt”。页面和配音清单共用。 */
-export const rowSay = (row, col = 1) => `${row[0].split(' / ')[0]} ${row[col]}`;
+export const rowSay = (row, col = 1) => `${row[0].split(' / ')[0]} ${row[col]}`.trim(); // 冠词表的行头是空的（行名写在 table.labels），念的就是那一格：“der Kuchen”
 const PERS = ['ich', 'du', 'er / sie', 'wir', 'ihr', 'sie / Sie'];
 /** 规则动词现在时的变位表：词干 + -e -st -t -en -t -en。 */
 const reg = (...inf) => ({ head: ['', ...inf], rows: PERS.map((p, i) => [p, ...inf.map(v => v.slice(0, -2) + ['e', 'st', 't', 'en', 't', 'en'][i])]) });
@@ -32,7 +34,7 @@ const STUDIEREN = reg('studieren', 'kochen');
 const SEIN_KOCHEN = { head: ['', 'sein', 'kochen'], rows: PERS.map((p, i) => [p, SEIN.rows[i][1], STUDIEREN.rows[i][2]]) };
 const SEIN_WOHNEN = { head: ['', 'sein', 'wohnen'], rows: PERS.map((p, i) => [p, SEIN.rows[i][1], REGULAR.rows[i][2]]) };
 /** 语法卡小题（drill）里那一组怎么写、怎么念：'Bist' + 'du' → “du bist”；尊称保留大写 “Sie sind”。 */
-export const drillSay = d => `${d.sj === 'Sie' && d.row === 5 ? 'Sie' : d.sj.toLowerCase()} ${d.v.toLowerCase()}`;
+export const drillSay = d => d.say || `${d.sj === 'Sie' && d.row === 5 ? 'Sie' : d.sj.toLowerCase()} ${d.v.toLowerCase()}`; // 不是“主语 + 动词”的小题（冠词、否定）自己写 say：'das Brot'
 
 /* ================= 第 0 课：发音入门 ================= */
 const L = (l, name, say) => ({ l, name, say });
@@ -562,7 +564,140 @@ const LESSON_4 = {
   },
 };
 
-export const STORY_LESSONS = [LESSON_0, LESSON_1, LESSON_2, LESSON_3, LESSON_4];
+/* ================= 第 2 单元：数量与简单购买（一课两天） ================= */
+/** 冠词表：行头是空的，行名写在 labels；一格就是“冠词 + 名词”，念出来是 der Kuchen。 */
+const ARTIKEL_5 = { head: ['', '定冠词'], labels: ['阳性', '阴性', '中性'], rows: [['', 'der Kuchen'], ['', 'die Brezel'], ['', 'das Brot']] };
+const LESSON_5 = {
+  id: 'sl-05', version: 1, unit: 2, n: 5, days: 2,
+  title: '面包店', titleDe: 'In der Bäckerei',
+  scene: '早上，宿舍楼下的面包店。你第一次自己买早餐。',
+  canDo: ['听懂价格', '在面包店说要什么'],
+  role: 'Lin', cast: ['Verk'],
+  lines: [
+    line('Verk', 'Guten Morgen! Bitte schön?', '早上好！您要点什么？'),
+    line('Lin', 'Guten Morgen! Was kostet das Brot?', '早上好！这个面包多少钱？'),
+    line('Verk', 'Das Brot kostet drei Euro zwanzig.', '面包三欧二十。'),
+    line('Lin', 'Und die Brezel?', '那碱水结呢？'),
+    line('Verk', 'Die Brezel kostet neunzig Cent. Der Kuchen ist heute sehr gut!', '碱水结九十分。今天的蛋糕特别好！'),
+    line('Lin', 'Nein, danke. Das Brot und die Brezel, bitte.', '不用了，谢谢。要面包和碱水结。'),
+    line('Verk', 'Gern. Das macht vier Euro zehn.', '好的。一共四欧十分。'),
+    line('Lin', 'Wie bitte? Vierzehn Euro?!', '什么？十四欧？！'),
+    line('Verk', 'Nein, nein! Vier Euro zehn.', '不不！四欧十分。'),
+    line('Lin', 'Ach so! Hier, bitte.', '原来如此！给您。'),
+    line('Verk', 'Danke. Hier ist die Tüte. Tschüss!', '谢谢。这是袋子。拜拜！'),
+    line('Lin', 'Danke schön! Tschüss!', '非常感谢！拜拜！'),
+  ],
+  preview: [
+    { de: 'das Brot', zh: '面包', line: 1, pic: 'brot' },
+    { de: 'die Brezel', zh: '碱水结', line: 3, pic: 'brezel' },
+    { de: 'der Kuchen', zh: '蛋糕', line: 4, pic: 'kuchen' },
+    { de: 'Was kostet …?', zh: '……多少钱？', line: 1, pic: 'preis' },
+    { de: 'der Euro', zh: '欧元', line: 2, pic: 'euro' },
+    { de: 'Das macht …', zh: '一共……', line: 6, pic: 'kasse' },
+  ],
+  listenQuestion: choice('hq', 'Lin 买了什么？', ['面包和碱水结', '蛋糕', '面包和蛋糕'], { key: 0 }),
+  listenMore: [
+    choice('hq2', '一共多少钱？', ['4,10 €', '14 €', '4,01 €']),
+    choice('hq3', '店员推荐了什么？', ['蛋糕', '碱水结', '咖啡']),
+  ],
+  words: [
+    { id: 'w129', de: 'kosten', zh: '价格是、值……钱', line: 1, form: 'kostet' },
+    { id: 'w078', de: 'das Brot', zh: '面包', line: 1, form: 'Brot' },
+    { de: 'die Brezel', zh: '碱水结', line: 3, form: 'Brezel' },
+    { id: 'w377', de: 'der Kuchen', zh: '蛋糕', line: 4, form: 'Kuchen' },
+    { de: 'die Tüte', zh: '袋子', line: 10, form: 'Tüte' },
+    { id: 'w364', de: 'der Euro', zh: '欧元', line: 2, form: 'Euro' },
+    { de: 'der Cent', zh: '分（欧元的百分之一）', line: 4, form: 'Cent' },
+    { id: 'w057', de: 'heute', zh: '今天', line: 4, form: 'heute' },
+    { id: 'w246', de: 'sehr', zh: '很、非常', line: 4, form: 'sehr' },
+    { de: 'Das macht …', zh: '一共……', line: 6, form: 'Das macht' },
+  ],
+  phrases: [
+    { de: 'Guten Morgen!', zh: '早上好' }, { de: 'Bitte schön?', zh: '您要点什么？（店员招呼客人）' },
+    { de: 'Hier, bitte.', zh: '给您' }, { de: 'Gern.', zh: '好的、乐意' },
+  ],
+  gloss: {
+    guten: 'Guten Morgen! = 早上好', morgen: 'der Morgen 早上；Guten Morgen! = 早上好', bitte: '请；Bitte schön? = 您要点什么？', 'schön': 'Bitte schön? = 您要点什么？Danke schön! = 非常感谢',
+    was: '什么；Was kostet …? = ……多少钱？', kostet: '价格是（er / sie / es 用 kostet，原形 kosten）', das: '定冠词（中性）：das Brot；Das macht … = 一共……', brot: 'das Brot 面包',
+    drei: '三', euro: 'der Euro 欧元', zwanzig: '二十', und: '和；那……呢', die: '定冠词（阴性）：die Brezel', brezel: 'die Brezel 碱水结', neunzig: '九十', cent: 'der Cent 分',
+    der: '定冠词（阳性）：der Kuchen', kuchen: 'der Kuchen 蛋糕', ist: '是', heute: '今天', sehr: '很、非常', gut: '好', nein: '不', danke: '谢谢', gern: '好的、乐意',
+    macht: 'Das macht … = 一共……（原形 machen）', vier: '四', zehn: '十', wie: 'Wie bitte? = 什么？请再说一遍', vierzehn: '十四', ach: 'Ach so! = 原来如此', so: 'Ach so! = 原来如此',
+    hier: '这里；Hier, bitte. = 给您', 'tüte': 'die Tüte 袋子', 'tschüss': '拜拜',
+    im: '= in dem；im Angebot = 在优惠中', angebot: 'das Angebot 优惠', kaffee: 'der Kaffee 咖啡', zusammen: '一起', nur: '只', frisch: '新鲜的',
+  },
+  cards: [
+    { after: 2, kind: 'tip', title: '价格里的逗号', body: '德语的小数点写成逗号：3,20 €，读 drei Euro zwanzig。' },
+    { after: 5, kind: 'grammar', title: '定冠词 der · die · das', body: '名词有三种性，定冠词随性变化：阳性 der，阴性 die，中性 das。', table: ARTIKEL_5, on: [0, 1, 2],
+      drill: [
+        { line: 2, de: 'Das Brot kostet drei Euro zwanzig.', zh: '面包三欧二十。', v: 'Das', no: ['Der', 'Die'], sj: 'Brot', row: 2, col: 1, say: 'das Brot', hint: 'Brot 是中性名词，用 das' },
+        { line: 4, de: 'Die Brezel kostet neunzig Cent.', zh: '碱水结九十分。', v: 'Die', no: ['Der', 'Das'], sj: 'Brezel', row: 1, col: 1, say: 'die Brezel', hint: 'Brezel 是阴性名词，用 die' },
+        { line: 4, de: 'Der Kuchen ist heute sehr gut!', zh: '今天的蛋糕特别好！', v: 'Der', no: ['Die', 'Das'], sj: 'Kuchen', row: 0, col: 1, say: 'der Kuchen', hint: 'Kuchen 是阳性名词，用 der' },
+      ],
+      example: 'Das Brot und die Brezel, bitte.' },
+    { after: 6, kind: 'pron', title: '词尾 -ig', body: '-ig 在词尾，g 读成 ich 里的 ch：摆好 i 的嘴形，只送气。', pairs: ['zwanzig', 'neunzig', 'dreißig', 'richtig'], example: 'Das Brot kostet drei Euro zwanzig.', pics: ['m-ich'] },
+  ],
+  wordPack: {
+    id: 'zahlen-13-100', title: '数字 13–100', refs: ['w413', 'w039', 'w040', 'w041'], inText: ['zwanzig', 'neunzig', 'vierzehn'],
+    items: [['13', 'dreizehn'], ['14', 'vierzehn'], ['15', 'fünfzehn'], ['16', 'sechzehn'], ['17', 'siebzehn'], ['18', 'achtzehn'], ['19', 'neunzehn'],
+      ['20', 'zwanzig'], ['30', 'dreißig'], ['40', 'vierzig'], ['50', 'fünfzig'], ['60', 'sechzig'], ['70', 'siebzig'], ['80', 'achtzig'], ['90', 'neunzig'], ['100', 'hundert'],
+      ['21', 'einundzwanzig'], ['35', 'fünfunddreißig'], ['99', 'neunundneunzig']].map(([n, de]) => ({ n, de })),
+    exercises: [
+      match('p1', [['dreizehn', '13'], ['sechzehn', '16'], ['siebzehn', '17'], ['zwanzig', '20'], ['dreißig', '30'], ['hundert', '100']]),
+      listen('p2', 'Lena', 'dreißig', '听到的是几？', ['30', '13', '3']),
+      listen('p3', 'Lena', 'vierzehn', '听到的是几？', ['14', '40', '4']),
+      choice('p4', 'fünfunddreißig = ?', ['35', '53', '530']),
+      listen('p5', 'Lena', 'einundzwanzig', '听到的是几？', ['21', '12', '20']),
+      listen('p6', 'Verk', 'Das macht zwei Euro fünfzig.', '一共多少钱？', ['2,50 €', '12,50 €', '2,15 €']),
+      listen('p7', 'Verk', 'neunundneunzig Cent', '听到的价格是？', ['0,99 €', '0,90 €', '9,90 €']),
+      choice('p8', '3,20 € 怎么读？', ['drei Euro zwanzig', 'dreizehn Euro zwanzig', 'drei Euro zwölf']),
+    ],
+  },
+  exercises: [
+    match('x1', [['das Brot', '面包'], ['die Brezel', '碱水结'], ['der Kuchen', '蛋糕'], ['die Tüte', '袋子'], ['heute', '今天'], ['sehr', '很']]),
+    choice('x2', '___ Brot kostet drei Euro zwanzig.', ['Das', 'Der', 'Die']),
+    choice('x3', '___ Kuchen ist sehr gut.', ['Der', 'Die', 'Das']),
+    choice('x4', '___ Tüte ist hier.', ['Die', 'Der', 'Das']),
+    choice('x5', '___ Bus ist da.', ['Der', 'Die', 'Das']),
+    choice('x6', '___ Zimmer ist neu.', ['Das', 'Der', 'Die']),
+    listen('x7', 'Verk', 'Das macht vier Euro zehn.', '一共多少钱？', ['4,10 €', '14 €', '40 €']),
+    listen('x8', 'Verk', 'Die Brezel kostet neunzig Cent.', '碱水结多少钱？', ['0,90 €', '0,19 €', '9 €']),
+    assemble('x9', '这个面包多少钱？', 'Was kostet das Brot?', ['die', 'kommt']),
+    assemble('x10', '今天的蛋糕很好。', 'Der Kuchen ist heute sehr gut.', ['das', 'kostet']),
+    choice('x11', '店员说 “Das macht vier Euro zehn.” 意思是：', ['一共 4.10 欧', '找你 4.10 欧', '面包 4.10 欧']),
+    choice('x12', '“Guten Morgen!” 什么时候说？', ['早上见面', '晚上见面', '告别']),
+  ],
+  dictation: [1, 2, 6, 8],
+  shadow: [1, 3, 5, 9],
+  speak: [
+    reply('s1', '问面包多少钱。', ['Was kostet das Brot?', 'Guten Morgen! Was kostet das Brot?'], ['Verk', 'Guten Morgen! Bitte schön?']),
+    reply('s2', '谢绝，要面包和碱水结。', ['Nein, danke. Das Brot und die Brezel, bitte.', 'Das Brot und die Brezel, bitte.'], ['Verk', 'Der Kuchen ist heute sehr gut!']),
+    reply('s3', '没听清，请她再说一遍。', ['Wie bitte?'], ['Verk', 'Das macht vier Euro zehn.']),
+  ],
+  reviews: [
+    reply('r1', '问碱水结多少钱。', ['Was kostet die Brezel?']),
+    reply('r2', '“今天的蛋糕很好。”', ['Der Kuchen ist heute sehr gut.']),
+    reply('r3', '早上进店，向店员问好。', ['Guten Morgen!']),
+  ],
+  reading: {
+    title: '面包店门口的小黑板', kind: 'read',
+    lines: [
+      line('Verk', 'Heute im Angebot!', '今日优惠！'),
+      line('Verk', 'Das Brot ist heute frisch: 3,20 Euro.', '面包今天新鲜出炉：3.20 欧。', 'Das Brot ist heute frisch: drei Euro zwanzig.'),
+      line('Verk', 'Die Brezel: 90 Cent.', '碱水结：90 分。', 'Die Brezel: neunzig Cent.'),
+      line('Verk', 'Der Kuchen: 2,50 Euro.', '蛋糕：2.50 欧。', 'Der Kuchen: zwei Euro fünfzig.'),
+      line('Verk', 'Der Kaffee: 1,80 Euro.', '咖啡：1.80 欧。', 'Der Kaffee: ein Euro achtzig.'),
+      line('Verk', 'Kaffee und Kuchen zusammen: nur 4 Euro!', '咖啡加蛋糕一起：只要 4 欧！', 'Kaffee und Kuchen zusammen: nur vier Euro!'),
+    ],
+    newWords: [
+      { de: 'das Angebot', zh: '优惠', forms: ['angebot'] },
+      { de: 'frisch', zh: '新鲜的', forms: ['frisch'] },
+      { de: 'nur', zh: '只', forms: ['nur'] },
+    ],
+    question: choice('q', '咖啡和蛋糕一起买，便宜多少？', ['30 分', '50 分', '1 欧']),
+  },
+};
+
+export const STORY_LESSONS = [LESSON_0, LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5];
 
 // 单元总表：每个单元结束时出一次，把本单元零散学到的语法收成整张表，和小测放在一起
 // 复习词卡背面的搭配和例句（2026-11-15 作者定：课文是根，这里是生枝长叶的地方——换地方、换人称、换成问句，让人能举一反三；和课文原句一样的不放）。
@@ -607,6 +742,18 @@ const WORD_MORE = {
     'nicht': { col: [['nicht gut', '不好'], ['nicht hier', '不在这儿'], ['noch nicht', '还没有']], ex: [['Ich bin nicht neu hier.', '我不是新来的。'], ['Das ist nicht richtig.', '这不对。'], ['Ich wohne nicht hier.', '我不住这儿。']] },
     'da': { col: [['Ich bin gleich da.', '我马上到。'], ['Wer ist da?', '谁在那儿？']], ex: [['Ist Lena da?', 'Lena 在吗？'], ['Ich bin da!', '我在！']] },
     'Auf Wiedersehen!': { col: [['Vielen Dank und auf Wiedersehen!', '多谢，再见！']], ex: [['Auf Wiedersehen, Frau Vogel!', '再见，Vogel 女士！'], ['Danke schön. Auf Wiedersehen!', '非常感谢，再见！']] },
+  },
+  'sl-05': {
+    'kosten': { col: [['Was kostet das?', '这个多少钱？'], ['Das kostet viel.', '这个很贵。']], ex: [['Was kostet der Kaffee?', '咖啡多少钱？'], ['Was kostet das Zimmer?', '房间多少钱？']] },
+    'das Brot': { col: [['Brot und Butter', '面包和黄油'], ['das Brot hier', '这里的面包']], ex: [['Das Brot ist sehr gut.', '这面包很好。'], ['Wo ist das Brot?', '面包在哪？']] },
+    'die Brezel': { col: [['Brezel und Kaffee', '碱水结配咖啡'], ['die Brezel hier', '这个碱水结']], ex: [['Was kostet die Brezel?', '碱水结多少钱？'], ['Die Brezel ist sehr gut.', '这个碱水结很好。']] },
+    'der Kuchen': { col: [['Kaffee und Kuchen', '咖啡配蛋糕（德国人的下午茶）'], ['der Kuchen von Tom', 'Tom 做的蛋糕']], ex: [['Wo ist der Kuchen?', '蛋糕在哪？'], ['Tom, der Kuchen ist sehr gut!', 'Tom，蛋糕很好吃！']] },
+    'die Tüte': { col: [['Tüte? Ja, bitte.', '要袋子吗？——要。'], ['die Tüte hier', '这个袋子']], ex: [['Die Tüte kostet zwanzig Cent.', '袋子二十分。'], ['Wo ist die Tüte?', '袋子在哪？']] },
+    'der Euro': { col: [['zwei Euro fünfzig', '2.50 欧'], ['zehn Euro', '十欧（Euro 不加复数词尾）']], ex: [['Das Brot kostet drei Euro.', '面包三欧。'], ['Das macht zwanzig Euro.', '一共二十欧。']] },
+    'der Cent': { col: [['fünfzig Cent', '五十分'], ['zwei Euro und zehn Cent', '两欧零十分']], ex: [['Das kostet nur fünfzig Cent.', '这个只要五十分。'], ['Die Tüte kostet zehn Cent.', '袋子十分。']] },
+    'heute': { col: [['heute Morgen', '今天早上'], ['bis heute', '到今天为止']], ex: [['Heute ist Lena nicht da.', '今天 Lena 不在。'], ['Ich koche heute.', '今天我做饭。']] },
+    'sehr': { col: [['sehr gut', '很好'], ['Danke sehr!', '非常感谢！']], ex: [['Tom kocht sehr gut.', 'Tom 做饭很好。'], ['Das Zimmer ist sehr sauber.', '房间很干净。']] },
+    'Das macht …': { col: [['Das macht zusammen zehn Euro.', '一共十欧。'], ['Was macht das?', '一共多少钱？']], ex: [['Das macht zwei Euro fünfzig.', '一共两欧五十。'], ['Das macht zwölf Euro, bitte.', '一共十二欧。']] },
   },
 };
 STORY_LESSONS.forEach(l => (l.words || []).forEach(w => { const m = WORD_MORE[l.id]?.[w.de]; if (m) w.more = m; }));

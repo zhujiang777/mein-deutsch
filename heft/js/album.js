@@ -63,7 +63,7 @@ export function albumPage(app, state, ts, helpers) {
             ? li(x.main.c.title, x.n, { act: `data-g="${x.n}"` }) + x.extra.map((e, k) => li(e.c.title, x.n, { act: `data-ge="${x.n}:${k}"` })).join('')
             : li(x.plan || '综合运用', x.n)).join('')}${u.sum ? li('单元总表', '测', u.sumGot ? { act: `data-u="${u.n}"` } : {}) : ''}`
         : `<div class="al-ul"><b>${u.n}</b><div><span>${esc(u.name)}</span><em>${u.lessons.map(x => esc(x.plan)).filter(Boolean).join(' · ') || '综合运用'}</em></div></div>`).join('')}`,
-    wd: () => { const wli = (x, i) => { const e = entry(x.w.de); return `<button type="button" class="al-li got wd" data-wd="${i}"><span class="t">${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}<span class="h">${esc(e.lemma)}</span></span><span class="ld"></span><span class="pg zh">${esc(x.w.zh)}</span></button>`; };
+    wd: () => { const wli = (x, i) => { const e = entry(x.w.de); return `<button type="button" class="al-li got wd" data-wd="${i}"><span class="t">${e.art ? `<em class="md-art ${e.art}">${e.art}</em> ` : ''}<span class="h ${e.art || ''}">${esc(e.lemma)}</span></span><span class="ld"></span><span class="pg zh">${esc(x.w.zh)}</span></button>`; };
       const weak = A.words.map((x, i) => x.weak ? wli(x, i) : '').join('');
       const byLesson = [...new Set(A.words.map(x => x.l))].map(l => `<p class="al-uh">${l.n} <i>${esc(l.title)}</i></p>${A.words.map((x, i) => x.l === l ? wli(x, i) : '').join('')}`).join('');
       return `<h3>单词<small>已学 ${A.count.wd}</small></h3><p class="al-uh">不熟 <i>${A.count.weak}</i></p>${weak || none}${byLesson}`; },

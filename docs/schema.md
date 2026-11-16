@@ -72,7 +72,7 @@
 | `dictation` / `shadow` | 听写哪几句；跟读哪几句（只能是我的角色） |
 | `reviews` / `reading` | 3 道隔天检查变式；课后小材料 + 1 道理解题 |
 | `version` | 改了已上线的课文内容就加 1（学习记录按版本分开） |
-| `n` / `unit` / `days` | 进度表里的课号、单元号；`days: 1` 表示 1 天学完（第 1 单元），其余为 2 |
+| `n` / `unit` / `days` | 进度表里的课号、单元号；`days: 1` 表示 1 天学完（第 1 单元），其余为 2。两天课：第 1 天 = 预习、听、精读、词包；第 2 天 = 练习、再听、听写、跟读、复述、开口。进度里 `lessons[id].d1` 记第 1 天学完的日子，词从那天起进复习 |
 | `cover` | ? 首页名签上的短名，5 个字以内；课名本身不超过 5 个字时不用填（名签放不下长课名） |
 | `canDo` | 学完能做到什么（一条一句，进度证据用） |
 | `cast` | 本课出场的其他角色，预习时“认人物”用 |
@@ -80,6 +80,7 @@
 | `lines[].say` | ? 念出来的字和显示的字不一样时填（拼字母、数字、被打断的半句） |
 | `preview` | 预习词 4–6 个：`{ de, zh, line, pic }`，`line` 是这个词出现在第几句（听到那句时亮出来），`pic` 是图标名 |
 | `listenQuestion` | 听前问题（选择题）。`key` 是答案落在第几个预习词上 |
+| `listenMore` | ? 盲听之后追加的第 2、3 道理解题（选择题数组），一题一屏 |
 | `words` | 进复习的重点词 5–8 个：`{ id?, de, zh, line, form }`。`id` 只在词库里真有这个词时才填；没有 `id` 的是词库待补的词（自带 `zh`，可带 `art / pos`），接入时追加到 `vocab.js` 末尾 |
 | `phrases` | 按整体短语学的口头语：`{ de, zh }` |
 | `cards[].table` + `on` | 语法卡的整张小表（`{ head, rows }`）和本课点亮的行下标；`contrast` 是 du / Sie 之类的成对例句 |
@@ -88,6 +89,7 @@
 | `cards[].words` | ? 小贴士卡下面列的例词（带冠词），按词性上色、点了能听 |
 | `cards[].pics` | 发音卡的口型图（名字同第 0 课小抄的 `pic`）。一张图就写一个；和 `pairs` 一一对应时，点哪个词换哪张图（如第 1 课 ich / ach） |
 | `cards[].drill` | 语法卡「先做后讲」的小题，一道点亮表里一格：`{ line, de, zh, v, no, sj, row, col? }`——`line` 课文第几句（必须不晚于这张卡的 `after`），`de` 那句里用来挖空的半句，`v` 正确的动词（按句中写法），`no` 干扰项，`sj` 主语（按句中写法），`row`/`col` 对应表里哪一格（`col` 默认 1）。语法卡必须有 `drill`；`body` 是最后留下的那句规则，用规范术语 |
+| `cards[].table.labels` / `drill[].say` `hint` | 不是“主语 + 动词”的语法点（冠词、否定）：表的行头留空，行名写在 `table.labels`（阳性 / 阴性 / 中性），一格就是“冠词 + 名词”；小题的 `no` 可以是数组（三选一），`say` 是这一格怎么念（`'das Brot'`），`hint` 是答错后的提示 |
 | `exercises` | 轻快练习，顺序即出题顺序。类型：`choice`、`listenChoice`（带 `voice`、`audioText`，可带 `say`）、`match`、`assemble` |
 | `speak` | 开口回应场景：`{ prompt, cue?: { who, de }, answers, model }`。`cue` 是对方先说的话，用该角色的声音 |
 | `wordPack` | ? 词包：`{ title, items: [{ n, de }], refs, inText, exercises }`。`refs` 是词库里对应的词条，`inText` 是课文里真的出现的成员 |
