@@ -7,8 +7,8 @@ import { buildLesson, buildQuiz, buildReview, rulerOf, correct, closest, pieces,
 const DAY = 86400000, T0 = new Date(2026, 10, 12, 9).getTime();
 const L1 = STORY_LESSONS[1];
 
-test('课程顺序：第 0 课 → 第 1–4 课 → 第 1 单元总表与小测 → 第 5、6 课', () => {
-  assert.deepEqual(course().map(i => i.id), ['sl-00', 'sl-01', 'sl-02', 'sl-03', 'sl-04', 'unit-1', 'sl-05', 'sl-06']);
+test('课程顺序：第 0 课 → 第 1–4 课 → 第 1 单元总表与小测 → 第 5–7 课', () => {
+  assert.deepEqual(course().map(i => i.id), ['sl-00', 'sl-01', 'sl-02', 'sl-03', 'sl-04', 'unit-1', 'sl-05', 'sl-06', 'sl-07']);
 });
 
 test('一天一课：学完今天这课就休息，明天才给下一课', () => {

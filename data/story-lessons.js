@@ -841,7 +841,129 @@ const LESSON_6 = {
   },
 };
 
-export const STORY_LESSONS = [LESSON_0, LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6];
+/** 否定：kein 跟着名词的性变，nicht 管其他成分。 */
+const NEG_7 = { head: ['', '否定'], labels: ['阳性', '阴性', '中性', '形容词'], rows: [['', 'kein Fehler'], ['', 'keine Panik'], ['', 'kein Problem'], ['', 'nicht richtig']] };
+const LESSON_7 = {
+  id: 'sl-07', version: 1, unit: 2, n: 7, days: 2,
+  title: '押金瓶', titleDe: 'Was ist Pfand?',
+  scene: '小超市门口。你手里拿着刚买的可乐和小票，越看越不对。',
+  canDo: ['说“没有、不是”', '问“这是什么”', '看懂小票上的押金'],
+  role: 'Lin', cast: [],
+  lines: [
+    line('Lin', 'Moment. Was ist das?', '等等。这是什么？'),
+    line('Lin', 'Die Cola kostet zwei Euro fünfundzwanzig.', '可乐是两欧二十五。'),
+    line('Lin', 'Aber hier steht: zwei Euro fünfzig!', '可这上面写着：两欧五十！'),
+    line('Lin', 'Das ist nicht richtig!', '这不对！'),
+    line('Lin', 'Ist das ein Fehler?', '是算错了吗？'),
+    line('Lin', 'Keine Panik, Lin.', '别慌，Lin。'),
+    line('Lin', 'Hier steht auch: Pfand, fünfundzwanzig Cent.', '这儿还写着：Pfand，二十五分。'),
+    line('Lin', 'Pfand? Ich verstehe das nicht.', 'Pfand？我不明白。'),
+    line('Lin', 'Oh, ein Automat! Flasche zurück – Geld zurück.', '哦，有台机器！瓶子退回——钱退回。'),
+    line('Lin', 'Ach so! Das Pfand kommt zurück.', '原来如此！押金会退回来。'),
+    line('Lin', 'Das ist kein Fehler.', '这不是错误。'),
+    line('Lin', 'Kein Problem!', '没问题！'),
+    line('Lin', 'Aber fünfundzwanzig Cent sind auch Geld. Die Flasche kommt morgen zurück!', '不过二十五分也是钱。瓶子明天就拿回来退！'),
+  ],
+  preview: [
+    { de: 'Was ist das?', zh: '这是什么？', line: 0, pic: 'frage' },
+    { de: 'die Flasche', zh: '瓶子', line: 8, pic: 'flasche' },
+    { de: 'der Fehler', zh: '错误', line: 4, pic: 'fehler' },
+    { de: 'das Geld', zh: '钱', line: 8, pic: 'geld' },
+    { de: 'zurück', zh: '回来、退回', line: 8, pic: 'zurueck' },
+  ],
+  listenQuestion: choice('hq', '小票上多出来的 25 分是什么？', ['瓶子的押金', '算错了', '袋子的钱'], { key: 1 }),
+  listenMore: [
+    choice('hq2', '可乐本身多少钱？', ['2,25 €', '2,50 €', '2,15 €']),
+    choice('hq3', '瓶子退回去会怎样？', ['钱退回来', '换一瓶新的', '没有用']),
+  ],
+  words: [
+    { de: 'das Pfand', zh: '押金', line: 6, form: 'Pfand' },
+    { de: 'die Flasche', zh: '瓶子', line: 8, form: 'Flasche' },
+    { de: 'der Fehler', zh: '错误', line: 4, form: 'Fehler' },
+    { id: 'w184', de: 'das Geld', zh: '钱', line: 8, form: 'Geld' },
+    { de: 'das Problem', zh: '问题', line: 11, form: 'Problem' },
+    { id: 'w125', de: 'verstehen', zh: '明白、理解', line: 7, form: 'verstehe' },
+    { de: 'zurück', zh: '回来、退回', pos: 'adv.', line: 9, form: 'zurück' },
+    { de: 'der Automat', zh: '自动机器', line: 8, form: 'Automat' },
+    { id: 'w283', de: 'stehen', zh: '写着；站着', line: 2, form: 'steht' },
+  ],
+  phrases: [
+    { de: 'Was ist das?', zh: '这是什么？' }, { de: 'Hier steht …', zh: '这上面写着……' },
+    { de: 'Keine Panik!', zh: '别慌！' }, { de: 'Kein Problem!', zh: '没问题！' },
+  ],
+  gloss: {
+    moment: 'Moment. = 等一下', was: '什么', ist: '是', das: '这；定冠词（中性）', die: '定冠词（阴性）', cola: 'die Cola 可乐', kostet: '价格是（原形 kosten）', zwei: '二', euro: 'der Euro 欧元',
+    'fünfundzwanzig': '二十五', aber: '但是', hier: '这里', steht: '写着（原形 stehen）；Hier steht … = 这上面写着……', 'fünfzig': '五十', nicht: '不', richtig: '对的',
+    ein: '不定冠词（阳性、中性）', fehler: 'der Fehler 错误', keine: '没有、不是（否定阴性名词）；Keine Panik! = 别慌', panik: 'die Panik 慌张；Keine Panik! = 别慌', lin: '你的名字',
+    auch: '也', pfand: 'das Pfand 押金', cent: 'der Cent 分', ich: '我', verstehe: '明白（ich 用 verstehe，原形 verstehen）', oh: '哦', automat: 'der Automat 自动机器',
+    flasche: 'die Flasche 瓶子', 'zurück': '回来、退回', geld: 'das Geld 钱', ach: 'Ach so! = 原来如此', so: 'Ach so! = 原来如此', kommt: '来（原形 kommen）；kommt zurück = 回来、退回来',
+    kein: '没有、不是（否定阳性、中性名词）', problem: 'das Problem 问题；Kein Problem! = 没问题', sind: '是（复数用 sind）', morgen: '明天',
+    an: 'an alle = 致所有人', alle: '所有人', in: '在……里；in Ordnung = 可以、合规', der: '定冠词', wg: 'die WG 合租公寓', 'küche': 'die Küche 厨房', lager: 'das Lager 仓库',
+    flaschen: 'die Flaschen 瓶子（Flasche 的复数）', zwanzig: '二十', ordnung: 'die Ordnung 秩序；in Ordnung = 可以、合规', bitte: '请', bringen: '拿、带；zurückbringen = 拿回去', sie: 'Sie（大写）= 您',
+  },
+  cards: [
+    { after: 7, kind: 'pron', title: 'pf', body: '先闭紧双唇，松开时上牙马上碰下唇送气，两个音连成一个。', pairs: ['Pfand', 'Pfand zurück', 'der Pfandautomat'], example: 'Das Pfand kommt zurück.' },
+    { after: 9, kind: 'tip', title: 'Pfand', body: '德国的饮料瓶和易拉罐大多带押金，一次性塑料瓶和罐是 25 分。空瓶拿到超市的退瓶机，机器出一张小票，结账时抵钱。' },
+    { after: 11, kind: 'grammar', title: 'kein · nicht', body: '否定名词用 kein，词尾和 ein 一样：kein、keine、kein。否定动词、形容词等其他成分用 nicht。', table: NEG_7, on: [0, 1, 2, 3],
+      drill: [
+        { line: 3, de: 'Das ist nicht richtig!', zh: '这不对！', v: 'nicht', no: ['kein'], sj: 'richtig', row: 3, col: 1, say: 'nicht richtig', hint: 'richtig 是形容词，否定用 nicht' },
+        { line: 5, de: 'Keine Panik, Lin.', zh: '别慌，Lin。', v: 'Keine', no: ['Kein', 'Nicht'], sj: 'Panik', row: 1, col: 1, say: 'keine Panik', hint: 'Panik 是阴性名词，用 keine' },
+        { line: 10, de: 'Das ist kein Fehler.', zh: '这不是错误。', v: 'kein', no: ['nicht', 'keine'], sj: 'Fehler', row: 0, col: 1, say: 'kein Fehler', hint: 'Fehler 是阳性名词，用 kein' },
+        { line: 11, de: 'Kein Problem!', zh: '没问题！', v: 'Kein', no: ['Keine', 'Nicht'], sj: 'Problem', row: 2, col: 1, say: 'kein Problem', hint: 'Problem 是中性名词，用 kein' },
+      ],
+      example: 'Das ist kein Fehler. Ich verstehe das nicht.' },
+  ],
+  exercises: [
+    match('x1', [['das Pfand', '押金'], ['die Flasche', '瓶子'], ['der Fehler', '错误'], ['das Geld', '钱'], ['verstehen', '明白'], ['zurück', '回来、退回']]),
+    choice('x2', 'Das ist ___ Fehler.', ['kein', 'nicht', 'keine']),
+    choice('x3', 'Das ist ___ richtig.', ['nicht', 'kein', 'keine']),
+    choice('x4', 'Ich verstehe das ___.', ['nicht', 'kein', 'keine']),
+    choice('x5', 'Das ist ___ Cola. Das ist Wasser.', ['keine', 'kein', 'nicht']),
+    choice('x6', '___ Problem!', ['Kein', 'Keine', 'Nicht']),
+    choice('x7', 'Tom ist ___ da.', ['nicht', 'kein', 'keine']),
+    choice('x8', 'Das ist ___ Kaffee. Das ist Tee.', ['kein', 'keine', 'nicht']),
+    assemble('x9', '这不是错误。', 'Das ist kein Fehler.', ['nicht', 'keine']),
+    assemble('x10', '我不明白。', 'Ich verstehe das nicht.', ['kein', 'ist']),
+    listen('x11', 'Lin', 'Das Pfand kommt zurück.', '这句话的意思是：', ['押金会退回来', '押金不退', '瓶子要洗']),
+    choice('x12', 'Was ist das? – Das ist ___ Automat.', ['ein', 'eine']),
+    choice('x13', 'Hier ___: zwei Euro fünfzig.', ['steht', 'kostet', 'kommt']),
+    choice('x14', '小票上的 “Pfand 0,25” 是：', ['瓶子的押金', '税', '袋子的钱']),
+  ],
+  dictation: [0, 3, 7, 10],
+  shadow: [2, 4, 9, 11],
+  retell: [0, 3, 7, 10, 11],
+  speak: [
+    reply('s1', '小票上有个不认识的词。问：“这是什么？”', ['Was ist das?']),
+    reply('s2', '告诉他：不是错误，是押金。', ['Nein, das ist kein Fehler. Das ist Pfand.', 'Das ist kein Fehler. Das ist Pfand.', 'Nein, das ist kein Fehler.'], ['Tom', 'Ist das ein Fehler?']),
+    reply('s3', '你没明白，告诉她。', ['Ich verstehe das nicht.', 'Ich verstehe nicht.'], ['Verk', 'Das macht zwei Euro fünfzig.']),
+  ],
+  reviews: [
+    reply('r1', '“这不对。”', ['Das ist nicht richtig.']),
+    reply('r2', '“没问题！”', ['Kein Problem!']),
+    reply('r3', '“我不明白。”', ['Ich verstehe das nicht.', 'Ich verstehe nicht.']),
+  ],
+  reading: {
+    title: 'Herr Krause 贴在厨房的通知', kind: 'read',
+    lines: [
+      line('Krause', 'An alle in der WG:', '致合租公寓全体：'),
+      line('Krause', 'Die Küche ist kein Lager!', '厨房不是仓库！'),
+      line('Krause', 'Hier sind 20 Flaschen. Zwanzig!', '这里有 20 个瓶子。二十个！', 'Hier sind zwanzig Flaschen. Zwanzig!'),
+      line('Krause', 'Das ist nicht in Ordnung.', '这不合规矩。'),
+      line('Krause', 'Bitte bringen Sie die Flaschen zurück.', '请把瓶子拿去退掉。'),
+      line('Krause', 'Das Pfand: 5 Euro.', '押金：5 欧。', 'Das Pfand: fünf Euro.'),
+    ],
+    newWords: [
+      { de: 'an alle', zh: '致所有人', forms: ['an', 'alle'] },
+      { de: 'das Lager', zh: '仓库', forms: ['lager'] },
+      { de: 'die Flaschen', zh: '瓶子（Flasche 的复数）', forms: ['flaschen'] },
+      { de: 'in Ordnung', zh: '可以、合规', forms: ['ordnung'] },
+      { de: 'bringen', zh: '拿、带', forms: ['bringen'] },
+    ],
+    question: choice('q', '这些瓶子能退多少钱？', ['5 欧', '20 欧', '25 分']),
+  },
+};
+
+export const STORY_LESSONS = [LESSON_0, LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6, LESSON_7];
 
 // 单元总表：每个单元结束时出一次，把本单元零散学到的语法收成整张表，和小测放在一起
 // 复习词卡背面的搭配和例句（2026-11-15 作者定：课文是根，这里是生枝长叶的地方——换地方、换人称、换成问句，让人能举一反三；和课文原句一样的不放）。
@@ -910,6 +1032,17 @@ const WORD_MORE = {
     'oder': { col: [['Kaffee oder Tee?', '咖啡还是茶？'], ['Ja oder nein?', '是还是不是？']], ex: [['Kommst du aus China oder aus Japan?', '你来自中国还是日本？'], ['Möchtest du Brot oder Kuchen?', '你要面包还是蛋糕？']] },
     'wirklich': { col: [['Wirklich?', '真的吗？'], ['wirklich gut', '真的很好']], ex: [['Der Kuchen ist wirklich gut.', '蛋糕真的很好吃。'], ['Kommst du wirklich aus Köln?', '你真的是科隆人？']] },
     'der Geldbeutel': { col: [['mein Geldbeutel', '我的钱包'], ['der Geldbeutel von Tom', 'Tom 的钱包']], ex: [['Wo ist mein Geldbeutel?', '我的钱包在哪？'], ['Der Geldbeutel ist neu.', '这钱包是新的。']] },
+  },
+  'sl-07': {
+    'das Pfand': { col: [['mit Pfand', '带押金'], ['ohne Pfand', '不带押金']], ex: [['Ist das mit Pfand?', '这个带押金吗？'], ['Das Pfand kostet fünfundzwanzig Cent.', '押金二十五分。']] },
+    'die Flasche': { col: [['eine Flasche Wasser', '一瓶水'], ['eine Flasche Cola', '一瓶可乐']], ex: [['Ich möchte eine Flasche Wasser.', '我要一瓶水。'], ['Die Flasche ist nicht da.', '瓶子不在这。']] },
+    'der Fehler': { col: [['ein Fehler', '一个错误'], ['mein Fehler', '我的错']], ex: [['Das ist mein Fehler.', '是我的错。'], ['Ist hier ein Fehler?', '这里有错吗？']] },
+    'das Geld': { col: [['viel Geld', '很多钱'], ['kein Geld', '没钱']], ex: [['Das kostet viel Geld.', '这要花很多钱。'], ['Tom, wo ist das Geld?', 'Tom，钱呢？']] },
+    'das Problem': { col: [['ein Problem', '一个问题'], ['Was ist das Problem?', '问题出在哪？']], ex: [['Das ist kein Problem.', '这不是问题。'], ['Ist das ein Problem?', '这有问题吗？']] },
+    'verstehen': { col: [['Ich verstehe.', '我明白了。'], ['Ich verstehe nicht.', '我不明白。']], ex: [['Verstehst du das?', '你明白吗？'], ['Tom versteht Lena nicht.', 'Tom 不懂 Lena。']] },
+    'zurück': { col: [['Geld zurück', '退钱'], ['Ich bin zurück!', '我回来了！']], ex: [['Lena ist zurück.', 'Lena 回来了。'], ['Zwei Euro zurück.', '找您两欧。']] },
+    'der Automat': { col: [['der Pfandautomat', '退瓶机'], ['der Kaffeeautomat', '咖啡机']], ex: [['Wo ist der Automat?', '机器在哪？'], ['Der Automat ist kaputt.', '机器坏了。']] },
+    'stehen': { col: [['Was steht hier?', '这上面写的什么？'], ['Hier steht mein Name.', '这上面写着我的名字。']], ex: [['Hier steht: Zimmer drei.', '这上面写着：三号房间。'], ['Was steht da?', '那上面写的什么？']] },
   },
 };
 STORY_LESSONS.forEach(l => (l.words || []).forEach(w => { const m = WORD_MORE[l.id]?.[w.de]; if (m) w.more = m; }));

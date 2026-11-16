@@ -3,7 +3,7 @@
  "voices": {
   "Lin": {
    "voice": "Jonas Falk",
-   "chars": 1275,
+   "chars": 1807,
    "items": [
     {
      "id": "34be9a178f61",
@@ -360,6 +360,114 @@
      "text": "Getrennt, bitte."
     },
     {
+     "id": "b52132d9e43d",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Moment. Was ist das?"
+    },
+    {
+     "id": "8f73916810a5",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Die Cola kostet zwei Euro fünfundzwanzig."
+    },
+    {
+     "id": "85751d95c25f",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Aber hier steht: zwei Euro fünfzig!"
+    },
+    {
+     "id": "39da92f73c84",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Das ist nicht richtig!"
+    },
+    {
+     "id": "55ceab1f7cdd",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Ist das ein Fehler?"
+    },
+    {
+     "id": "e4c065c581c4",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Keine Panik, Lin."
+    },
+    {
+     "id": "7f3716710f68",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Hier steht auch: Pfand, fünfundzwanzig Cent."
+    },
+    {
+     "id": "a0e0cc5e5c49",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Pfand? Ich verstehe das nicht."
+    },
+    {
+     "id": "5526982e67df",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Oh, ein Automat! Flasche zurück – Geld zurück."
+    },
+    {
+     "id": "2bbf9b88976f",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Ach so! Das Pfand kommt zurück."
+    },
+    {
+     "id": "43f09b411cf5",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Das ist kein Fehler."
+    },
+    {
+     "id": "4c4335b01951",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Kein Problem!"
+    },
+    {
+     "id": "776d20f5f333",
+     "lesson": "sl-07",
+     "kind": "line",
+     "text": "Aber fünfundzwanzig Cent sind auch Geld. Die Flasche kommt morgen zurück!"
+    },
+    {
+     "id": "6a68f46b3143",
+     "lesson": "sl-07",
+     "kind": "exercise",
+     "text": "Das Pfand kommt zurück."
+    },
+    {
+     "id": "519c9c9bd71f",
+     "lesson": "sl-07",
+     "kind": "model",
+     "text": "Was ist das?"
+    },
+    {
+     "id": "ce77ae3670ed",
+     "lesson": "sl-07",
+     "kind": "model",
+     "text": "Nein, das ist kein Fehler. Das ist Pfand."
+    },
+    {
+     "id": "892e7370e52d",
+     "lesson": "sl-07",
+     "kind": "model",
+     "text": "Ich verstehe das nicht."
+    },
+    {
+     "id": "415403930ab6",
+     "lesson": "sl-07",
+     "kind": "model",
+     "text": "Das ist nicht richtig."
+    },
+    {
      "id": "ea673f5c4147",
      "lesson": "unit-1",
      "kind": "line",
@@ -387,7 +495,7 @@
   },
   "Lena": {
    "voice": "Lea",
-   "chars": 7162,
+   "chars": 8123,
    "items": [
     {
      "id": "062616307468",
@@ -3396,6 +3504,378 @@
      "text": "für"
     },
     {
+     "id": "0dc2b1117a81",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "die Flasche"
+    },
+    {
+     "id": "41e756fb938e",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "der Fehler"
+    },
+    {
+     "id": "31945e5360b3",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "das Geld"
+    },
+    {
+     "id": "e778866b9c5d",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "zurück"
+    },
+    {
+     "id": "fb44b462d069",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "das Pfand"
+    },
+    {
+     "id": "1ce79756e3fb",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "das Problem"
+    },
+    {
+     "id": "a70adb7fd089",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "verstehen"
+    },
+    {
+     "id": "373deee0df6f",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "der Automat"
+    },
+    {
+     "id": "9c88858a6868",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "stehen"
+    },
+    {
+     "id": "f4b3bf03de4f",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "mit Pfand"
+    },
+    {
+     "id": "787504f919d4",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "ohne Pfand"
+    },
+    {
+     "id": "f85ba3c7b968",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Ist das mit Pfand?"
+    },
+    {
+     "id": "2ff912839f32",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Das Pfand kostet fünfundzwanzig Cent."
+    },
+    {
+     "id": "4580bea83951",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "eine Flasche Wasser"
+    },
+    {
+     "id": "35863c1d3d9b",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "eine Flasche Cola"
+    },
+    {
+     "id": "b3111a996a81",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Ich möchte eine Flasche Wasser."
+    },
+    {
+     "id": "a1f96a29207a",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Die Flasche ist nicht da."
+    },
+    {
+     "id": "1703e2c0ec11",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "ein Fehler"
+    },
+    {
+     "id": "0093b8afcc7a",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "mein Fehler"
+    },
+    {
+     "id": "63f2a7ee1085",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Das ist mein Fehler."
+    },
+    {
+     "id": "d054ab21d7a2",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Ist hier ein Fehler?"
+    },
+    {
+     "id": "b6e70e515b7c",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "viel Geld"
+    },
+    {
+     "id": "f4c6d0995783",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "kein Geld"
+    },
+    {
+     "id": "15468e3f18fa",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Das kostet viel Geld."
+    },
+    {
+     "id": "53de36ded920",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Tom, wo ist das Geld?"
+    },
+    {
+     "id": "6fa1056e4ff8",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "ein Problem"
+    },
+    {
+     "id": "2fbc7e23d1fe",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Was ist das Problem?"
+    },
+    {
+     "id": "5d3baafda396",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Das ist kein Problem."
+    },
+    {
+     "id": "6b601f33b1a9",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Ist das ein Problem?"
+    },
+    {
+     "id": "e53dda111e39",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Ich verstehe."
+    },
+    {
+     "id": "6dff28bd2e7a",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Ich verstehe nicht."
+    },
+    {
+     "id": "11ea115509b2",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Verstehst du das?"
+    },
+    {
+     "id": "eb44f892a572",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Tom versteht Lena nicht."
+    },
+    {
+     "id": "05159fb4ece4",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Geld zurück"
+    },
+    {
+     "id": "776fca6ddc35",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Ich bin zurück!"
+    },
+    {
+     "id": "11a0d76c65ff",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Lena ist zurück."
+    },
+    {
+     "id": "8beb7243c780",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Zwei Euro zurück."
+    },
+    {
+     "id": "4a0548a1adf5",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "der Pfandautomat"
+    },
+    {
+     "id": "83c338fa2330",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "der Kaffeeautomat"
+    },
+    {
+     "id": "252db4ecbc65",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Wo ist der Automat?"
+    },
+    {
+     "id": "87903e8afefc",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Der Automat ist kaputt."
+    },
+    {
+     "id": "22486b153d5f",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Was steht hier?"
+    },
+    {
+     "id": "cfde058187b9",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Hier steht mein Name."
+    },
+    {
+     "id": "8e256e774a15",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Hier steht: Zimmer drei."
+    },
+    {
+     "id": "b4b647231fff",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Was steht da?"
+    },
+    {
+     "id": "eefb17b95a38",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Hier steht"
+    },
+    {
+     "id": "5f03f5541918",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Keine Panik!"
+    },
+    {
+     "id": "97f9ef1ee9bb",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "Kein Problem!"
+    },
+    {
+     "id": "82aaca4d2af5",
+     "lesson": "sl-07",
+     "kind": "card",
+     "text": "Das Pfand kommt zurück."
+    },
+    {
+     "id": "c539cfa3f060",
+     "lesson": "sl-07",
+     "kind": "card",
+     "text": "Pfand"
+    },
+    {
+     "id": "bf1a9d235659",
+     "lesson": "sl-07",
+     "kind": "card",
+     "text": "Pfand zurück"
+    },
+    {
+     "id": "615824edc2f7",
+     "lesson": "sl-07",
+     "kind": "card",
+     "text": "kein Fehler"
+    },
+    {
+     "id": "843ee50bb887",
+     "lesson": "sl-07",
+     "kind": "card",
+     "text": "keine Panik"
+    },
+    {
+     "id": "f8a68557c7d1",
+     "lesson": "sl-07",
+     "kind": "card",
+     "text": "kein Problem"
+    },
+    {
+     "id": "aa7beb150def",
+     "lesson": "sl-07",
+     "kind": "card",
+     "text": "Das ist kein Fehler. Ich verstehe das nicht."
+    },
+    {
+     "id": "15b7892a97de",
+     "lesson": "sl-07",
+     "kind": "exercise",
+     "text": "Das ist kein Fehler."
+    },
+    {
+     "id": "8770568f9a40",
+     "lesson": "sl-07",
+     "kind": "exercise",
+     "text": "Ich verstehe das nicht."
+    },
+    {
+     "id": "d85caa045522",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "an alle"
+    },
+    {
+     "id": "cd9647bdb4da",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "das Lager"
+    },
+    {
+     "id": "a75d4ce96e47",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "die Flaschen"
+    },
+    {
+     "id": "f3ca8304453a",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "in Ordnung"
+    },
+    {
+     "id": "1a85a97818b8",
+     "lesson": "sl-07",
+     "kind": "word",
+     "text": "bringen"
+    },
+    {
      "id": "77a1886dbb8e",
      "lesson": "unit-1",
      "kind": "card",
@@ -3447,7 +3927,7 @@
   },
   "Tom": {
    "voice": "Dylan Carter",
-   "chars": 1010,
+   "chars": 1029,
    "items": [
     {
      "id": "0a5fe7af989a",
@@ -3666,6 +4146,12 @@
      "text": "Kaffee und Kuchen für zwei."
     },
     {
+     "id": "29ecfd49b80d",
+     "lesson": "sl-07",
+     "kind": "cue",
+     "text": "Ist das ein Fehler?"
+    },
+    {
      "id": "a5e4b74455ff",
      "lesson": "unit-1",
      "kind": "line",
@@ -3699,7 +4185,7 @@
   },
   "Krause": {
    "voice": "Erich Steiner",
-   "chars": 417,
+   "chars": 580,
    "items": [
     {
      "id": "fbfce9554286",
@@ -3772,6 +4258,42 @@
      "lesson": "sl-04",
      "kind": "reading",
      "text": "Auf Wiedersehen!"
+    },
+    {
+     "id": "9ceab7f570ba",
+     "lesson": "sl-07",
+     "kind": "reading",
+     "text": "An alle in der WG:"
+    },
+    {
+     "id": "0798d1c37814",
+     "lesson": "sl-07",
+     "kind": "reading",
+     "text": "Die Küche ist kein Lager!"
+    },
+    {
+     "id": "fdf8ee8fba33",
+     "lesson": "sl-07",
+     "kind": "reading",
+     "text": "Hier sind zwanzig Flaschen. Zwanzig!"
+    },
+    {
+     "id": "7e06bf9b9d2f",
+     "lesson": "sl-07",
+     "kind": "reading",
+     "text": "Das ist nicht in Ordnung."
+    },
+    {
+     "id": "c9eeca940dff",
+     "lesson": "sl-07",
+     "kind": "reading",
+     "text": "Bitte bringen Sie die Flaschen zurück."
+    },
+    {
+     "id": "b149e65d5842",
+     "lesson": "sl-07",
+     "kind": "reading",
+     "text": "Das Pfand: fünf Euro."
     },
     {
      "id": "332abfbed38b",

@@ -217,6 +217,94 @@ const sl05 = svg('0 0 300 220', `
   <g style="fill:${K.card}">${[[134, 113], [150, 108], [168, 113], [141, 134], [163, 134], [152, 143]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.3"/>`).join('')}</g>
   ${lead('M48 48C52 68 56 86 60 104', 'M154 86C153 92 152 96 152 101', 'M244 42C244 58 242 74 240 90')}`);
 
+// 蛋糕的两条路径：第 5 课 kuchen 贴纸和 sl-06 场景共用
+const CAKE_TOP = 'M14 52L66 34L84 46Z';
+const CAKE_SIDE = 'M14 52L84 46V70L14 78Z';
+
+// ===== 第 31 轮 · sl-06 咖啡馆、sl-07 押金瓶（粘到 art-lessons.js 的「场景」部分、`export const SCENES` 之前，sl-05 后面） =====
+// 复用已经在 art-lessons.js 里的 BREAD，和第 5 课 kuchen 贴纸那块蛋糕的 CAKE_TOP / CAKE_SIDE。
+// ⚠ CAKE_TOP、CAKE_SIDE 现在定义在贴纸部分（SCENES 之后），sl-06 先用到它们：请把那两行原样挪到这段代码前面（kuchen 贴纸照用，不受影响）。
+
+// 可乐瓶：sl-07 和贴纸 flasche 共用。w = 墨线粗细（贴纸缩小后要加粗）
+function bottle7(w = 1.7) {
+  const body = 'M54 80V88C54 94 42 98 42 108V198C42 202 44 204 48 204H74C78 204 80 202 80 198V108C80 98 68 94 68 88V80Z';
+  return `
+  ${off(`<path d="${body}" style="fill:${K.wash}"/><path d="M52 68H70V80H52Z" style="fill:${K.ochre}"/>`)}
+  <path d="M42 116H80V198C80 202 78 204 74 204H48C44 204 42 202 42 198Z" style="fill:${K.ink2}"/>
+  <path d="M42 138H80V166H42Z" style="fill:${K.coral}"/>
+  ${txt(61, 157, 'Cola', 13, K.white, 700)}
+  ${hi('M48 120V134M48 170V196')}
+  ${ink(w, `<path d="${body}"/><path d="M52 68H70V80H52Z"/><path d="M42 138H80M42 166H80"/>`)}
+  ${ink(w * .7, '<path d="M56 70V78M61 70V78M66 70V78"/>', 'rough-s')}`;
+}
+
+// sl-06 咖啡馆：小圆桌上一杯咖啡（杯碟）、一块蛋糕、一杯水
+const TABLE6 = 'M30 150C30 144 270 144 270 150S30 156 30 150Z';
+const CUP6S = 'M50 116H92L89 136C88 143 54 143 53 136Z';
+const GLASS6S = 'M204 90H244L240 146C240 148.5 208 148.5 208 146Z';
+const CAKE6 = `<g transform="translate(118 97) scale(.62)">
+  ${off(`<path d="${CAKE_SIDE}" style="fill:${K.ochre}"/>`)}
+  <path d="${CAKE_TOP}" style="fill:${K.card}"/>
+  <path d="M14 61L84 55V60L14 66Z" style="fill:${K.coral}"/>
+  ${off(`<circle cx="62" cy="38" r="6" style="fill:${K.coral}"/>`, 1.2, 1)}
+  ${ink(2.7, `<path d="${CAKE_SIDE}"/><path d="M14 52L66 34L84 46"/><circle cx="62" cy="38" r="6"/><path d="M62 32C63 29 65 27 68 26"/>`)}
+  ${ink(2, '<path d="M14 61L84 55M14 66L84 60"/>', 'rough-s')}</g>`;
+const sl06 = svg('0 0 300 220', `
+  ${off(`
+    <path d="M30 150V156C30 162 270 162 270 156V150Z" style="fill:${K.sky}"/>
+    <path d="${CUP6S}" style="fill:${K.mint}"/>
+    <path d="${GLASS6S}" style="fill:${K.wash}"/>`)}
+  <path d="M145 160H155V202H145Z" style="fill:${K.ink2}"/>
+  <path d="${TABLE6}" style="fill:${K.card}"/>
+  ${dots('M200 145C240 146 262 147 270 150V156C266 159 240 161 200 161.6Z', 0.14)}
+  <path d="M40 146C40 141 102 141 102 146S40 151 40 146Z" style="fill:${K.card}"/>
+  <path d="M116 147C116 142.5 188 142.5 188 147S116 151.5 116 147Z" style="fill:${K.card}"/>
+  <path d="M50 116C50 112 92 112 92 116S50 120 50 116Z" style="fill:${BREAD}"/>
+  <path d="M205.2 108H242.8L240 146C240 148.5 208 148.5 208 146Z" style="fill:${K.sky}"/>
+  <g style="fill:${K.card}"><circle cx="218" cy="134" r="1.8"/><circle cx="226" cy="122" r="1.4"/><circle cx="232" cy="138" r="1.3"/></g>
+  ${hi('M211 96l2.4 44M58 122l1 12')}
+  ${CAKE6}
+  ${ink(1.7, `
+    <path d="M10 206C90 205 210 206.5 292 206"/>
+    <path d="${TABLE6}"/><path d="M30 150V156C30 162 270 162 270 156V150"/>
+    <path d="M145 160V202M155 160V202"/><path d="M118 206C126 198 174 198 182 206"/>
+    <path d="M40 146C40 141 102 141 102 146S40 151 40 146Z"/>
+    <path d="${CUP6S}"/><path d="M50 116C50 112 92 112 92 116S50 120 50 116Z"/><path d="M91.6 121C102 120 102 134 89.8 134.5"/>
+    <path d="M64 106C60 101 68 98 64 92M78 106C74 101 82 98 78 92"/>
+    <path d="M116 147C116 142.5 188 142.5 188 147S116 151.5 116 147Z"/>
+    <path d="${GLASS6S}"/>`)}
+  ${ink(1.2, '<path d="M205.2 108C216 110 232 106 242.8 108"/>', 'rough-s')}
+  ${lead('M30 52C34 74 40 98 48 114', 'M152 86C152 96 151 106 150 114', 'M232 42C230 58 228 72 226 86')}`);
+
+// sl-07 押金瓶：一瓶可乐、一张小票（Pfand 那一行涂了荧光笔）、右边退瓶机的一角（屏幕显示 0,25 €）
+const BON7 = 'M104 92H164V190L158 196L152 190L146 196L140 190L134 196L128 190L122 196L116 190L110 196L104 190Z';
+const MACH7 = 'M206 46H306V206H196V56C196 50 200 46 206 46Z';
+const sl07 = svg('0 0 300 220', `
+  ${off(`<path d="${MACH7}" style="fill:${K.sky}"/>`)}
+  ${dots('M262 46H306V206H262Z', 0.14)}
+  <path d="M214 62H284V86H214Z" style="fill:${K.card}"/>
+  ${txt(249, 79, '0,25 €', 14, K.skyInk, 650)}
+  <circle cx="248" cy="126" r="24" style="fill:${K.card}"/>
+  <circle cx="248" cy="126" r="15" style="fill:${K.ink2}"/>
+  <path d="M228 168H268V174H228Z" style="fill:${K.ink2}"/>
+  ${bottle7()}
+  <g transform="rotate(4 134 144)">
+    ${off(`<path d="${BON7}" style="fill:${K.wash}"/>`)}
+    <path d="${BON7}" style="fill:${K.card}"/>
+    <path d="M108 123H160V136H108Z" style="fill:${K.ochre};opacity:.55"/>
+    <rect x="110" y="106" width="18" height="4" rx="1" style="fill:${K.ink2}"/>
+    ${txt(158, 111, '2,25', 12, K.ink, 600, 'end')}
+    ${txt(110, 134, 'Pfand', 11, K.ink, 600, 'start')}${txt(158, 134, '0,25', 12, K.ink, 600, 'end')}
+    ${txt(134, 178, '2,50', 17, K.ink, 700)}
+    ${ink(1.7, `<path d="${BON7}"/>`)}
+    ${ink(1.1, '<path d="M110 148H158M110 152H158"/>', 'rough-s')}</g>
+  ${ink(1.7, `
+    <path d="M10 206C90 205 210 206.5 292 206"/>
+    <path d="${MACH7}"/><path d="M214 62H284V86H214Z"/>
+    <circle cx="248" cy="126" r="24"/><circle cx="248" cy="126" r="15"/>
+    <path d="M228 168H268V174H228Z"/>`)}
+  ${lead('M36 42C40 52 46 60 54 66', 'M150 86C156 98 162 110 165 124', 'M232 36C232 42 232 48 232 56')}`);
+
 export const SCENES = {
   'sl-00': { svg: sl00, labels: [] },
   'sl-01': { svg: sl01, labels: [
@@ -237,6 +325,16 @@ export const SCENES = {
     { de: 'das Brot', art: 'das', x: 0.04, y: 0.10 },
     { de: 'die Brezel', art: 'die', x: 0.36, y: 0.30 },
     { de: 'der Kuchen', art: 'der', x: 0.62, y: 0.07 },
+  ] },
+  'sl-06': { svg: sl06, labels: [
+    { de: 'die Tasse', art: 'die', x: 0.02, y: 0.12 },
+    { de: 'das Stück', art: 'das', x: 0.36, y: 0.30 },
+    { de: 'das Wasser', art: 'das', x: 0.62, y: 0.06 },
+  ] },
+  'sl-07': { svg: sl07, labels: [
+    { de: 'die Flasche', art: 'die', x: 0.02, y: 0.06 },
+    { de: 'das Pfand', art: 'das', x: 0.27, y: 0.30 },
+    { de: 'der Automat', art: 'der', x: 0.62, y: 0.04 },
   ] },
 };
 
@@ -357,8 +455,6 @@ const brezel = pic(`
   <g style="fill:${K.card}">${[[32, 37], [42, 33], [56, 33], [66, 38], [37, 60], [59, 60], [48, 65], [27, 47]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.5"/>`).join('')}</g>`);
 
 // der Kuchen：一块蛋糕，侧面看得见夹层，顶上一颗草莓
-const CAKE_TOP = 'M14 52L66 34L84 46Z';
-const CAKE_SIDE = 'M14 52L84 46V70L14 78Z';
 const kuchen = pic(`
   ${off(`<path d="${CAKE_SIDE}" style="fill:${K.ochre}"/>`)}
   <path d="${CAKE_TOP}" style="fill:${K.card}"/>
@@ -401,5 +497,128 @@ const kasse = pic(`<g transform="rotate(-6 48 48)">
   ${ink(W, `<path d="${BON}"/>`)}
   ${ink(1.4, '<path d="M33 45H63M33 48H63"/>', 'rough-s')}</g>`);
 
-export const PICS = { kaffee, bus, buch, topf, tuer, haus, uni, kalender, schluessel, hand, daumen, land, brot, brezel, kuchen, preis, euro, kasse };
+const RED = V('rot', '#c8402f');
+
+/* ---------- 第 6 课 ---------- */
+
+// Ich möchte …：手指点在菜单的一行上
+const MENU6 = 'M10 14H52V84H10Z';
+const POINT6 = 'M84 44H66C62 44 60 46 58 47H34C30 47 30 55 34 55H56C53 57 53 62 56 63C53 65 53 70 57 71C55 73 57 77 61 77L84 76Z';
+const bestellen = pic(`
+  <g transform="rotate(-5 31 49)">
+    ${off(`<path d="${MENU6}" style="fill:${K.sky}"/>`, 2.4, 2)}
+    <path d="${MENU6}" style="fill:${K.card}"/>
+    <path d="M14 48H48V56H14Z" style="fill:${K.ochre};opacity:.6"/>
+    <g style="fill:${K.ink2}"><rect x="17" y="22" width="20" height="4" rx="1"/>${[38, 50, 62, 72].map(y => `<rect x="17" y="${y}" width="${y === 50 ? 22 : 18}" height="3" rx="1"/>`).join('')}</g>
+    ${ink(W, `<path d="${MENU6}"/>`)}</g>
+  ${off(`<path d="M84 42H90V78H84Z" style="fill:${K.mint}"/>`, 1.2, 1)}
+  <path d="${POINT6}" style="fill:${K.card}"/>
+  ${dots('M70 44H84V76L62 77C60 70 62 60 66 56Z', 0.12)}
+  ${ink(W, `<path d="${POINT6}"/><path d="M84 42H90V78H84Z"/>`)}`);
+
+// zahlen：手心朝上托着一摞硬币，再递出一枚
+const PALM6 = 'M8 62C20 62 30 60 38 56C42 50 48 48 50 52C51 55 48 58 44 61H80C86 61 86 69 80 69H76C80 70 80 76 74 76L30 77C20 77 14 74 8 72Z';
+const coinStack = y => `<path d="M56 ${y}V${y + 4}C56 ${y + 6} 78 ${y + 6} 78 ${y + 4}V${y}"/><path d="M56 ${y}C56 ${y - 2} 78 ${y - 2} 78 ${y}S56 ${y + 2} 56 ${y}Z"/>`;
+const zahlen = pic(`<g transform="translate(4 4)">
+  <path d="${PALM6}" style="fill:${K.card}"/>
+  ${dots('M44 61H80C86 61 86 69 80 69H76C80 70 80 76 74 76L44 77Z', 0.12)}
+  ${off(`<path d="M56 49V61C56 63 78 63 78 61V49C78 47 56 47 56 49Z" style="fill:${K.ochre}"/>
+    <circle cx="66" cy="24" r="9" style="fill:${K.ochre}"/>`, 1.2, 1)}
+  ${ink(W, `<path d="${PALM6}"/>${[57, 53, 49].map(coinStack).join('')}<circle cx="66" cy="24" r="9"/>`)}
+  ${ink(1.6, '<path d="M44 36C48 30 52 27 56 26M40 28C44 22 48 19 52 18"/>', 'rough-s')}
+  ${hi('M61 20c2-2 4-3 7-3')}</g>`);
+
+// das Wasser：一只玻璃杯，水面以下是蓝的，几个小气泡
+const GLASS6 = 'M28 16H68L63 80C62.8 83 33.2 83 33 80Z';
+const wasser = pic(`
+  ${off(`<path d="${GLASS6}" style="fill:${K.wash}"/>`)}
+  <path d="M29.7 38H66.3L63 80C62.8 83 33.2 83 33 80Z" style="fill:${K.sky}"/>
+  ${dots('M54 38H66.3L63 80C62.9 82 58 82.6 54 82.8Z', 0.14)}
+  <g style="fill:${K.card}"><circle cx="42" cy="66" r="2"/><circle cx="50" cy="56" r="1.6"/><circle cx="45" cy="48" r="1.3"/><circle cx="56" cy="70" r="1.4"/></g>
+  ${hi('M35 24l2.6 50')}
+  ${ink(W, `<path d="${GLASS6}"/>`)}
+  ${ink(1.4, '<path d="M29.7 38C40 40.4 56 35.6 66.3 38"/>', 'rough-s')}`);
+
+// die Tasse：一只空杯子放在碟子上（不冒热气，杯里看得见杯底）
+const CUP6 = 'M24 38H66L63 62C62 70 28 70 27 62Z';
+const RIM6 = 'M24 38C24 33.5 66 33.5 66 38S24 42.5 24 38Z';
+const SAUCER6 = 'M12 70C12 64.5 84 64.5 84 70S12 75.5 12 70Z';
+const tasse = pic(`
+  ${off(`<path d="${SAUCER6}" style="fill:${K.sky}"/>`, 2, 1.4)}
+  <path d="${SAUCER6}" style="fill:${K.card}"/>
+  ${off(`<path d="${CUP6}" style="fill:${K.mint}"/>`)}
+  ${dots('M52 40H66L63 62C62.6 65 58 67.4 52 68Z', 0.16)}
+  <path d="${RIM6}" style="fill:${K.wash}"/>
+  ${ink(W, `<path d="${SAUCER6}"/><path d="${CUP6}"/><path d="${RIM6}"/><path d="M65.4 44C77 43 77 59 63.6 59.5"/><path d="M65 48.5C71 48.4 71 55 64.2 55.2"/>`)}
+  ${hi('M30 46l1.6 12')}`);
+
+// der Geldbeutel：一只钱包，扣带上一颗按扣，上面露出一张纸币
+const WALLET6 = 'M14 36H76C80 36 82 38 82 42V76C82 80 80 82 76 82H18C15 82 14 80 14 77Z';
+const FLAP6 = 'M50 48H82V66H50C47 66 46 64 46 62V52C46 50 47 48 50 48Z';
+const geldbeutel = pic(`
+  <g transform="rotate(-8 42 30)">${off(`<path d="M22 20H62V40H22Z" style="fill:${K.mint}"/>`, 1.2, 1)}
+    ${ink(W, '<path d="M22 20H62V40H22Z"/><circle cx="42" cy="29" r="5"/>')}</g>
+  ${off(`<path d="${WALLET6}" style="fill:${K.coral}"/>`)}
+  ${dots('M60 36H76C80 36 82 38 82 42V76C82 80 80 82 76 82H60Z', 0.16)}
+  <path d="${FLAP6}" style="fill:${K.card}"/>
+  ${off(`<circle cx="55" cy="57" r="3.4" style="fill:${K.ochre}"/>`, .8, .8)}
+  ${ink(W, `<path d="${WALLET6}"/><path d="${FLAP6}"/><circle cx="55" cy="57" r="3.4"/>`)}
+  ${ink(1.2, '<path d="M19 42H40M19 76H76"/>', 'rough-s')}`);
+
+// Zusammen oder getrennt?：一张小票从中间撕成两半
+const HALF_L = 'M16 16H44L41 24L45 32L41 40L45 48L41 56L45 64L41 72L44 80L40 84L36 80L32 84L28 80L24 84L20 80L16 84Z';
+const HALF_R = 'M52 16H80V84L76 80L72 84L68 80L64 84L60 80L56 84L52 80L49 72L53 64L49 56L53 48L49 40L53 32L49 24Z';
+const half = (d, rot, x0, x1) => `<g transform="rotate(${rot} ${(x0 + x1) / 2} 50)">
+  ${off(`<path d="${d}" style="fill:${K.wash}"/>`, 2, 1.6)}<path d="${d}" style="fill:${K.card}"/>
+  <g style="fill:${K.ink2}">${[26, 36, 46].map(y => `<rect x="${x0}" y="${y}" width="${y === 46 ? 10 : 15}" height="3.2" rx="1"/>`).join('')}<rect x="${x0}" y="62" width="17" height="5" rx="1.2"/></g>
+  ${ink(W, `<path d="${d}"/>`)}</g>`;
+const getrennt = pic(`${half(HALF_L, -9, 21, 36)}${half(HALF_R, 9, 57, 72)}`);
+
+/* ---------- 第 7 课 ---------- */
+
+// Was ist das?：对话框里一个大问号
+const BUB7 = 'M20 14H76C81 14 84 17 84 22V58C84 63 81 66 76 66H46L30 80L33 66H20C15 66 12 63 12 58V22C12 17 15 14 20 14Z';
+const frage = pic(`
+  ${off(`<path d="${BUB7}" style="fill:${K.sky}"/>`, 2.4, 2)}
+  <path d="${BUB7}" style="fill:${K.card}"/>
+  ${txt(48, 57, '?', 46, K.ink, 700)}
+  ${ink(W, `<path d="${BUB7}"/>`)}`);
+
+// die Flasche：一瓶可乐（和 sl-07 场景里是同一只瓶子）
+const flasche = pic(`<g transform="translate(48 48) scale(.55) translate(-61 -136)">${bottle7(W / .55)}</g>`);
+
+// der Fehler：小票上一行被红笔圈出来（就是多出来的 Pfand 那一行），底下一共 2,50
+const fehler = pic(`<g transform="rotate(-6 48 48)">
+  ${off(`<path d="${BON}" style="fill:${K.wash}"/>`, 2.4, 2)}
+  <path d="${BON}" style="fill:${K.card}"/>
+  <g style="fill:${K.ink2}"><rect x="33" y="24" width="13" height="3.2" rx="1"/><rect x="53" y="24" width="10" height="3.2" rx="1"/>
+    <rect x="33" y="38" width="15" height="3.2" rx="1"/><rect x="53" y="38" width="10" height="3.2" rx="1"/></g>
+  ${txt(48, 70, '2,50', 15, K.ink, 700)}
+  ${ink(W, `<path d="${BON}"/>`)}
+  ${ink(1.3, '<path d="M33 53H63M33 56H63"/>', 'rough-s')}</g>
+  <path d="M24 36C30 29 60 28 70 33C77 38 66 46 48 46C34 46 22 43 25 37C27 34 31 32 36 31" style="fill:none;stroke:${RED};stroke-width:2.4;stroke-linecap:round" filter="url(#rough)"/>`);
+
+// das Geld：一张纸币，前面几枚硬币
+const NOTE7 = 'M12 18H74V56H12Z';
+const geld = pic(`
+  <g transform="rotate(-8 43 37)">${off(`<path d="${NOTE7}" style="fill:${K.mint}"/>`)}
+    ${dots('M52 18H74V56H52Z', 0.14)}
+    <circle cx="28" cy="37" r="9" style="fill:${K.card}"/>
+    ${txt(58, 43, '10', 15, K.ink, 700)}
+    ${ink(W, `<path d="${NOTE7}"/><circle cx="28" cy="37" r="9"/>`)}
+    ${ink(1.2, '<path d="M16 22H70V52H16Z"/>', 'rough-s')}</g>
+  ${off(`<circle cx="36" cy="68" r="11" style="fill:${K.coral}"/><circle cx="60" cy="66" r="15" style="fill:${K.ochre}"/>`)}
+  <circle cx="60" cy="66" r="15" style="fill:${K.ochre}"/>
+  <circle cx="60" cy="66" r="8.5" style="fill:${K.wash}"/>
+  ${ink(W, '<circle cx="36" cy="68" r="11"/><circle cx="60" cy="66" r="15"/><circle cx="60" cy="66" r="8.5"/>')}
+  ${hi('M50 58c2-3 5-4.6 8-5')}`);
+
+// zurück：一只往回拐的箭头
+const BACK7 = 'M18 70H56A25 25 0 0 0 56 20H38V10L14 26L38 42V32H56A13 13 0 0 1 56 58H18Z';
+const zurueck = pic(`<g transform="translate(2 8)">
+  ${off(`<path d="${BACK7}" style="fill:${K.mint}"/>`)}
+  ${dots('M56 20A25 25 0 0 1 56 70V58A13 13 0 0 0 56 32Z', 0.18)}
+  ${ink(W, `<path d="${BACK7}"/>`)}</g>`);
+
+export const PICS = { kaffee, bus, buch, topf, tuer, haus, uni, kalender, schluessel, hand, daumen, land, brot, brezel, kuchen, preis, euro, kasse, bestellen, zahlen, wasser, tasse, geldbeutel, getrennt, frage, flasche, fehler, geld, zurueck };
 // 不画（用无图版式）：neu、frage、raus、woher、pfeil、ort、person、leer —— 画出来只会是抽象符号。

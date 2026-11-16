@@ -81,6 +81,7 @@
 | `preview` | 预习词 4–6 个：`{ de, zh, line, pic }`，`line` 是这个词出现在第几句（听到那句时亮出来），`pic` 是图标名 |
 | `listenQuestion` | 听前问题（选择题）。`key` 是答案落在第几个预习词上 |
 | `listenMore` | ? 盲听之后追加的第 2、3 道理解题（选择题数组），一题一屏 |
+| `retell` | ? 复述哪几句（下标数组）。不写 = 我的每句台词；整篇都是我说的独白课要写，挑 4–6 句 |
 | `words` | 进复习的重点词 5–8 个：`{ id?, de, zh, line, form }`。`id` 只在词库里真有这个词时才填；没有 `id` 的是词库待补的词（自带 `zh`，可带 `art / pos`），接入时追加到 `vocab.js` 末尾 |
 | `phrases` | 按整体短语学的口头语：`{ de, zh }` |
 | `cards[].table` + `on` | 语法卡的整张小表（`{ head, rows }`）和本课点亮的行下标；`contrast` 是 du / Sie 之类的成对例句 |

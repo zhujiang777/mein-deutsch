@@ -48,7 +48,8 @@ export function buildLesson(lesson, day = 0) {
   (lesson.listenMore || []).forEach(q => add('relisten', 'listenQ', { q })); // 盲听的第 2、3 个问题
   lesson.dictation.forEach(i => add('dictation', 'dictate', { i }));
   lesson.shadow.forEach(i => add('shadow', 'shadow', { i }));
-  lesson.lines.forEach((l, i) => { if (l.who === lesson.role) add('retell', 'retell', { i }); });
+  // 复述：我的每句台词；整篇都是我说的独白课在 lesson.retell 里挑几句
+  lesson.lines.forEach((l, i) => { if (lesson.retell ? lesson.retell.includes(i) : l.who === lesson.role) add('retell', 'retell', { i }); });
   (lesson.speak || []).forEach(item => add('speak', 'speak', { item }));
   add('finish', 'finish');
   if (day === 1) return [...steps.filter(s => DAY1.includes(s.seg)), { seg: 'finish', type: 'finish', day: 1 }];
