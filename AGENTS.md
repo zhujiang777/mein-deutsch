@@ -6,6 +6,7 @@
   - 写或改课程内容：`docs/course-authoring.md`（规则和流程）+ `docs/course-outline.md`（第 8–30 课逐课大纲）；字段查 `docs/schema.md`；草稿样板 `docs/examples/unit-2-draft.md`
   - 做界面、画插画：`docs/design.md`
   - 改代码、预览、发布：`docs/engineering.md`
+- 不知道接下来做什么：看 `docs/roadmap.md`（待办清单）。做完一项就勾掉；每次收工更新它最上面的“现在该做的三件事”。
 - 开发时要节约 token 使用量。
 
 # 做事的规矩
