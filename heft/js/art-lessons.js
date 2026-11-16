@@ -18,7 +18,7 @@ const K = {
   card: V('card', '#fffdf6'), wash: V('wash', '#e3eef8'),
   skyInk: V('sky-ink', '#3f7aa8'), white: V('sticker-edge', '#ffffff'),
 };
-const FONT = V('font-sans', '"Instrument Sans",system-ui,sans-serif');
+const FONT = V('font-sans', "'Instrument Sans',system-ui,sans-serif"); // 只能用单引号：这个值要插进 style="…"，双引号会把属性截断、字号全部失效（2026-11-16 修）
 
 const svg = (vb, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" aria-hidden="true">${body}</svg>`;
 // 错版色块：整组往右下错开

@@ -14,7 +14,7 @@
 | `js/` | 录音与发音评分（应用共用） |
 | `worker/` | 发音评分服务（Cloudflare Worker → Azure Speech），部署见 `worker/README.md` |
 | `tools/` | 配音清单与录音生成 |
-| `docs/` | 产品宪法、内容写作规则、数据字段 |
+| `docs/` | 产品宪法、写课规则与逐课大纲、数据字段、界面插画做法、工程与发布说明 |
 
 ## 技术说明
 
